@@ -177,6 +177,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitGrammarSpec(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitGrammarSpec(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -257,6 +263,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitGrammarDecl(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitGrammarDecl(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -303,6 +315,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitGrammarType(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitGrammarType(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -384,6 +402,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitPrequelConstruct(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPrequelConstruct(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -473,6 +497,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitOptionsSpec(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitOptionsSpec(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -539,6 +569,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitOption(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitOption(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -597,6 +633,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitOptionValue(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitOptionValue(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -697,6 +739,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitDelegateGrammars(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDelegateGrammars(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -765,6 +813,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitDelegateGrammar(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitDelegateGrammar(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -827,6 +881,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitTokensSpec(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTokensSpec(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -884,6 +944,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitChannelsSpec(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitChannelsSpec(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -947,6 +1013,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitIdList(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitIdList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1029,6 +1101,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitAction_(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAction_(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1089,6 +1167,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitActionScopeName(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitActionScopeName(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1154,6 +1238,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitActionBlock(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitActionBlock(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1199,6 +1289,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitArgActionBlock(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitArgActionBlock(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1270,6 +1366,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitModeSpec(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitModeSpec(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1335,6 +1437,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitRules(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRules(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1393,6 +1501,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitRuleSpec(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRuleSpec(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1476,6 +1590,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitParserRuleSpec(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitParserRuleSpec(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1599,6 +1719,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitExceptionGroup(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExceptionGroup(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1669,6 +1795,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitExceptionHandler(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitExceptionHandler(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1717,6 +1849,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitFinallyClause(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitFinallyClause(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1764,6 +1902,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitRulePrequel(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRulePrequel(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1824,6 +1968,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitRuleReturns(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRuleReturns(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1876,6 +2026,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitThrowsSpec(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitThrowsSpec(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1940,6 +2096,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitLocalsSpec(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLocalsSpec(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -1988,6 +2150,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitRuleAction(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRuleAction(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2038,6 +2206,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitRuleModifiers(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRuleModifiers(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2096,6 +2270,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitRuleModifier(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRuleModifier(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2147,6 +2327,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitRuleBlock(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRuleBlock(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2196,6 +2382,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitRuleAltList(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRuleAltList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2261,6 +2453,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitLabeledAlt(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLabeledAlt(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2323,6 +2521,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitLexerRuleSpec(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLexerRuleSpec(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2394,6 +2598,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitLexerRuleBlock(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLexerRuleBlock(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2443,6 +2653,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitLexerAltList(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLexerAltList(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2506,6 +2722,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitLexerAlt(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLexerAlt(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2574,6 +2796,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitLexerElements(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLexerElements(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2662,6 +2890,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitLexerElement(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLexerElement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2765,6 +2999,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitLexerBlock(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLexerBlock(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2819,6 +3059,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitLexerCommands(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLexerCommands(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2887,6 +3133,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitLexerCommand(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLexerCommand(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -2950,6 +3202,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitLexerCommandName(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLexerCommandName(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3009,6 +3267,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitLexerCommandExpr(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLexerCommandExpr(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3076,6 +3340,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitAltList(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAltList(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3141,6 +3411,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitAlternative(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAlternative(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3246,6 +3522,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitElement(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitElement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3403,6 +3685,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitPredicateOptions(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPredicateOptions(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3475,6 +3763,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitPredicateOption(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitPredicateOption(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3566,6 +3860,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitLabeledElement(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLabeledElement(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3644,6 +3944,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitEbnf(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEbnf(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3698,6 +4004,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitBlockSuffix(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBlockSuffix(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3743,6 +4055,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitEbnfSuffix(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitEbnfSuffix(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3850,6 +4168,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitLexerAtom(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitLexerAtom(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -3936,6 +4260,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitAtom(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitAtom(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4010,6 +4340,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitWildcard(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitWildcard(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4067,6 +4403,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitNotSet(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitNotSet(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4137,6 +4479,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitBlockSet(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBlockSet(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4206,6 +4554,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitSetElement(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitSetElement(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4310,6 +4664,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitBlock(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitBlock(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4396,6 +4756,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitRuleref(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitRuleref(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4462,6 +4828,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitCharacterRange(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitCharacterRange(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4510,6 +4882,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitTerminalDef(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitTerminalDef(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4599,6 +4977,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitElementOptions(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitElementOptions(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4668,6 +5052,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitElementOption(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitElementOption(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4751,6 +5141,12 @@ public partial class ANTLRv4Parser : Parser {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitIdentifier(this);
 		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitIdentifier(this);
+			else return visitor.VisitChildren(this);
+		}
 	}
 
 	[RuleVersion(0)]
@@ -4808,6 +5204,12 @@ public partial class ANTLRv4Parser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IANTLRv4ParserListener typedListener = listener as IANTLRv4ParserListener;
 			if (typedListener != null) typedListener.ExitQualifiedIdentifier(this);
+		}
+		[System.Diagnostics.DebuggerNonUserCode]
+		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
+			IANTLRv4ParserVisitor<TResult> typedVisitor = visitor as IANTLRv4ParserVisitor<TResult>;
+			if (typedVisitor != null) return typedVisitor.VisitQualifiedIdentifier(this);
+			else return visitor.VisitChildren(this);
 		}
 	}
 
