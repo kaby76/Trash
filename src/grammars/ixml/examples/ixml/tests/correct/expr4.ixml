@@ -1,0 +1,8 @@
+expression: expr. 
+-expr: term; sum.
+sum: term, "+", term++"+".
+-term: factor; prod.
+prod: factor, "×", factor++"×".
+-factor: id; number; "(", expr, ")".
+id: ["a"-"z"]+.
+number: ["0"-"9"]+, (".", ["0"-"9"]+)?.

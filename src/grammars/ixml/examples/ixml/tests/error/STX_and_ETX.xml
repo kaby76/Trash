@@ -1,0 +1,1 @@
+<S><show><STX/></show>This file begins with a start-of-text (STX, ^B) character,<hide><LF/></hide>followed by some lines of text, and it ends<hide><LF/></hide>with an end-of-text (ETX, ^C) character.<show><ETX/></show></S>

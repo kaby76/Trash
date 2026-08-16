@@ -1,0 +1,91 @@
+<ixml
+  ><comment> Sample grammar 3
+
+from https://homepages.cwi.nl/~steven/Talks/2013/08-07-invisible-xml/invisible-xml-3.html
+</comment
+  ><comment> Revisions:
+2018-04-08 : CMSMcQ : made this from sample.grammar.03.xml
+</comment
+  ><rule name="css"
+    ><alt
+      ><nonterminal name="rules"
+    /></alt
+  ></rule
+  ><rule name="rules"
+    ><alt
+      ><nonterminal name="rule"
+    /></alt
+    ><alt
+      ><nonterminal name="rules"
+      /><nonterminal name="rule"
+    /></alt
+  ></rule
+  ><rule name="rule"
+    ><alt
+      ><nonterminal name="selector"
+      /><nonterminal name="block"
+    /></alt
+  ></rule
+  ><rule name="block"
+    ><alt
+      ><literal string="{"
+      /><nonterminal name="properties"
+      /><literal string="}"
+    /></alt
+  ></rule
+  ><rule name="properties"
+    ><alt
+      ><nonterminal name="property"
+    /></alt
+    ><alt
+      ><nonterminal name="property"
+      /><literal string=";"
+      /><nonterminal name="properties"
+    /></alt
+  ></rule
+  ><rule name="property"
+    ><alt
+      ><nonterminal name="name"
+      /><literal string=":"
+      /><nonterminal name="value"
+    /></alt
+    ><alt
+      ><nonterminal name="empty"
+    /></alt
+  ></rule
+  ><rule name="selector"
+    ><alt
+      ><nonterminal name="name"
+    /></alt
+  ></rule
+  ><rule name="name"
+    ><alt
+      ><inclusion
+        ><member from="a" to="z"
+        /><member from="A" to="Z"
+      /></inclusion
+      ><repeat0
+        ><inclusion
+          ><member from="a" to="z"
+          /><member from="A" to="Z"
+          /><member from="0" to="9"
+          /><member string="-"
+          /><member string="_"
+        /></inclusion
+      ></repeat0
+    ></alt
+  ></rule
+  ><rule name="value"
+    ><alt
+      ><inclusion
+        ><member from="x" to="z"
+      /></inclusion
+    ></alt
+  ></rule
+  ><comment> An earlier form of grammar 3 didn't actually define
+the nonterminal 'empty'.  That might be related to the
+exponential problem. </comment
+  ><rule name="empty"
+    ><alt
+  /></rule
+></ixml>

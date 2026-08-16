@@ -1,0 +1,255 @@
+<tc:test-catalog xmlns:tc="https://github.com/invisibleXML/ixml/test-catalog"
+		 xmlns:ixml="http://invisiblexml.org/NS"
+		 release-date="2022-05-17"
+		 name="Prolog tests"
+		 >
+  <tc:description>
+    <tc:p>This test set collects some grammars with prolog information,
+    and some simple tests to make sure the processor is actually
+    processing the grammar normally.</tc:p>
+    <tc:p>The expected results currently assume that processors will
+    recognize the version string "1.0" and no other version
+    identifiers, and supply ixml:state="version-mismatch" in all
+    cases where the version declaration is syntactically correct
+    and the version string is not "1.0".</tc:p>
+  </tc:description>
+
+  <tc:test-set name="prolog-1a">
+    <tc:created by="jwL" on="2022-05-16"/>
+    <tc:description>
+      <tc:p>A grammar with a simple version.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar> 
+      ixml version "1.3".
+      P:["B"-"D"].  
+    </tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result>
+      <tc:assert-xml>
+        <ixml xmlns=""
+          ><prolog
+            ><version string="1.3"
+          /></prolog
+          ><rule name="P"
+            ><alt
+              ><inclusion
+                ><member from="B" to="D"
+              /></inclusion
+            ></alt
+          ></rule
+        ></ixml>
+      </tc:assert-xml>
+      </tc:result>
+    </tc:grammar-test>
+
+    <tc:test-case name="epsilon">
+      <tc:test-string/>
+      <tc:result>
+	<tc:assert-not-a-sentence ixml:state="version-mismatch"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="B1">
+      <tc:test-string>B</tc:test-string>
+      <tc:result><tc:assert-xml>
+	<P ixml:state="version-mismatch">B</P>
+      </tc:assert-xml></tc:result>
+    </tc:test-case>
+    <tc:test-case name="D">
+      <tc:test-string>D</tc:test-string>
+      <tc:result><tc:assert-xml>
+	<P ixml:state="version-mismatch">D</P>
+      </tc:assert-xml></tc:result>
+    </tc:test-case>
+    <tc:test-case name="b2">
+      <tc:test-string>b</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence ixml:state="version-mismatch"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="BCD">
+      <tc:test-string>BCD</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence ixml:state="version-mismatch"/>
+      </tc:result>
+    </tc:test-case>
+  </tc:test-set>
+
+  <tc:test-set name="prolog-1b">
+    <tc:created by="jwL" on="2022-05-16"/>
+    <tc:description>
+      <tc:p>A grammar with a simple version using single quotes.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar> 
+      ixml version '1.0'.
+      P:["B"-"D"].  
+    </tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result>
+      <tc:assert-xml>
+        <ixml xmlns=""
+          ><prolog
+            ><version string="1.0"
+          /></prolog
+          ><rule name="P"
+            ><alt
+              ><inclusion
+                ><member from="B" to="D"
+              /></inclusion
+            ></alt
+          ></rule
+        ></ixml>
+      </tc:assert-xml>
+      </tc:result>
+    </tc:grammar-test>
+
+    <tc:test-case name="epsilon">
+      <tc:test-string/>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+    <tc:test-case name="B1">
+      <tc:test-string>B</tc:test-string>
+      <tc:result><tc:assert-xml>
+	<P>B</P>
+      </tc:assert-xml></tc:result>
+    </tc:test-case>
+    <tc:test-case name="D">
+      <tc:test-string>D</tc:test-string>
+      <tc:result><tc:assert-xml>
+	<P>D</P>
+      </tc:assert-xml></tc:result>
+    </tc:test-case>
+    <tc:test-case name="b2">
+      <tc:test-string>b</tc:test-string>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+    <tc:test-case name="BCD">
+      <tc:test-string>BCD</tc:test-string>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+  </tc:test-set>
+
+  <tc:test-set name="prolog-2">
+    <tc:created by="jwL" on="2022-05-17"/>
+    <tc:description>
+      <tc:p>A grammar with an incorrect version.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar> ixml version P:["B"-"D"]. </tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result>
+	<tc:assert-not-a-grammar error-code="none"/>
+      </tc:result>
+    </tc:grammar-test>
+
+    <tc:test-case name="epsilon">
+      <tc:test-string/>
+      <tc:result>
+	<tc:assert-not-a-grammar error-code="none"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="B1">
+      <tc:test-string>B</tc:test-string>
+      <tc:result><tc:assert-not-a-grammar error-code="none"/></tc:result>
+    </tc:test-case>
+    <tc:test-case name="BCD">
+      <tc:test-string>BCD</tc:test-string>
+      <tc:result><tc:assert-not-a-grammar error-code="none"/></tc:result>
+    </tc:test-case>
+  </tc:test-set>
+
+  <tc:test-set name="prolog-3">
+    <tc:created by="jwL" on="2022-05-17"/>
+    <tc:description>
+      <tc:p>A grammar with a simple version and a rule named ixml.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar> ixml version "1.0". ixml:["B"-"D"]. </tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result>
+      <tc:assert-xml>
+        <ixml xmlns=""
+          ><prolog
+            ><version string="1.0"
+          /></prolog
+          ><rule name="ixml"
+            ><alt
+              ><inclusion
+                ><member from="B" to="D"
+              /></inclusion
+            ></alt
+          ></rule
+        ></ixml>
+      </tc:assert-xml>
+      </tc:result>
+    </tc:grammar-test>
+
+    <tc:test-case name="epsilon">
+      <tc:test-string/>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+    <tc:test-case name="B1">
+      <tc:test-string>B</tc:test-string>
+      <tc:result><tc:assert-xml>
+	<ixml>B</ixml>
+      </tc:assert-xml></tc:result>
+    </tc:test-case>
+    <tc:test-case name="D">
+      <tc:test-string>D</tc:test-string>
+      <tc:result><tc:assert-xml>
+	<ixml>D</ixml>
+      </tc:assert-xml></tc:result>
+    </tc:test-case>
+    <tc:test-case name="b2">
+      <tc:test-string>b</tc:test-string>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+    <tc:test-case name="BCD">
+      <tc:test-string>BCD</tc:test-string>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+  </tc:test-set>
+
+  <tc:test-set name="prolog-4">
+    <tc:created by="jwL" on="2022-05-17"/>
+    <tc:description>
+      <tc:p>A grammar with a rule that might be mistaken for a version.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar> ixml: version. version: "1.3". </tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result>
+      <tc:assert-xml>
+        <ixml xmlns=""
+          ><rule name="ixml"
+            ><alt
+              ><nonterminal name="version"
+            /></alt
+          ></rule
+          ><rule name="version"
+            ><alt
+              ><literal string="1.3"
+            /></alt
+          ></rule
+        ></ixml>
+      </tc:assert-xml>
+      </tc:result>
+    </tc:grammar-test>
+
+    <tc:test-case name="epsilon">
+      <tc:test-string/>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+    <tc:test-case name="v1.0">
+      <tc:test-string>1.0</tc:test-string>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+    <tc:test-case name="v1.3">
+      <tc:test-string>1.3</tc:test-string>
+      <tc:result><tc:assert-xml>
+	<ixml><version>1.3</version></ixml>
+      </tc:assert-xml></tc:result>
+    </tc:test-case>
+  </tc:test-set>
+
+
+
+
+
+</tc:test-catalog>

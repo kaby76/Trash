@@ -1,0 +1,4 @@
+a: b, c.
+b: c, d.
+c: [1]. {illegal}
+d: .

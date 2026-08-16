@@ -1,0 +1,26 @@
+{ Sample grammar 4, taken from
+
+  http://loup-vaillant.fr/tutorials/earley-parsing/what-and-why
+
+Revisions:
+
+  2018-08-10 : CMSMcQ : correct syntax error caught by DCG parser.
+  2018-03-29 : CMSMcQ : copied from net, translated into ixml
+}
+
+{
+Sum     = Sum     [+-] Product
+        | Product
+Product = Product [*/] Factor
+        | Factor
+Factor  = '(' Sum ')'
+        | Number
+Number  = [0-9]+
+}
+
+Sum: Sum, SOp, Product; Product.
+SOp: ["+"; "-"].
+Product:  Product, POp, Factor; Factor.
+POp: ["*"; "/"].
+Factor: "(", Sum, ")"; Number.
+Number: ["0"-"9"]+.

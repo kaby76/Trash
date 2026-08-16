@@ -1,0 +1,9 @@
+polynomial: f, (plus; minus)*. {4x2+3x-2}
+plus: -"+", -f.
+minus: -"-", -f.
+@power: exp.
+@constant: @n.
+-f: @n, -"x", @power?; constant.
+n: ["0"-"9"]+.
+exp: ("⁰"; "¹"; "²";"³"; "⁴"; "⁵"; "⁶"; "⁷"; "⁸"; "⁹")+.
+

@@ -1,0 +1,478 @@
+<ixml
+   ><rule name='ixml'
+      >: <def
+         ><alt
+            ><nonterminal name='S'
+            />, <repeat1
+               ><nonterminal name='rule'/>+</repeat1
+         ></alt
+      ></def>.</rule
+   ><rule name='rule'
+      >: <def
+         ><alt
+            ><option
+               ><nonterminal name='mark'/>?</option
+            >, <nonterminal name='name'
+            />, <nonterminal name='S'
+            />, <terminal
+               ><quoted dstring=':'
+            /></terminal
+            >, <nonterminal name='S'
+            />, <nonterminal name='def'
+            />, <terminal
+               ><quoted dstring='.'
+            /></terminal
+            >, <nonterminal name='S'
+         /></alt
+      ></def>.</rule
+   ><rule name='def'
+      >: <def
+         ><alt
+            ><repeat1
+               ><nonterminal name='alt'
+               />+<sep
+                  >(<def
+                     ><alt
+                        ><terminal
+                           ><quoted dstring=';'
+                        /></terminal
+                        >, <nonterminal name='S'
+                     /></alt
+                  ></def>)</sep
+            ></repeat1
+         ></alt
+      ></def>.</rule
+   ><rule name='alt'
+      >: <def
+         ><alt
+            ><repeat0
+               ><nonterminal name='term'
+               />*<sep
+                  >(<def
+                     ><alt
+                        ><terminal
+                           ><quoted dstring=','
+                        /></terminal
+                        >, <nonterminal name='S'
+                     /></alt
+                  ></def>)</sep
+            ></repeat0
+         ></alt
+      ></def>.</rule
+   ><rule mark='-' name='term'
+      >: <def
+         ><alt
+            ><nonterminal name='factor'
+         /></alt
+         >; <alt
+            ><nonterminal name='repeat0'
+         /></alt
+         >; <alt
+            ><nonterminal name='repeat1'
+         /></alt
+         >; <alt
+            ><nonterminal name='option'
+         /></alt
+      ></def>.</rule
+   ><rule name='repeat0'
+      >: <def
+         ><alt
+            ><nonterminal name='factor'
+            />, <terminal
+               ><quoted dstring='*'
+            /></terminal
+            >, <nonterminal name='S'
+            />, <option
+               ><nonterminal name='sep'/>?</option
+         ></alt
+      ></def>.</rule
+   ><rule name='sep'
+      >: <def
+         ><alt
+            ><nonterminal name='factor'
+         /></alt
+      ></def>.</rule
+   ><rule name='repeat1'
+      >: <def
+         ><alt
+            ><nonterminal name='factor'
+            />, <terminal
+               ><quoted dstring='+'
+            /></terminal
+            >, <nonterminal name='S'
+            />, <option
+               ><nonterminal name='sep'/>?</option
+         ></alt
+      ></def>.</rule
+   ><rule name='option'
+      >: <def
+         ><alt
+            ><nonterminal name='factor'
+            />, <terminal
+               ><quoted dstring='?'
+            /></terminal
+            >, <nonterminal name='S'
+         /></alt
+      ></def>.</rule
+   ><rule mark='-' name='factor'
+      >: <def
+         ><alt
+            ><nonterminal name='nonterminal'
+         /></alt
+         >; <alt
+            ><nonterminal name='terminal'
+         /></alt
+         >; <alt
+            ><terminal
+               ><quoted dstring='('
+            /></terminal
+            >, <nonterminal name='S'
+            />, <nonterminal name='def'
+            />, <terminal
+               ><quoted dstring=')'
+            /></terminal
+            >, <nonterminal name='S'
+         /></alt
+      ></def>.</rule
+   ><rule name='nonterminal'
+      >: <def
+         ><alt
+            ><option
+               ><nonterminal name='mark'/>?</option
+            >, <nonterminal name='name'
+            />, <nonterminal name='S'
+         /></alt
+      ></def>.</rule
+   ><rule name='terminal'
+      >: <def
+         ><alt
+            ><option
+               ><nonterminal name='mark'/>?</option
+            >, (<def
+               ><alt
+                  ><nonterminal name='quoted'
+               /></alt
+               >; <alt
+                  ><nonterminal name='hex'
+               /></alt
+               >; <alt
+                  ><nonterminal name='charset'
+               /></alt
+               >; <alt
+                  ><nonterminal name='exclude'
+               /></alt
+            ></def>)</alt
+      ></def>.</rule
+   ><rule name='charset'
+      >: <def
+         ><alt
+            ><terminal
+               ><quoted dstring='['
+            /></terminal
+            >, <nonterminal name='S'
+            />,  <repeat1
+               ><nonterminal name='element'
+               />+<sep
+                  >(<def
+                     ><alt
+                        ><terminal
+                           ><quoted dstring=';'
+                        /></terminal
+                        >, <nonterminal name='S'
+                     /></alt
+                  ></def>)</sep
+            ></repeat1
+            >, <terminal
+               ><quoted dstring=']'
+            /></terminal
+            >, <nonterminal name='S'
+         /></alt
+      ></def>.</rule
+   ><rule name='exclude'
+      >: <def
+         ><alt
+            ><terminal
+               ><quoted dstring='~'
+            /></terminal
+            >, <nonterminal name='S'
+            />, <nonterminal mark='-' name='charset'
+         /></alt
+      ></def>.</rule
+   ><rule mark='-' name='element'
+      >: <def
+         ><alt
+            ><nonterminal name='range'
+         /></alt
+         >; <alt
+            ><nonterminal name='character'
+            />, <nonterminal name='S'
+         /></alt
+         >; <alt
+            ><nonterminal name='class'
+            />, <nonterminal name='S'
+         /></alt
+      ></def>.</rule
+   ><rule name='range'
+      >: <def
+         ><alt
+            ><nonterminal name='from'
+            />, <nonterminal name='S'
+            />, <terminal
+               ><quoted dstring='-'
+            /></terminal
+            >, <nonterminal name='S'
+            />, <nonterminal name='to'
+            />, <nonterminal name='S'
+         /></alt
+      ></def>.</rule
+   ><rule mark='@' name='from'
+      >: <def
+         ><alt
+            ><nonterminal name='character'
+         /></alt
+      ></def>.</rule
+   ><rule mark='@' name='to'
+      >: <def
+         ><alt
+            ><nonterminal name='character'
+         /></alt
+      ></def>.</rule
+   ><rule name='class'
+      >: <def
+         ><alt
+            ><nonterminal name='letter'
+            />, <nonterminal name='letter'
+         /></alt
+      ></def
+      >. <comment>{One of the Unicode character classes}</comment
+   ></rule
+   ><rule mark='@' name='name'
+      >: <def
+         ><alt
+            ><nonterminal name='letgit'
+            />, <repeat0
+               ><nonterminal name='xletter'/>*</repeat0
+         ></alt
+      ></def>.</rule
+   ><rule mark='-' name='letgit'
+      >: <def
+         ><alt
+            ><nonterminal name='letter'
+         /></alt
+         >; <alt
+            ><nonterminal name='digit'
+         /></alt
+      ></def>.</rule
+   ><rule mark='-' name='letter'
+      >: <def
+         ><alt
+            ><terminal
+               ><charset
+                  >[<range from='"a"' to='"z"'>-</range
+                  >; <range from='"A"' to='"Z"'>-</range>]</charset
+            ></terminal
+         ></alt
+      ></def>.</rule
+   ><rule mark='-' name='digit'
+      >: <def
+         ><alt
+            ><terminal
+               ><charset
+                  >[<range from='"0"' to='"9"'>-</range>]</charset
+            ></terminal
+         ></alt
+      ></def>.</rule
+   ><rule mark='-' name='xletter'
+      >: <def
+         ><alt
+            ><nonterminal name='letgit'
+         /></alt
+         >; <alt
+            ><terminal
+               ><quoted dstring='-'
+            /></terminal
+         ></alt
+      ></def>.</rule
+   ><rule mark='@' name='mark'
+      >: <def
+         ><alt
+            ><terminal
+               ><quoted dstring='@'
+            /></terminal
+            >, <nonterminal name='S'
+         /></alt
+         >; <alt
+            ><terminal
+               ><quoted dstring='^'
+            /></terminal
+            >, <nonterminal name='S'
+         /></alt
+         >; <alt
+            ><terminal
+               ><quoted dstring='-'
+            /></terminal
+            >, <nonterminal name='S'
+         /></alt
+      ></def>.</rule
+   ><rule name='quoted'
+      >: <def
+         ><alt
+            ><terminal mark='-'
+               ><quoted sstring='"'
+            /></terminal
+            >, <nonterminal name='dstring'
+            />, <terminal mark='-'
+               ><quoted sstring='"'
+            /></terminal
+            >, <nonterminal name='S'
+         /></alt
+         >; <alt
+            ><terminal mark='-'
+               ><quoted dstring='&apos;'
+            /></terminal
+            >, <nonterminal name='sstring'
+            />, <terminal mark='-'
+               ><quoted dstring='&apos;'
+            /></terminal
+            >, <nonterminal name='S'
+         /></alt
+      ></def>.</rule
+   ><rule mark='@' name='dstring'
+      >: <def
+         ><alt
+            ><repeat1
+               ><nonterminal name='dchar'/>+</repeat1
+         ></alt
+      ></def>.</rule
+   ><rule mark='@' name='sstring'
+      >: <def
+         ><alt
+            ><repeat1
+               ><nonterminal name='schar'/>+</repeat1
+         ></alt
+      ></def>.</rule
+   ><rule name='dchar'
+      >: <def
+         ><alt
+            ><terminal
+               ><exclude>~['<schar>"</schar>']</exclude
+            ></terminal
+         ></alt
+         >; <alt
+            ><terminal
+               ><quoted sstring='""'
+            /></terminal
+         ></alt
+      ></def
+      >. <comment>{all characters, dquotes must be doubled}</comment
+   ></rule
+   ><rule name='schar'
+      >: <def
+         ><alt
+            ><terminal
+               ><exclude
+                  >~["<dchar>'</dchar>"]</exclude
+            ></terminal
+         ></alt
+         >; <alt
+            ><terminal
+               ><quoted dstring='&apos;&apos;'
+            /></terminal
+         ></alt
+      ></def
+      >. <comment>{all characters, squotes must be doubled}</comment
+   ></rule
+   ><rule mark='-' name='character'
+      >: <def
+         ><alt
+            ><terminal
+               ><quoted sstring='"'
+            /></terminal
+            >, <nonterminal name='dchar'
+            />, <terminal
+               ><quoted sstring='"'
+            /></terminal
+         ></alt
+         >; <alt
+            ><terminal
+               ><quoted dstring='&apos;'
+            /></terminal
+            >, <nonterminal name='schar'
+            />, <terminal
+               ><quoted dstring='&apos;'
+            /></terminal
+         ></alt
+         >; <alt
+            ><nonterminal name='hex'
+         /></alt
+      ></def>.</rule
+   ><rule name='hex'
+      >: <def
+         ><alt
+            ><terminal
+               ><quoted dstring='#'
+            /></terminal
+            >, <nonterminal name='number'
+         /></alt
+      ></def>.</rule
+   ><rule name='number'
+      >: <def
+         ><alt
+            ><repeat1
+               ><nonterminal name='hexit'/>+</repeat1
+         ></alt
+      ></def>.</rule
+   ><rule mark='-' name='hexit'
+      >: <def
+         ><alt
+            ><nonterminal name='digit'
+         /></alt
+         >; <alt
+            ><terminal
+               ><charset
+                  >[<range from='"a"' to='"f"'>-</range
+                  >; <range from='"A"' to='"F"'>-</range>]</charset
+            ></terminal
+         ></alt
+      ></def>.</rule
+   ><rule mark='-' name='S'
+      >: <def
+         ><alt
+            ><repeat0
+               >(<def
+                  ><alt
+                     ><terminal
+                        ><quoted dstring=' '
+                     /></terminal
+                  ></alt
+                  >; <alt
+                     ><nonterminal name='comment'
+                  /></alt
+               ></def>)*</repeat0
+         ></alt
+      ></def>.</rule
+   ><rule name='comment'
+      >: <def
+         ><alt
+            ><terminal
+               ><quoted dstring='{'
+            /></terminal
+            >, <repeat0
+               ><nonterminal name='cchar'/>*</repeat0
+            >, <terminal
+               ><quoted dstring='}'
+            /></terminal
+         ></alt
+      ></def>.</rule
+   ><rule mark='-' name='cchar'
+      >: <def
+         ><alt
+            ><terminal
+               ><exclude
+                  >~["<dchar>}</dchar>"]</exclude
+            ></terminal
+         ></alt
+      ></def
+      >.<comment>{the end}</comment
+   ></rule
+></ixml>

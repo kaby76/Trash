@@ -1,0 +1,2018 @@
+<tc:test-catalog xmlns:tc="https://github.com/invisibleXML/ixml/test-catalog"
+		 xmlns:ixml="http://invisiblexml.org/NS"
+		 name="Misc tests"
+		 release-date="2022-06-13"
+		 >
+  <tc:description>
+    <tc:p>Grammars 1-20.</tc:p>
+    <tc:p>Tests compiled manually in 2018 and 2019, re-packaged in 2022.</tc:p>
+    <tc:p>Moved to ixml test collection, June 2022.</tc:p>
+  </tc:description>
+
+  <tc:test-set name="sample.grammar.01">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+    <tc:description>
+      <tc:p>The one used in MSM's Balisage 2017 talk about the
+      Earley algorithm.</tc:p>
+      <tc:p>The language recognized is left-recursive expressions
+      using + and - as operators and a and b as operands.</tc:p>
+    </tc:description>
+    
+    <tc:ixml-grammar>E: E, Q, F; F.  F: 'a'; 'b'. Q: '+'; '-'.</tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result>
+	<tc:assert-xml>
+	<ixml
+	  ><rule name="E"
+	    ><alt
+	      ><nonterminal name="E"
+	      /><nonterminal name="Q"
+	      /><nonterminal name="F"
+	    /></alt
+	    ><alt><nonterminal name="F"/></alt
+	  ></rule
+	  ><rule name="F"
+	    ><alt><literal string="a"/></alt
+	    ><alt><literal string="b"/></alt
+	  ></rule
+	  ><rule name="Q"
+	    ><alt><literal string="+"/></alt
+	    ><alt><literal string="-"/></alt
+	  ></rule
+	></ixml>
+      </tc:assert-xml>
+      </tc:result>
+    </tc:grammar-test>
+    
+    <tc:test-case name="g01.c01">
+      <!-- <accept s="a"/> -->
+      <tc:test-string>a</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <E><F>a</F></E>
+	</tc:assert-xml>
+      </tc:result>
+    </tc:test-case>    
+    <tc:test-case name="g01.c02">
+      <!-- <accept s="a+b"/> -->
+      <tc:test-string>a+b</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <E><E><F>a</F></E><Q>+</Q><F>b</F></E>
+	</tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g01.c03">
+      <tc:test-string>a-b+a</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <E><E><E><F>a</F></E><Q>-</Q><F>b</F></E><Q>+</Q><F>a</F></E>
+	</tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g01.r04">
+      <tc:test-string>42</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g01.r05">
+      <tc:test-string>a*b/a</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g01.r06">
+      <tc:test-string>x-y+z</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g01.r07">
+      <tc:test-string>-a</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g01.r08">
+      <tc:test-string>a++</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g01.r09">
+      <tc:test-string>a-(b-a)</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+  </tc:test-set>
+  
+  <tc:test-set name="sample.grammar.02">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+    <tc:description>
+      <tc:p>An attempt to force a prediction to be added after its
+      completion when items are queued in the obvious way. Tests
+      whether the parser handles the situation correctly; it can
+      handle completion items repeatedly, or it can add null
+      predictions earlier, or it can check each newly predicted item
+      to see if it has already been completed.</tc:p>
+      <tc:p>L(G) = {'', 'a', 'aa' }, 'a' is ambiguous.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar>
+      S: X, X.
+      X: 'a'; .
+    </tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result><tc:assert-xml>
+      <ixml
+	><rule name="S"
+	  ><alt
+	    ><nonterminal name="X"
+	    /><nonterminal name="X"
+	  /></alt
+	></rule
+	><rule name="X"
+	  ><alt
+	    ><literal string="a"
+	  /></alt
+	  ><alt
+	/></rule
+	></ixml>
+      </tc:assert-xml></tc:result>
+    </tc:grammar-test>
+    <tc:test-case name="g02.c01">
+      <tc:test-string/>
+      <tc:result>
+	<tc:assert-xml>
+	  <S><X/><X/></S>
+	</tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g02.c02">
+      <tc:test-string>a</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><X>a</X><X/></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><X/><X>a</X></S>
+	</tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g02.c03">
+      <tc:test-string>aa</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <S><X>a</X><X>a</X></S>	  
+	</tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g02.r04">
+      <tc:test-string>b</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g02.r05">
+      <tc:test-string>aaa</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+  </tc:test-set>
+  
+  <tc:test-set name="sample.grammar.02b">
+    <tc:created on="2022-02-09" by="cmsmcq"/>
+    <tc:description>
+      <tc:p>Original form of grammar 02:  structurally sound
+      but violates the rule against multiple rules for the
+      same nonterminal as well as the rule against
+      undefined nonterminals.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar>S: X, X. X: a. X: .</tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result><tc:assert-not-a-grammar error-code="S03"/></tc:result>
+    </tc:grammar-test>
+  </tc:test-set>
+  
+  <tc:test-set name="sample.grammar.02c">
+    <tc:created on="2022-02-09" by="cmsmcq"/>
+    <tc:description>
+      <tc:p>Variant form of grammar 02:  structurally sound
+      but violates the rule against multiple rules for the
+      same nonterminal.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar>S: X, X. X: 'a'. X: .</tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result><tc:assert-not-a-grammar error-code="S03"/></tc:result>
+    </tc:grammar-test>
+  </tc:test-set>
+
+  <tc:test-set name="sample.grammar.02d">
+    <tc:created on="2022-02-09" by="cmsmcq"/>
+    <tc:description>
+      <tc:p>Variant form of grammar 02:  structurally sound
+      but violates the rule against undeclared nonterminals
+      (or possibly the rule against unquoted literals).</tc:p>
+    </tc:description>
+    <tc:ixml-grammar>S: X, X. X: a; .</tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result><tc:assert-not-a-grammar error-code="S02"/></tc:result>
+    </tc:grammar-test>
+  </tc:test-set>
+  
+  <tc:test-set name="sample.grammar.03">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+    <tc:description>
+      <tc:p>A toy fragment of CSS from one of Steven Pemberton's talks.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar-ref href="grammars/sample.grammar.03.ixml"/>
+    <tc:grammar-test>
+      <tc:result>
+	<tc:assert-xml-ref href="parse-trees/sample.grammar.03.ixml.xml"/>
+      </tc:result>
+    </tc:grammar-test>
+    <tc:test-case name="g03.c01">
+      <tc:test-string>p{}</tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="parse-trees/g03.c01.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g03.c02">
+      <tc:test-string>p{a:x}</tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="parse-trees/g03.c02.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g03.c03">
+      <tc:test-string>q{b:y;b2:z;xyz:x}</tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="parse-trees/g03.c03.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g03.c04">
+      <tc:test-string>p{a:x}q{b:y;b2:z;xyz:x}</tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="parse-trees/g03.c04.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g03.r05">
+      <tc:test-string>p</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g03.r06">
+      <tc:test-string>a:x</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g03.r07">
+      <tc:test-string>{a:x}</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g03.r08">
+      <tc:test-string>p{a x}</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g03.r09">
+      <tc:test-string>q{b:y;b2:z,xyz:x}</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g03.r10">
+      <tc:test-string>q{b:y;b2=z;xyz:x}</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g03.r11">
+      <tc:test-string>q{b:y b2:z xyz:x}</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g03.r12">
+      <tc:test-string>p{a:x};q{b:y;b2:z;xyz:x}</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+  </tc:test-set>
+  
+  <tc:test-set name="sample.grammar.04">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+    <tc:description>
+      <tc:p>A more or less conventional grammar for four-operation
+      arithmetic expressions over literal integers, from Loup
+      Vaillant's tutorial on Earley parsing.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar-ref href="grammars/sample.grammar.04.ixml"/>
+    <tc:grammar-test>
+      <tc:result>
+	<tc:assert-xml>
+	  <ixml
+            ><comment> Sample grammar 4, taken from
+
+  http://loup-vaillant.fr/tutorials/earley-parsing/what-and-why
+
+Revisions:
+
+  2018-08-10 : CMSMcQ : correct syntax error caught by DCG parser.
+  2018-03-29 : CMSMcQ : copied from net, translated into ixml
+</comment
+            ><comment>
+Sum     = Sum     [+-] Product
+        | Product
+Product = Product [*/] Factor
+        | Factor
+Factor  = '(' Sum ')'
+        | Number
+Number  = [0-9]+
+</comment
+            ><rule name="Sum"
+              ><alt
+		><nonterminal name="Sum"
+		/><nonterminal name="SOp"
+		/><nonterminal name="Product"
+              /></alt
+              ><alt
+		><nonterminal name="Product"
+              /></alt
+            ></rule
+            ><rule name="SOp"
+              ><alt
+		><inclusion
+		  ><member string="+"
+		  /><member string="-"
+		/></inclusion
+              ></alt
+            ></rule
+            ><rule name="Product"
+              ><alt
+		><nonterminal name="Product"
+		/><nonterminal name="POp"
+		/><nonterminal name="Factor"
+              /></alt
+              ><alt
+		><nonterminal name="Factor"
+              /></alt
+            ></rule
+            ><rule name="POp"
+              ><alt
+		><inclusion
+		  ><member string="*"
+		  /><member string="/"
+		/></inclusion
+              ></alt
+            ></rule
+            ><rule name="Factor"
+              ><alt
+		><literal string="("
+		/><nonterminal name="Sum"
+		/><literal string=")"
+              /></alt
+              ><alt
+		><nonterminal name="Number"
+              /></alt
+            ></rule
+            ><rule name="Number"
+              ><alt
+		><repeat1
+		  ><inclusion
+                    ><member from="0" to="9"
+		  /></inclusion
+		></repeat1
+              ></alt
+            ></rule
+	  ></ixml>
+	</tc:assert-xml>
+      </tc:result>
+    </tc:grammar-test>
+    <tc:test-case name="g04.c01">
+      <tc:test-string>0</tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="parse-trees/g04.c01.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g04.c02">
+      <tc:test-string>42</tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="parse-trees/g04.c02.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g04.c03">
+      <tc:test-string>42-3</tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="parse-trees/g04.c03.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g04.c04">
+      <tc:test-string>42*3-7</tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="parse-trees/g04.c04.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g04.c05">
+      <tc:test-string>42-3/7</tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="parse-trees/g04.c05.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g04.c06">
+      <tc:test-string>(42-3)/7</tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="parse-trees/g04.c06.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g04.c07">
+      <tc:test-string>((42-3)/7)</tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="parse-trees/g04.c07.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g04.c08">
+      <tc:test-string>((((42)-((3)))/7))</tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="parse-trees/g04.c08.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <!--* that last accept with nested parens takes 9 seconds
+	to accept, with the version of Earley0 of 6 April 2018.
+	That may be a sign.
+	*-->
+    <tc:test-case name="g04.r09">
+      <tc:test-string>x</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g04.r10">
+      <tc:test-string>-</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g04.r11">
+      <tc:test-string>-42</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g04.r12">
+      <tc:test-string>42=3</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g04.r13">
+      <tc:test-string>42-3div7</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g04.r14">
+      <tc:test-string>(42-3)/7)</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g04.r15">
+      <tc:test-string>(((42-3)/7)</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>    
+  </tc:test-set>
+  
+  <tc:test-set name="sample.grammar.05">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+    <tc:description>
+      <tc:p>From Loup Vaillant, illustrating the same sequencing issue as
+      grammar 2, I think.</tc:p>
+      <tc:p>L(G) = {''}.</tc:p>
+    </tc:description>
+    <!-- Two versions in slightly different styles. -->
+    <!-- <tc:ixml-grammar>A: . A: B. B: A.</tc:ixml-grammar> -->
+    <!-- <tc:ixml-grammar>A: (); B. B: A.</tc:ixml-grammar> -->
+    <tc:ixml-grammar>A: ; B. B: A.</tc:ixml-grammar> 
+    <tc:grammar-test>
+      <tc:result>
+	<tc:assert-xml>
+	  <ixml
+	    ><rule name="A"><alt/><alt><nonterminal name="B"/></alt></rule
+	    ><rule name="B"><alt><nonterminal name="A"/></alt></rule
+	  ></ixml>
+	</tc:assert-xml>
+	<!-- 
+	<tc:assert-xml>
+	  <ixml
+	    ><rule name="A"><alt><alts><alt/></alts></alt><alt><nonterminal name="B"/></alt></rule
+	    ><rule name="B"><alt><nonterminal name="A"/></alt></rule
+	  ></ixml>
+	</tc:assert-xml> -->
+      </tc:result>
+    </tc:grammar-test>
+    <tc:test-case name="g05.c01">
+      <tc:test-string/>
+      <tc:result>
+	<tc:assert-xml>
+	  <A ixml:state="ambiguous"/>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <A ixml:state="ambiguous"><B><A/></B></A>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <A ixml:state="ambiguous"><B><A><B><A/></B></A></B></A>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <A ixml:state="ambiguous"><B><A><B><A><B><A/></B></A></B></A></B></A>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <A ixml:state="ambiguous"><B><A><B><A><B><A><B><A/></B></A></B></A></B></A></B></A>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <A ixml:state="ambiguous"><B><A><B><A><B><A><B><A><B><A/></B></A></B></A></B></A></B></A></B></A>
+	</tc:assert-xml>
+	<!-- ... etc. -->
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g05.r01">
+      <tc:test-string>a</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+  </tc:test-set>
+  
+  <tc:test-set name="sample.grammar.06">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+    <tc:description>
+      <tc:p>Infinite parse trees without empty RHS.</tc:p>
+      <tc:p>L(G) = {'a', 'b'}.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar>S: A; B. A: "a"; B. B: A; "b".</tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result>
+	<tc:assert-xml>
+	  <ixml
+	      ><rule name="S"><alt><nonterminal name="A"/></alt><alt><nonterminal name="B"/></alt></rule
+	      ><rule name="A"><alt><literal string="a"/></alt><alt><nonterminal name="B"/></alt></rule
+	      ><rule name="B"><alt><nonterminal name="A"/></alt><alt><literal string="b"/></alt></rule
+	  ></ixml>
+	</tc:assert-xml>
+      </tc:result>
+    </tc:grammar-test>
+    <tc:test-case name="g06.r01">
+      <tc:test-string/>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+    <tc:test-case name="g06.c02">
+      <tc:test-string>a</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><A>a</A></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><B><A>a</A></B></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><A><B><A>a</A></B></A></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><B><A><B><A>a</A></B></A></B></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><A><B><A><B><A>a</A></B></A></B></A></S>
+	</tc:assert-xml>
+	<!-- ... etc. ... -->
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g06.c03">
+      <tc:test-string>b</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><B>b</B></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><A><B>b</B></A></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><B><A><B>b</B></A></B></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><A><B><A><B>b</B></A></B></A></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><B><A><B><A><B>b</B></A></B></A></B></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><A><B><A><B><A><B>b</B></A></B></A></B></A></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><B><A><B><A><B><A><B>b</B></A></B></A></B></A></B></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><A><B><A><B><A><B><A><B>b</B></A></B></A></B></A></B></A></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><B><A><B><A><B><A><B><A><B>b</B></A></B></A></B></A></B></A></B></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><A><B><A><B><A><B><A><B><A><B>b</B></A></B></A></B></A></B></A></B></A></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><B><A><B><A><B><A><B><A><B><A><B>b</B></A></B></A></B></A></B></A></B></A></B></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><A><B><A><B><A><B><A><B><A><B><A><B>b</B></A></B></A></B></A></B></A></B></A></B></A></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><B><A><B><A><B><A><B><A><B><A><B><A><B>b</B></A></B></A></B></A></B></A></B></A></B></A></B></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><A><B><A><B><A><B><A><B><A><B><A><B><A><B>b</B></A></B></A></B></A></B></A></B></A></B></A></B></A></S>
+	</tc:assert-xml>
+	<!-- ... etc. ... -->
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g06.r04">
+      <tc:test-string>c</tc:test-string>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+    <tc:test-case name="g06.r05">
+      <tc:test-string>ab</tc:test-string>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+    <tc:test-case name="g06.r06">
+      <tc:test-string>aa</tc:test-string>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+  </tc:test-set>
+  
+  <tc:test-set name="sample.grammar.07">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+    <tc:description>
+      <tc:p>Trivial left-recursive grammar, from Loup Vaillant and
+      Grune/Jacobs.</tc:p>
+      <tc:p>L(G) = {'', 'a', 'aa', 'aaa', ... } = regex a*.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar>A: A, "a"; .</tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result><tc:assert-xml>
+	<ixml
+	    ><rule name="A"
+              ><alt><nonterminal name="A"/><literal string="a"/></alt
+              ><alt
+            /></rule
+	  ></ixml>
+	</tc:assert-xml></tc:result>
+    </tc:grammar-test>
+    <tc:test-case name="g07c01">
+      <tc:test-string/>
+      <tc:result>
+	<tc:assert-xml><A/></tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g07c02">
+      <tc:test-string>a</tc:test-string>
+      <tc:result>
+	<tc:assert-xml><A><A/>a</A></tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g07c03">
+      <tc:test-string>aa</tc:test-string>
+      <tc:result>
+	<tc:assert-xml><A><A><A/>a</A>a</A></tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g07r04">
+      <tc:test-string>b</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+  </tc:test-set>
+  
+  <tc:test-set name="sample.grammar.08">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+    <tc:description>
+      <tc:p>Trivial right-recursive grammar, from Loup Vaillant and
+      Grune/Jacobs. Unless they use Leo's optimization (or some
+      other clever technique I haven't heard of), Earley parsers
+      will take quadratic time and space on this.</tc:p>
+      <tc:p>L(G) = {'', 'a', 'aa', 'aaa', ... } = regex a*.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar>A: "a", A; .</tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result>
+	<tc:assert-xml>
+	  <ixml
+            ><rule name="A"
+              ><alt
+		><literal string="a"
+		/><nonterminal name="A"
+              /></alt
+              ><alt
+            /></rule
+	  ></ixml>
+	</tc:assert-xml>
+      </tc:result>
+    </tc:grammar-test>
+    <tc:test-case name="g08c01">
+      <tc:test-string/>
+      <tc:result>
+	<tc:assert-xml><A/></tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g08c02">
+      <tc:test-string>a</tc:test-string>
+      <tc:result>
+	<tc:assert-xml><A>a<A/></A></tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g08c03">
+      <tc:test-string>aa</tc:test-string>
+      <tc:result>
+	<tc:assert-xml><A>a<A>a<A/></A></A></tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g08r04">
+      <tc:test-string>b</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g08c05">
+      <tc:test-string>aaaa</tc:test-string>
+      <tc:result>
+	<tc:assert-xml><A>a<A>a<A>a<A>a<A/></A></A></A></A></tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+  </tc:test-set>
+    
+  <tc:test-set name="sample.grammar.09">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+    <tc:modified on="2022-02-18" by="cmsmcq"
+		 change="Corrected typo in grammar, supplied missing Block"/>
+    <tc:description>
+      <tc:p>Toy if-then-else ambiguity from Loup Vaillant.</tc:p>
+      <tc:p>Also illustrates use of character numbers.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar>
+      Block: "{}", S; If.
+      If: "if", S, Block; "if", S, Block, "else", S, Block.
+      S: [" "; #0A; #0D; #09]*.
+    </tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result>
+	<tc:assert-xml>
+	  <ixml
+            ><rule name="Block"
+              ><alt
+		><literal string="{}"
+		/><nonterminal name="S"
+              /></alt
+              ><alt
+		><nonterminal name="If"
+              /></alt
+            ></rule
+            ><rule name="If"
+              ><alt
+		><literal string="if"
+		/><nonterminal name="S"
+		/><nonterminal name="Block"
+              /></alt
+              ><alt
+		><literal string="if"
+		/><nonterminal name="S"
+		/><nonterminal name="Block"
+		/><literal string="else"
+		/><nonterminal name="S"
+		/><nonterminal name="Block"
+              /></alt
+            ></rule
+            ><rule name="S"
+              ><alt
+		><repeat0
+		  ><inclusion
+                    ><member string=" "
+                    /><member hex="0A"
+                    /><member hex="0D"
+                    /><member hex="09"
+		  /></inclusion
+		></repeat0
+              ></alt
+            ></rule
+	  ></ixml>
+	</tc:assert-xml>
+      </tc:result>
+    </tc:grammar-test>
+    <tc:test-case name="g09r01">
+      <tc:test-string></tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g09c02">
+      <tc:test-string>{}</tc:test-string>
+      <tc:result>
+	<tc:assert-xml><Block>{}<S/></Block></tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g09c03">
+      <tc:test-string>if {}</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <Block
+              ><If>if<S> </S
+                  ><Block>{}<S
+                  /></Block
+              ></If
+	  ></Block>
+	</tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g09c04">
+      <tc:test-string>if {} else {}</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <Block
+	    ><If>if<S> </S
+	    ><Block>{}<S> </S
+	    ></Block>else<S> </S
+	    ><Block>{}<S
+	    /></Block
+	    ></If
+	  ></Block>
+	</tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g09c05">
+      <tc:test-string>if{}else{}</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <Block
+	    ><If>if<S
+	    /><Block>{}<S
+	    /></Block>else<S
+	    /><Block>{}<S
+	    /></Block
+	    ></If
+	  ></Block>
+	</tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g09c06">
+      <tc:test-string>if{}elseif{}else {}  </tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <Block
+	    ><If>if<S
+	    /><Block>{}<S
+	    /></Block>else<S
+	    /><Block
+	      ><If>if<S
+              /><Block>{}<S
+              /></Block>else<S> </S
+              ><Block>{}<S>  </S
+              ></Block
+	      ></If
+	    ></Block
+	    ></If
+	  ></Block>
+	</tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+  </tc:test-set>
+    
+  <tc:test-set name="sample.grammar.10">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+      <tc:description>
+	<tc:p>Infinite ambiguity (loop).</tc:p>
+	<tc:p>L(G) = {''}.</tc:p>
+      </tc:description>
+      <tc:ixml-grammar>A: A; .</tc:ixml-grammar>
+      <tc:grammar-test>
+	<tc:result>
+	  <tc:assert-xml
+	    ><ixml
+              ><rule name="A"
+		><alt
+		  ><nonterminal name="A"
+		/></alt
+		><alt
+              /></rule
+	    ></ixml>
+      </tc:assert-xml>
+	</tc:result>
+      </tc:grammar-test>
+      <tc:test-case name="g10c01">
+	<tc:test-string/>
+	<tc:result>
+	  <tc:assert-xml><A ixml:state="ambiguous"/></tc:assert-xml>
+	  <tc:assert-xml><A ixml:state="ambiguous"><A/></A></tc:assert-xml>
+	  <tc:assert-xml><A ixml:state="ambiguous"><A><A/></A></A></tc:assert-xml>
+	  <tc:assert-xml>
+	    <A ixml:state="ambiguous"><A><A><A/></A></A></A>
+	  </tc:assert-xml>
+	  <tc:assert-xml>
+	    <A ixml:state="ambiguous"><A><A><A><A/></A></A></A></A>
+	  </tc:assert-xml>
+	  <tc:assert-xml>
+	    <A ixml:state="ambiguous"><A><A><A><A><A/></A></A></A></A></A>
+	  </tc:assert-xml>
+	  <tc:assert-xml>
+	    <A ixml:state="ambiguous"><A><A><A><A><A><A/></A></A></A></A></A></A>
+	  </tc:assert-xml>
+	  <tc:assert-xml>
+	    <A ixml:state="ambiguous"><A><A><A><A><A><A><A/></A></A></A></A></A></A></A>
+	  </tc:assert-xml>
+	  <!-- ... etc. ... -->
+	</tc:result>
+      </tc:test-case>
+      <tc:test-case name="g10r02">
+	<tc:test-string>a</tc:test-string>
+	<tc:result>
+	  <tc:assert-not-a-sentence/>
+	</tc:result>
+      </tc:test-case>
+  </tc:test-set>
+    
+  <tc:test-set name="sample.grammar.11">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+      <tc:description>
+	<tc:p>Lots of infinite ambiguity.</tc:p>
+	<tc:p>L(G) is the set of strings matching the regex
+	"(x|y|z)*", grouped arbitrarily into nodes labeled
+	A, B, and C, with an S node at the root.</tc:p>
+      </tc:description>
+      <tc:ixml-grammar>
+	S: (A; B; C)*.
+	A: (A; B; C)*; ["x"; "y"; "z"]*.
+	B: (A; B; C)*; ["x"; "y"; "z"]*.
+	C: (A; B; C)*; ["x"; "y"; "z"]*.
+      </tc:ixml-grammar>
+      <tc:grammar-test>
+	<tc:result>
+	  <tc:assert-xml>
+	    <ixml
+              ><rule name="S"
+		><alt
+		  ><repeat0
+		    ><alts
+                      ><alt
+			><nonterminal name="A"
+                      /></alt
+                      ><alt
+			><nonterminal name="B"
+                      /></alt
+                      ><alt
+			><nonterminal name="C"
+                      /></alt
+		    ></alts
+		  ></repeat0
+		></alt
+              ></rule
+              ><rule name="A"
+		><alt
+		  ><repeat0
+		    ><alts
+                      ><alt
+			><nonterminal name="A"
+                      /></alt
+                      ><alt
+			><nonterminal name="B"
+                      /></alt
+                      ><alt
+			><nonterminal name="C"
+                      /></alt
+		    ></alts
+		  ></repeat0
+		></alt
+		><alt
+		  ><repeat0
+		    ><inclusion
+                      ><member string="x"
+                      /><member string="y"
+                      /><member string="z"
+		    /></inclusion
+		  ></repeat0
+		></alt
+              ></rule
+              ><rule name="B"
+		><alt
+		  ><repeat0
+		    ><alts
+                      ><alt
+			><nonterminal name="A"
+                      /></alt
+                      ><alt
+			><nonterminal name="B"
+                      /></alt
+                      ><alt
+			><nonterminal name="C"
+                      /></alt
+		    ></alts
+		  ></repeat0
+		></alt
+		><alt
+		  ><repeat0
+		    ><inclusion
+                      ><member string="x"
+                      /><member string="y"
+                      /><member string="z"
+		    /></inclusion
+		  ></repeat0
+		></alt
+              ></rule
+              ><rule name="C"
+		><alt
+		  ><repeat0
+		    ><alts
+                      ><alt
+			><nonterminal name="A"
+                      /></alt
+                      ><alt
+			><nonterminal name="B"
+                      /></alt
+                      ><alt
+			><nonterminal name="C"
+                      /></alt
+		    ></alts
+		  ></repeat0
+		></alt
+		><alt
+		  ><repeat0
+		    ><inclusion
+                      ><member string="x"
+                      /><member string="y"
+                      /><member string="z"
+		    /></inclusion
+		  ></repeat0
+		></alt
+              ></rule
+	    ></ixml>
+	  </tc:assert-xml>
+	</tc:result>
+      </tc:grammar-test>
+      <tc:test-case name="g11c01">
+	<tc:test-string/>
+	<tc:result>
+	  <tc:assert-xml><S ixml:state="ambiguous"/></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><A/></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><B/></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><C/></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><A/><A/></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><A/><B/></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><A/><C/></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><A><A/></A></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><A><B/></A></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><A><C/></A></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><B/><A/></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><B/><B/></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><B/><C/></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><B><A/></B></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><B><B/></B></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><B><C/></B></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><C/><A/></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><C/><B/></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><C/><C/></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><C><A/></C></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><C><B/></C></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><C><C/></C></S></tc:assert-xml>
+	  <tc:assert-xml>
+	    <S ixml:state="ambiguous"
+	       ><B><C><A><C><B><A/></B></C></A></C></B
+            ></S>
+	  </tc:assert-xml>
+	  <!-- ... etc. ... -->
+	</tc:result>
+      </tc:test-case>
+      <tc:test-case name="g11c02">
+	<tc:test-string>x</tc:test-string>
+	<tc:result>
+	  <tc:assert-xml><S ixml:state="ambiguous"><A>x</A></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><B>x</B></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><C>x</C></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><A>x</A><A/></S></tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><B><A><C><A><B>x</B></A></C></A></B></S></tc:assert-xml>
+	  <tc:assert-xml>	    
+	    <S ixml:state="ambiguous"><B><B><B><A><B><B><C>x</C></B></B></A></B></B></B></S>
+	  </tc:assert-xml>
+	  <tc:assert-xml>
+	    <S ixml:state="ambiguous"
+               ><B><B><C>x</C></B></B
+            ></S>
+	  </tc:assert-xml>
+          <tc:assert-xml>
+            <S ixml:state="ambiguous"
+               ><B/><A><A>x</A><C/></A
+               ></S>
+          </tc:assert-xml>
+          <tc:assert-xml>
+            <S ixml:state="ambiguous"
+               ><A/><B>x</B></S>
+          </tc:assert-xml>
+	  <tc:assert-xml><S ixml:state="ambiguous"><B>x</B><C/></S></tc:assert-xml>
+	  <!-- ... etc. ... -->
+	</tc:result>
+      </tc:test-case>
+  </tc:test-set>
+
+  <tc:test-set name="sample.grammar.12">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+    <tc:description>
+      <tc:p>Stripped down version of sample.grammar.11. Lots of
+      ambiguity, but should be slightly less explosive.</tc:p>
+      <tc:p>L(G) is {'a', 'aa', 'aaa', ...}.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar>S: A+.  A: (A, A)+; "a"+.</tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result>
+	<tc:assert-xml>
+	  <ixml
+            ><rule name="S"
+              ><alt
+		><repeat1
+		  ><nonterminal name="A"
+		/></repeat1
+              ></alt
+            ></rule
+            ><rule name="A"
+              ><alt
+		><repeat1
+		  ><alts
+                    ><alt
+                      ><nonterminal name="A"
+                      /><nonterminal name="A"
+                    /></alt
+		  ></alts
+		></repeat1
+              ></alt
+              ><alt
+		><repeat1
+		  ><literal string="a"
+		/></repeat1
+              ></alt
+            ></rule
+	  ></ixml>
+	</tc:assert-xml>
+      </tc:result>
+    </tc:grammar-test>
+    <tc:test-case name="g12.r01">
+      <tc:test-string/>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+    <tc:test-case name="g12.c02">
+      <tc:test-string>a</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <S><A>a</A></S>
+	</tc:assert-xml>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g12.c03">
+      <tc:test-string>aa</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><A>aa</A></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><A>a</A><A>a</A></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><A><A>a</A><A>a</A></A></S>
+	</tc:assert-xml>
+      </tc:result>
+      <tc:app-info tc:desc="parse-forest grammar">
+	<tc:ixml-grammar>
+	  S.0.2 = A.0.1, A.1.2; A.0.2.
+	  A.0.1 = 'a'.
+	  A.1.2 = 'a'.
+	  A.0.2 = 'aa'; A.0.1, A.0.2.
+	</tc:ixml-grammar>
+      </tc:app-info>
+    </tc:test-case>
+    <tc:test-case name="g12.c04">
+      <tc:test-string>aaaa</tc:test-string>
+      <tc:result><tc:assert-xml>
+	<S ixml:state="ambiguous"><A>aaaa</A></S>
+	</tc:assert-xml><tc:assert-xml>
+	<S ixml:state="ambiguous"><A>aaa</A><A>a</A></S>
+	</tc:assert-xml><tc:assert-xml>
+	<S ixml:state="ambiguous"><A>aa</A><A>a</A><A>a</A></S>
+	</tc:assert-xml><tc:assert-xml>
+	<S ixml:state="ambiguous"><A>aa</A><A>aa</A></S>
+	</tc:assert-xml><tc:assert-xml>
+	<S ixml:state="ambiguous"><A>a</A><A>aaa</A></S>
+	</tc:assert-xml><tc:assert-xml>	  
+	<S ixml:state="ambiguous"><A>a</A><A>a</A><A>a</A><A>a</A></S>
+	</tc:assert-xml><tc:assert-xml>
+	<S ixml:state="ambiguous"><A><A>a</A><A>aaa</A></A></S>
+	</tc:assert-xml><!-- ... --><tc:assert-xml>
+	<S ixml:state="ambiguous"><A><A>a</A><A>a</A></A><A><A>a</A><A>a</A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+	<S ixml:state="ambiguous"><A><A><A>a</A><A>a</A></A><A><A>a</A><A>a</A></A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A>a</A><A>a</A><A>a</A><A>a</A></S>
+	</tc:assert-xml><tc:assert-xml>
+	<S ixml:state="ambiguous"><A><A>a</A><A>a</A></A><A>a</A><A>a</A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A>a</A><A>aa</A><A>a</A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A>aa</A><A>a</A></A><A>a</A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A><A>a</A><A>a</A></A><A>a</A></A><A>a</A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A>a</A><A>aa</A></A><A>a</A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A>a</A><A><A>a</A><A>a</A></A></A><A>a</A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A>a</A><A><A>a</A><A>a</A></A><A>a</A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A>aa</A><A>aa</A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A>a</A><A>a</A><A>aa</A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A>a</A><A>a</A></A><A>aa</A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A>a</A><A>aaa</A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A>a</A><A><A>aa</A><A>a</A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A>a</A><A><A><A>a</A><A>a</A></A><A>a</A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A>a</A><A><A>a</A><A>aa</A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A>a</A><A><A>a</A><A><A>a</A><A>a</A></A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A>aaa</A><A>a</A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A>a</A><A>a</A><A>a</A><A>a</A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A><A>aa</A><A>a</A></A><A>a</A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A><A><A>a</A><A>a</A></A><A>a</A></A><A>a</A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A><A>a</A><A>aa</A></A><A>a</A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A><A>a</A><A><A>a</A><A>a</A></A></A><A>a</A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A>aa</A><A>aa</A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A><A>a</A><A>a</A></A><A>aa</A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A>a</A><A>aaa</A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A>a</A><A><A>aa</A><A>a</A></A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A>a</A><A><A><A>a</A><A>a</A></A><A>a</A></A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A>a</A><A><A>a</A><A>aa</A></A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A>a</A><A><A>a</A><A><A>a</A><A>a</A></A></A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A>aa</A><A><A>a</A><A>a</A></A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A><A>a</A><A>a</A></A><A><A>a</A><A>a</A></A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A>aa</A><A><A>a</A><A>a</A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A>a</A><A>a</A><A><A>a</A><A>a</A></A></S>
+	</tc:assert-xml><tc:assert-xml>
+        <S ixml:state="ambiguous"><A><A>a</A><A>a</A></A><A><A>a</A><A>a</A></A></S>	  
+        </tc:assert-xml>
+	<!-- ... -->
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g12.c05">
+      <tc:test-string>aaaaaaaa</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><A>aaaaaaaa</A></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><A><A><A><A>a</A><A>a</A></A
+	  ><A>a</A></A><A>a</A></A><A><A>a</A><A><A>a</A><A
+	  ><A>a</A><A>a</A></A></A></A></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"
+            ><A><A><A><A>a</A><A><A>a</A><A>a</A></A></A><A
+            >a</A></A><A>aa</A></A><A><A>a</A><A>a</A></A></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><A><A><A>a</A><A>aa</A
+            ></A><A><A>a</A><A><A>a</A><A>a</A></A></A></A
+            ><A>aa</A></S>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"
+	     ><A><A><A>a</A><A><A><A>a</A><A>a</A
+             ></A><A>a</A></A></A><A><A><A>a</A><A
+             ><A>a</A><A>a</A></A></A><A>a</A></A
+             ></A
+          ></S>
+	</tc:assert-xml>
+        <tc:assert-xml>
+          <S ixml:state="ambiguous"
+             ><A
+             ><A><A><A>aaaa</A><A>a</A></A
+             ><A>a</A></A><A>a</A></A><A>a</A
+             ></S>
+        </tc:assert-xml>
+        <tc:assert-xml>
+          <S ixml:state="ambiguous"
+             ><A>aaa</A><A><A>a</A><A>a</A
+             ><A><A>a</A><A>a</A></A
+             ><A>a</A></A></S>
+        </tc:assert-xml>
+        <tc:assert-xml>
+          <S ixml:state="ambiguous"
+             ><A>aaaaaa</A
+             ><A>aa</A></S>
+        </tc:assert-xml>
+	<!-- ... -->
+	<tc:assert-xml>
+          <S ixml:state="ambiguous"><A><A><A><A><A>aaa</A
+          ><A>a</A></A><A>a</A></A><A>a</A></A><A>a</A
+          ></A><A>a</A></S>
+	</tc:assert-xml>
+	<!-- ... -->
+	<tc:assert-xml>
+          <S ixml:state="ambiguous"><A><A>a</A><A>a</A></A
+          ><A>aaaaaa</A></S>
+        </tc:assert-xml>
+	<!-- ... -->
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="g12.r06">
+      <tc:test-string>aaaaaaaab</tc:test-string>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+  </tc:test-set>
+    
+  <tc:test-set name="sample.grammar.13">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+    <tc:description>
+      <tc:p>From Grune and Jacobs p. 201, discussion of "parsing by
+      searching".  Lots of indeterminacy.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar>
+      S: "a", S, "b"; 
+         S, "a", "b"; 
+         "a", "a", "a".
+    </tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result>
+	<tc:assert-xml>
+	  <ixml
+            ><rule name="S"
+              ><alt
+		><literal string="a"
+		/><nonterminal name="S"
+		/><literal string="b"
+              /></alt
+              ><alt
+		><nonterminal name="S"
+		/><literal string="a"
+		/><literal string="b"
+              /></alt
+              ><alt
+		><literal string="a"
+		/><literal string="a"
+		/><literal string="a"
+              /></alt
+            ></rule
+	  ></ixml>
+	</tc:assert-xml>
+      </tc:result>
+    </tc:grammar-test>
+    <tc:test-case name="g13c01">
+      <tc:created by="cmsmcq" on="2022-02-18"/>
+      <tc:test-string/>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+    <tc:test-case name="g13c02">
+      <tc:created by="cmsmcq" on="2022-02-18"/>
+      <tc:test-string>a</tc:test-string>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+    <tc:test-case name="g13c03">
+      <tc:created by="cmsmcq" on="2022-02-18"/>
+      <tc:test-string>aa</tc:test-string>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+    <tc:test-case name="g13c04">
+      <tc:created by="cmsmcq" on="2022-02-18"/>
+      <tc:test-string>ab</tc:test-string>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+    <tc:test-case name="g13c05">
+      <tc:created by="cmsmcq" on="2022-02-18"/>
+      <tc:test-string>aaa</tc:test-string>
+      <tc:result><tc:assert-xml>
+	<S>aaa</S>
+      </tc:assert-xml></tc:result>
+    </tc:test-case>
+    <tc:test-case name="g13c06">
+      <tc:created by="cmsmcq" on="2022-02-18"/>
+      <tc:test-string>aaaab</tc:test-string>
+      <tc:result><tc:assert-xml>
+	<S ixml:state="ambiguous">a<S>aaa</S>b</S>
+      </tc:assert-xml><tc:assert-xml>
+	<S ixml:state="ambiguous"><S>aaa</S>ab</S>
+      </tc:assert-xml></tc:result>
+    </tc:test-case>
+    <tc:test-case name="g13c07">
+      <tc:created by="cmsmcq" on="2022-02-18"/>
+      <tc:test-string>aaab</tc:test-string>
+      <tc:result><tc:assert-not-a-sentence/></tc:result>
+    </tc:test-case>
+    <tc:test-case name="g13c08">
+      <tc:created by="cmsmcq" on="2022-02-18"/>
+      <tc:test-string>aaaaabb</tc:test-string>
+      <tc:result><tc:assert-xml>
+	<S ixml:state="ambiguous">a<S>a<S>aaa</S>b</S>b</S>
+      </tc:assert-xml><tc:assert-xml>
+	<S ixml:state="ambiguous">a<S><S>aaa</S>ab</S>b</S>
+      </tc:assert-xml></tc:result>
+    </tc:test-case>
+    <tc:test-case name="g13c09">
+      <tc:created by="cmsmcq" on="2022-02-18"/>
+      <tc:test-string>aaaabab</tc:test-string>
+      <tc:result><tc:assert-xml>
+	<S ixml:state="ambiguous"><S>a<S>aaa</S>b</S>ab</S>
+      </tc:assert-xml><tc:assert-xml>
+	<S ixml:state="ambiguous"><S><S>aaa</S>ab</S>ab</S>
+      </tc:assert-xml></tc:result>
+    </tc:test-case>
+  </tc:test-set>
+  
+  <tc:test-set name="sample.grammar.14">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+    <tc:modified on="2022-02-19" by="cmsmcq"
+		 change="Corrected typo"/>
+      <tc:description>
+	<tc:p>From Grune and Jacobs p. 203, discussion of "parsing by
+	searching".</tc:p>
+      </tc:description>
+      <tc:ixml-grammar>
+	S: E.
+	E: F; E, Q, F.
+	F: "a".
+	Q: "+"; "-".
+      </tc:ixml-grammar>
+      <tc:grammar-test>
+	<tc:result>
+	  <tc:assert-xml>
+	    <ixml
+              ><rule name="S"
+		><alt
+		  ><nonterminal name="E"
+		/></alt
+              ></rule
+              ><rule name="E"
+		><alt
+		  ><nonterminal name="F"
+		/></alt
+		><alt
+		  ><nonterminal name="E"
+		  /><nonterminal name="Q"
+		  /><nonterminal name="F"
+		/></alt
+              ></rule
+              ><rule name="F"
+		><alt
+		  ><literal string="a"
+		/></alt
+              ></rule
+              ><rule name="Q"
+		><alt
+		  ><literal string="+"
+		/></alt
+		><alt
+		  ><literal string="-"
+		/></alt
+              ></rule
+	    ></ixml>
+	  </tc:assert-xml>
+	</tc:result>
+      </tc:grammar-test>
+      <tc:test-case name="g14c01">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string/>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g14c02">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>a</tc:test-string>
+	<tc:result><tc:assert-xml>
+	  <S><E><F>a</F></E></S>
+	</tc:assert-xml></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g14c03">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>b</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g14c04">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>aa</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g14c05">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>2a</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g14c06">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>a+a</tc:test-string>
+	<tc:result><tc:assert-xml>
+	  <S><E><E><F>a</F></E><Q>+</Q><F>a</F></E></S>
+	</tc:assert-xml></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g14c07">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>a+a-a</tc:test-string>
+	<tc:result><tc:assert-xml>
+	  <S><E><E><E><F>a</F></E><Q>+</Q><F>a</F></E><Q>-</Q><F>a</F></E></S>
+	</tc:assert-xml></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g14c08">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>a++</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g14c09">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>a+-b</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+  </tc:test-set>
+    
+  <tc:test-set name="sample.grammar.15">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+      <tc:description>
+	<tc:p>From Grune and Jacobs p. 212, discussion of space and time
+	requirements for Earley parsing.  A grammar "in
+	which almost all non-terminal produce almost all substrings
+	in almost all combinatorially possible ways".
+	</tc:p>
+      </tc:description>
+      <tc:ixml-grammar>S: S, S; "x".</tc:ixml-grammar>
+      <tc:grammar-test>
+	<tc:result>
+	  <tc:assert-xml>
+	    <ixml
+              ><rule name="S"
+		><alt
+		  ><nonterminal name="S"
+		  /><nonterminal name="S"
+		/></alt
+		><alt
+		  ><literal string="x"
+		/></alt
+              ></rule
+	    ></ixml>
+	  </tc:assert-xml>
+	</tc:result>
+      </tc:grammar-test>
+      <tc:test-case name="g15c01">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string/>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g15c02">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>y</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g15c03">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>x</tc:test-string>
+	<tc:result><tc:assert-xml>
+	  <S>x</S>
+	</tc:assert-xml></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g15c04">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>xx</tc:test-string>
+	<tc:result><tc:assert-xml>
+	  <S><S>x</S><S>x</S></S>
+	</tc:assert-xml></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g15c05">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>xxx</tc:test-string>
+	<tc:result><tc:assert-xml>	
+	  <S ixml:state="ambiguous"><S><S>x</S><S>x</S></S><S>x</S></S>
+	</tc:assert-xml><tc:assert-xml>	
+	  <S ixml:state="ambiguous"><S>x</S><S><S>x</S><S>x</S></S></S>	  
+	</tc:assert-xml></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g15c06">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>xxxx</tc:test-string>
+	<tc:result><tc:assert-xml>	
+	  <S ixml:state="ambiguous"><S><S>x</S><S><S>x</S><S>x</S></S></S><S>x</S></S>
+	  </tc:assert-xml><tc:assert-xml>
+	  <S ixml:state="ambiguous"><S><S><S>x</S><S>x</S></S><S>x</S></S><S>x</S></S>
+	  </tc:assert-xml><tc:assert-xml>
+          <S ixml:state="ambiguous"><S><S>x</S><S>x</S></S><S><S>x</S><S>x</S></S></S>
+	  </tc:assert-xml><tc:assert-xml>
+          <S ixml:state="ambiguous"><S>x</S><S><S><S>x</S><S>x</S></S><S>x</S></S></S>
+	  </tc:assert-xml><tc:assert-xml>
+          <S ixml:state="ambiguous"><S>x</S><S><S>x</S><S><S>x</S><S>x</S></S></S></S>
+	</tc:assert-xml>
+	</tc:result>
+      </tc:test-case>
+  </tc:test-set>
+    
+  <tc:test-set name="sample.grammar.16">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+      <tc:description>
+	<tc:p>From Grune and Jacobs p. 216; illustrates potential
+	problems in closure algorithm when epsilon rules are
+	present.</tc:p>
+      </tc:description>
+      <tc:ixml-grammar>
+	S: E.
+	E: E, Q, F; F.
+	F: "a".
+	Q: "*"; "/"; .	  
+      </tc:ixml-grammar>
+      <tc:grammar-test>
+	<tc:result>
+	  <tc:assert-xml>
+	    <ixml
+              ><rule name="S"
+		><alt
+		  ><nonterminal name="E"
+		/></alt
+              ></rule
+              ><rule name="E"
+		><alt
+		  ><nonterminal name="E"
+		  /><nonterminal name="Q"
+		  /><nonterminal name="F"
+		/></alt
+		><alt
+		  ><nonterminal name="F"
+		/></alt
+              ></rule
+              ><rule name="F"
+		><alt
+		  ><literal string="a"
+		/></alt
+              ></rule
+              ><rule name="Q"
+		><alt
+		  ><literal string="*"
+		/></alt
+		><alt
+		  ><literal string="/"
+		/></alt
+		><alt
+              /></rule
+	    ></ixml>
+	  </tc:assert-xml>
+	</tc:result>
+      </tc:grammar-test>
+      <tc:test-case name="g16c01">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string/>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g16c02">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>a</tc:test-string>
+	<tc:result><tc:assert-xml>
+	  <S><E><F>a</F></E></S>
+	</tc:assert-xml></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g16c03">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>b</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g16c04">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>aa</tc:test-string>
+	<tc:result><tc:assert-xml>
+	  <S><E><E><F>a</F></E><Q/><F>a</F></E></S>
+	</tc:assert-xml></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g16c05">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>2a</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g16c06">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>a/a</tc:test-string>
+	<tc:result><tc:assert-xml>
+	  <S><E><E><F>a</F></E><Q>/</Q><F>a</F></E></S>
+	</tc:assert-xml></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g16c07">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>a*a/a</tc:test-string>
+	<tc:result><tc:assert-xml>
+	  <S><E><E><E><F>a</F></E><Q>*</Q><F>a</F></E><Q>/</Q><F>a</F></E></S>
+	</tc:assert-xml></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g16c08">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>a**</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g16c09">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>a//b</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+  </tc:test-set>
+    
+  <tc:test-set name="sample.grammar.17">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+      <tc:description>
+	<tc:p>From Grune and Jacobs p. 217; grammar to illustrate the
+	Aycock/Horspool optimization of Earley. Cf. grammar 2, but
+	this one is shorter. Grune and Jacobs are pretty good at code
+	golf for grammars!</tc:p>
+      </tc:description>
+      <tc:ixml-grammar>S: A, A, "x". A: .</tc:ixml-grammar>
+      <tc:grammar-test>
+	<tc:result>
+	  <tc:assert-xml>
+	    <ixml
+              ><rule name="S"
+		><alt
+		  ><nonterminal name="A"
+		  /><nonterminal name="A"
+		  /><literal string="x"
+		/></alt
+              ></rule
+              ><rule name="A"
+		><alt
+              /></rule
+	    ></ixml>
+	  </tc:assert-xml>
+	</tc:result>
+      </tc:grammar-test>
+      <tc:test-case name="g17c01">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string/>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g17c02">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>x</tc:test-string>
+	<tc:result><tc:assert-xml>
+	  <S><A/><A/>x</S>
+	</tc:assert-xml></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g17c03">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>y</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g17c04">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>xx</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+  </tc:test-set>
+    
+  <tc:test-set name="sample.grammar.18">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+      <tc:description>
+	<tc:p>From Grune and Jacobs p. 221, discussion of epsilon
+	rules (here C, easy to overlook).</tc:p>
+      </tc:description>
+      <tc:ixml-grammar>
+	S: A; A, B; B.
+	A: C.
+	B: D.
+	C: "p"; {nil} .
+	D: "q".
+      </tc:ixml-grammar>
+      <tc:grammar-test>
+	<tc:result>
+	  <tc:assert-xml>
+	    <ixml
+              ><rule name="S"
+		><alt
+		  ><nonterminal name="A"
+		/></alt
+		><alt
+		  ><nonterminal name="A"
+		  /><nonterminal name="B"
+		/></alt
+		><alt
+		  ><nonterminal name="B"
+		/></alt
+              ></rule
+              ><rule name="A"
+		><alt
+		  ><nonterminal name="C"
+		/></alt
+              ></rule
+              ><rule name="B"
+		><alt
+		  ><nonterminal name="D"
+		/></alt
+              ></rule
+              ><rule name="C"
+		><alt
+		  ><literal string="p"
+		/></alt
+		><comment>nil</comment
+		><alt
+              /></rule
+              ><rule name="D"
+		><alt
+		  ><literal string="q"
+		/></alt
+              ></rule
+	    ></ixml>
+	  </tc:assert-xml>
+	</tc:result>
+      </tc:grammar-test>
+      <tc:test-case name="g18c01">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string/>
+	<tc:result><tc:assert-xml>
+	  <S><A><C/></A></S>
+	</tc:assert-xml></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g18c02">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>p</tc:test-string>
+	<tc:result><tc:assert-xml>
+	  <S><A><C>p</C></A></S>
+	</tc:assert-xml></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g18c03">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>q</tc:test-string>
+	<tc:result><tc:assert-xml>
+	  <S ixml:state="ambiguous"><A><C/></A><B><D>q</D></B></S>
+	</tc:assert-xml><tc:assert-xml>
+	  <S ixml:state="ambiguous"><B><D>q</D></B></S>
+	</tc:assert-xml></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g18c04">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>pq</tc:test-string>
+	<tc:result><tc:assert-xml>
+	  <S><A><C>p</C></A><B><D>q</D></B></S>
+	</tc:assert-xml></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g18c05">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>pp</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g18c06">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>qq</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g18c07">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>qp</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g18c08">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>ppq</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g18c09">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>pqpq</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+  </tc:test-set>
+
+  <tc:test-set name="sample.grammar.19">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+      <tc:description>
+	<tc:p>Infinite ambiguity; based on sample.grammar.10 but without
+	epsilon rule.</tc:p>
+      </tc:description>
+      <tc:ixml-grammar>A: A; "a".</tc:ixml-grammar>
+      <tc:grammar-test>
+	<tc:result>
+	  <tc:assert-xml>
+	    <ixml
+              ><rule name="A"
+		><alt
+		  ><nonterminal name="A"
+		/></alt
+		><alt
+		  ><literal string="a"
+		/></alt
+              ></rule
+	    ></ixml>
+	  </tc:assert-xml>
+	</tc:result>
+      </tc:grammar-test>
+      <tc:test-case name="g19c01">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>a</tc:test-string>
+	<tc:result><tc:assert-xml>
+	  <A ixml:state="ambiguous">a</A>
+	</tc:assert-xml><tc:assert-xml>
+	  <A ixml:state="ambiguous"><A>a</A></A>
+	</tc:assert-xml><tc:assert-xml>
+	  <A ixml:state="ambiguous"><A><A>a</A></A></A>
+	</tc:assert-xml><tc:assert-xml>
+	  <A ixml:state="ambiguous"><A><A><A>a</A></A></A></A>
+        </tc:assert-xml><tc:assert-xml>
+	  <A ixml:state="ambiguous"><A><A><A><A>a</A></A></A></A></A>
+	</tc:assert-xml><tc:assert-xml>
+	  <A ixml:state="ambiguous"><A><A><A><A><A>a</A></A></A></A></A></A>
+	</tc:assert-xml><!-- ... etc ... -->
+	</tc:result>
+      </tc:test-case>
+      <tc:test-case name="g19c02">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string/>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g19c03">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>aa</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+  </tc:test-set>
+    
+  <tc:test-set name="sample.grammar.20">
+    <tc:created on="2022-02-08" by="cmsmcq"/>
+      <tc:description>
+	<tc:p>Infinite ambiguity, grows in width as well as depth.
+	Based on sample.grammar.19.</tc:p>
+      </tc:description>
+      <tc:ixml-grammar>A: A, A; {nil} .</tc:ixml-grammar>
+      <tc:grammar-test>
+	<tc:result>
+	  <tc:assert-xml>
+	    <ixml
+              ><rule name="A"
+		><alt
+		  ><nonterminal name="A"
+		  /><nonterminal name="A"
+		/></alt
+		><comment>nil</comment
+		><alt
+              /></rule
+	    ></ixml>
+	  </tc:assert-xml>
+	</tc:result>
+      </tc:grammar-test>
+      <tc:test-case name="g20c01">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string/>
+	<tc:result><tc:assert-xml>
+	  <A ixml:state="ambiguous"/>
+	</tc:assert-xml><tc:assert-xml>
+	  <A ixml:state="ambiguous"><A/><A/></A>
+	</tc:assert-xml><tc:assert-xml>
+	  <A ixml:state="ambiguous"><A><A/><A/></A><A/></A>
+	</tc:assert-xml><tc:assert-xml>
+	  <A ixml:state="ambiguous"><A/><A><A/><A/></A></A>	  
+	</tc:assert-xml><tc:assert-xml>
+	<A ixml:state="ambiguous"
+          ><A><A><A><A><A/><A/></A><A/></A><A><A><A><A/><A
+          /></A><A><A/><A/></A></A><A/></A></A><A/></A><A
+          ><A/><A/></A></A>
+	</tc:assert-xml><!-- ... etc ... -->
+	</tc:result>
+      </tc:test-case>
+      <tc:test-case name="g20c02">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>a</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+      <tc:test-case name="g20c03">
+	<tc:created by="cmsmcq" on="2022-01-19"/>
+	<tc:test-string>aa</tc:test-string>
+	<tc:result><tc:assert-not-a-sentence/></tc:result>
+      </tc:test-case>
+  </tc:test-set>
+
+  
+
+</tc:test-catalog>

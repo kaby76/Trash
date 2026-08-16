@@ -1,0 +1,12 @@
+
+<xml
+   ><element name='test' close='test'
+      ><attribute name='lang' value='en'
+      /><attribute name='class' value='test'
+      /><content>
+  This <element name='em' close='em'
+            ><content>is</content
+         ></element> a test.
+</content
+   ></element
+></xml>

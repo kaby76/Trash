@@ -1,0 +1,293 @@
+
+<ixml
+   ><rule name='ixml'
+      ><def
+         ><alt
+            ><term name='S'
+            /><term name='rules'
+         /></alt
+      ></def
+   ></rule
+   ><rule mark='-' name='rules'
+      ><def
+         ><alt
+            ><term name='rule'
+         /></alt
+         ><alt
+            ><term name='rule'
+            /><term name='rules'
+         /></alt
+      ></def
+   ></rule
+   ><rule name='rule'
+      ><def
+         ><alt
+            ><term name='mark'
+            /><term name='name'
+            /><term string='::='
+            /><term name='S'
+            /><term name='def'
+         /></alt
+         ><alt
+            ><term name='name'
+            /><term string='::='
+            /><term name='S'
+            /><term name='def'
+         /></alt
+      ></def
+   ></rule
+   ><rule name='def'
+      ><def
+         ><alt
+            ><term name='alts'
+         /></alt
+      ></def
+   ></rule
+   ><rule mark='-' name='alts'
+      ><def
+         ><alt
+            ><term name='alt'
+         /></alt
+         ><alt
+            ><term name='alt'
+            /><term string='|'
+            /><term name='S'
+            /><term name='alts'
+         /></alt
+      ></def
+   ></rule
+   ><rule name='alt'
+      ><def
+         ><alt
+            ><term name='terms'
+         /></alt
+         ><alt
+            ><term name='empty'
+         /></alt
+      ></def
+   ></rule
+   ><rule mark='-' name='terms'
+      ><def
+         ><alt
+            ><term name='term'
+         /></alt
+         ><alt
+            ><term name='term'
+            /><term name='S'
+            /><term name='terms'
+         /></alt
+      ></def
+   ></rule
+   ><rule name='empty'
+      ><def
+         ><alt
+            ><empty
+         /></alt
+      ></def
+   ></rule
+   ><rule name='term'
+      ><def
+         ><alt
+            ><term name='mark'
+            /><term name='name'
+         /></alt
+         ><alt
+            ><term name='name'
+         /></alt
+         ><alt
+            ><term name='string'
+         /></alt
+         ><alt
+            ><term name='range'
+         /></alt
+      ></def
+   ></rule
+   ><rule mark='@' name='name'
+      ><def
+         ><alt
+            ><term string='&lt;'
+            /><term name='letters'
+            /><term string='>'
+            /><term name='S'
+         /></alt
+      ></def
+   ></rule
+   ><rule mark='@' name='mark'
+      ><def
+         ><alt
+            ><term string='@'
+            /><term name='S'
+         /></alt
+         ><alt
+            ><term string='^'
+            /><term name='S'
+         /></alt
+         ><alt
+            ><term string='-'
+            /><term name='S'
+         /></alt
+      ></def
+   ></rule
+   ><rule name='letters'
+      ><def
+         ><alt
+            ><term name='letter'
+            /><term name='more-letters'
+         /></alt
+      ></def
+   ></rule
+   ><rule name='letter'
+      ><def
+         ><alt
+            ><term
+               ><range from='a' to='z'
+            /></term
+         ></alt
+         ><alt
+            ><term
+               ><range from='A' to='Z'
+            /></term
+         ></alt
+         ><alt
+            ><term
+               ><range from='0' to='9'
+            /></term
+         ></alt
+      ></def
+   ></rule
+   ><rule name='more-letters'
+      ><def
+         ><alt
+            ><term name='letter'
+            /><term name='more-letters'
+         /></alt
+         ><alt
+            ><term string='-'
+            /><term name='more-letters'
+         /></alt
+         ><alt
+            ><term name='empty'
+         /></alt
+      ></def
+   ></rule
+   ><rule mark='@' name='string'
+      ><def
+         ><alt
+            ><term string='"'
+            /><term name='chars'
+            /><term string='"'
+            /><term name='S'
+         /></alt
+      ></def
+   ></rule
+   ><rule name='chars'
+      ><def
+         ><alt
+            ><term name='char'
+            /><term name='chars'
+         /></alt
+         ><alt
+            ><term name='char'
+         /></alt
+      ></def
+   ></rule
+   ><rule name='char'
+      ><def
+         ><alt
+            ><term
+               ><range from=' ' to='!'
+            /></term
+         ></alt
+         ><alt
+            ><term
+               ><range from='#' to='~'
+            /></term
+         ></alt
+         ><alt
+            ><term string='""'
+               ><comment>{all characters, quotes must be doubled}</comment
+            ></term
+         ></alt
+      ></def
+   ></rule
+   ><rule name='range'
+      ><def
+         ><alt
+            ><term string='['
+            /><term name='S'
+            /><term name='character'
+            /><term name='S'
+            /><term string='-'
+            /><term name='S'
+            /><term name='character'
+            /><term name='S'
+            /><term string=']'
+            /><term name='S'
+         /></alt
+      ></def
+   ></rule
+   ><rule mark='-' name='character'
+      ><def
+         ><alt
+            ><term string='"'
+            /><term name='char'
+            /><term string='"'
+         /></alt
+         ><alt
+            ><term string='"'
+            /><term string='"'
+            /><term string='"'
+            /><term string='"'
+         /></alt
+      ></def
+   ></rule
+   ><rule mark='-' name='S'
+      ><def
+         ><alt
+            ><term string=' '
+            /><term name='S'
+         /></alt
+         ><alt
+            ><term name='comment'
+            /><term name='S'
+         /></alt
+         ><alt
+            ><empty
+         /></alt
+      ></def
+   ></rule
+   ><rule name='comment'
+      ><def
+         ><alt
+            ><term string='{'
+            /><term name='schars'
+            /><term string='}'
+         /></alt
+      ></def
+   ></rule
+   ><rule mark='-' name='schars'
+      ><def
+         ><alt
+            ><term name='schar'
+            /><term name='schars'
+         /></alt
+         ><alt
+            ><empty
+         /></alt
+      ></def
+   ></rule
+   ><rule mark='-' name='schar'
+      ><def
+         ><alt
+            ><term
+               ><range from=' ' to='|'
+            /></term
+         ></alt
+         ><alt
+            ><term string='~'
+               ><comment>{Everything except: }</comment
+            ></term
+         ></alt
+      ></def
+   ></rule
+></ixml>

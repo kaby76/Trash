@@ -1,0 +1,6 @@
+MODULE ORP;
+  IMPORT Texts;
+  
+BEGIN 
+  Texts.Append(Ob.Log, W.buf);
+END ORP.

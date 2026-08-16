@@ -1,0 +1,12 @@
+
+<expression
+   ><sum
+      ><id name='pi'
+      /><bracketed
+         ><prod
+            ><number value='10'
+            /><id name='b'
+         /></prod
+      ></bracketed
+   ></sum
+></expression>

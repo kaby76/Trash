@@ -1,0 +1,22 @@
+{ Sample grammar 3
+
+from https://homepages.cwi.nl/~steven/Talks/2013/08-07-invisible-xml/invisible-xml-3.html
+}
+{ Revisions:
+2018-04-08 : CMSMcQ : made this from sample.grammar.03.xml
+}
+
+css: rules.
+rules: rule; rules, rule.
+rule: selector, block.
+block: "{", properties, "}".
+properties:  property; property, ";", properties.
+property:  name, ":", value; empty.
+selector: name.
+name: ["a"-"z";"A"-"Z"], ["a"-"z";"A"-"Z";"0"-"9";"-";"_"]*.
+value: ["x"-"z"].
+
+{ An earlier form of grammar 3 didn't actually define
+the nonterminal 'empty'.  That might be related to the
+exponential problem. }
+empty: .

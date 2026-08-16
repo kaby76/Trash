@@ -1,0 +1,135 @@
+<ixml
+  ><rule name="syntax"
+    ><alt
+      ><option
+        ><nonterminal name="S"
+      /></option
+      ><nonterminal name="production"
+      /><nonterminal name="syntax"
+    /></alt
+    ><alt
+      ><nonterminal name="nil"
+    /></alt
+  ></rule
+  ><rule name="production"
+    ><alt
+      ><nonterminal name="identifier"
+      /><option
+        ><nonterminal name="S"
+      /></option
+      ><literal tmark="-" string="="
+      /><option
+        ><nonterminal name="S"
+      /></option
+      ><nonterminal name="expression"
+      /><option
+        ><nonterminal name="S"
+      /></option
+      ><literal tmark="-" string="."
+      /><option
+        ><nonterminal name="S"
+      /></option
+    ></alt
+  ></rule
+  ><rule name="expression"
+    ><alt
+      ><nonterminal name="term"
+    /></alt
+    ><alt
+      ><nonterminal name="expression"
+      /><option
+        ><nonterminal name="S"
+      /></option
+      ><literal tmark="-" string="|"
+      /><option
+        ><nonterminal name="S"
+      /></option
+      ><nonterminal name="term"
+    /></alt
+  ></rule
+  ><rule name="term"
+    ><alt
+      ><nonterminal name="factor"
+    /></alt
+    ><alt
+      ><nonterminal name="term"
+      /><nonterminal name="S"
+      /><nonterminal name="factor"
+    /></alt
+  ></rule
+  ><rule name="factor"
+    ><alt
+      ><nonterminal name="identifier"
+    /></alt
+    ><alt
+      ><nonterminal name="string"
+    /></alt
+  ></rule
+  ><rule name="identifier"
+    ><alt
+      ><nonterminal name="letter"
+    /></alt
+    ><alt
+      ><nonterminal name="identifier"
+      /><nonterminal name="letter"
+    /></alt
+    ><alt
+      ><nonterminal name="identifier"
+      /><nonterminal name="digit"
+    /></alt
+  ></rule
+  ><rule name="string"
+    ><alt
+      ><nonterminal name="stringhead"
+      /><literal tmark="-" string="&quot;"
+    /></alt
+  ></rule
+  ><rule name="stringhead"
+    ><alt
+      ><literal tmark="-" string="&quot;"
+    /></alt
+    ><alt
+      ><nonterminal name="stringhead"
+      /><nonterminal name="character"
+    /></alt
+  ></rule
+  ><rule name="letter"
+    ><alt
+      ><inclusion
+        ><member from="A" to="Z"
+        /><member from="a" to="z"
+      /></inclusion
+    ></alt
+  ></rule
+  ><rule name="digit"
+    ><alt
+      ><inclusion
+        ><member from="0" to="9"
+      /></inclusion
+    ></alt
+  ></rule
+  ><comment> Wirth does not define character. </comment
+  ><rule name="character"
+    ><alt
+      ><exclusion
+        ><member string="&quot;"
+      /></exclusion
+    ></alt
+  ></rule
+  ><comment> Wirth does not define empty-set symbol. </comment
+  ><rule name="nil"
+    ><alt
+  /></rule
+  ><rule mark="-" name="S"
+    ><alt
+      ><repeat1
+        ><inclusion tmark="-"
+          ><member string=" "
+          /><member hex="09"
+          /><member hex="0A"
+          /><member hex="0D"
+        /></inclusion
+      ></repeat1
+    ></alt
+  ></rule
+></ixml>

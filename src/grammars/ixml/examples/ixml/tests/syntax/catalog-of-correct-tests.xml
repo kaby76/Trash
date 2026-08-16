@@ -1,0 +1,95 @@
+<test-catalog xmlns="https://github.com/invisibleXML/ixml/test-catalog"
+	      release-date="2022-06-01"
+	      name="Correct Syntax tests">
+
+  <description>
+    <p>Syntax tests for grammar features. These tests all make assertions
+    about grammars that are syntactically correct.</p>
+  </description>
+
+  <test-set name="comment">
+    <description>
+      <p>This test was written to test <code>comment</code>s, but it tests
+      <code>ixml</code> and <code>rule</code> too.</p>
+    </description>
+    <created by="ndw" on="2022-03-26"/>
+    <ixml-grammar-ref href="comment.ixml"/>
+    <grammar-test>
+      <result>
+	<assert-xml-ref href="comment.output.xml"/>
+      </result>
+    </grammar-test>
+  </test-set>
+
+  <test-set name="rulemark">
+    <created by="ndw" on="2022-03-26"/>
+    <ixml-grammar-ref href="rulemark.ixml"/>
+    <grammar-test>
+      <result>
+	<assert-xml-ref href="rulemark.output.xml"/>
+      </result>
+    </grammar-test>
+  </test-set>
+
+  <test-set name="alts">
+    <created by="ndw" on="2022-03-26"/>
+    <ixml-grammar-ref href="alts.ixml"/>
+    <grammar-test>
+      <result>
+	<assert-xml-ref href="alts.output.xml"/>
+      </result>
+    </grammar-test>
+  </test-set>
+
+  <test-set name="repeat0">
+    <created by="ndw" on="2022-03-26"/>
+    <ixml-grammar-ref href="repeat0.ixml"/>
+    <grammar-test>
+      <result>
+	<assert-xml-ref href="repeat0.output.xml"/>
+      </result>
+    </grammar-test>
+  </test-set>
+
+  <test-set name="repeat1">
+    <created by="ndw" on="2022-03-26"/>
+    <ixml-grammar-ref href="repeat1.ixml"/>
+    <grammar-test>
+      <result>
+	<assert-xml-ref href="repeat1.output.xml"/>
+      </result>
+    </grammar-test>
+  </test-set>
+
+
+  <test-set name="option">
+    <created by="ndw" on="2022-03-26"/>
+    <ixml-grammar-ref href="option.ixml"/>
+    <grammar-test>
+      <result>
+	<assert-xml-ref href="option.output.xml"/>
+      </result>
+    </grammar-test>
+  </test-set>
+
+  <test-set name="literal">
+    <created by="ndw" on="2022-03-26"/>
+    <ixml-grammar-ref href="literal.ixml"/>
+    <grammar-test>
+      <result>
+	<assert-xml-ref href="literal.output.xml"/>
+      </result>
+    </grammar-test>
+  </test-set>
+
+  <test-set name="sets">
+    <created by="ndw" on="2022-03-26"/>
+    <ixml-grammar-ref href="sets.ixml"/>
+    <grammar-test>
+      <result>
+	<assert-xml-ref href="sets.output.xml"/>
+      </result>
+    </grammar-test>
+  </test-set>
+  
+</test-catalog>

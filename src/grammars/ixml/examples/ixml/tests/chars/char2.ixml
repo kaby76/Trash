@@ -1,0 +1,44 @@
+input: char*.
+
+-char: {C;} Cc; Cf; Cn; Co; Cs; {L;} {LC;} Ll; Lm; Lo; Lt; Lu; {M;} Mc; Me; Mn; {N;} Nd; Nl; No; {P;} Pc; Pd; Pe; Pf; Pi; Po; Ps; {S;} Sc; Sk; Sm; So; {Z;} Zl; Zp; Zs; Unassigned.
+
+Unassigned: ~[{C;} Cc; Cf; Cn; Co; Cs; {L;} {LC;} Ll; Lm; Lo; Lt; Lu; {M;} Mc; Me; Mn; {N;} Nd; Nl; No; {P;} Pc; Pd; Pe; Pf; Pi; Po; Ps; {S;} Sc; Sk; Sm; So; {Z;} Zl; Zp; Zs].
+
+{ C: [ C].}
+ Cc: [Cc].
+ Cf: [Cf].
+ Cn: [Cn].
+ Co: [Co].
+ Cs: [Cs].
+{ L: [L].}
+{ LC: [LC].}
+ Ll: [Ll].
+ Lm: [Lm].
+ Lo: [Lo].
+ Lt: [Lt].
+ Lu: [Lu].
+{ M: [M].}
+ Mc: [Mc].
+ Me: [Me].
+ Mn: [Mn].
+{ N: [N].}
+ Nd: [Nd].
+ Nl: [Nl].
+ No: [No].
+{ P: [P].}
+ Pc: [Pc].
+ Pd: [Pd].
+ Pe: [Pe].
+ Pf: [Pf].
+ Pi: [Pi].
+ Po: [Po].
+ Ps: [Ps].
+{ S: [S].}
+ Sc: [Sc].
+ Sk: [Sk].
+ Sm: [Sm].
+ So: [So].
+{ Z: [Z].}
+ Zl: [Zl].
+ Zp: [Zp].
+ Zs: [Zs].

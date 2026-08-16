@@ -1,0 +1,12 @@
+url: scheme, ":", authority, path.
+scheme: name.
+@name: letter+.
+authority: "//", host.
+host: sub++".".
+sub: name.
+path: ("/", seg)+.
+seg: sname.
+@sname: fletter*.
+-letter: ["a"-"z"]; ["A"-"Z"]; ["0"-"9"].
+-fletter: letter; ".".
+

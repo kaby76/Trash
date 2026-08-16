@@ -1,0 +1,10 @@
+expression: expr. 
+-expr: term; sum; diff.
+sum: term, "+", term++"+".
+diff: term, "-", term++"-".
+-term: factor; prod; div.
+prod: factor, "×", factor++"×".
+div: factor, "÷", factor++"÷".
+-factor: name; number; "(", ^expr, ")".
+name: ["a"-"z"]+.
+number: ["0"-"9"]+.

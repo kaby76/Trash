@@ -1,0 +1,74 @@
+{version 2023-11-21}
+         ixml: s, prolog?, rule++RS, s.
+
+           -s: (whitespace; comment)*. {Optional spacing}
+          -RS: (whitespace; comment)+. {Required spacing}
+  -whitespace: -[Zs]; tab; lf; cr.
+         -tab: -#9.
+          -lf: -#a.
+          -cr: -#d.
+      comment: -"{", (cchar; comment)*, -"}".
+       -cchar: ~["{}"].
+
+       prolog: version, s.
+      version: -"ixml", RS, -"version", RS, string, s, -'.' .
+
+         rule: naming, -["=:"], s, -alts, -".".
+      -naming: (mark, s)?, name, s, (">", s, alias, s)?.
+        @name: namestart, namefollower*.
+   -namestart: ["_"; L].
+-namefollower: namestart; ["-.·‿⁀"; Nd; Mn].
+
+       @alias: name.
+         alts: alt++(-[";|"], s).
+          alt: term**(-",", s).
+        -term: factor;
+               option;
+               repeat0;
+               repeat1.
+      -factor: terminal;
+               nonterminal;
+               insertion;
+               -"(", s, alts, -")", s.
+      repeat0: factor, (-"*", s; -"**", s, sep).
+      repeat1: factor, (-"+", s; -"++", s, sep).
+       option: factor, -"?", s.
+        @mark: ["@^-"].
+          sep: factor.
+  nonterminal: naming.
+    -terminal: literal; 
+               charset.
+      literal: quoted;
+               encoded.
+      -quoted: (tmark, s)?, string, s.
+
+       @tmark: ["^-"].
+      @string: -'"', dchar+, -'"';
+               -"'", schar+, -"'".
+        dchar: ~['"'; Cc];
+               '"', -'"'. {all characters except controls; quotes must be doubled}
+        schar: ~["'"; Cc];
+               "'", -"'". {all characters except controls; quotes must be doubled}
+     -encoded: (tmark, s)?, -"#", hex, s.
+         @hex: ["0"-"9"; "a"-"f"; "A"-"F"]+.
+
+     -charset: inclusion; 
+               exclusion.
+    inclusion: (tmark, s)?,          set.
+    exclusion: (tmark, s)?, -"~", s, set.
+         -set: -"[", s,  (member, s)**(-[";|"], s), -"]", s.
+       member: string;
+               -"#", hex;
+               range;
+               class.
+       -range: from, s, -"-", s, to.
+        @from: character.
+          @to: character.
+   -character: -'"', dchar, -'"';
+               -"'", schar, -"'";
+               "#", hex.
+       -class: code.
+        @code: capital, letter?.
+     -capital: ["A"-"Z"].
+      -letter: ["A"-"Z"; "a"-"z"].
+    insertion: -"+", s, (string; -"#", hex), s.

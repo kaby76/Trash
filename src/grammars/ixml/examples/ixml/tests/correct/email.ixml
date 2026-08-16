@@ -1,0 +1,8 @@
+email: user, -"@", host.
+@user: atom++".".
+-atom: char+.
+@host: domain++".".
+-domain: word++"-".
+-word: letgit+.
+-letgit: ["A"-"Z"; "a"-"z"; "0"-"9"].
+-char:   letgit; ["!#$%&'*+-/=?^_`{|}~"].

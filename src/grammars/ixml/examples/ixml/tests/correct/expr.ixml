@@ -1,0 +1,15 @@
+expression: expr.
+-expr: term; sum; diff.
+sum: expr, -"+", term.
+diff: expr, "-", term.
+-term: factor; prod; div.
+prod: term, -"×", factor.
+div: term, "÷", factor.
+-factor: id; number; bracketed.
+bracketed: -"(", expr, -")".
+id: @name.
+name: letter+.
+number: @value.
+value: digit+.
+-letter: ["a"-"z"].
+-digit: ["0"-"9"].

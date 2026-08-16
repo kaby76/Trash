@@ -1,0 +1,10 @@
+
+<json
+   ><object
+      >{<pair string='name'
+         >: <string>pi</string
+      ></pair
+      >, <pair string='value'
+         >: <number>3.145926</number
+      ></pair>}</object
+></json>

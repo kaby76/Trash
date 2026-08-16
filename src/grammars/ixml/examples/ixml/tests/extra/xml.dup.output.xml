@@ -1,0 +1,11 @@
+
+<xml
+    ><element name='test' close='test'
+	      > <attribute name='att' value='abc'
+	      /> <attribute name='class' value='test'
+	      /><content
+	      >&#xA;  Now is the <element name='em' close='em'
+	      ><content>time</content></element
+	      > for stuff.&#xA;</content
+    ></element
+></xml>

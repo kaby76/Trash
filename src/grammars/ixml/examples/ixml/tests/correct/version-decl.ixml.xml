@@ -1,0 +1,56 @@
+<ixml
+  ><prolog
+    ><version string="1.0"
+  /></prolog
+  ><rule name="S"
+    ><alt><literal string="abc"/><nonterminal name="done"/></alt
+    ><alt
+      ><inclusion><member hex="00BF"/></inclusion
+      ><literal string="x"
+      /><inclusion
+      /><literal string="x?"
+    /></alt
+    ><alt
+      ><inclusion><member hex="00BF"/></inclusion
+      ><literal string="y"
+      /><repeat1><inclusion/></repeat1
+      ><literal string="y?"
+    /></alt
+    ><alt
+      ><inclusion><member hex="00A1"/></inclusion
+      ><literal string="z"
+      /><option><inclusion/></option
+      ><literal string="z!"
+    /></alt
+    ><alt
+      ><inclusion><member hex="00A1"/></inclusion
+      ><literal string="w"
+      /><repeat0><inclusion/></repeat0
+      ><literal string="w!"
+    /></alt
+    
+    ><alt
+      ><literal string="v"
+      /><exclusion
+      /><literal string="v"
+    /></alt
+    ><alt
+      ><literal string="u"
+      /><repeat1><exclusion/></repeat1
+      ><literal string="u"
+    /></alt
+    ><alt
+      ><literal string="t"
+      /><option><exclusion/></option
+      ><literal string="t"
+    /></alt
+    ><alt
+      ><literal string="s"
+      /><repeat0><exclusion/></repeat0
+      ><literal string="s"
+    /></alt
+  ></rule
+  ><rule name="done"
+    ><alt><inclusion><member hex="1F63A"/></inclusion></alt
+  ></rule
+></ixml>

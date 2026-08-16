@@ -1,0 +1,61 @@
+{ program is defined in section 4.8 }
+program: S, decl**S, S, cmd, S.
+
+{ Names are described in 4.3 but left indeterminate syntactically;
+I've made them like the SGML reference concrete syntax. }
+NAME: letter, namechar*.
+-letter:  ["a"-"z"; "A"-"Z"].
+-digit: ["0"-"9"].
+-namechar:  letter; digit; ["-"; "."; "_"].
+
+{ Types are described in 4.3 }
+TYPE:  "int"; "bool".
+boolean:  "true"; "false".
+number:  digit+.
+
+{ declarations:  section 4.4 }
+decl:  NAME, S, -":", S, TYPE, S, -";".
+
+{ operators, section 4.5 }
+unaryOp: negate; not.  
+
+negate: "-".
+not: "not".
+
+binaryOp: plus; minus; less; greater; equal; or; and.  
+plus: -"+".
+minus: -"-".
+less: -"<".
+greater: -">".
+equal: -"=".
+or: -"or".
+and: -"and".
+
+{ expressions:  4.6 }
+expr:  constant; variable; unaryExpr; binaryExpr.
+constant:  number; boolean.
+variable:  NAME.
+unaryExpr:  unaryOp, S, expr.
+binaryExpr:  -"(", S, expr, S, binaryOp, S, expr, S, -")".
+
+{ commands:  4.7 }
+cmd: (skip; block; assign; choice; loop; input; output).
+cmdseq: (cmd, S, -";", S)+.
+skip: -"skip".
+block:  -"begin", S, cmdseq, -"end".
+assign: variable, S, -":=", S, expr.
+choice: -"if", S, condition, S, -"then", S, iftrue, -"else", S, iffalse.
+condition: -expr.
+iftrue: cmd.
+iffalse: cmd.
+loop: -"while", S, expr, S, -"do", S, cmd.
+input: -"input", S, NAME.
+output: -"output", S, expr.
+
+{ Stepney does not specify whitespace or comment rules. }
+-S: (ws; comment)*.
+-ws: -[#20; #0A; #09; #0D].
+comment: -"/*", nonstar*, ("*", nonstarnonslash*)*, -"*/".
+nonstar: ~["*"]. 
+nonstarnonslash: ~["*"; "/"]. 
+

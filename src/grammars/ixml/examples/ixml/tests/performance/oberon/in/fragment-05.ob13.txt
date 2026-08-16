@@ -1,0 +1,16 @@
+MODULE ORP; (*N. Wirth 1.7.97 / 8.3.2020  Oberon compiler for RISC*)
+  IMPORT Texts, Oberon, ORS, ORB, ORG;
+  (*Author: Niklaus Wirth, 2014.*)
+
+  VAR sym: INTEGER;   (*last symbol read*)
+    dc: LONGINT;    (*data counter*)
+    Type: PROCEDURE (VAR type: ORB.Type);
+    FormalType: PROCEDURE (VAR typ: ORB.Type; dim: INTEGER);
+    modid: ORS.Ident;
+    W: Texts.Writer;
+  
+BEGIN Texts.OpenWriter(W); Texts.WriteString(W, "OR Compiler  8.3.2020");
+  Texts.WriteLn(W); Texts.Append(Oberon.Log, W.buf);
+  NEW(dummy); dummy.class := ORB.Var; dummy.type := ORB.intType;
+  expression := expression0; Type := Type0; FormalType := FormalType0
+END ORP.

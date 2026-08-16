@@ -1,0 +1,19 @@
+json: S, object.
+object: "{", S, members, "}", S.
+-members: pair**(",", S).
+pair: @string, S, ":", S, value.
+array: "[", S, value**(",", S), "]", S.
+-value: string, S; number, S; object; array; "true", S; "false", S; "null", S.
+string: -"""", char*, -"""".
+-char: ~['"'; "\" {;[#0-#1F];}]; '\', ('"'; "\"; "/"; "b"; "f"; "n"; "r"; "t"; "u", hexdigits).
+number: "-"?, int, frac?, exp?.
+-int: "0"; digit19, digit*.
+-frac: ".", digit+.
+-exp: ("e"; "E"), sign?, digit+.
+-sign: "+"; "-".
+-S: " "*.
+-digit: ["0"-"9"].
+-digit19: ["1"-"9"].
+-hexdigits: hexdigit, hexdigit, hexdigit, hexdigit.
+-hexdigit: digit; ["a"-"f"]; ["A"-"F"].
+

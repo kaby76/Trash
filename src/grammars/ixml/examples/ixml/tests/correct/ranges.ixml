@@ -1,0 +1,15 @@
+test: other, digit, other, cap, other, lc, other, lf?.
+other: ~[#a; #d; #30-#39; #41-#5A; #61-#7A]+.
+cap: [#41-#5A]+.
+lc: [#61-#7A]+.
+digit: [#30-#39]+.
+-lf: -#a | -#d, -#a.
+{
+0123456789abcdef
+ !"#$%&'()*+,-./
+0123456789:;<=>?
+@ABCDEFGHIJKLMNO
+PQRSTUVWXYZ[\]^_
+`abcdefghijklmno
+pqrstuvwxyz{|}~
+}

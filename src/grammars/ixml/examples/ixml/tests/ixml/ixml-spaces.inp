@@ -1,0 +1,60 @@
+ ixml  :  S  ,  rule  +  S  ,  S  . 
+ - S :  ( whitespace ; comment )  *  . 
+ - whitespace :  -  [ Zs ]  ; tab ; { lf ; } cr . 
+ - tab :  - #9 . 
+{ - lf :  - #a . }
+ - cr :  - #d . 
+ comment :  - "{" ,  ( cchar ; comment )  *  ,  - "}" . 
+ - cchar : ~ [ "{}" ]  . 
+ rule :  ( mark , S ) ? , name , S ,  [ "=:" ]  , S ,  - alts , "." . 
+ @ mark :  [ "@^-" ]  . 
+ alts : alt +  (  [ ";|" ]  , S )  . 
+ alt : term *  ( "," , S )  . 
+ - term : factor ; 
+          option ; 
+          repeat0 ; 
+          repeat1 . 
+ - factor : terminal ; 
+            nonterminal ; 
+            "(" , S , alts , ")" , S . 
+ repeat0 : factor , "*" , S , sep ? . 
+ repeat1 : factor , "+" , S , sep ? . 
+ option : factor , "?" , S . 
+ sep : factor . 
+ nonterminal :  ( mark , S ) ? , name , S . 
+ - terminal : literal ; 
+              charset . 
+ literal : quoted ; 
+           encoded . 
+ - quoted :  ( tmark , S ) ? ,  - string . 
+ @ name : namestart , namefollower *  . 
+ - namestart :  [ "_" ; Ll ; Lu ; Lm ; Lt ; Lo ]  . 
+ - namefollower : namestart ;  [ "-.·‿⁀" ; Nd ; Mn ]  . 
+ @ tmark :  [ "^-" ]  . 
+ string :  - '"' , dstring ,  - '"' , S ; 
+ - "'" , sstring ,  - "'" , S . 
+ @ dstring : dchar +  . 
+ @ sstring : schar +  . 
+ dchar : ~ [ '"' ]  ; 
+         '"' ,  - '"' . { all characters , quotes must be doubled }
+ schar : ~ [ "'" ]  ; 
+         "'" ,  - "'" . { all characters , quotes must be doubled }
+ - encoded :  ( tmark , S ) ? ,  - "#" ,  @ hex , S . 
+ hex :  [ "0" - "9" ; "a" - "f" ; "A" - "F" ]  +  . 
+ - charset : inclusion ; 
+             exclusion . 
+ inclusion :  ( tmark , S ) ? , set . 
+ exclusion :  ( tmark , S ) ? , "~" , S , set . 
+ - set : "[" , S , member *  (  [ ";|" ]  , S )  , "]" , S . 
+ - member : literal ; 
+            range ; 
+            class . 
+ range : from , "-" , S , to . 
+ @ from : character . 
+ @ to : character . 
+ - character :  - '"' , dchar ,  - '"' , S ; 
+ - "'" , schar ,  - "'" , S ; 
+ "#" , hex , S . 
+ class :  @ code , S . 
+ code : letter , letter . 
+ - letter :  [ "a" - "z" ; "A" - "Z" ]  . 

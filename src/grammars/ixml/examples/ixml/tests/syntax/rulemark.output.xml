@@ -1,0 +1,1 @@
+<ixml><rule mark="^" name="S"><alt><nonterminal name="A"/></alt></rule><rule mark="@" name="A"><alt><nonterminal name="B"/></alt></rule><rule mark="-" name="B"><alt><literal string="a"/></alt></rule></ixml>

@@ -1,0 +1,188 @@
+<test-catalog xmlns="https://github.com/invisibleXML/ixml/test-catalog"
+	      release-date="2022-06-01"
+	      name="Instance Syntax tests (ixml)">
+
+  <description>
+    <p>Syntax tests provided by Steven Pemberton in December 2021.</p>
+    <p>Most tests are negative (the file.ixml files do not conform
+    to the grammar for ixml).</p>
+    <p>Since these are all parsed against the grammar for ixml
+    grammars, the expected result could be given as
+    'assert-not-a-grammar' as well as 'assert-not-a-sentence'. The
+    inputs are not sentences in the language defined by the grammar
+    for grammars, which means they are not ixml grammars.</p>
+    <p>Three catalogs are provided, using different formulations. This
+    one uses the ixml form of the ixml grammar and describes all the
+    tests as instance tests.</p>
+  </description>
+
+  <test-set name="syntax-ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="../reference/ixml.ixml"/>
+    
+    <test-case name="class-range">
+      <test-string-ref href="class-range.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="defn1">
+      <test-string-ref href="defn1.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="defn2">
+      <test-string-ref href="defn2.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="defn3">
+      <test-string-ref href="defn3.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="defn4">
+      <test-string-ref href="defn4.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="defn5">
+      <test-string-ref href="defn5.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="defn6">
+      <test-string-ref href="defn6.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="defn8">
+      <test-string-ref href="defn8.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="defn9">
+      <test-string-ref href="defn9.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="defn10">
+      <test-string-ref href="defn10.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="defn11">
+      <test-string-ref href="defn11.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="elem2">
+      <test-string-ref href="elem2.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="elem3">
+      <test-string-ref href="elem3.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="elem4">
+      <test-string-ref href="elem4.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="elem5">
+      <test-string-ref href="elem5.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="elem6">
+      <test-string-ref href="elem6.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="elem7">
+      <test-string-ref href="elem7.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="empty-string">
+      <test-string-ref href="empty-string.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="expr10">
+      <test-string-ref href="expr10.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="hex2">
+      <test-string-ref href="hex2.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="name-with-spaces">
+      <test-string-ref href="name-with-spaces.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="rule">
+      <test-string-ref href="rule.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="rule1">
+      <test-string-ref href="rule1.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="rule3">
+      <test-string-ref href="rule3.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="rule4">
+      <test-string-ref href="rule4.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="rule5">
+      <test-string-ref href="rule5.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="rule6">
+      <test-string-ref href="rule6.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="rule7">
+      <test-string-ref href="rule7.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="rule8">
+      <test-string-ref href="rule8.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="rule9">
+      <test-string-ref href="rule9.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="rule10">
+      <test-string-ref href="rule10.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="unterminated-comment">
+      <test-string-ref href="unterminated-comment.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="unterminated-comment1">
+      <test-string-ref href="unterminated-comment1.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="unterminated-comment2">
+      <test-string-ref href="unterminated-comment2.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+
+    <test-case name="nothexdigits">
+      <created by="NDW" on="2022-06-02"/>
+      <modified by="MSM" on="2022-06-03"
+		change="copied to instance tests"/>
+      <test-string>S = #CAFFEINE.</test-string>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+
+    <test-case name="multiline-strings-LF">
+      <created by="CMSMcQ" on="2022-06-03"/>
+      <test-string-ref href="multiline-string.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="multiline-strings-CRLF">
+      <created by="CMSMcQ" on="2022-06-03"/>
+      <test-string-ref href="multiline-string.crlf.ixml"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+  </test-set>
+</test-catalog>

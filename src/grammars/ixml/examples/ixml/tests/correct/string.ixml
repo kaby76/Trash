@@ -1,0 +1,5 @@
+S : @able, baker, @charlie.
+able: string.
+baker: string.
+charlie: string.
+string: ["abc"]*, ".".

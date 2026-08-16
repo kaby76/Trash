@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tc:test-catalog xmlns:tc="https://github.com/invisibleXML/ixml/test-catalog"
+		 xmlns:ixml="http://invisiblexml.org/NS"
+		 name="Oberon-performance-tests"
+		 release-date="2023-11-21"
+		 >
+  <tc:description>
+    <tc:p>A collection of tests for use in measuring performance
+    of an invisible XML processor.</tc:p>
+  </tc:description>
+ 
+  <tc:test-set name="Oberon-fragments">
+    <tc:created by="cmsmcq" on="2022-08-25"/>
+    <tc:modified by="cmsmcq" on="2023-11-21"
+                 change="added ORP.Mod.txt test"/>
+    <tc:description>
+      <tc:p>The grammar is an edited translation of Wirth's grammar.
+      The test cases are syntactically well formed fragments of
+      ORP.Mod.txt in the materials from Project Oberon 2013.</tc:p>
+      <tc:p>Each fragment is about twice the size of the preceding;
+      the goal is to get a quick idea of whether the parse times are
+      linear in the size of the input (they double, too) or more, or
+      less.</tc:p>
+    </tc:description>
+   
+    <tc:ixml-grammar-ref href="../../../samples/Oberon/Grammars/Oberon.ixml"/>
+
+    <tc:test-case name="ob-01">
+      <tc:created on="2022-08-30" by="cmsmcq"/>
+      <tc:test-string-ref href="in/fragment-01.ob13.txt"/>
+      <tc:result>
+	<tc:assert-xml-ref href="out/fragment-01.ob13.xml"/>
+      </tc:result>
+    </tc:test-case>
+
+    <tc:test-case name="ob-02">
+      <tc:created on="2022-08-30" by="cmsmcq"/>
+      <tc:test-string-ref href="in/fragment-02.ob13.txt"/>
+      <tc:result>
+	<tc:assert-xml-ref href="out/fragment-02.ob13.xml"/>
+      </tc:result>
+    </tc:test-case>
+
+    <tc:test-case name="ob-03">
+      <tc:created on="2022-08-30" by="cmsmcq"/>
+      <tc:test-string-ref href="in/fragment-03.ob13.txt"/>
+      <tc:result>
+	<tc:assert-xml-ref href="out/fragment-03.ob13.xml"/>
+      </tc:result>
+    </tc:test-case>
+
+    <tc:test-case name="ob-04">
+      <tc:created on="2022-08-30" by="cmsmcq"/>
+      <tc:test-string-ref href="in/fragment-04.ob13.txt"/>
+      <tc:result>
+	<tc:assert-xml-ref href="out/fragment-04.ob13.xml"/>
+      </tc:result>
+    </tc:test-case>
+    
+    <tc:test-case name="ob-05">
+      <tc:created on="2022-08-30" by="cmsmcq"/>
+      <tc:test-string-ref href="in/fragment-05.ob13.txt"/>
+      <tc:result>
+	<tc:assert-xml-ref href="out/fragment-05.ob13.xml"/>
+      </tc:result>
+    </tc:test-case>
+    
+    <tc:test-case name="ob-06">
+      <tc:created on="2022-08-30" by="cmsmcq"/>
+      <tc:test-string-ref href="in/fragment-06.ob13.txt"/>
+      <tc:result>
+	<tc:assert-xml-ref href="out/fragment-06.ob13.xml"/>
+      </tc:result>
+    </tc:test-case>
+    
+    <tc:test-case name="ob-07">
+      <tc:created on="2022-08-30" by="cmsmcq"/>
+      <tc:test-string-ref href="in/fragment-07.ob13.txt"/>
+      <tc:result>
+	<tc:assert-xml-ref href="out/fragment-07.ob13.xml"/>
+      </tc:result>
+    </tc:test-case>
+    
+    <tc:test-case name="ob-08">
+      <tc:created on="2022-08-30" by="cmsmcq"/>
+      <tc:test-string-ref href="in/fragment-08.ob13.txt"/>
+      <tc:result>
+	<tc:assert-xml-ref href="out/fragment-08.ob13.xml"/>
+      </tc:result>
+    </tc:test-case>
+    
+    <tc:test-case name="ob-09">
+      <tc:created on="2022-08-30" by="cmsmcq"/>
+      <tc:test-string-ref href="in/fragment-09.ob13.txt"/>
+      <tc:result>
+	<tc:assert-xml-ref href="out/fragment-09.ob13.xml"/>
+      </tc:result>
+    </tc:test-case>
+    
+    <tc:test-case name="ob-10">
+      <tc:created on="2022-08-30" by="cmsmcq"/>
+      <tc:test-string-ref href="in/fragment-10.ob13.txt"/>
+      <tc:result>
+	<tc:assert-xml-ref href="out/fragment-10.ob13.xml"/>
+      </tc:result>
+    </tc:test-case>
+    
+    <tc:test-case name="ob-ORP">
+      <tc:created on="2023-11-21" by="cmsmcq"/>
+      <tc:test-string-ref href="../../../samples/Oberon/Project-Oberon-2013-materials/ORP.Mod.txt"/>
+      <tc:result>
+	<tc:assert-xml-ref href="out/ORP.Mod.txt.xml"/>
+      </tc:result>
+    </tc:test-case>
+    
+  </tc:test-set>
+
+  
+  <tc:test-set name="Oberon-modules">
+    <tc:created by="cmsmcq" on="2022-08-25"/>
+    <tc:modified by="cmsmcq" on="2023-11-21"
+                 change="merge test set into common catalog"/>
+    <tc:description>
+      <tc:p>This test set includes the modules for the Oberon
+      compiler, all from the materials available from Project Oberon
+      2013.</tc:p>
+    </tc:description>
+   
+    <tc:ixml-grammar-ref href="../../../samples/Oberon/Grammars/Oberon.ixml"/>
+    
+    <tc:test-case name="ORTool">
+      <tc:created on="2022-08-28" by="cmsmcq"/>
+      <tc:description>
+        <tc:p>Input size: 10630 characters.</tc:p>
+      </tc:description>
+      <tc:test-string-ref
+	  href="../../../samples/Oberon/Project-Oberon-2013-materials/ORTool.Mod.txt"/>
+      <tc:result>
+	<tc:assert-xml-ref href="out/ORTool.Mod.txt.xml"/>
+      </tc:result>
+    </tc:test-case>
+
+    <tc:test-case name="ORS">
+      <tc:created on="2022-08-28" by="cmsmcq"/>
+      <tc:description>
+        <tc:p>Input size: 11262 characters.</tc:p>
+      </tc:description>
+      <tc:test-string-ref
+	  href="../../../samples/Oberon/Project-Oberon-2013-materials/ORS.Mod.txt"/>
+      <tc:result>
+	<tc:assert-xml-ref href="out/ORS.Mod.txt.xml"/>
+      </tc:result>
+    </tc:test-case>
+
+    <tc:test-case name="ORB">
+      <tc:created on="2022-08-28" by="cmsmcq"/>
+      <tc:description>
+        <tc:p>Input size: 18052 characters.</tc:p>
+      </tc:description>
+      <tc:test-string-ref
+	  href="../../../samples/Oberon/Project-Oberon-2013-materials/ORB.Mod.txt"/>
+      <tc:result>
+	<tc:assert-xml-ref href="out/ORB.Mod.txt.xml"/>
+      </tc:result>
+    </tc:test-case>
+
+    <tc:test-case name="ORG">
+      <tc:created on="2022-08-28" by="cmsmcq"/>
+      <tc:description>
+        <tc:p>Input size: 40612 characters.</tc:p>
+      </tc:description>
+      <tc:test-string-ref
+	  href="../../../samples/Oberon/Project-Oberon-2013-materials/ORG.Mod.txt"/>
+      <tc:result>
+	<tc:assert-xml-ref href="out/ORG.Mod.txt.xml"/>
+      </tc:result>
+    </tc:test-case>
+
+    <tc:test-case name="ORP">
+      <tc:created on="2022-08-28" by="cmsmcq"/>
+      <tc:description>
+        <tc:p>Input size: 43115 characters.</tc:p>
+      </tc:description>
+      <tc:test-string-ref
+	  href="../../../samples/Oberon/Project-Oberon-2013-materials/ORP.Mod.txt"/>
+      <tc:result>
+	<tc:assert-xml-ref href="out/ORP.Mod.txt.xml"/>
+      </tc:result>
+    </tc:test-case>
+
+    
+  </tc:test-set>
+
+  
+</tc:test-catalog>

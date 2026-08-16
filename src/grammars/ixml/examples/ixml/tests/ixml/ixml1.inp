@@ -1,0 +1,45 @@
+ixml: S, rule+.
+rule: mark?, name, S, ":", S, def, ".", S.
+def: alt+(";", S).
+alt: term*(",", S).
+-term: factor; repeat0; repeat1; option.
+repeat0: factor, "*", S, sep?.
+sep: factor.
+repeat1: factor, "+", S, sep?.
+option: factor, "?", S.
+-factor: nonterminal; terminal; "(", S, def, ")", S.
+nonterminal: mark?, name, S.
+terminal: mark?, (quoted; hex; charset; exclude).
+
+charset: "[", S,  element+(";", S), "]", S.
+exclude: "~", S, -charset.
+
+-element: range; character, S; class, S.
+range: from, S, "-", S, to, S.
+@from: character.
+@to: character.
+class: letter, letter. {One of the Unicode character classes}
+
+@name: letgit, xletter*.
+-letgit: letter; digit.
+-letter: ["a"-"z"; "A"-"Z"].
+-digit: ["0"-"9"].
+-xletter: letgit; "-".
+
+@mark: "@", S; "^", S; "-", S.
+
+quoted: -'"', dstring, -'"', S; -"'", sstring, -"'", S.
+@dstring: dchar+.
+@sstring: schar+.
+dchar: ~['"']; '""'. {all characters, dquotes must be doubled}
+schar: ~["'"]; "''". {all characters, squotes must be doubled}
+-character: '"', dchar, '"'; "'", schar, "'"; hex.
+
+hex: "#", number.
+number: hexit+.
+-hexit: digit; ["a"-"f"; "A"-"F"].
+
+-S: (" "; comment)*.
+comment: "{", cchar*, "}".
+-cchar: ~["}"].
+{the end}

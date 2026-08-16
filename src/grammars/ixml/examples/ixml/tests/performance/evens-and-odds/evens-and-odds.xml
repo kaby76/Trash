@@ -1,0 +1,40 @@
+<ixml
+  ><rule name="S"
+    ><alt
+      ><nonterminal name="evens"
+      /><nonterminal name="eflag"
+    /></alt
+    ><alt
+      ><nonterminal name="odds"
+      /><nonterminal name="oflag"
+    /></alt
+  ></rule
+  ><rule name="evens"
+    ><alt
+      ><alts
+	><alt
+      /></alts
+    ></alt
+    ><alt
+      ><nonterminal name="LE"
+      /><nonterminal name="evens"
+      /><nonterminal name="RE"
+    /></alt
+  ></rule
+  ><rule name="odds"
+    ><alt
+      ><literal string="a"
+    /></alt
+    ><alt
+      ><nonterminal name="LO"
+      /><nonterminal name="odds"
+      /><nonterminal name="RO"
+    /></alt
+  ></rule
+  ><rule name="LE"><alt><literal string="a"/></alt></rule
+  ><rule name="RE"><alt><literal string="a"/></alt></rule
+  ><rule name="LO"><alt><literal string="a"/></alt></rule
+  ><rule name="RO"><alt><literal string="a"/></alt></rule
+  ><rule name="eflag"><alt><literal string="e"/></alt></rule
+  ><rule name="oflag"><alt><literal string="o"/></alt></rule
+></ixml>
