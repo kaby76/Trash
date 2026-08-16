@@ -50,6 +50,7 @@ This program is part of the Trash toolkit.]]>
 		<ProjectReference Include="../grammars/rex/Generated-CSharp/rex.csproj" />
 		<ProjectReference Include="../grammars/w3cebnf/Generated-CSharp/w3cebnf.csproj" />
 		<ProjectReference Include="../grammars/xtext/Generated-CSharp/xtext.csproj" />
+		<ProjectReference Include="../grammars/ixml/Generated-CSharp/ixml.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="readme.md" Pack="true" PackagePath="" />

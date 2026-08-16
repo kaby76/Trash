@@ -63,6 +63,7 @@ class Command
                         ".iso" => "Iso14977",
                         ".pegjs" => "Pegjs",
                         ".pest" => "Pest",
+                        ".ixml" => "ixml",
                         _ => null
                     };
                     config.Type = parser_type;
