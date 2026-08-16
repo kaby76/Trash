@@ -915,14 +915,18 @@ namespace Trash
                 }
             }
             {
-                var spec_examplesy = navigator
+                var spec_all_inputs = navigator
                     .Select("/desc/inputs", nsmgr)
                     .Cast<XPathNavigator>()
-                    .Select(t => t.Value)
-                    .FirstOrDefault();
-                if (config.example_files == null && spec_examplesy != null)
+                    .Select(t => t.Value.Trim())
+                    .Where(t => t != "")
+                    .ToList();
+                if (spec_all_inputs.Any())
                 {
-                    config.example_files = spec_examplesy;
+                    config.all_example_files = spec_all_inputs;
+                    var firstPositive = spec_all_inputs.FirstOrDefault(p => !p.StartsWith("!"));
+                    if (config.example_files == null && firstPositive != null)
+                        config.example_files = firstPositive;
                 }
             }
             {
@@ -997,6 +1001,10 @@ namespace Trash
                         test.grammar_name = config.grammar_name;
                         test.start_rule = config.start_rule;
                         test.example_files = config.example_files;
+                        test.all_example_files = config.all_example_files
+                            ?? (config.example_files != null
+                                ? new List<string> { config.example_files }
+                                : new List<string> { "examples" });
                         if (test.example_files == null)
                         {
                             test.example_files = "examples";
@@ -1162,12 +1170,15 @@ namespace Trash
                         .Where(t => t.Value != "")
                         .Select(t => t.Value)
                         .FirstOrDefault();
-                    var spec_examplesy = xmltest
+                    var spec_all_inputs_test = xmltest
                         .Select("inputs", nsmgr)
                         .Cast<XPathNavigator>()
-                        .Where(t => t.Value != "")
-                        .Select(t => t.Value)
-                        .FirstOrDefault();
+                        .Select(t => t.Value.Trim())
+                        .Where(t => t != "")
+                        .ToList();
+                    var spec_examplesy = spec_all_inputs_test.Any()
+                        ? spec_all_inputs_test.FirstOrDefault(p => !p.StartsWith("!"))
+                        : null;
                     var all = config.force ? config.targets : test_targets.Intersect(config.targets);
                     foreach (var os_target in test_ostargets)
                     {
@@ -1214,13 +1225,19 @@ namespace Trash
                             if (spec_examplesy != null)
                             {
                                 test.example_files = spec_examplesy;
+                                test.all_example_files = spec_all_inputs_test.Any()
+                                    ? spec_all_inputs_test
+                                    : new List<string> { spec_examplesy };
                             } else if (config.example_files != null)
                             {
                                 test.example_files = config.example_files.Trim();
+                                test.all_example_files = config.all_example_files
+                                    ?? new List<string> { config.example_files.Trim() };
                             }
                             else
                             {
                                 test.example_files = "examples";
+                                test.all_example_files = new List<string> { "examples" };
                             }
 
                             if (spec_antlr_tool_args.Contains("-package"))
@@ -1851,6 +1868,16 @@ namespace Trash
             t.Add("example_files_win", RemoveTrailingSlash(test.example_files.Replace('/', '\\')));
             t.Add("example_dir_unix", RemoveTrailingSlash(GetBaseDir(test.example_files.Replace('\\', '/'))));
             t.Add("example_dir_win", RemoveTrailingSlash(GetBaseDir(test.example_files.Replace('/', '\\'))));
+            // Pre-compute single-quoted glob arguments for generated shell/ps1 scripts.
+            // Negation patterns (starting with '!') get a '!../' prefix; others get '../'.
+            var globArgsUnix = string.Join(" ", test.all_example_files.Select(p =>
+                p.StartsWith("!") ? $"'!../{p.Substring(1).Replace('\\', '/')}'"
+                                  : $"'../{p.Replace('\\', '/')}'"));
+            var globArgsWin = string.Join(" ", test.all_example_files.Select(p =>
+                p.StartsWith("!") ? $"'!..\\{p.Substring(1).Replace('/', '\\')}'"
+                                  : $"'..\\{p.Replace('/', '\\')}'"));
+            t.Add("glob_args_unix", globArgsUnix);
+            t.Add("glob_args_win",  globArgsWin);
             t.Add("exec_name", GetOSTarget() == OSPlatform.Windows ? "Test.exe" : "Test");
             t.Add("go_lexer_name", test.fully_qualified_go_lexer_name);
             t.Add("go_parser_name", test.fully_qualified_go_parser_name);

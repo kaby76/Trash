@@ -15,6 +15,7 @@ namespace Trash
         public CaseInsensitiveType? case_insensitive_type { get; set; } = null;
         public string current_directory;
         public string example_files { get; set; } = "examples/";
+        public List<string> all_example_files { get; set; } = new List<string> { "examples/" };
         public string fully_qualified_lexer_name { get; set; }
         public string fully_qualified_listener_name { get; set; }
         public string fully_qualified_parser_name { get; set; }
