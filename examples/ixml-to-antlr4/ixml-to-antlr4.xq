@@ -61,4 +61,14 @@
  let $unescaped := fn:replace($inner, '""', '"')
  let $escaped   := fn:replace($unescaped, "'", "\\'")
  let $new       := concat("'", $escaped, "'")
- return replace value of node $s with $new)
+ return replace value of node $s with $new),
+
+(: Step 11: Lowercase any nonterminal names that begin with an uppercase letter,
+   appending '_' to avoid collisions with existing lowercase names.
+   Antlr4 requires parser rule names to start with a lowercase letter; names
+   starting with uppercase are treated as lexer (token) rules.
+   Applies to both rule definitions (rule_/name/NAME) and all references
+   (nonterminal/name/NAME) so every occurrence is renamed consistently. :)
+(for $n in //name/NAME
+ where matches(string($n), "^[A-Z]")
+ return replace value of node $n with concat(fn:lower-case(string($n)), "_"))
