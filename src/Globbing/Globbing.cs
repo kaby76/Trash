@@ -26,6 +26,7 @@ namespace TrashGlobbing
         {
             var regex = new StringBuilder();
             var characterClass = false;
+            int braceDepth = 0;
             regex.Append("^");
             int ptr = 0;
             for ( ; ptr < glob.Length; ++ptr)
@@ -67,6 +68,39 @@ namespace TrashGlobbing
                         characterClass = true;
                         regex.Append(c);
                         break;
+                    case '{':
+                        // Begin alternation group: {a,b,c} → (?:a|b|c)
+                        // Only treat as alternation when a matching '}' exists; otherwise
+                        // emit a literal '\{' so the regex stays valid.
+                        if (HasMatchingBrace(glob, ptr + 1))
+                        {
+                            braceDepth++;
+                            regex.Append("(?:");
+                        }
+                        else
+                        {
+                            regex.Append("\\{");
+                        }
+                        break;
+                    case '}':
+                        if (braceDepth > 0)
+                        {
+                            braceDepth--;
+                            regex.Append(")");
+                        }
+                        else
+                        {
+                            // Unmatched '}' — treat as literal
+                            regex.Append("\\}");
+                        }
+                        break;
+                    case ',':
+                        // Inside braces ',' is the alternation separator; outside it is literal
+                        if (braceDepth > 0)
+                            regex.Append("|");
+                        else
+                            regex.Append(",");
+                        break;
                     default:
                         if (RegexSpecialChars.Contains(c)) regex.Append('\\');
                         regex.Append(c);
@@ -75,6 +109,23 @@ namespace TrashGlobbing
             }
             regex.Append("$");
             return regex.ToString();
+        }
+
+        // Returns true if there is a '}' in glob[start..] that closes the
+        // immediately enclosing '{' (i.e. at brace depth 0 relative to start).
+        private static bool HasMatchingBrace(string glob, int start)
+        {
+            int depth = 0;
+            for (int i = start; i < glob.Length; i++)
+            {
+                if (glob[i] == '{') depth++;
+                else if (glob[i] == '}')
+                {
+                    if (depth == 0) return true;
+                    depth--;
+                }
+            }
+            return false;
         }
 
         private List<DirectoryInfo> GetDirectory(string cwd, string expr)

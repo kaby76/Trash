@@ -76,6 +76,7 @@ public class Config
     public string SetupFfn = ".trgen.rc";
     public string root_directory;
     public string example_files { get; set; }
+    public List<string> all_example_files { get; set; }
 
     public List<Test> Tests;
 
@@ -146,5 +147,5 @@ public class Config
     public bool deps { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "2.1.0";
+    public string Version { get; set; } = "2.2.0";
 }

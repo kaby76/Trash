@@ -1,6 +1,6 @@
-﻿using System.IO;
+﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
-using System.Text.RegularExpressions;
 
 namespace Trash;
 
@@ -19,32 +19,66 @@ class Command
     {
         string cwd = System.Environment.CurrentDirectory;
         cwd = cwd.Replace("\\", "/");
-        if (!cwd.EndsWith("\\")) cwd += "/";
+        if (!cwd.EndsWith("/")) cwd += "/";
         DirectoryInfo cwdi = new DirectoryInfo(cwd);
-        foreach (var p in config.Files)
+
+        // Separate positive patterns from negation patterns (prefix '!').
+        var positivePatterns = config.Files.Where(p => !p.StartsWith("!")).ToList();
+        var negativePatterns = config.Files
+            .Where(p => p.StartsWith("!"))
+            .Select(p => p.Substring(1))
+            .ToList();
+
+        // Collect files from all positive patterns.
+        var allFiles = new List<string>();
+        foreach (var p in positivePatterns)
         {
             var glob = new TrashGlobbing.Glob();
             var z = p.Replace("\\", "/");
-            var list_pp = glob
+            var matches = glob
                 .GlobContents(cwdi, z, true)
                 .Select(f =>
                 {
                     var n = f.FullName.Replace('\\', '/');
-                    var r = n;
                     if (!config.Full)
                     {
-                        r = System.IO.Path.GetRelativePath(cwd, n);
-                        r = r.Replace('\\', '/');
+                        var r = System.IO.Path.GetRelativePath(cwd, n);
+                        return r.Replace('\\', '/');
                     }
-                    return r;
+                    return n;
+                });
+            allFiles.AddRange(matches);
+        }
+
+        allFiles = allFiles.Distinct().ToList();
+
+        // Remove files matching any negation pattern, using GlobContents so that
+        // inclusion and exclusion share the same matching semantics (segment-aware,
+        // ** handling, separator normalisation, etc.).
+        foreach (var negPat in negativePatterns)
+        {
+            var negGlob = new TrashGlobbing.Glob();
+            var z = negPat.Replace("\\", "/");
+            var negMatches = negGlob
+                .GlobContents(cwdi, z, true)
+                .Select(f =>
+                {
+                    var n = f.FullName.Replace('\\', '/');
+                    if (!config.Full)
+                    {
+                        var r = System.IO.Path.GetRelativePath(cwd, n);
+                        return r.Replace('\\', '/');
+                    }
+                    return n;
                 })
-                .ToList();
-            list_pp.Sort();
-            list_pp = list_pp.Distinct().ToList();
-            foreach (var y in list_pp)
-            {
-                System.Console.WriteLine(y);
-            }
+                .ToHashSet();
+            allFiles = allFiles.Where(f => !negMatches.Contains(f)).ToList();
+        }
+
+        allFiles.Sort();
+        foreach (var y in allFiles)
+        {
+            System.Console.WriteLine(y);
         }
 
         return 0;

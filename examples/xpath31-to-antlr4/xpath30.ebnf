@@ -1,0 +1,209 @@
+[1]   	XPath	   ::=   	Expr
+[2]   	ParamList	   ::=   	Param ("," Param)*
+[3]   	Param	   ::=   	"$" EQName TypeDeclaration?
+[4]   	FunctionBody	   ::=   	EnclosedExpr
+[5]   	EnclosedExpr	   ::=   	"{" Expr "}"
+[6]   	Expr	   ::=   	ExprSingle ("," ExprSingle)*
+[7]   	ExprSingle	   ::=   	ForExpr
+| LetExpr
+| QuantifiedExpr
+| IfExpr
+| OrExpr
+[8]   	ForExpr	   ::=   	SimpleForClause "return" ExprSingle
+[9]   	SimpleForClause	   ::=   	"for" SimpleForBinding ("," SimpleForBinding)*
+[10]   	SimpleForBinding	   ::=   	"$" VarName "in" ExprSingle
+[11]   	LetExpr	   ::=   	SimpleLetClause "return" ExprSingle
+[12]   	SimpleLetClause	   ::=   	"let" SimpleLetBinding ("," SimpleLetBinding)*
+[13]   	SimpleLetBinding	   ::=   	"$" VarName ":=" ExprSingle
+[14]   	QuantifiedExpr	   ::=   	("some" | "every") "$" VarName "in" ExprSingle ("," "$" VarName "in" ExprSingle)* "satisfies" ExprSingle
+[15]   	IfExpr	   ::=   	"if" "(" Expr ")" "then" ExprSingle "else" ExprSingle
+[16]   	OrExpr	   ::=   	AndExpr ( "or" AndExpr )*
+[17]   	AndExpr	   ::=   	ComparisonExpr ( "and" ComparisonExpr )*
+[18]   	ComparisonExpr	   ::=   	StringConcatExpr ( (ValueComp
+| GeneralComp
+| NodeComp) StringConcatExpr )?
+[19]   	StringConcatExpr	   ::=   	RangeExpr ( "||" RangeExpr )*
+[20]   	RangeExpr	   ::=   	AdditiveExpr ( "to" AdditiveExpr )?
+[21]   	AdditiveExpr	   ::=   	MultiplicativeExpr ( ("+" | "-") MultiplicativeExpr )*
+[22]   	MultiplicativeExpr	   ::=   	UnionExpr ( ("*" | "div" | "idiv" | "mod") UnionExpr )*
+[23]   	UnionExpr	   ::=   	IntersectExceptExpr ( ("union" | "|") IntersectExceptExpr )*
+[24]   	IntersectExceptExpr	   ::=   	InstanceofExpr ( ("intersect" | "except") InstanceofExpr )*
+[25]   	InstanceofExpr	   ::=   	TreatExpr ( "instance" "of" SequenceType )?
+[26]   	TreatExpr	   ::=   	CastableExpr ( "treat" "as" SequenceType )?
+[27]   	CastableExpr	   ::=   	CastExpr ( "castable" "as" SingleType )?
+[28]   	CastExpr	   ::=   	UnaryExpr ( "cast" "as" SingleType )?
+[29]   	UnaryExpr	   ::=   	("-" | "+")* ValueExpr
+[30]   	ValueExpr	   ::=   	SimpleMapExpr
+[31]   	GeneralComp	   ::=   	"=" | "!=" | "<" | "<=" | ">" | ">="
+[32]   	ValueComp	   ::=   	"eq" | "ne" | "lt" | "le" | "gt" | "ge"
+[33]   	NodeComp	   ::=   	"is" | "<<" | ">>"
+[34]   	SimpleMapExpr	   ::=   	PathExpr ("!" PathExpr)*
+[35]   	PathExpr	   ::=   	("/" RelativePathExpr?)
+| ("//" RelativePathExpr)
+| RelativePathExpr	/* xgc: leading-lone-slash */
+[36]   	RelativePathExpr	   ::=   	StepExpr (("/" | "//") StepExpr)*
+[37]   	StepExpr	   ::=   	PostfixExpr | AxisStep
+[38]   	AxisStep	   ::=   	(ReverseStep | ForwardStep) PredicateList
+[39]   	ForwardStep	   ::=   	(ForwardAxis NodeTest) | AbbrevForwardStep
+[40]   	ForwardAxis	   ::=   	("child" "::")
+| ("descendant" "::")
+| ("attribute" "::")
+| ("self" "::")
+| ("descendant-or-self" "::")
+| ("following-sibling" "::")
+| ("following" "::")
+| ("namespace" "::")
+[41]   	AbbrevForwardStep	   ::=   	"@"? NodeTest
+[42]   	ReverseStep	   ::=   	(ReverseAxis NodeTest) | AbbrevReverseStep
+[43]   	ReverseAxis	   ::=   	("parent" "::")
+| ("ancestor" "::")
+| ("preceding-sibling" "::")
+| ("preceding" "::")
+| ("ancestor-or-self" "::")
+[44]   	AbbrevReverseStep	   ::=   	".."
+[45]   	NodeTest	   ::=   	KindTest | NameTest
+[46]   	NameTest	   ::=   	EQName | Wildcard
+[47]   	Wildcard	   ::=   	"*"
+| (NCName ":" "*")
+| ("*" ":" NCName)
+| (BracedURILiteral "*")	/* ws: explicit */
+[48]   	PostfixExpr	   ::=   	PrimaryExpr (Predicate | ArgumentList)*
+[49]   	ArgumentList	   ::=   	"(" (Argument ("," Argument)*)? ")"
+[50]   	PredicateList	   ::=   	Predicate*
+[51]   	Predicate	   ::=   	"[" Expr "]"
+[52]   	PrimaryExpr	   ::=   	Literal
+| VarRef
+| ParenthesizedExpr
+| ContextItemExpr
+| FunctionCall
+| FunctionItemExpr
+[53]   	Literal	   ::=   	NumericLiteral | StringLiteral
+[54]   	NumericLiteral	   ::=   	IntegerLiteral | DecimalLiteral | DoubleLiteral
+[55]   	VarRef	   ::=   	"$" VarName
+[56]   	VarName	   ::=   	EQName
+[57]   	ParenthesizedExpr	   ::=   	"(" Expr? ")"
+[58]   	ContextItemExpr	   ::=   	"."
+[59]   	FunctionCall	   ::=   	EQName ArgumentList	/* xgc: reserved-function-names */
+/* gn: parens */
+[60]   	Argument	   ::=   	ExprSingle | ArgumentPlaceholder
+[61]   	ArgumentPlaceholder	   ::=   	"?"
+[62]   	FunctionItemExpr	   ::=   	NamedFunctionRef | InlineFunctionExpr
+[63]   	NamedFunctionRef	   ::=   	EQName "#" IntegerLiteral	/* xgc: reserved-function-names */
+[64]   	InlineFunctionExpr	   ::=   	"function" "(" ParamList? ")" ("as" SequenceType)? FunctionBody
+[65]   	SingleType	   ::=   	SimpleTypeName "?"?
+[66]   	TypeDeclaration	   ::=   	"as" SequenceType
+[67]   	SequenceType	   ::=   	("empty-sequence" "(" ")")
+| (ItemType OccurrenceIndicator?)
+[68]   	OccurrenceIndicator	   ::=   	"?" | "*" | "+"	/* xgc: occurrence-indicators */
+[69]   	ItemType	   ::=   	KindTest | ("item" "(" ")") | FunctionTest | AtomicOrUnionType | ParenthesizedItemType
+[70]   	AtomicOrUnionType	   ::=   	EQName
+[71]   	KindTest	   ::=   	DocumentTest
+| ElementTest
+| AttributeTest
+| SchemaElementTest
+| SchemaAttributeTest
+| PITest
+| CommentTest
+| TextTest
+| NamespaceNodeTest
+| AnyKindTest
+[72]   	AnyKindTest	   ::=   	"node" "(" ")"
+[73]   	DocumentTest	   ::=   	"document-node" "(" (ElementTest | SchemaElementTest)? ")"
+[74]   	TextTest	   ::=   	"text" "(" ")"
+[75]   	CommentTest	   ::=   	"comment" "(" ")"
+[76]   	NamespaceNodeTest	   ::=   	"namespace-node" "(" ")"
+[77]   	PITest	   ::=   	"processing-instruction" "(" (NCName | StringLiteral)? ")"
+[78]   	AttributeTest	   ::=   	"attribute" "(" (AttribNameOrWildcard ("," TypeName)?)? ")"
+[79]   	AttribNameOrWildcard	   ::=   	AttributeName | "*"
+[80]   	SchemaAttributeTest	   ::=   	"schema-attribute" "(" AttributeDeclaration ")"
+[81]   	AttributeDeclaration	   ::=   	AttributeName
+[82]   	ElementTest	   ::=   	"element" "(" (ElementNameOrWildcard ("," TypeName "?"?)?)? ")"
+[83]   	ElementNameOrWildcard	   ::=   	ElementName | "*"
+[84]   	SchemaElementTest	   ::=   	"schema-element" "(" ElementDeclaration ")"
+[85]   	ElementDeclaration	   ::=   	ElementName
+[86]   	AttributeName	   ::=   	EQName
+[87]   	ElementName	   ::=   	EQName
+[88]   	SimpleTypeName	   ::=   	TypeName
+[89]   	TypeName	   ::=   	EQName
+[90]   	FunctionTest	   ::=   	AnyFunctionTest
+| TypedFunctionTest
+[91]   	AnyFunctionTest	   ::=   	"function" "(" "*" ")"
+[92]   	TypedFunctionTest	   ::=   	"function" "(" (SequenceType ("," SequenceType)*)? ")" "as" SequenceType
+[93]   	ParenthesizedItemType	   ::=   	"(" ItemType ")"
+[94]   	EQName	   ::=   	QName | URIQualifiedName
+
+
+[95]   	IntegerLiteral	   ::=   	Digits
+[96]   	DecimalLiteral	   ::=   	("." Digits) | (Digits "." [0-9]*)	/* ws: explicit */
+[97]   	DoubleLiteral	   ::=   	(("." Digits) | (Digits ("." [0-9]*)?)) [eE] [+-]? Digits	/* ws: explicit */
+[98]   	StringLiteral	   ::=   	('"' (EscapeQuot | [^"])* '"') | ("'" (EscapeApos | [^'])* "'")	/* ws: explicit */
+[99]   	URIQualifiedName	   ::=   	BracedURILiteral NCName	/* ws: explicit */
+[100]   	BracedURILiteral	   ::=   	"Q" "{" [^{}]* "}"	/* ws: explicit */
+[101]   	EscapeQuot	   ::=   	'""'
+[102]   	EscapeApos	   ::=   	"''"
+[103]   	Comment	   ::=   	"(:" (CommentContents | Comment)* ":)"	/* ws: explicit */
+/* gn: comments */
+[104]   	QName	   ::=   	[http://www.w3.org/TR/REC-xml-names/#NT-QName]Names	/* xgc: xml-version */
+[105]   	NCName	   ::=   	[http://www.w3.org/TR/REC-xml-names/#NT-NCName]Names	/* xgc: xml-version */
+[106]   	Char	   ::=   	[http://www.w3.org/TR/REC-xml#NT-Char]XML	/* xgc: xml-version */
+The following symbols are used only in the definition of terminal symbols; they are not terminal symbols in the grammar of A.1 EBNF.
+
+[107]   	Digits	   ::=   	[0-9]+
+[108]   	CommentContents	   ::=   	(Char+ - (Char* ('(:' | ':)') Char*))
+
+reserved functions
+attribute
+
+comment
+
+document-node
+
+element
+
+empty-sequence
+
+function
+
+if
+
+item
+
+namespace-node
+
+node
+
+processing-instruction
+
+schema-attribute
+
+schema-element
+
+switch
+
+text
+
+typeswitch
+
+A.4 Precedence Order (Non-Normative)
+The grammar in A.1 EBNF normatively defines built-in precedence among the operators of XQuery. These operators are summarized here to make clear the order of their precedence from lowest to highest. The associativity column indicates the order in which operators of equal precedence in an expression are applied.
+
+#	Operator	Associativity
+1	, (comma)	either
+2	for, let, some, every, if	NA
+3	or	either
+4	and	either
+5	eq, ne, lt, le, gt, ge, =, !=, <, <=, >, >=, is, <<, >>	NA
+6	||	left-to-right
+7	to	NA
+8	+, - (binary)	left-to-right
+9	*, div, idiv, mod	left-to-right
+10	union, |	either
+11	intersect, except	left-to-right
+12	instance of	NA
+13	treat as	NA
+14	castable as	NA
+15	cast as	NA
+16	-, + (unary)	right-to-left
+17	!	left-to-right
+18	/, //	left-to-right
+19	[ ]	left-to-right

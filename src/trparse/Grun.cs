@@ -375,6 +375,45 @@ public class Grun
                 }
             }
         }
+        else if (parser_type == "gen")
+        {
+            System.Console.Error.WriteLine("Using Generated-CSharp parser.");
+            string path = config.ParserLocation != null
+                ? config.ParserLocation
+                : Environment.CurrentDirectory + Path.DirectorySeparatorChar;
+            path = path.Replace("\\", "/");
+            if (!path.EndsWith("/")) path = path + "/";
+            var candidates = new[]
+            {
+                path + "Generated-CSharp/bin/Debug/net10.0/",
+                path + "bin/Debug/net10.0/",
+                path + "Generated-CSharp/bin/Release/net10.0/",
+                path + "bin/Release/net10.0/",
+            };
+            string found_path = null;
+            foreach (var candidate in candidates)
+            {
+                if (File.Exists(candidate + config.Dll + ".dll"))
+                {
+                    found_path = Path.GetFullPath(candidate);
+                    break;
+                }
+            }
+            if (found_path != null)
+            {
+                Assembly asm = Assembly.LoadFile(found_path + config.Dll + ".dll");
+                type = asm.GetType("Program");
+            }
+            else
+            {
+                System.Console.Error.WriteLine(
+                    "gen: could not find '" + config.Dll + ".dll' in any of:");
+                foreach (var c in candidates)
+                    System.Console.Error.WriteLine("  " + Path.GetFullPath(c));
+                System.Console.Error.WriteLine(
+                    "Did you run 'dotnet build' in the Generated-CSharp directory?");
+            }
+        }
         else
         {
             System.Console.Error.WriteLine("Using built-in parser.");
@@ -398,7 +437,7 @@ public class Grun
                 "Grammophone" => "grammophone",
                 "Princeton" => "princeton",
                 _ => throw new Exception(
-                    "Unknown built-in parser type. Supported: ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton.")
+                    "Unknown built-in parser type. Supported: ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton, gen.")
             };
             // Get this assembly.
             System.Reflection.Assembly a = this.GetType().Assembly;
