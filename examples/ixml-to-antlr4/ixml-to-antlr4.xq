@@ -33,18 +33,25 @@
 (for $a in //rule_/ASSIGN[. = "="]
  return replace value of node $a with ":"),
 
-(: Step 7: Replace the rule-terminating '.' with Antlr4 ';'. :)
+(: Step 7: Add EOF to the end of the start rule (the first rule_ in the grammar).
+   Per the iXML spec the first rule is the root/start symbol.  Antlr4 requires
+   the start rule to be EOF-terminated.  Insert " EOF" before the DOT so that
+   after Step 8 replaces '.' with ';' the result is '... EOF;'. :)
+(let $dot := (//rule_)[1]/DOT
+ return insert node " EOF" before $dot),
+
+(: Step 8: Replace the rule-terminating '.' with Antlr4 ';'. :)
 (for $d in //rule_/DOT | //version/DOT
  return replace value of node $d with ";"),
 
-(: Step 8: Convert iXML comments '{...}' to Antlr4 block-comment '/* ... */'.
+(: Step 9: Convert iXML comments '{...}' to Antlr4 block-comment '/* ... */'.
    COMMENT tokens are on the hidden channel, so they appear as XDM attributes
    (@COMMENT), not elements (//COMMENT). :)
 (for $c in //@COMMENT
  let $inner := substring(string($c), 2, string-length(string($c)) - 2)
  return replace value of node $c with concat("/* ", $inner, " */")),
 
-(: Step 9: Convert double-quoted iXML string literals to Antlr4 single-quoted.
+(: Step 10: Convert double-quoted iXML string literals to Antlr4 single-quoted.
    e.g., "A" -> 'A', "+" -> '+', "ixml" -> 'ixml'.
    Handles embedded double-quotes (iXML escapes them as "") and embedded
    single-quotes (Antlr4 escapes them as \').
