@@ -1,0 +1,152 @@
+{ Sample grammar from Niklaus Wirth, Grundlagen und Techniken des
+Compilerbaus (Bonn: Addison-Wesley, 1996), pp. 36-37.
+
+Oberon-0.
+
+Rules for ws added for convenience; Wirth assumes the lexer
+eats whitespace. }
+
+{ Revisions:
+  2022-06-15 : CMSMcQ : Use the Lumley construction to trim expressions.
+  2022-06-15 : CMSMcQ : revise S handling again (leading ws pattern).
+                        Make selector and procedures reject epsilon
+                        for clarity in the output
+  2022-06-14 : CMSMcQ : revise S handling (tight tags, where possible).
+                        Hide most literals, use pre-terminal symbols.
+  2018-08-10 : CMSMcQ : correct syntax errors found by DCG parser
+  2018-08-09 : CMSMcQ : made first transcription; needs testing, since
+      the translation from Wirth's EBNF is error-prone.
+}
+
+{ We move the rule for module to the front, since it is the
+start symbol. }
+
+            module = S?, -"MODULE", S, @ident, -";", S?,
+                     declarations,
+                     (-"BEGIN", S?, StatementSequence)?,
+                     -"END", S, @ident_close, -".", S?.
+    
+             ident = letter, (letter; digit)*, S?.
+       ident_close = ident.
+           integer = digit, (digit)*, S?.
+          selector = (member; subscript)+.
+	    member = -".", S?, ident.
+	 subscript = -"[", S?, EXPRESSION, -"]", S?.
+         {selector = (".", S?, ident; "[", S?, expression, "]", S?)*.}
+           -number = integer.
+           -FACTOR = ident
+	           ; number
+		   ; -"(", S?, EXPRESSION, -")", S?
+		   ; factor
+		   .
+            factor = ident, selector
+	           ; "~", S?, FACTOR
+		   .
+             -TERM = FACTOR; term.
+              term = FACTOR, (TIMES; DIV; MOD; AND), FACTOR++(TIMES; DIV; MOD; AND).
+             {term = factor++(TIMES; DIV; MOD; AND).}
+	      
+ -SIMPLEEXPRESSION =  (PLUS; MINUS)?, TERM; SimpleExpression.
+  SimpleExpression =  (PLUS; MINUS)?, TERM, (PLUS; MINUS; OR), TERM++(PLUS; MINUS; OR).
+ {SimpleExpression =  (PLUS; MINUS)?, term++(PLUS; MINUS; OR).}
+
+    { N.B. Simplexpression allows 1, -1, 1 + 1,
+      -1 + 1, but not 1 + -1.
+      I expect that's intentional.
+      I've made it also forbid white space between sign and term.
+    }    
+ 
+       -EXPRESSION = SIMPLEEXPRESSION; expression.
+        expression = SIMPLEEXPRESSION, -COMPARATOR, SIMPLEEXPRESSION.
+       {expression = SimpleExpression, (-COMPARATOR, SimpleExpression)?.}
+       -COMPARATOR = EQL; NEQ; LSS; LEQ; GTR; GEQ.
+        assignment = ident, selector?, -":=", S?, EXPRESSION.
+  ActualParameters = -"(", S?, EXPRESSION**(-",", S?), -")", S?.
+     ProcedureCall = ident, selector?, ActualParameters?.
+       IfStatement = -"IF", S?, condition, 
+                     -"THEN", S?, then-stmts,
+                     (-"ELSIF", S?, condition, 
+		     -"THEN", S?, then-stmts)*,
+                     (-"ELSE", S?, else-stmts)?,
+		     -"END", S?.
+         condition = -EXPRESSION.
+        then-stmts = -StatementSequence.
+        else-stmts = -StatementSequence.
+    WhileStatement = -"WHILE", S?, condition, 
+                     -"DO", S?, do-statements,
+		     -"END", S?.
+     do-statements = -StatementSequence.
+
+         statement = {}
+	 	   ; assignment
+		   ; ProcedureCall
+		   ; IfStatement
+		   ; WhileStatement
+		   .
+ StatementSequence = statement++(-";", S?).
+ 
+ { Wirth's formulation is closer to the following, but that complicates whitespace
+   handling. 
+
+         statement = (assignment; ProcedureCall; IfStatement; WhileStatement)?.
+ StatementSequence = statement++SEMI.
+ }
+
+         IdentList = ident++(-",", S?).
+         ArrayType = -"ARRAY", S?, EXPRESSION, -"OF", S?, type.
+         FieldList = (IdentList, -":", S?, type)?.
+        RecordType = -"RECORD", S?, FieldList++(-";", S?), -"END", S?.
+              type = ident
+	           ; ArrayType
+		   ; RecordType
+		   .
+         FPSection = (-"VAR", S)?, IdentList, -":", S?, type.
+  FormalParameters = -"(", S?, FPSection**(-";", S?), -")", S?.
+  ProcedureHeading = -"PROCEDURE", S, ident, FormalParameters?.
+     ProcedureBody = declarations, 
+                     (-"BEGIN", S?, StatementSequence)?,
+		     -"END", S, @ident.
+ProcedureDeclaration
+                   = ProcedureHeading, -";", S?, ProcedureBody.
+      declarations = constants?, types?, variables?, procedures?.
+         constants = -"CONST", S, (ident, -"=", S?, EXPRESSION, -";", S?)*.
+             types = -"TYPE", S, (IdentList, -"=", S?, type, -";", S?)*.
+         variables = -"VAR", S, (IdentList, -":", S?, type, -";", S?)*.
+        procedures = (ProcedureDeclaration, -";", S?)+.
+
+{ S and comment added here to make the grammar usable without
+  a scanner. N.B. Comments nest. }
+                -S = (ws; comment)+.
+               -ws = -[" "; #09; #0A; #0D].
+
+           comment = -"(*", comment-body, -"*)".
+      comment-body = comment-chars, ((comment++comment-chars), comment-chars?)?.
+    -comment-chars = (cc1; cc2; cc3)+, star*, lpar* | star+, lpar* | lpar+.
+              -cc1 = not-star-or-lpar.
+              -cc2 = lpar+, not-star-or-lpar.
+	      -cc3 = star+, lpar+, not-star-or-lpar
+                   | star+, not-star-or-lrpar.
+ -not-star-or-lpar = ~["*("].
+-not-star-or-lrpar = ~["(*)"].
+             -lpar = "(".
+	     -star = "*".
+
+            -digit = ['0'-'9'].
+           -letter = ['a'-'z'; 'A'-'Z'].
+
+             TIMES = -"*", S?.
+	       DIV = -"DIV", S?.
+	       MOD = -"MOD", S?.
+	       AND = -"AND", S?.
+	      PLUS = -"+", S?.
+	     MINUS = -"-", S?.
+	        OR = -"OR", S?.
+               EQL = -"=", S?.
+	       NEQ = -"#", S?.
+	       LSS = -"<", S?.
+	       LEQ = -"<=", S?.
+	       GTR = -">", S?.
+	       GEQ = -">=", S?.
+
+{ Separators }
+

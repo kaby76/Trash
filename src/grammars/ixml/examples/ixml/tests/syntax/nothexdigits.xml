@@ -1,0 +1,7 @@
+<ixml>
+   <rule name="S">
+      <alt>
+         <literal hex="CAFFEINE"/>
+      </alt>
+   </rule>
+</ixml>

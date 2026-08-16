@@ -1,0 +1,3 @@
+a: b. {This is an unterminated comment
+b: c.
+c: .

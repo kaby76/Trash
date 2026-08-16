@@ -1,0 +1,16 @@
+<expression
+   ><sum
+      ><exp
+         ><id>a</id
+         >^<number>2</number
+      ></exp
+      >+<prod
+         ><id>b</id
+         >×<number>3</number
+      ></prod
+      >+<exp
+         ><id>c</id
+         >^<number>2</number
+      ></exp
+   ></sum
+></expression>

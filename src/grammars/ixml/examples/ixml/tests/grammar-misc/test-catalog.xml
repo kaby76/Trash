@@ -1,0 +1,714 @@
+<tc:test-catalog xmlns:tc="https://github.com/invisibleXML/ixml/test-catalog"
+		 xmlns:ap="http://blackmesatech.com/2019/iXML/Aparecium"
+                 xmlns:ixml="http://invisiblexml.org/NS"
+		 release-date="2022-06-01"
+		 name="Improper grammars">
+  
+  <tc:description>
+    <tc:p>This test set collects some grammars which have
+    various forms of useless rules.  Some but not all of these
+    are non-conforming under the current (2022-06-01) rules of
+    ixml.</tc:p>
+  </tc:description>
+  
+  <tc:description>
+    
+    <tc:p>Note: This test catalog includes alternate results for
+    processors operating in non-standard modes. These are included
+    after the result element, wrapped in an app-info element.  The
+    app-info element also contains tc:options elements describing the
+    conditions under which the result holds. Conditions are assumed to
+    be describable by sets of name/value (usually option/setting)
+    pairs, expressed on the options element as attribute-value
+    specifications. If all the option/setting pairs on any options
+    element in the app-info element apply, then any of the results
+    specified in the app-info element is acceptable.  (So: for both
+    the options elements and the results in the app-info there is an
+    implicit disjunction: if any of the options elements applies, then
+    any of the results is OK.  For the various name/value pairs on an
+    options element, there is an implicit conjunction: the options
+    element applies if ALL of the name/value pairs apply.)</tc:p>
+    
+    <tc:p>In the current state of this catalog, the only options
+    specified are in the ap:* namespace; these have the local names
+     
+      'multiple-definitions', 
+      'undefined-symbols',
+      'unreachable-symbols', and 
+      'unproductive-symbols', 
+
+    with meanings which I hope are obvious.  In all cases, the
+    possible values are "error", "warning", and "silence".  In
+    non-error cases, the grammar may be rewritten internally to
+    eliminate the problem, but unless the user requests that the
+    compiled grammar be returned, there is really no way to know
+    whether this happens or not.</tc:p>
+    
+    <tc:p>For strict ixml conformance, the prescribed values are
+    
+      ap:multiple-definitions = "error", 
+      ap:undefined-symbols = "error",
+      ap:unreachable-symbols = "warning" or "silence", and 
+      ap:unproductive-symbols = "warning" or "silence".
+      
+    </tc:p>    
+    
+    <tc:p>Note that the handling of options is experimental and
+    subject to change without warning.  Anyone using this test set who
+    has opinions or suggestions on the right way to handle such
+    options is invited to contact the author.</tc:p>
+    
+  </tc:description>
+
+  <tc:description>
+    <tc:p>Note also that a test-case result of assert-not-a-grammar is
+    used here in test cases for what the spec will, I believe,
+    eventually describe as dynamic errors in the grammar, or just as
+    dynamic errors. (Greetings from the past, o future user!  If in
+    your world another result is prescribed, like for instance
+    assert-dynamic-error, then you are going to need to update this
+    catalog.  The same applies if you want to specify particular error
+    codes to be raised for particular test cases.)</tc:p>
+  </tc:description>
+
+  <tc:test-set name="multi-1">
+    <tc:created by="cmsmcq" on="2022-03-12"/>
+    <tc:description>
+      <tc:p>A grammar with multiple rules for the same nonterminal.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar>
+      S = 'a'.
+      S = 'b'.
+    </tc:ixml-grammar>
+    
+    <tc:grammar-test>
+      <tc:description>
+	<tc:p>The ixml spec defines this as a non-conforming grammar.</tc:p>
+      </tc:description>	
+      <tc:result>
+	<tc:assert-not-a-grammar error-code="S03"/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:multiple-definitions="warning"/>
+	<tc:options ap:multiple-definitions="silence"/>
+	<tc:assert-xml>
+	  <ixml
+	    ><rule name="S"
+	      ><alt><literal string="a"/></alt
+	    ></rule
+	    ><rule name="S"
+	      ><alt><literal string="b"/></alt
+	    ></rule
+	  ></ixml>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <ixml
+	    ><rule name="S"
+	      ><alt><literal string="a"/></alt
+	      ><alt><literal string="b"/></alt
+	    ></rule
+	  ></ixml>
+	</tc:assert-xml>
+      </tc:app-info>
+    </tc:grammar-test>
+    
+    <tc:test-case name="md-1">
+      <tc:test-string/>
+      <tc:result>
+	<tc:assert-not-a-grammar error-code="S03"/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:multiple-definitions="warning"/>
+	<tc:options ap:multiple-definitions="silence"/>
+	<tc:assert-not-a-sentence/>
+      </tc:app-info>
+    </tc:test-case>
+    
+    <tc:test-case name="md-2">
+      <tc:test-string>a</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-grammar error-code="S03"/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:multiple-definitions="warning"/>
+	<tc:options ap:multiple-definitions="silence"/>
+	<tc:assert-xml>
+	  <S>a</S>
+	</tc:assert-xml>
+      </tc:app-info>
+    </tc:test-case>
+    
+    <tc:test-case name="md-3">
+      <tc:test-string>b</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-grammar error-code="S03"/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:multiple-definitions="warning"/>
+	<tc:options ap:multiple-definitions="silence"/>
+	<tc:assert-xml>
+	  <S>b</S>
+	</tc:assert-xml>
+      </tc:app-info>
+    </tc:test-case>
+    
+  </tc:test-set>
+
+  <tc:test-set name="undefined-1">
+    <tc:created by="cmsmcq" on="2022-03-12"/>
+    <tc:description>
+      <tc:p>A grammar with an undefined nonterminal.</tc:p>
+      <tc:p>Any right-hand side with a required reference to X is
+      useless because X is undefined. Once in the sentential form, X
+      will stay there because it cannot be rewritten.  So the
+      right-hand with the reference can never occur in the successful
+      derivation of a sentence.</tc:p>
+      <tc:p>A simpler grammar that accepts the same language and
+      produces the same parse trees is:
+      
+        S = A; B; '(', S, ')'.
+	A = 'a'.
+	B = 'b'; B.
+      </tc:p>
+    </tc:description>
+    <tc:ixml-grammar>
+      S = A; B; '(', S, ')'.
+      A = 'a'; X, A.
+      B = 'b'; B, X*.
+    </tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:description>
+	<tc:p>The ixml spec defines this as a non-conforming grammar.</tc:p>
+      </tc:description>	
+      <tc:result>
+	<tc:assert-not-a-grammar error-code="S02"/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:undefined-symbols="warning"/>
+	<tc:options ap:undefined-symbols="silence"/>
+	<tc:assert-xml>
+	  <ixml
+	    ><rule name="S"
+	      ><alt><nonterminal name="A"/></alt
+	      ><alt><nonterminal name="B"/></alt
+	      ><alt
+		><literal string="("
+		/><nonterminal name="S"
+		/><literal string=")"
+	      /></alt
+	    ></rule
+	    ><rule name="A"
+	      ><alt><literal string="a"/></alt
+	      ><alt
+		><nonterminal name="X"
+		/><nonterminal name="A"
+	      /></alt
+	    ></rule
+	    ><rule name="B"
+	      ><alt><literal string="b"/></alt
+	      ><alt
+		><nonterminal name="B"
+		/><repeat0><nonterminal name="X"/></repeat0
+	      ></alt
+	    ></rule
+	  ></ixml>
+	</tc:assert-xml>
+	<tc:assert-xml>
+	  <ixml
+	    ><rule name="S"
+	      ><alt><nonterminal name="A"/></alt
+	      ><alt><nonterminal name="B"/></alt
+	      ><alt
+		><literal string="("
+		/><nonterminal name="S"
+		/><literal string=")"
+	      /></alt
+	    ></rule
+	    ><rule name="A"
+	      ><alt><literal string="a"/></alt
+	    ></rule
+	    ><rule name="B"
+	      ><alt><literal string="b"/></alt
+	      ><alt><nonterminal name="B"/></alt
+	    ></rule
+	  ></ixml>
+	</tc:assert-xml>
+      </tc:app-info>
+    </tc:grammar-test>
+
+    <tc:test-case name="undef-1">
+      <tc:test-string/>
+      <tc:result>
+	<tc:assert-not-a-grammar error-code="S02"/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:undefined-symbols="warning"/>
+	<tc:options ap:undefined-symbols="silence"/>
+	<tc:assert-not-a-sentence/>
+      </tc:app-info>
+    </tc:test-case>
+
+    <tc:test-case name="undef-2">
+      <tc:test-string>a</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-grammar error-code="S02"/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:undefined-symbols="warning"/>
+	<tc:options ap:undefined-symbols="silence"/>
+	<tc:assert-xml>
+	  <S><A>a</A></S>
+	</tc:assert-xml>
+      </tc:app-info>
+    </tc:test-case>
+
+    <tc:test-case name="undef-3">
+      <tc:test-string>b</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-grammar error-code="S02"/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:undefined-symbols="warning"/>
+	<tc:options ap:undefined-symbols="silence"/>	
+	<tc:assert-xml>
+	  <S ixml:state="ambiguous"><B>b</B></S>
+	</tc:assert-xml><tc:assert-xml>
+	  <S ixml:state="ambiguous"><B><B>b</B></B></S>
+	</tc:assert-xml><tc:assert-xml>
+	  <S ixml:state="ambiguous"><B><B><B>b</B></B></B></S>
+	</tc:assert-xml><tc:assert-xml>
+	  <S ixml:state="ambiguous"><B><B><B><B>b</B></B></B></B></S>
+	</tc:assert-xml><tc:assert-xml>
+	  <S ixml:state="ambiguous"><B><B><B><B><B>b</B></B></B></B></B></S>
+	</tc:assert-xml><tc:assert-xml>
+	  <S ixml:state="ambiguous"><B><B><B><B><B><B>b</B></B></B></B></B></B></S>
+	</tc:assert-xml>
+      </tc:app-info>
+    </tc:test-case>
+
+    <tc:test-case name="undef-4">
+      <tc:test-string>(a)</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-grammar error-code="S02"/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:undefined-symbols="warning"/>
+	<tc:options ap:undefined-symbols="silence"/>
+	<tc:assert-xml>
+	  <S>(<S><A>a</A></S>)</S>
+	</tc:assert-xml>
+      </tc:app-info>
+    </tc:test-case>
+
+    <tc:test-case name="undef-5">
+      <tc:test-string>((a))</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-grammar error-code="S02"/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:undefined-symbols="warning"/>
+	<tc:options ap:undefined-symbols="silence"/>
+	<tc:assert-xml>
+	  <S>(<S>(<S><A>a</A></S>)</S>)</S>
+	</tc:assert-xml>
+      </tc:app-info>
+    </tc:test-case>
+
+    <tc:test-case name="undef-6">
+      <tc:test-string>(b))</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-grammar error-code="S02"/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:undefined-symbols="warning"/>
+	<tc:options ap:undefined-symbols="silence"/>
+	<tc:assert-not-a-sentence/>
+      </tc:app-info>
+    </tc:test-case>
+  </tc:test-set>
+
+  <tc:test-set name="unreachable-1">
+    <tc:created by="cmsmcq" on="2022-03-12"/>
+    <tc:description>
+      <tc:p>A grammar with an unreachable rule.  The rule for B is
+      useless because B is not reachable from S. So the rule can never
+      occur in the successful derivation of a sentence.</tc:p>
+      <tc:p>It is easy to detect that B is unreachable, because there
+      are no references to B anywhere, and B is not the start
+      symbol.</tc:p>
+      <tc:p>This is a conforming ixml grammar.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar>
+      S = 'a'.
+      B = 'b'.
+    </tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result>
+	<tc:assert-xml>
+	  <ixml
+	    ><rule name="S"
+	      ><alt><literal string="a"/></alt
+	    ></rule
+	    ><rule name="B"
+	      ><alt><literal string="b"/></alt
+	    ></rule
+	  ></ixml>
+	</tc:assert-xml>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unreachable-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:grammar-test>
+    <tc:test-case name="unr-1">
+      <tc:test-string/>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unreachable-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:test-case>
+    <tc:test-case name="unr-2">
+      <tc:test-string>a</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <S>a</S>
+	</tc:assert-xml>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unreachable-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:test-case>
+    <tc:test-case name="unr-3">
+      <tc:test-string>b</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unreachable-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:test-case>
+  </tc:test-set>
+  
+  <tc:test-set name="unreachable-2">
+    <tc:created by="cmsmcq" on="2022-03-12"/>
+    <tc:description>
+      <tc:p>A grammar with two unreachable rules.  The rules for B and
+      C are useless because neither symbol is not reachable from
+      S. Their rules can never occur in the successful derivation of a
+      sentence.</tc:p>
+      <tc:p>A simple check that all nonterminals (with the possible
+      exception of the start symbol) are referred to will not find
+      this problem, because there references to both B and C.  To find
+      that they are unreachable, it is necessary to take the
+      transitive closure of the parent/child relation between
+      terminals on the left and right-hand sides of a rule.  A
+      nonterminal is reachable if (a) it is the start symbol, or if
+      (b) it occurs on the right-hand side of a rule, and the
+      nonterminal on the left-hand side is reachable.</tc:p>
+    </tc:description>
+    
+    <tc:ixml-grammar>
+      S = 'a'.
+      B = 'b'; '(', C, ')'.
+      C = 'c'; '[', B, ']'.
+    </tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result>
+	<tc:assert-xml>
+	  <ixml
+	    ><rule name="S"
+	      ><alt><literal string="a"/></alt
+	    ></rule
+	    ><rule name="B"
+	      ><alt><literal string="b"/></alt
+	      ><alt
+		><literal string="("
+		/><nonterminal name="C"
+		/><literal string=")"
+	      /></alt
+	    ></rule
+	    ><rule name="C"
+	      ><alt><literal string="c"/></alt
+	      ><alt
+		><literal string="["
+		/><nonterminal name="B"
+		/><literal string="]"
+	      /></alt
+	    ></rule
+	  ></ixml>
+	</tc:assert-xml>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unreachable-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:grammar-test>
+    <tc:test-case name="unr-4">
+      <tc:test-string/>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unreachable-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:test-case>
+    <tc:test-case name="unr-5">
+      <tc:test-string>a</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <S>a</S>
+	</tc:assert-xml>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unreachable-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:test-case>
+    <tc:test-case name="unr-6">
+      <tc:test-string>b</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unreachable-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:test-case>
+
+  </tc:test-set>
+
+  <tc:test-set name="non-productive-1">
+    <tc:created by="cmsmcq" on="2022-03-12"/>
+    <tc:description>
+      <tc:p>A grammar with an unproductive nonterminal.  The rule for
+      A is useless because it cannot produce any sequence of terminal
+      symbols: once A is in the sentential form, no rewriting step can
+      eliminate it.</tc:p>
+      <tc:p>This grammar can be cleaned up to the equivalent grammar
+      S = B. B = 'b'.</tc:p>
+    </tc:description>
+    
+    <tc:ixml-grammar>
+      S = A; B.
+      A = 'a', A.
+      B = 'b'.
+    </tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result>
+	<tc:assert-xml>
+	  <ixml
+	    ><rule name="S"
+	      ><alt><nonterminal name="A"/></alt
+	      ><alt><nonterminal name="B"/></alt
+	    ></rule
+	    ><rule name="A"
+	      ><alt><literal string="a"/><nonterminal name="A"/></alt
+	    ></rule
+	    ><rule name="B"
+	      ><alt><literal string="b"/></alt
+	    ></rule
+	  ></ixml>
+	</tc:assert-xml>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unproductive-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:grammar-test>
+    <tc:test-case name="np-1">
+      <tc:test-string/>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unproductive-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:test-case>
+    <tc:test-case name="np-2">
+      <tc:test-string>a</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unproductive-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:test-case>
+    <tc:test-case name="np-3">
+      <tc:test-string>b</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <S><B>b</B></S>
+	</tc:assert-xml>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unproductive-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:test-case>
+
+  </tc:test-set>
+  
+  <tc:test-set name="non-productive-2">
+    <tc:created by="cmsmcq" on="2022-03-12"/>
+    <tc:description>
+      <tc:p>A grammar with two unproductive nonterminals.  Neither A
+      nor C can produce a sequence of terminal symbols, so once they
+      appear in a sentential form the derivation process will never
+      terminate.  The grammar can be rewritten in an equivalent form
+      without their rules, as "S = B. B = 'b'."</tc:p>
+    </tc:description>
+
+    <tc:ixml-grammar>
+      S = A; B.
+      A = 'a', C.
+      B = 'b'; C.
+      C = '(', A, ')'.      
+    </tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result>
+	<tc:assert-xml>
+	  <ixml
+	    ><rule name="S"
+	      ><alt><nonterminal name="A"/></alt
+	      ><alt><nonterminal name="B"/></alt
+	    ></rule
+	    ><rule name="A"
+	      ><alt><literal string="a"/><nonterminal name="C"/></alt
+	    ></rule
+	    ><rule name="B"
+	      ><alt><literal string="b"/></alt
+	      ><alt><nonterminal name="C"/></alt
+	    ></rule
+	    ><rule name="C"
+	      ><alt
+		><literal string="("
+		/><nonterminal name="A"
+		/><literal string=")"
+	      /></alt
+	    ></rule
+	  ></ixml>
+	</tc:assert-xml>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unproductive-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:grammar-test>
+    <tc:test-case name="np-4">
+      <tc:test-string/>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unproductive-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:test-case>
+    <tc:test-case name="np-5">
+      <tc:test-string>a</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unproductive-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:test-case>
+    <tc:test-case name="np-6">
+      <tc:test-string>b</tc:test-string>
+      <tc:result>
+	<tc:assert-xml>
+	  <S><B>b</B></S>
+	</tc:assert-xml>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unproductive-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:test-case>
+  </tc:test-set>
+  
+  <tc:test-set name="non-productive-3">
+    <tc:created by="cmsmcq" on="2022-03-12"/>
+    <tc:description>
+      <tc:p>A grammar with no productive nonterminals.</tc:p>
+      <tc:p>This grammar produces no sentences at all; the language it
+      recognizes is the empty set.</tc:p>
+    </tc:description>
+    <tc:ixml-grammar>
+      S = A; B.
+      A = 'a', C.
+      B = 'b', A; C.
+      C = '(', A, ')'.      
+    </tc:ixml-grammar>
+    <tc:grammar-test>
+      <tc:result>
+	<tc:assert-xml>
+	  <ixml
+	    ><rule name="S"
+	      ><alt><nonterminal name="A"/></alt
+	      ><alt><nonterminal name="B"/></alt
+	    ></rule
+	    ><rule name="A"
+	      ><alt><literal string="a"/><nonterminal name="C"/></alt
+	    ></rule
+	    ><rule name="B"
+	      ><alt><literal string="b"/><nonterminal name="A"/></alt
+	      ><alt><nonterminal name="C"/></alt
+	    ></rule
+	    ><rule name="C"
+	      ><alt
+		><literal string="("
+		/><nonterminal name="A"
+		/><literal string=")"
+	      /></alt
+	    ></rule
+	  ></ixml>
+	</tc:assert-xml>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unproductive-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>      
+    </tc:grammar-test>
+    <tc:test-case name="np-7">
+      <tc:test-string/>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unproductive-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:test-case>
+    <tc:test-case name="np-8">
+      <tc:test-string>a</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unproductive-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:test-case>
+    <tc:test-case name="np-9">
+      <tc:test-string>b</tc:test-string>
+      <tc:result>
+	<tc:assert-not-a-sentence/>
+      </tc:result>
+      <tc:app-info>
+	<tc:options ap:unproductive-symbols="error"/>
+	<tc:assert-not-a-grammar/>
+      </tc:app-info>
+    </tc:test-case>
+
+  </tc:test-set>
+</tc:test-catalog>

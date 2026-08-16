@@ -1,0 +1,14 @@
+{expr: operand+operator.
+operand: id; number.
+-id: @name.
+name: letter+.
+-number: @value.
+value: digit+.
+letter: ["a"-"z"].
+digit: ["0"-"9"].
+operator: "+"; "-"; "×"; "÷".
+                             }
+expr: id; number; expr, operator, expr.
+id: ["a"-"z"]+.
+number: ["0"-"9"]+.
+operator: "+"; "-"; "×"; "÷".

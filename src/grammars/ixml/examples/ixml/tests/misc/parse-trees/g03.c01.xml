@@ -1,0 +1,14 @@
+<css
+  ><rules
+    ><rule
+      ><selector
+        ><name>p</name
+      ></selector
+      ><block>{<properties
+          ><property
+            ><empty
+          /></property
+        ></properties>}</block
+    ></rule
+  ></rules
+></css>

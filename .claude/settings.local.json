@@ -25,7 +25,10 @@
       "Read(//home/Kenne/issues/**)",
       "Bash(find . -name \"desc.xml\" -exec sed -i 's|/_scripts/desc\\\\.xsd|/scripts/desc.xsd|g' {} +)",
       "Bash(mkdir:*)",
-      "Bash(gh api:*)"
+      "Bash(gh api:*)",
+      "Bash(for g in antlr2 antlr3 antlr4 bison grammophone iso14977 javacc lark lbnf pegjs pest princeton rex xtext)",
+      "Read(//c/msys64/home/Kenne/issues/trash-add-ixml/src/grammars/$g/Generated-CSharp/**)",
+      "Bash(done)"
     ]
   }
 }

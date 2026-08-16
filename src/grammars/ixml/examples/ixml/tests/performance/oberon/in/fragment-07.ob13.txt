@@ -1,0 +1,70 @@
+MODULE ORP; (*N. Wirth 1.7.97 / 8.3.2020  Oberon compiler for RISC in Oberon-07*)
+  IMPORT Texts, Oberon, ORS, ORB, ORG;
+  (*Author: Niklaus Wirth, 2014.
+    Parser of Oberon-RISC compiler. Uses Scanner ORS to obtain symbols (tokens),
+    ORB for definition of data structures and for handling import and export, and
+    ORG to produce binary code. ORP performs type checking and data allocation.
+    Parser is target-independent, except for part of the handling of allocations.*)
+
+  TYPE PtrBase = POINTER TO PtrBaseDesc;
+    PtrBaseDesc = RECORD  (*list of names of pointer base types*)
+      name: ORS.Ident; type: ORB.Type; next: PtrBase
+    END ;
+  
+  VAR sym: INTEGER;   (*last symbol read*)
+    dc: LONGINT;    (*data counter*)
+    level, exno, version: INTEGER;
+    newSF: BOOLEAN;  (*option flag*)
+    expression: PROCEDURE (VAR x: ORG.Item);  (*to avoid forward reference*)
+    Type: PROCEDURE (VAR type: ORB.Type);
+    FormalType: PROCEDURE (VAR typ: ORB.Type; dim: INTEGER);
+    modid: ORS.Ident;
+    pbsList: PtrBase;   (*list of names of pointer base types*)
+    dummy: ORB.Object;
+    W: Texts.Writer;
+
+  PROCEDURE Check(s: INTEGER; msg: ARRAY OF CHAR);
+  BEGIN
+    IF sym = s THEN ORS.Get(sym) ELSE ORS.Mark(msg) END
+  END Check;
+
+  PROCEDURE qualident(VAR obj: ORB.Object);
+  BEGIN obj := ORB.thisObj(); ORS.Get(sym);
+    IF obj = NIL THEN ORS.Mark("undef"); obj := dummy END ;
+    IF (sym = ORS.period) & (obj.class = ORB.Mod) THEN
+      ORS.Get(sym);
+      IF sym = ORS.ident THEN obj := ORB.thisimport(obj); ORS.Get(sym);
+        IF obj = NIL THEN ORS.Mark("undef"); obj := dummy END
+      ELSE ORS.Mark("identifier expected"); obj := dummy
+      END
+    END
+  END qualident;
+
+  PROCEDURE CheckBool(VAR x: ORG.Item);
+  BEGIN
+    IF x.type.form # ORB.Bool THEN ORS.Mark("not Boolean"); x.type := ORB.boolType END
+  END CheckBool;
+
+  PROCEDURE CheckInt(VAR x: ORG.Item);
+  BEGIN
+    IF x.type.form # ORB.Int THEN ORS.Mark("not Integer"); x.type := ORB.intType END
+  END CheckInt;
+
+  PROCEDURE CheckSet(VAR x: ORG.Item);
+  BEGIN
+    IF x.type.form # ORB.Set THEN ORS.Mark("not Set"); x.type := ORB.setType END 
+  END CheckSet;
+
+  PROCEDURE CheckSetVal(VAR x: ORG.Item);
+  BEGIN
+    IF x.type.form # ORB.Int THEN ORS.Mark("not Int"); x.type := ORB.setType
+    ELSIF x.mode = ORB.Const THEN
+      IF (x.a < 0) OR (x.a >= 32) THEN ORS.Mark("invalid set") END
+    END 
+  END CheckSetVal;
+  
+BEGIN Texts.OpenWriter(W); Texts.WriteString(W, "OR Compiler  8.3.2020");
+  Texts.WriteLn(W); Texts.Append(Oberon.Log, W.buf);
+  NEW(dummy); dummy.class := ORB.Var; dummy.type := ORB.intType;
+  expression := expression0; Type := Type0; FormalType := FormalType0
+END ORP.

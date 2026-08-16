@@ -1,0 +1,7 @@
+<!-- AMBIGUOUS
+     The input from line.pos 1.2 to 1.2 can be interpreted as 'rule*";"' in 2 different ways:
+     1: rule*";"[1.2:]:  
+     2: rule*";"[1.2:]:  rule+";"[:1.2] 
+-->
+
+<block ixml:state="ambiguous" xmlns:ixml="http://invisiblexml.org/NS">{}</block>

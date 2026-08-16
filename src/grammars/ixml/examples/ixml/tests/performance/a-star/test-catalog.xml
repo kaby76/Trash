@@ -1,0 +1,18 @@
+<test-catalog xmlns="https://github.com/invisibleXML/ixml/test-catalog"
+		 xmlns:ixml="http://invisiblexml.org/NS"
+		 name="A-star"
+		 release-date="2022-07-10"
+		 >
+  <description>
+    <p>A set of grammars differing only in whitespace and comments,
+    and a set of inputs differing mostly in size.</p>
+    <p>The goal is to try to measure the cost of increased input size.</p>
+    <p>Note: There are traces of two distinct designs here: in one,
+    each grammar or input is ten times the size of its predecessor,
+    and in the other each case doubles in size.</p>
+  </description>
+
+  <test-set-ref href="doubling-test-catalog.xml"/>
+  <test-set-ref href="tenfold-test-catalog.xml"/>
+  
+</test-catalog>

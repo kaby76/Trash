@@ -1,0 +1,13 @@
+
+<expression
+   ><prod
+      ><number>234</number
+      >×<bracketed
+         >(<sum
+            ><name>bbbb</name
+            >+<name>cccc</name
+            >+<name>dddd</name
+         ></sum>)</bracketed
+      >×<number>12</number
+   ></prod
+></expression>

@@ -1,0 +1,30 @@
+{A grammar for an Algol60-like language.
+ Inherently ambiguous: dangling else problem}
+ 
+   program: s, statement*.
+-statement: simple; compound.
+   -simple: assignment; call.
+ -compound: if; while; block.
+
+assignment: id, -":=", s, expression.
+
+call: id, -"(", s, expression**(-",", s), -")", s.
+
+if:   -"if",   s, comparison, then, else?.
+then: -"then", s, statement.
+else: -"else", s, statement.
+
+while: -"while", s, comparison, -"do", s, statement.
+
+block: -"begin", s, statement*, -"end", s.
+
+comparison: expression, compare, expression.
+  @compare: ["<=>≠≤≥"], s.
+expression: sum; term.
+       sum: term, -"+", s, term++(-"+", s).
+     -term: product; operand.
+   product: operand, -"×", s, operand++(-"×", s).
+  -operand: id; number; -"(", s, -expression, -")", s.
+        id: [L]+, s.
+    number: ["0"-"9"]+, s.
+        -s: -[' '; #a; #d]*.

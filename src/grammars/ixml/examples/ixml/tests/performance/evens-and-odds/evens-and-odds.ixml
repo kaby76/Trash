@@ -1,0 +1,9 @@
+S = evens, eflag; odds, oflag.
+evens = (); LE, evens, RE.
+odds = 'a'; LO, odds, RO.
+LE = 'a'.
+RE = 'a'.
+LO = 'a'.
+RO = 'a'.
+eflag = 'e'.
+oflag = 'o'.

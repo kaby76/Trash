@@ -1,0 +1,15 @@
+<!-- AMBIGUOUS
+     The input from line.pos 1.1 to 1.8 can be interpreted as 'expr' in 2 different ways:
+     1: expr[1.1:]:  expr[:1.2] operator[:1.4] expr[:1.8] 
+     2: expr[1.1:]:  expr[:1.5] operator[:1.7] expr[:1.8] 
+-->
+
+<expr ixml:state="ambiguous" xmlns:ixml="http://invisiblexml.org/NS"
+  ><expr
+    ><expr><id>a</id></expr
+    ><operator>÷</operator
+    ><expr><id>b</id></expr
+  ></expr
+  ><operator>÷</operator
+  ><expr><id>c</id></expr
+></expr>

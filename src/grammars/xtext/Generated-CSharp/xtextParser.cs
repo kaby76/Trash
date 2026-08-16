@@ -166,12 +166,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitStart(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitStart(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -349,12 +343,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitGrammarID(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitGrammarID(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -423,12 +411,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitAbstractRule(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAbstractRule(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -495,12 +477,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitAbstractMetamodelDeclaration(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAbstractMetamodelDeclaration(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -563,12 +539,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitGeneratedMetamodel(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitGeneratedMetamodel(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -645,12 +615,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitReferencedMetamodel(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitReferencedMetamodel(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -716,12 +680,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitAnnotation(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAnnotation(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -791,12 +749,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitParserRule_(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitParserRule_(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1010,12 +962,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitRuleNameAndParams(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRuleNameAndParams(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1110,12 +1056,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitParameter(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitParameter(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1163,12 +1103,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitTypeRef(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTypeRef(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1237,12 +1171,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitAlternatives(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAlternatives(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1328,12 +1256,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitConditionalBranch(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitConditionalBranch(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1433,12 +1355,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitUnorderedGroup(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitUnorderedGroup(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1518,12 +1434,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitGroup(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitGroup(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1599,12 +1509,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitAbstractToken(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAbstractToken(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1672,12 +1576,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitAbstractTokenWithCardinality(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAbstractTokenWithCardinality(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1760,12 +1658,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitAction(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAction(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1867,12 +1759,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitAbstractTerminal(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAbstractTerminal(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1952,12 +1838,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitKeyword(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitKeyword(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2010,12 +1890,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitRuleCall(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRuleCall(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2106,12 +1980,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitNamedArgument(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitNamedArgument(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2177,12 +2045,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitLiteralCondition(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLiteralCondition(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2253,12 +2115,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitDisjunction(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitDisjunction(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2331,12 +2187,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitConjunction(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitConjunction(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2407,12 +2257,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitNegation(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitNegation(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2492,12 +2336,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitAtom(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAtom(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2564,12 +2402,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitParenthesizedCondition(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitParenthesizedCondition(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2617,12 +2449,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitParameterReference(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitParameterReference(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2669,12 +2495,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitTerminalRuleCall(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTerminalRuleCall(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2725,12 +2545,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitRuleID(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitRuleID(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2792,12 +2606,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitValidID(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitValidID(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2846,12 +2654,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitPredicatedKeyword(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitPredicatedKeyword(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2933,12 +2735,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitPredicatedRuleCall(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitPredicatedRuleCall(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3057,12 +2853,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitAssignment(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAssignment(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3171,12 +2961,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitAssignableTerminal(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAssignableTerminal(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3250,12 +3034,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitParenthesizedAssignableElement(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitParenthesizedAssignableElement(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3307,12 +3085,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitAssignableAlternatives(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAssignableAlternatives(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3393,12 +3165,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitCrossReference(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitCrossReference(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3472,12 +3238,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitCrossReferenceableTerminal(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitCrossReferenceableTerminal(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3539,12 +3299,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitParenthesizedElement(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitParenthesizedElement(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3593,12 +3347,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitPredicatedGroup(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitPredicatedGroup(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3690,12 +3438,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitTerminalRule(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTerminalRule(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -3826,12 +3568,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitTerminalAlternatives(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTerminalAlternatives(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3911,12 +3647,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitTerminalGroup(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTerminalGroup(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -3988,12 +3718,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitTerminalToken(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTerminalToken(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4074,12 +3798,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitTerminalTokenElement(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitTerminalTokenElement(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4167,12 +3885,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitParenthesizedTerminalElement(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitParenthesizedTerminalElement(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -4224,12 +3936,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitAbstractNegatedToken(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitAbstractNegatedToken(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4290,12 +3996,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitNegatedToken(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitNegatedToken(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -4347,12 +4047,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitUntilToken(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitUntilToken(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -4395,12 +4089,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitWildcard(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitWildcard(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -4440,12 +4128,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitEOF(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEOF(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4492,12 +4174,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitCharacterRange(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitCharacterRange(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4574,12 +4250,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitEnumRule(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEnumRule(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -4678,12 +4348,6 @@ public partial class xtextParser : Parser {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitEnumLiterals(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEnumLiterals(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -4762,12 +4426,6 @@ public partial class xtextParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IxtextListener typedListener = listener as IxtextListener;
 			if (typedListener != null) typedListener.ExitEnumLiteralDeclaration(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IxtextVisitor<TResult> typedVisitor = visitor as IxtextVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEnumLiteralDeclaration(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 

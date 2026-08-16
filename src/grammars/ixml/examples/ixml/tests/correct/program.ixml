@@ -1,0 +1,17 @@
+program: block.
+block: "{", S, statement**(";", S), "}", S.
+statement: if-statement; while-statement; assignment; call; block; .
+if-statement: "if", S, condition, "then", S, statement, else-part?.
+else-part: "else", S, statement.
+while-statement: "while", S, condition, "do", S, statement.
+assignment: variable, "=", S, expression.
+variable: identifier.
+call: identifier, "(", S, parameter**(",", S), ")", S.
+parameter: -expression.
+identifier: letter+, S.
+expression: identifier; number.
+number: digit+, S.
+-letter: ["a"-"z"]; ["A"-"Z"].
+-digit: ["0"-"9"].
+condition: identifier.
+-S: " "*.

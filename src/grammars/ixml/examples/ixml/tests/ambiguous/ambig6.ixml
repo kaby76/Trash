@@ -1,0 +1,4 @@
+block: "{", rule**";", "}".
+rule: name, "=", value; .
+name: [L]+.
+value: [Nd]+.

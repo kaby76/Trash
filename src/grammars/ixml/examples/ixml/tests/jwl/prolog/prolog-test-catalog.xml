@@ -1,0 +1,134 @@
+<test-catalog
+  xmlns:ixml="http://invisiblexml.org/NS" release-date="2022-05-17" name="Prolog tests"
+  xmlns="https://github.com/cmsmcq/ixml-tests">
+  <description>
+    <p>This test set collects some grammars with prolog information.</p>
+  </description>
+
+  <description>
+
+    <p>Note: </p>
+
+
+
+  </description>
+
+
+  <test-set name="prolog-1a">
+    <created by="jwL" on="2022-05-16"/>
+    <description>
+      <p>A grammar with a simple version.</p>
+    </description>
+    <ixml-grammar> 
+      ixml version "1.3".
+      P:["B"-"D"].  
+    </ixml-grammar>
+    <grammar-test>
+      <assert-xml>
+        <ixml xmlns="">
+          <prolog>
+            <version string="1.3"/>
+          </prolog>
+          <rule name="P">
+            <alt>
+              <inclusion>
+                <member from="B" to="D"/>
+              </inclusion>
+            </alt>
+          </rule>
+        </ixml>
+      </assert-xml>
+    </grammar-test>
+  </test-set>
+
+  <test-set name="prolog-1b">
+    <created by="jwL" on="2022-05-16"/>
+    <description>
+      <p>A grammar with a simple version using single quotes.</p>
+    </description>
+    <ixml-grammar> 
+      ixml version '1.3'.
+      P:["B"-"D"].  
+    </ixml-grammar>
+    <grammar-test>
+      <assert-xml>
+        <ixml xmlns="">
+          <prolog>
+            <version string="1.3"/>
+          </prolog>
+          <rule name="P">
+            <alt>
+              <inclusion>
+                <member from="B" to="D"/>
+              </inclusion>
+            </alt>
+          </rule>
+        </ixml>
+      </assert-xml>
+    </grammar-test>
+  </test-set>
+
+  <test-set name="prolog-2">
+    <created by="jwL" on="2022-05-17"/>
+    <description>
+      <p>A grammar with an incorrect version.</p>
+    </description>
+    <ixml-grammar> ixml version P:["B"-"D"]. </ixml-grammar>
+    <grammar-test>
+      <assert-not-a-grammar/>
+    </grammar-test>
+  </test-set>
+
+  <test-set name="prolog-3">
+    <created by="jwL" on="2022-05-17"/>
+    <description>
+      <p>A grammar with a simple version and a rule named ixml.</p>
+    </description>
+    <ixml-grammar> ixml version "1.3". ixml:["B"-"D"]. </ixml-grammar>
+    <grammar-test>
+      <assert-xml>
+        <ixml xmlns="">
+          <prolog>
+            <version string="1.3"/>
+          </prolog>
+          <rule name="ixml">
+            <alt>
+              <inclusion>
+                <member from="B" to="D"/>
+              </inclusion>
+            </alt>
+          </rule>
+        </ixml>
+      </assert-xml>
+    </grammar-test>
+  </test-set>
+
+  <test-set name="prolog-4">
+    <created by="jwL" on="2022-05-17"/>
+    <description>
+      <p>A grammar with a rule that might be mistaken for a version.</p>
+    </description>
+    <ixml-grammar> ixml: version. version: "1.3". </ixml-grammar>
+    <grammar-test>
+      <assert-xml>
+        <ixml xmlns="">
+          <rule name="ixml">
+            <alt>
+              <nonterminal name="version"/>
+            </alt>
+          </rule>
+          <rule name="version">
+            <alt>
+              <literal string="1.3"/>
+            </alt>
+          </rule>
+        </ixml>
+      </assert-xml>
+    </grammar-test>
+  </test-set>
+
+
+
+
+
+</test-catalog>

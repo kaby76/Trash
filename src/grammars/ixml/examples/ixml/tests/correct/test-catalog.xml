@@ -1,0 +1,1380 @@
+<test-catalog xmlns="https://github.com/invisibleXML/ixml/test-catalog"
+              release-date="2022-11-22"
+	      name="Tests producing parse trees">
+
+  <description>
+    <p>Tests provided by Steven Pemberton in December 2021, with
+    corrections of 21 December. Reorganized by Norm Tovey-Walsh,
+    February 2022.</p>
+
+  </description>
+
+  <test-set name="ixml tests">
+    <created on="2021-12-16" by="SP"/>
+    <modified on="2021-12-21" by="SP"
+	      change="Corrected input, grammar, or output for 5 tests"/>
+    <modified on="2021-12-30" by="MSM"
+	      change="Updated catalog, corrected many tests."/>
+    <modified on="2022-05-30" by="MSM"
+	      change="Add whitespace-and-delimiters test sets."/>
+
+    <test-set name="address">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="address.ixml"/>
+      <test-case name="address">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove all but one trailing LF from input"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="remove nonsignificant whitespace from
+			  expected result"/>
+	<test-string-ref href="address.inp"/>
+	<result>
+	  <assert-xml-ref href="address.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+    <test-set name="arith">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="arith.ixml"/>
+      <test-case name="arith">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="remove nonsignificant whitespace from expected result"/>
+	<test-string-ref href="arith.inp"/>
+	<result>
+	  <assert-xml-ref href="arith.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="attribute-value">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="attribute-value.ixml"/>
+      <test-case name="attribute-value">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<test-string-ref href="attribute-value.inp"/>
+	<result>
+	  <assert-xml-ref href="attribute-value.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="attribute-multipart">
+      <description>
+        <p>Test that an attribute value constructed from multiple children
+        is correctly interpreted.</p>
+      </description>
+      <created by="ndw" on="2022-03-11"/>
+      <ixml-grammar-ref href="attr-multipart.ixml"/>
+      <test-case name="attribute-multipart">
+        <created by="ndw" on="2022-03-11"/>
+	<test-string>February, 2022</test-string>
+	<result>
+	  <assert-xml><date month="February" xmlns=""><year>2022</year></date></assert-xml>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="diary">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="diary.ixml"/>
+      <test-case name="diary">
+	<created by="SP" on="2021-12-16"/>
+	<modified
+	    by="MSM"
+	    on="2022-01-01"
+	    change="stripped non-significant whitespace from result"/>
+	<test-string-ref href="diary.inp"/>
+	<result>
+	  <assert-xml-ref href="diary.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="diary2">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="diary2.ixml"/>
+      <test-case name="diary2">
+	<created by="SP" on="2021-12-16"/>
+	<modified
+	    by="MSM"
+	    on="2022-01-01"
+	    change="stripped non-significant whitespace from result"/>
+	<test-string-ref href="diary2.inp"/>
+	<result>
+	  <assert-xml-ref href="diary2.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="diary3">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="diary3.ixml"/>
+      <test-case name="diary3">
+	<created by="SP" on="2021-12-16"/>
+	<modified
+	    by="MSM"
+	    on="2021-12-30"
+	    change="stripped non-significant whitespace from result"/>
+	<test-string-ref href="diary3.inp"/>
+	<result>
+	  <assert-xml-ref href="diary3.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="email">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="email.ixml"/>
+      <test-case name="email">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<test-string-ref href="email.inp"/>
+	<result>
+	  <assert-xml-ref href="email.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+    <test-set name="expr">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="expr.ixml"/>
+      <test-case name="expr">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified
+	    by="MSM"
+	    on="2022-01-01"
+	    change="stripped non-significant whitespace from result"/>
+	<test-string-ref href="expr.inp"/>
+	<result>
+	  <assert-xml-ref href="expr.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="expr1">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="expr1.ixml"/>
+      <test-case name="expr1">
+        <created by="SP" on="2021-12-16"/>
+        <modified by="MSM" on="2021-12-23"
+                  change="Change result"/>
+        <modified by="MSM" on="2022-01-01"
+                  change="remove trailing whitespace from input"/>
+        <modified by="MSM" on="2022-01-01"
+                  change="remove whitespace from expected result"/>
+        <modified by="MSM" on="2022-05-21"
+                  change="change to assert-dynamic-error"/>
+        <test-string-ref href="expr1.inp"/>
+        <description>
+          <p>Illustrates the way to handle dynamic errors in a test:
+          use assert-dynamic-error.</p>
+          <p>It's not formally a grammar error, since this grammar
+          will work fine for some inputs and processors are not
+          required to reject the grammar.  So assert-not-a-grammar
+          is not the right thing.</p>
+          <p>It's not formally a failure to parse the input, since
+          this input string is perfectly grammatical against this
+          input grammar.  So assert-not-a-sentence is not the right
+          thing.</p>
+          <p>The error arises in serialization and only at run time.
+          So assert-dynamic-error.</p>
+        </description>
+        <result>
+          <assert-dynamic-error error-code="D01 D02"/>
+	</result>
+      </test-case>
+    </test-set>
+
+    <test-set name="expr2">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="expr2.ixml"/>
+      <test-case name="expr2">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="remove whitespace from expected result"/>
+	<test-string-ref href="expr2.inp"/>
+	<result>
+	  <assert-xml-ref href="expr2.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="expr3">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="expr3.ixml"/>
+      <test-case name="expr3">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="remove whitespace from expected result"/>
+	<test-string-ref href="expr3.inp"/>
+	<result>
+	  <assert-xml-ref href="expr3.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="expr4">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="expr4.ixml"/>
+      <test-case name="expr4">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="remove whitespace from expected result"/>
+	<test-string-ref href="expr4.inp"/>
+	<result>
+	  <assert-xml-ref href="expr4.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="expr5">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="expr5.ixml"/>
+      <test-case name="expr5">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="remove trailing whitespace from input, again"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="remove whitespace from expected result"/>
+	<test-string-ref href="expr5.inp"/>
+	<result>
+	  <assert-xml-ref href="expr5.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="expr6">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="expr6.ixml"/>
+      <test-case name="expr6">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="remove pretty-printing whitespace from expected result"/>
+	<test-string-ref href="expr6.inp"/>
+	<result>
+	  <assert-xml-ref href="expr6.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="hash">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="hash.ixml"/>
+      <test-case name="hash">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="remove pretty-printing whitespace from expected result"/>
+	<test-string-ref href="hash.inp"/>
+	<result>
+	  <assert-xml-ref href="hash.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="hex">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="hex.ixml"/>
+      <test-case name="hex">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<test-string-ref href="hex.inp"/>
+	<result>
+	  <assert-xml-ref href="hex.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="hex1">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="hex1.ixml"/>
+      <test-case name="hex1">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<test-string-ref href="hex1.inp"/>
+	<result>
+	  <assert-xml-ref href="hex1.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="hex3">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="hex3.ixml"/>
+      <test-case name="hex3">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="remove trailing whitespace from input"/>
+	<test-string-ref href="hex3.inp"/>
+	<result>
+	  <assert-xml-ref href="hex3.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="json">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="json.ixml"/>
+      <test-case name="json">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="removed non-significant whitespace
+			  from expected result"/>
+	<test-string-ref href="json.inp"/>
+	<result>
+	  <assert-xml-ref href="json.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="json1">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="json1.ixml"/>
+      <test-case name="json1">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="replace trailing LF in input with space"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="removed non-significant whitespace
+			  from expected result"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="trimmed trailing blank to agree with
+			  expected result, it is not actually
+			  required by the grammar"/>
+	<test-string-ref href="json1.inp"/>
+	<result>
+	  <assert-xml-ref href="json1.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="lf">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="lf.ixml"/>
+      <test-case name="lf">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="Stripped whitespace from expected result"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="Stripped final empty line element from
+			  expected result, no trailing lf in input"/>
+	<test-string-ref href="lf.inp"/>
+	<result>
+	  <assert-xml-ref href="lf.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="marked">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="marked.ixml"/>
+      <test-case name="marked">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="removed all whitespace from
+			  expected result"/>
+	<test-string-ref href="marked.inp"/>
+	<result>
+	  <assert-xml-ref href="marked.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="nested-comment">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="nested-comment.ixml"/>
+      <test-case name="nested-comment">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="remove nonsignificant whitespace from
+			  expected result"/>
+	<test-string-ref href="nested-comment.inp"/>
+	<result>
+	  <assert-xml-ref href="nested-comment.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="para-test">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="para-test.ixml"/>
+      <test-case name="para-test">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="changed result"/>
+	<modified by="NDW" on="2022-05-12"
+		  change="changed result"/>
+	<test-string-ref href="para-test.inp"/>
+	<result>
+	  <assert-xml-ref href="para-test.output.xml"/>
+	</result>
+	<description>
+	  <p>The grammar as written allows only one section; the input
+	  has several. The error was probably in the formulation of
+	  the grammar. The grammar has been updated to one possible
+          correct forumulation.</p>
+	</description>
+
+      </test-case>
+    </test-set>
+
+
+    <test-set name="poly">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="poly.ixml"/>
+      <test-case name="poly">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="remove nonsignificant whitespace from
+			  expected result"/>
+	<test-string-ref href="poly.inp"/>
+	<result>
+	  <assert-xml-ref href="poly.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="program">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="program.ixml"/>
+      <test-case name="program">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="remove nonsignificant whitespace from
+			  expected result"/>
+	<test-string-ref href="program.inp"/>
+	<result>
+	  <assert-xml-ref href="program.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="range">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="range.ixml"/>
+      <description>
+	<p>Possible problem:  range [#0 - #9]
+	includes non-XML characters.  Legal?</p>
+      </description>
+      <test-case name="range">
+	<created by="SP" on="2021-12-16"/>
+	<test-string-ref href="range.inp"/>
+	<result>
+	  <assert-xml-ref href="range.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="string">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="string.ixml"/>
+      <test-case name="string">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="remove nonsignificant whitespace from
+			  expected result"/>
+	<test-string-ref href="string.inp"/>
+	<result>
+	  <assert-xml-ref href="string.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="tab">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="tab.ixml"/>
+      <test-case name="tab">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="trim ungrammatical trailing LF from input"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="remove nonsignificant whitespace from
+			  expected result"/>
+
+	<test-string-ref href="tab.inp"/>
+	<result>
+	  <assert-xml-ref href="tab.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="test">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="test.ixml"/>
+      <test-case name="test">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="remove nonsignificant whitespace from
+			  expected result"/>
+	<test-string-ref href="test.inp"/>
+	<result>
+	  <assert-xml-ref href="test.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="unicode-range">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="unicode-range.ixml"/>
+      <test-case name="unicode-range">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified by="MSM" on="2021-01-01"
+		  change="corrected expected output, it was missing a character"/>
+	<test-string-ref href="unicode-range.inp"/>
+	<result>
+	  <assert-xml-ref href="unicode-range.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="unicode-range1">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="unicode-range1.ixml"/>
+      <test-case name="unicode-range1">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="SP" on="2021-12-21"
+		  change="replaced expected output"/>
+	<test-string-ref href="unicode-range1.inp"/>
+	<result>
+	  <assert-xml-ref href="unicode-range1.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="unicode-range2">
+      <created by="SP" on="2021-12-21"/>
+      <ixml-grammar-ref href="unicode-range2.ixml"/>
+      <test-case name="unicode-range2">
+	<created by="SP" on="2021-12-21"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="supplied expected output"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="stripped trailing whitespace from input"/>
+	<modified by="MSM" on="2023-11-15"
+		  change="rename using 2 not 1"/>
+	<test-string-ref href="unicode-range2.inp"/>
+	<result>
+	  <assert-xml-ref href="unicode-range2.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="unicode-classes">
+      <created by="SP" on="2023-06-13"/>
+      <modified by="NDW" on="2023-06-15"
+		change="Added to the test catalog"/>
+      <modified by="MSM" on="2023-11-16"
+		change="Added dependencies to mark this as requiring Unicode 14.0 or later"/>
+      <dependencies Unicode-version="14.0"/>
+      <dependencies Unicode-version="15.0"/>
+      <dependencies Unicode-version="15.1"/>
+      <ixml-grammar-ref href="unicode-classes.ixml"/>
+      <test-case name="unicode-classes">
+        <created by="SP" on="2023-06-13"/>
+	<modified by="NDW" on="2023-06-15"
+		  change="supplied expected output"/>
+	<test-string-ref href="unicode-classes.inp"/>
+	<result>
+	  <assert-xml-ref href="unicode-classes.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+    <test-set name="unicode-version-check">
+      <created by="MSM" on="2023-11-15"/>
+      <ixml-grammar-ref href="unicode-version-diagnostic.ixml"/>
+      
+      <test-case name="unicode-v06.0-diagnostic">
+        <dependencies Unicode-version="6.0"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v06.0.xml"/></result>
+      </test-case>
+      
+      <test-case name="unicode-v06.1-diagnostic">
+        <dependencies Unicode-version="6.1"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v06.1.xml"/></result>
+      </test-case>
+      
+      <test-case name="unicode-v06.2-diagnostic">
+        <dependencies Unicode-version="6.2"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v06.2.xml"/></result>
+      </test-case>
+      
+      <test-case name="unicode-v06.3-diagnostic">
+        <dependencies Unicode-version="6.3"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v06.3.xml"/></result>
+      </test-case>
+      
+      <test-case name="unicode-v07-diagnostic">
+        <dependencies Unicode-version="7.0"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v07.0.xml"/></result>
+      </test-case>
+      
+      <test-case name="unicode-v08-diagnostic">
+        <dependencies Unicode-version="8.0"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v08.0.xml"/></result>
+      </test-case>
+      
+      <test-case name="unicode-v09-diagnostic">
+        <dependencies Unicode-version="9.0"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v09.0.xml"/></result>
+      </test-case>
+      
+      <test-case name="unicode-version-10-diagnostic">
+        <dependencies Unicode-version="10.0"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v10.0.xml"/></result>
+      </test-case>
+      
+      <test-case name="unicode-version-11-diagnostic">
+        <dependencies Unicode-version="11.0"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v11.0.xml"/></result>
+      </test-case>
+      
+      <test-case name="unicode-version-12-diagnostic">
+        <dependencies Unicode-version="12.0"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v12.0.xml"/></result>
+      </test-case>
+      
+      <test-case name="unicode-version-12.1-diagnostic">
+        <dependencies Unicode-version="12.1"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v12.1.xml"/></result>
+      </test-case>
+      
+      <test-case name="unicode-version-13-diagnostic">
+        <dependencies Unicode-version="13.0"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v13.0.xml"/></result>
+      </test-case>
+      
+      <test-case name="unicode-version-14-diagnostic">
+        <dependencies Unicode-version="14.0"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v14.0.xml"/></result>
+      </test-case>
+      
+      <test-case name="unicode-version-15-diagnostic">
+        <dependencies Unicode-version="15.0"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v15.0.xml"/></result>
+      </test-case>
+      
+      <test-case name="unicode-version-15.1-diagnostic">
+        <dependencies Unicode-version="15.1"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v15.1.xml"/></result>
+      </test-case>
+      
+      <test-case name="unicode-version-16.0-diagnostic">
+        <dependencies Unicode-version="16.0"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v16.0.xml"/></result>
+      </test-case>
+
+      <test-case name="unicode-version-17.0-diagnostic">
+        <dependencies Unicode-version="17.0"/>
+        <test-string-ref href="unicode-version-diagnostic.txt"/>
+        <result><assert-xml-ref href="unicode.v17.0.xml"/></result>
+      </test-case>
+
+    </test-set>
+               
+
+    <test-set name="vcard">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="vcard.ixml"/>
+      <test-case name="vcard">
+	<created by="SP" on="2021-12-16"/>
+	<modified
+	    by="MSM"
+	    on="2021-12-30"
+	    change="stripped non-significant whitespace from result"/>
+	<test-string-ref href="vcard.inp"/>
+	<result>
+	  <assert-xml-ref href="vcard.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="xml">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="xml.ixml"/>
+      <test-case name="xml">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified
+	    by="MSM"
+	    on="2022-01-01"
+	    change="stripped non-significant whitespace from result"/>
+	<test-string-ref href="xml.inp"/>
+	<result>
+	  <assert-xml-ref href="xml.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="xml1">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="xml1.ixml"/>
+      <test-case name="xml1">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified
+	    by="MSM"
+	    on="2022-01-01"
+	    change="stripped non-significant whitespace from result"/>
+	<test-string-ref href="xml1.inp"/>
+	<result>
+	  <assert-xml-ref href="xml1.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="xpath">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="xpath.ixml"/>
+      <test-case name="xpath">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="MSM" on="2021-12-30"
+		  change="remove trailing whitespace from input"/>
+	<modified by="MSM" on="2021-01-01"
+		  change="mark as not-a-sentence"/>
+	<description>
+	  <p>The input is <code>a[.!='']</code> but the grammar does
+	  not provide for predicates.  So although the input is a
+	  perfectly fine XPath expression, it is not a sentence in the
+	  language defined by the grammar specified for the test.</p>
+	</description>
+	<test-string-ref href="xpath.inp"/>
+	<result>
+	  <assert-not-a-sentence/>
+	  <!-- <assert-xml-ref href="xpath.output.xml"/> -->
+	</result>
+      </test-case>
+    </test-set>
+    
+  </test-set>
+
+  <test-set name="element-content">
+    <created by="ndw" on="2022-02-05"/>
+    <ixml-grammar-ref href="element-content.ixml"/>
+    <test-case name="element-content">
+      <created by="ndw" on="2022-02-05"/>
+      <modified by="ndw" on="2022-02-05"
+      change="Converted it into the catalog format"/>
+      <test-string-ref href="element-content.inp"/>
+      <result>
+	<assert-xml-ref href="element-content.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="empty-group">
+    <created by="ndw" on="2022-02-05"/>
+    <ixml-grammar-ref href="empty-group.ixml"/>
+    <test-case name="empty-group">
+      <created by="ndw" on="2022-02-05"/>
+      <modified by="ndw" on="2022-02-05"
+      change="Converted it into the catalog format"/>
+      <test-string-ref href="empty-group.inp"/>
+      <result>
+	<assert-xml-ref href="empty-group.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="range-comments">
+    <created by="ndw" on="2022-02-05"/>
+    <ixml-grammar-ref href="range-comments.ixml"/>
+    <test-case name="range-comments">
+      <created by="ndw" on="2022-02-05"/>
+      <modified by="ndw" on="2022-02-05"
+      change="Converted it into the catalog format"/>
+      <test-string-ref href="range-comments.inp"/>
+      <result>
+	<assert-xml-ref href="range-comments.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="ranges">
+    <created by="ndw" on="2022-02-05"/>
+    <ixml-grammar-ref href="ranges.ixml"/>
+    <test-case name="ranges">
+      <created by="ndw" on="2022-02-05"/>
+      <modified by="ndw" on="2022-02-05"
+      change="Converted it into the catalog format"/>
+      <test-string-ref href="ranges.inp"/>
+      <result>
+	<assert-xml-ref href="ranges.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>  
+
+  <test-set name="ranges1">
+    <created by="ndw" on="2022-02-05"/>
+    <ixml-grammar-ref href="ranges1.ixml"/>
+    <test-case name="ranges1">
+      <created by="ndw" on="2022-02-05"/>
+      <modified by="ndw" on="2022-02-05"
+      change="Converted it into the catalog format"/>
+      <test-string-ref href="ranges1.inp"/>
+      <result>
+	<assert-xml-ref href="ranges1.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>  
+
+  <test-set name="version-decl">
+    <created by="MSM" on="2022-05-27"/>
+    <ixml-grammar-ref href="version-decl.ixml"/>
+    <grammar-test>
+      <result>
+	<assert-xml-ref href="version-decl.ixml.xml"/>
+      </result>
+    </grammar-test>
+    <test-case name="empty">
+      <test-string/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>    
+    <test-case name="abc">
+      <test-string>abc😺</test-string>
+      <result><assert-xml>
+	<S xmlns="">abc<done>😺</done></S>
+      </assert-xml></result>
+    </test-case>
+    
+    <test-case name="x0">
+      <test-string>¿xx?</test-string>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="x1">
+      <test-string>¿x.x?</test-string>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="y0">
+      <test-string>¿yy?</test-string>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="y1">
+      <test-string>¿y.y?</test-string>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="y2">
+      <test-string>¿y..y?</test-string>
+      <result><assert-not-a-sentence/></result>
+    </test-case>    
+    <test-case name="z0">
+      <test-string>¡zz!</test-string>
+      <result><assert-xml>
+	<S xmlns="">¡zz!</S>
+      </assert-xml></result>
+    </test-case>
+    <test-case name="z1">
+      <test-string>¡z.z!</test-string>
+      <result><assert-not-a-sentence/></result>
+    </test-case>    
+    <test-case name="w0">
+      <test-string>¡ww!</test-string>
+      <result><assert-xml>
+	<S xmlns="">¡ww!</S>
+      </assert-xml></result>
+    </test-case>
+    <test-case name="w1">
+      <test-string>¡w.w!</test-string>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="w2">
+      <test-string>¡w..w!</test-string>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+
+    <test-case name="v0">
+      <test-string>vv</test-string>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="v1">
+      <test-string>v.v</test-string>
+      <result><assert-xml>
+	<S xmlns="">v.v</S>
+      </assert-xml></result>
+    </test-case>
+    <test-case name="v2">
+      <test-string>v..v</test-string>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="u0">
+      <test-string>uu</test-string>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="u1">
+      <test-string>u.u</test-string>
+      <result><assert-xml>
+	<S xmlns="">u.u</S>
+      </assert-xml></result>
+    </test-case>
+    <test-case name="u2">
+      <test-string>u..u</test-string>
+      <result><assert-xml>
+	<S xmlns="">u..u</S>
+      </assert-xml></result>
+    </test-case>    
+    <test-case name="t0">
+      <test-string>tt</test-string>
+      <result><assert-xml>
+	<S xmlns="">tt</S>
+      </assert-xml></result>
+    </test-case>
+    <test-case name="t1">
+      <test-string>t.t</test-string>
+      <result><assert-xml>
+	<S xmlns="">t.t</S>
+      </assert-xml></result>
+    </test-case>
+    <test-case name="t2">
+      <test-string>t..t</test-string>
+      <result><assert-not-a-sentence/></result>
+    </test-case>    
+    <test-case name="s0">
+      <test-string>ss</test-string>
+      <result><assert-xml>
+	<S xmlns="">ss</S>
+      </assert-xml></result>
+    </test-case>
+    <test-case name="s1">
+      <test-string>s.s</test-string>
+      <result><assert-xml>
+	<S xmlns="">s.s</S>
+      </assert-xml></result>
+    </test-case>
+    <test-case name="s2">
+      <test-string>s..s</test-string>
+      <result><assert-xml>
+	<S xmlns="">s..s</S>
+      </assert-xml></result>
+    </test-case>
+    
+  </test-set>
+
+  <test-set name="version-decl-two"
+	    xmlns:ixml="http://invisiblexml.org/NS">
+    <created by="MSM" on="2022-05-27"/>
+    <modified on="2022-06-01" by="NDW"
+	      change="Added ixml:state to indicate a version mismatch."/>
+    <ixml-grammar-ref href="version-decl.2.ixml"/>
+    <grammar-test>
+      <result>
+	<assert-xml-ref href="version-decl-two.ixml.xml"/>
+      </result>
+    </grammar-test>
+    <test-case name="empty">
+      <test-string/>
+      <result><assert-xml><S xmlns="" ixml:state="version-mismatch"/></assert-xml></result>
+    </test-case>
+    <test-case name="abc">
+      <test-string>abc😺</test-string>
+      <result><assert-not-a-sentence/></result>
+    </test-case>    
+    <test-case name="done">
+      <test-string>done</test-string>
+      <result><assert-xml>
+	<S xmlns="" ixml:state="version-mismatch">done</S>
+      </assert-xml></result>
+    </test-case>    
+    <test-case name="overdone">
+      <test-string>donetoomuch</test-string>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+  </test-set>
+
+  <test-set name="whitespace-and-delimiters-inline">
+    <created by="MSM" on="2022-05-30"/>
+    <ixml-grammar>
+&#x9;S&#xD;={}a, b, c, d.&#xD;
+&#x9;a&#xA;=&#x20;'Don''t worry'&#xD;
+&#x9;      | 'Keep ''calm'''.&#xD;
+&#x9;b&#xD;={}[';,']?.&#xD;
+&#x9;&#x9;d = 'be ''happy''.'&#xD;
+        |{}; 'and carry on.'.{}c=#000000000000020.&#xD;
+    </ixml-grammar>
+    <grammar-test>
+      <result><assert-xml>
+	<ixml xmlns=""
+	  ><rule name="S"
+	    ><comment
+	    /><alt
+	      ><nonterminal name="a"
+	      /><nonterminal name="b"
+	      /><nonterminal name="c"
+	      /><nonterminal name="d"
+	    /></alt
+	  ></rule
+	  ><rule name="a"
+	    ><alt><literal string="Don't worry"/></alt
+	    ><alt><literal string="Keep 'calm'"/></alt
+	  ></rule
+	  ><rule name="b"
+	    ><comment
+	    /><alt><option><inclusion><member string=";,"/></inclusion></option></alt
+	  ></rule
+	  ><rule name="d"
+	    ><alt><literal string="be 'happy'."/></alt
+	    ><comment
+	    /><alt
+	    /><alt><literal string="and carry on."/></alt
+	  ></rule
+	  ><comment
+	  /><rule name="c"
+	    ><alt><literal hex="000000000000020"/></alt
+	  ></rule
+	></ixml>
+      </assert-xml></result>     
+    </grammar-test>
+    <test-case name="empty">
+      <test-string/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="wd1">
+      <test-string>Don't worry, be 'happy'.</test-string>
+      <result><assert-xml>
+	<S xmlns=""><a>Don't worry</a><b>,</b><c> </c><d>be 'happy'.</d></S>
+      </assert-xml></result>
+    </test-case>
+    <test-case name="wd2">
+      <test-string>Don't worry and carry on.</test-string>
+      <result><assert-xml>
+	<S xmlns=""><a>Don't worry</a><b></b><c> </c><d>and carry on.</d></S>
+      </assert-xml></result>
+    </test-case>
+    <test-case name="wd3">
+      <test-string>Keep 'calm'; be 'happy'.</test-string>
+      <result><assert-xml>
+	<S xmlns=""><a>Keep 'calm'</a><b>;</b><c> </c><d>be 'happy'.</d></S>
+      </assert-xml></result>
+    </test-case> 
+    
+  </test-set>
+
+  <test-set name="whitespace-and-delimiters-external">
+    <created by="MSM" on="2022-05-30"/>
+    <ixml-grammar-ref href="ws-and-delim.ixml"/>
+    <grammar-test>
+      <result><assert-xml>
+	<ixml xmlns=""
+	  ><rule name="S"
+	    ><comment
+	    /><alt
+	      ><nonterminal name="a"
+	      /><nonterminal name="b"
+	      /><nonterminal name="c"
+	      /><nonterminal name="d"
+	    /></alt
+	  ></rule
+	  ><rule name="a"
+	    ><alt><literal string="Don't worry"/></alt
+	    ><alt><literal string="Keep 'calm'"/></alt
+	  ></rule
+	  ><rule name="b"
+	    ><comment
+	    /><alt><option><inclusion><member string=";,"/></inclusion></option></alt
+	  ></rule
+	  ><rule name="d"
+	    ><alt><literal string="be 'happy'."/></alt
+	    ><comment
+	    /><alt
+	    /><alt><literal string="and carry on."/></alt
+	  ></rule
+	  ><comment
+	  /><rule name="c"
+	    ><alt><literal hex="00000000020"/></alt
+	  ></rule
+	></ixml>
+      </assert-xml></result>     
+    </grammar-test>
+    <test-case name="empty">
+      <test-string/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    <test-case name="wd1">
+      <test-string>Don't worry, be 'happy'.</test-string>
+      <result><assert-xml>
+	<S xmlns=""><a>Don't worry</a><b>,</b><c> </c><d>be 'happy'.</d></S>
+      </assert-xml></result>
+    </test-case>
+    <test-case name="wd2">
+      <test-string>Don't worry and carry on.</test-string>
+      <result><assert-xml>
+	<S xmlns=""><a>Don't worry</a><b></b><c> </c><d>and carry on.</d></S>
+      </assert-xml></result>
+    </test-case>
+    <test-case name="wd3">
+      <test-string>Keep 'calm'; be 'happy'.</test-string>
+      <result><assert-xml>
+	<S xmlns=""><a>Keep 'calm'</a><b>;</b><c> </c><d>be 'happy'.</d></S>
+      </assert-xml></result>
+    </test-case> 
+  </test-set>
+
+  <test-set name="leading-nullable">
+    <description>
+      <p>Test that repeated nullable nonterminals are handled correctly.</p>
+    </description>
+    <created by="ndw" on="2022-06-17"/>
+    <ixml-grammar>
+      S = B, B, 'a'.
+      B = .
+    </ixml-grammar>
+    <test-case name="leading-nullable">
+      <created by="ndw" on="2022-06-17"/>
+      <test-string>a</test-string>
+      <result>
+	<assert-xml><S xmlns=""><B/><B/>a</S></assert-xml>
+      </result>
+    </test-case>
+    <test-case name="leading-nullable-fail">
+      <created by="ndw" on="2022-06-19"/>
+      <test-string>aa</test-string>
+      <result>
+	<assert-not-a-sentence/>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="leading-embedded-nullable">
+    <description>
+      <p>Test that repeated nullable nonterminals are handled correctly.</p>
+    </description>
+    <created by="ndw" on="2022-06-17"/>
+    <ixml-grammar>
+      S = B, B, 'a'.
+      B = C .
+      C = .
+    </ixml-grammar>
+    <test-case name="leading-nullable">
+      <created by="ndw" on="2022-06-17"/>
+      <test-string>a</test-string>
+      <result>
+	<assert-xml><S xmlns=""><B><C/></B><B><C/></B>a</S></assert-xml>
+      </result>
+    </test-case>
+    <test-case name="leading-nullable-fail">
+      <created by="ndw" on="2022-06-19"/>
+      <test-string>aa</test-string>
+      <result>
+	<assert-not-a-sentence/>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="shared-nullable-prefix">
+    <description>
+      <p>Test that leading nullable nonterminals in multiple
+      right-hand sides are handled correctly.</p>
+    </description>
+    <created by="cmsmcq" on="2023-11-22"/>
+    <ixml-grammar>
+      S = A; B; C.
+      A = s, 'a'.
+      B = s, 'b'.
+      C = s, 'c'.
+      -s = -[Zs; #9; #A; #D]*.
+    </ixml-grammar>
+    <test-case name="snp-1">
+      <created by="cmsmcq" on="2023-11-22"/>
+      <test-string>a</test-string>
+      <result>
+	<assert-xml><S xmlns=""><A>a</A></S></assert-xml>
+      </result>
+    </test-case>
+    <test-case name="snp-2">
+      <created by="cmsmcq" on="2023-11-22"/>
+      <test-string>   b</test-string>
+      <result>
+	<assert-xml><S xmlns=""><B>b</B></S></assert-xml>
+      </result>
+    </test-case>
+    <test-case name="snp-3">
+      <created by="cmsmcq" on="2023-11-22"/>
+      <test-string>&#x9;c</test-string>
+      <result>
+	<assert-xml><S xmlns=""><C>c</C></S></assert-xml>
+      </result>
+    </test-case>
+    <test-case name="snp-4">
+      <created by="cmsmcq" on="2023-11-22"/>
+      <test-string>d</test-string>
+      <result>
+	<assert-not-a-sentence/>
+      </result>
+    </test-case>
+    <test-case name="snp-5">
+      <created by="cmsmcq" on="2023-11-22"/>
+      <test-string>&#x9;c </test-string>
+      <result>
+	<assert-not-a-sentence/>
+      </result>
+    </test-case>
+  </test-set>
+        
+  <test-set name="naming-elements">
+    <description>
+      <p>Test renaming an element.</p>
+    </description>
+    <created by="ndw" on="2023-10-23"/>
+    <ixml-grammar>
+      ixml version "1.1".
+      S = A, B.
+      A = 'a' .
+      B>X = 'b' .
+    </ixml-grammar>
+    <test-case name="naming-elements">
+      <created by="ndw" on="2023-10-23"/>
+      <test-string>ab</test-string>
+      <result>
+	<assert-xml><S xmlns=""><A>a</A><X>b</X></S></assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="naming-elements-rhs">
+    <description>
+      <p>Test renaming an element.</p>
+    </description>
+    <created by="ndw" on="2023-10-23"/>
+    <ixml-grammar>
+      ixml version "1.1".
+      S = A, B>C.
+      A = 'a' .
+      B = 'b' .
+    </ixml-grammar>
+    <test-case name="naming-elements-rhs">
+      <created by="ndw" on="2023-10-23"/>
+      <test-string>ab</test-string>
+      <result>
+	<assert-xml><S xmlns=""><A>a</A><C>b</C></S></assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="naming-attributes">
+    <description>
+      <p>Test renaming an attribute.</p>
+    </description>
+    <created by="ndw" on="2023-10-23"/>
+    <ixml-grammar>
+      ixml version "1.1".
+      S = A, @B.
+      A = 'a' .
+      B>X = 'b' .
+    </ixml-grammar>
+    <test-case name="naming-attributes">
+      <created by="ndw" on="2023-10-23"/>
+      <test-string>ab</test-string>
+      <result>
+	<assert-xml><S xmlns="" X='b'><A>a</A></S></assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="naming-attributes-rhs">
+    <description>
+      <p>Test renaming an attribute.</p>
+    </description>
+    <created by="ndw" on="2023-10-23"/>
+    <ixml-grammar>
+      ixml version "1.1".
+      S = A, @B>C.
+      A = 'a' .
+      B>X = 'b' .
+    </ixml-grammar>
+    <test-case name="naming-attributes-rhs">
+      <created by="ndw" on="2023-10-23"/>
+      <test-string>ab</test-string>
+      <result>
+	<assert-xml><S xmlns="" C='b'><A>a</A></S></assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+</test-catalog>
+

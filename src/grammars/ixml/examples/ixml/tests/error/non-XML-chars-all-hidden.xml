@@ -1,0 +1,294 @@
+<ixml><comment
+> Grammar for experiments with non-XML characters in input.
+
+  In this grammar, non-XML characters are accepted in the
+  input but are not shown in the output.  It's used for
+  sanity-checking the inputs for tests of the companion
+  grammar in which not all control characters are hidden.
+
+  Since we need non-XML characters in the input, and the only 
+  non-XML characters we can make are in the C0 range, the 
+  input and output are likely to be challenging to check.
+  
+  You have been warned.
+</comment
+   ><rule name="S"
+      ><alt
+         ><repeat0
+            ><alts
+               ><alt><nonterminal name="show"/></alt
+               ><alt><nonterminal name="hide"/></alt
+               ><alt><nonterminal name="printable"/></alt
+            ></alts
+         ></repeat0
+      ></alt
+   ></rule
+   ><rule name="NUL"
+      ><alt
+         ><literal tmark="-" hex="00"
+            ><comment> null </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="SOH"
+      ><alt
+         ><literal tmark="-" hex="01"
+            ><comment> start of header </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="STX"
+      ><alt
+         ><literal tmark="-" hex="02"
+            ><comment> start of text </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="ETX"
+      ><alt
+         ><literal tmark="-" hex="03"
+            ><comment> end of text </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="EOT"
+      ><alt
+         ><literal tmark="-" hex="04"
+            ><comment> end of transmission </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="ENQ"
+      ><alt
+         ><literal tmark="-" hex="05"
+            ><comment> enquiry ('are you there?') </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="ACK"
+      ><alt
+         ><literal tmark="-" hex="06"
+            ><comment> acknowledgement ('yes i am here') </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="BEL"
+      ><alt
+         ><literal tmark="-" hex="07"
+            ><comment> bell </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="BS"
+      ><alt
+         ><literal tmark="-" hex="08"
+            ><comment> backspace </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="HT"
+      ><alt
+         ><literal tmark="-" hex="09"
+            ><comment> horizontal tab, an XML character, but 
+           not a prime, so it's in the 'hide' category </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="LF"
+      ><alt
+         ><literal tmark="-" hex="0A"
+            ><comment> linefeed, also an XML character </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="VT"
+      ><alt
+         ><literal tmark="-" hex="0B"
+            ><comment> vertical tabulation </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="FF"
+      ><alt
+         ><literal tmark="-" hex="0C"
+            ><comment> form feed </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="CR"
+      ><alt
+         ><literal tmark="-" hex="0D"
+            ><comment> carriage return (an XML character) </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="SO"
+      ><alt
+         ><literal tmark="-" hex="0E"
+            ><comment> shift out (to alternate character set </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="SI"
+      ><alt
+         ><literal tmark="-" hex="0F"
+            ><comment> shift in (from alternate character set </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="DLE"
+      ><alt
+         ><literal tmark="-" hex="10"
+            ><comment> data link escape </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="DC1"
+      ><alt
+         ><literal tmark="-" hex="11"
+            ><comment> device-control 1 / XON </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="DC2"
+      ><alt
+         ><literal tmark="-" hex="12"
+            ><comment> device-control 2 </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="DC3"
+      ><alt
+         ><literal tmark="-" hex="13"
+            ><comment> device-control 3 / XOFF </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="DC4"
+      ><alt
+         ><literal tmark="-" hex="14"
+            ><comment> device-control 4 </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="NAK"
+      ><alt
+         ><literal tmark="-" hex="15"
+            ><comment> negative acknowledgement </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="SYN"
+      ><alt
+         ><literal tmark="-" hex="16"
+            ><comment> synchronous idle </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="ETB"
+      ><alt
+         ><literal tmark="-" hex="17"
+            ><comment> end of transmission block / end of paragraph </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="CAN"
+      ><alt
+         ><literal tmark="-" hex="18"
+            ><comment> cancel </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="EM"
+      ><alt
+         ><literal tmark="-" hex="19"
+            ><comment> end of medium / em-space / beginning of paragraph </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="SUB"
+      ><alt
+         ><literal tmark="-" hex="1A"
+            ><comment> substitute (often used for end of file) </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="ESC"
+      ><alt
+         ><literal tmark="-" hex="1B"
+            ><comment> escape </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="FS"
+      ><alt
+         ><literal tmark="-" hex="1C"
+            ><comment> file separator </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="GS"
+      ><alt
+         ><literal tmark="-" hex="1D"
+            ><comment> group separator </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="RS"
+      ><alt
+         ><literal tmark="-" hex="1E"
+            ><comment> record separator </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="US"
+      ><alt
+         ><literal tmark="-" hex="1F"
+            ><comment> unit separator </comment
+         ></literal
+      ></alt
+   ></rule
+   ><rule name="show"
+      ><alt><nonterminal name="STX"/></alt
+      ><alt><nonterminal name="ETX"/></alt
+      ><alt><nonterminal name="ENQ"/></alt
+      ><alt><nonterminal name="BEL"/></alt
+      ><alt><nonterminal name="VT"/></alt
+      ><alt><nonterminal name="CR"/></alt
+      ><alt><nonterminal name="DC1"/></alt
+      ><alt><nonterminal name="DC3"/></alt
+      ><alt><nonterminal name="ETB"/></alt
+      ><alt><nonterminal name="GS"/></alt
+      ><alt><nonterminal name="US"/></alt
+   ></rule
+   ><rule name="hide"
+      ><alt><nonterminal name="NUL"/></alt
+      ><alt><nonterminal name="SOH"/></alt
+      ><alt><nonterminal name="EOT"/></alt
+      ><alt><nonterminal name="ACK"/></alt
+      ><alt><nonterminal name="BS"/></alt
+      ><alt><nonterminal name="HT"/></alt
+      ><alt><nonterminal name="LF"/></alt
+      ><alt><nonterminal name="FF"/></alt
+      ><alt><nonterminal name="SO"/></alt
+      ><alt><nonterminal name="SI"/></alt
+      ><alt><nonterminal name="DLE"/></alt
+      ><alt><nonterminal name="DC2"/></alt
+      ><alt><nonterminal name="DC4"/></alt
+      ><alt><nonterminal name="NAK"/></alt
+      ><alt><nonterminal name="SYN"/></alt
+      ><alt><nonterminal name="CAN"/></alt
+      ><alt><nonterminal name="EM"/></alt
+      ><alt><nonterminal name="SUB"/></alt
+      ><alt><nonterminal name="ESC"/></alt
+      ><alt><nonterminal name="FS"/></alt
+      ><alt><nonterminal name="RS"/></alt
+   ></rule
+   ><rule mark="-" name="printable"
+      ><alt
+         ><inclusion
+            ><member from="#20" to="#7E"
+         /></inclusion
+      ></alt
+   ></rule
+></ixml>

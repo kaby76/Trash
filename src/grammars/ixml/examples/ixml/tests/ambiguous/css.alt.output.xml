@@ -1,0 +1,27 @@
+<css xmlns:ixml="http://invisiblexml.org/NS" ixml:state="ambiguous"
+    ><rule
+      ><selector
+	><name>body</name
+      ></selector
+      ><block
+	><property name="color"
+	  ><value name="blue"
+	/></property
+	><property name="font-weight"
+	  ><value name="bold"
+	/></property
+	><property name="margin"
+	  ><value number="0"
+	/></property
+	><property
+      /></block
+    ></rule
+    ><rule
+      ><selector
+	><name>head</name
+      ></selector
+      ><block
+	><property
+      /></block
+    ></rule
+></css>

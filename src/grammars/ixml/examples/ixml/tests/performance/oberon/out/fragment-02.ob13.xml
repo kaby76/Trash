@@ -1,0 +1,1 @@
+<module name='ORP'><ImportList><import><ident>Texts</ident></import></ImportList><DeclarationSequence/><StatementSequence><ProcedureCall><designator left='Texts' right='Append'/><ActualParameters><designator left='Ob' right='Log'/><designator left='W' right='buf'/></ActualParameters></ProcedureCall></StatementSequence><END_MODULE name='ORP'/></module>

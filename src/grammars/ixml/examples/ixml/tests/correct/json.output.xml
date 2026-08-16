@@ -1,0 +1,108 @@
+
+<json
+   ><element
+      ><object
+         >{<member string='menu'
+            >:<element
+               ><object
+                  >{<member string='id'
+                     >:<element
+                        ><string>file</string
+                     ></element
+                  ></member
+                  >,<member string='value'
+                     >:<element
+                        ><string>File</string
+                     ></element
+                  ></member
+                  >,<member string='popup'
+                     >:<element
+                        ><object
+                           >{<member string='menuitem'
+                              >:<element
+                                 ><array
+                                    >[<elements
+                                       ><element
+                                          ><object
+                                             >{<member string='value'
+                                                >:<element
+                                                   ><string>New</string
+                                                ></element
+                                             ></member
+                                             >,<member string='onclick'
+                                                >:<element
+                                                   ><string>CreateNewDoc()</string
+                                                ></element
+                                             ></member>}</object
+                                       ></element
+                                       >,<element
+                                          ><object
+                                             >{<member string='value'
+                                                >:<element
+                                                   ><string>Open</string
+                                                ></element
+                                             ></member
+                                             >,<member string='onclick'
+                                                >:<element
+                                                   ><string>OpenDoc()</string
+                                                ></element
+                                             ></member>}</object
+                                       ></element
+                                       >,<element
+                                          ><object
+                                             >{<member string='value'
+                                                >:<element
+                                                   ><string>Close</string
+                                                ></element
+                                             ></member
+                                             >,<member string='onclick'
+                                                >:<element
+                                                   ><string>CloseDoc()</string
+                                                ></element
+                                             ></member>}</object
+                                       ></element
+                                    ></elements>]</array
+                              ></element
+                           ></member>}</object
+                     ></element
+                  ></member>}</object
+            ></element
+         ></member
+         >,<member string='number'
+            >:<element
+               ><number
+                  ><int
+                     >-<digit>0</digit
+                  ></int
+                  ><frac
+                     >.<digit>0</digit
+                  ></frac
+                  ><exp>e<sign>+</sign
+                     ><digit>0</digit
+                     ><digit>0</digit
+                  ></exp
+               ></number
+            ></element
+         ></member
+         >,<member string='string'
+            >:<element
+               ><string
+                  >\<escape>u<hex>f</hex
+                     ><hex>f</hex
+                     ><hex>f</hex
+                     ><hex>f</hex
+                  ></escape
+               ></string
+            ></element
+         ></member
+         >,<member string='bool'
+            >:<element>true</element
+         ></member
+         >,<member string='also'
+            >:<element>false</element
+         ></member
+         >,<member string='no'
+            >:<element>null</element
+         ></member>}</object
+   ></element
+></json>

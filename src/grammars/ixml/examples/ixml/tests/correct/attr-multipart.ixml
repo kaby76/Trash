@@ -1,0 +1,3 @@
+date: month, -',', -' '*, year . 
+@month: 'Feb', 'ruary' .
+year: ['0'-'9']+ .

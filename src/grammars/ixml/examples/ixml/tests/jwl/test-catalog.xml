@@ -1,0 +1,12 @@
+<test-catalog xmlns="https://github.com/cmsmcq/ixml-tests"
+	      release-date="2022-05-17"
+	      name="jwL Test Suite 1">
+
+  <description>
+    <p>Additional test sets by jwL.</p>
+    <p>Created during the development of a Javascript/SaxonJS ixml processor</p>
+  </description>
+  
+  <test-set-ref href="insertion/test-catalog.xml"/>
+  <test-set-ref href="prolog/test-catalog.xml"/>
+</test-catalog>

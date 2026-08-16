@@ -1,0 +1,289 @@
+{ An attempt to detect which version of Unicode the ixml processor is
+  currently using.
+
+  The input is a sequence of the following code points, separated
+  for legibility by whitespace.
+
+  First, some characters whose general category value has changed:
+
+  U+00A7 Section sign (So in 6.0, Po from 6.1)
+  U+2308 Left ceiling (Sm in 6.0-6.2, Ps from 6.3)
+  U+FD3E..FD3F Ornate L/R parenthesis (Ps,Pe in 6.0-6.3, Pe,Ps from 7)
+  U+13DD Cherokee letter TLA (Lo 6.0-7.0, Lu from 8)
+  U+1886 Mongolian letter Ali Gali three Baluda (Lo, then Mn from 9)
+  
+  U+10D0 Georgian small letter AN (Lo in 6-10, Ll from 11)
+  U+166D Canadian syllabics CHI sign (Po in 6-11, So from 12)
+  U+1734 Hanundo sign PAMUDPOD (Mn in 6-13, Mc in 14-15)
+
+  Then a sequence of characters new in different versions:
+
+  6.0 U+1F086 So Playing card six of Hearts
+  6.1 U+2CF3  Ll Coptic small letter BOHAIRIC KHEI
+  6.2 U+20BA  Sc Turkish Lira sign
+  6.3 adds only format control characters, omitted here
+  7.0 U+052B  Ll Cyrillic small letter DZZHE
+  8.0 U+13F5  Lu Cherokee letter MV
+  
+  9.0 U+1715C Lo (not named)
+  10.0 U+0860 Lo Syriac letter Malayalam NGA
+  11.0 U+0560 Ll Armenian ... turned AYB
+  12.0 U+0C77 Po Telugu sign SIDDHAM
+  12.1 U+32FF So Square era name REIWA
+  
+  13.0 U+1FBF7 Nd Segmented digit seven
+  14.0 U+2E54 Po Medieval question mark
+  15.0 U+11B00 Po Devanagari head mark
+  15.1 U+2FFC So ideographic desc char surround from right
+  16.0 U+10D40 Nd Garay digit zero
+
+  17.0 U+11DE0 Nd Tolong Siki digit zero
+
+  For the record, earlier versions had:
+  13.0 U+08BE Lo Arabic ... PAH with small v
+  14.0 U+061D Po Arabic end of text mark
+  but I'm trying to avoid confusing debuggers with bidi.
+
+}
+-unicode-version = unicode-6.0
+                | unicode-6.1
+                | unicode-6.2
+                | unicode-6.3
+                | unicode-7.0
+                | unicode-8.0
+                | unicode-9.0
+                | unicode-10.0
+                | unicode-11.0
+                | unicode-12.0
+                | unicode-12.1
+                | unicode-13.0
+                | unicode-14.0
+                | unicode-15.0
+                | unicode-15.1
+                | unicode-16.0
+                | unicode-17.0
+                .
+
+unicode-6.0  = -[So], -[Sm], -[Ps], -[Pe], -[Lo], -[Lo], s,
+                {A7    2308   FD3E, FD3F    13DD   1886 }
+               -[Lo], -[Po], -[Mn], s,
+                {10d0  166d   1734 }
+               -[So],  -~[Ll], -~[Sc], -~[Ll], -~[Lu], s,
+                {1f086   2cf3    20ba    052b    13f5 }
+               -~[Lo], -~[Lo], -~[Ll], -~[Po], -~[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -~[Nd], -~[Po], -~[Po], -~[So], -~[Nd], s,
+                {1fbf7   2e54    11b00   2ffc    10d40 }
+               -~[Nd], s.
+                {11de0 }
+
+unicode-6.1  = -[Po], -[Sm], -[Ps], -[Pe], -[Lo], -[Lo], s,
+                { A7   2308   FD3E , FD3F   13DD   1886 }
+               -[Lo], -[Po], -[Mn], s,
+                {10d0  166d   1734 }
+               -[So],  -[Ll],  -~[Sc], -~[Ll], -~[Lu], s,
+                {1f086  2cf3     20ba    052b    13f5 }
+               -~[Lo], -~[Lo], -~[Ll], -~[Po], -~[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -~[Nd], -~[Po], -~[Po], -~[So], -~[Nd], s,
+                {1fbf7   2e54    11b00   2ffc    10d40 }
+               -~[Nd], s.
+                {11de0 }
+
+unicode-6.2  = -[Po], -[Sm], -[Ps], -[Pe], -[Lo], -[Lo], s,
+                { A7   2308   FD3E , FD3F   13DD   1886 }
+               -[Lo], -[Po], -[Mn], s,
+                {10d0  166d   1734 }
+               -[So],  -[Ll],  -[Sc],  -~[Ll], -~[Lu], s,
+                {1f086  2cf3     20ba    052b    13f5 }
+               -~[Lo], -~[Lo], -~[Ll], -~[Po], -~[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -~[Nd], -~[Po], -~[Po], -~[So], -~[Nd], s,
+                {1fbf7   2e54    11b00   2ffc    10d40 }
+               -~[Nd], s.
+                {11de0 }
+
+unicode-6.3  = -[Po], -[Ps], -[Ps], -[Pe], -[Lo], -[Lo], s,
+                { A7   2308   FD3E , FD3F   13DD   1886 }
+               -[Lo], -[Po], -[Mn], s,
+                {10d0  166d   1734 }
+               -[So],  -[Ll],  -[Sc],  -~[Ll], -~[Lu], s,
+                {1f086  2cf3     20ba    052b    13f5 }
+               -~[Lo], -~[Lo], -~[Ll], -~[Po], -~[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -~[Nd], -~[Po], -~[Po], -~[So], -~[Nd], s,
+                {1fbf7   2e54    11b00   2ffc    10d40 }
+               -~[Nd], s.
+                {11de0 }
+
+unicode-7.0  = -[Po], -[Ps], -[Pe], -[Ps], -[Lo], -[Lo], s,
+                { A7   2308   FD3E , FD3F   13DD   1886 }
+               -[Lo], -[Po], -[Mn], s,
+                {10d0  166d   1734 }
+               -[So],  -[Ll],  -[Sc],  -[Ll],  -~[Lu], s,
+                {1f086  2cf3     20ba    052b    13f5 }
+               -~[Lo], -~[Lo], -~[Ll], -~[Po], -~[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -~[Nd], -~[Po], -~[Po], -~[So], -~[Nd], s,
+                {1fbf7   2e54    11b00   2ffc    10d40 }
+               -~[Nd], s.
+                {11de0 }
+
+unicode-8.0  = -[Po], -[Ps], -[Pe], -[Ps], -[Lu], -[Lo], s,
+                { A7   2308   FD3E , FD3F   13DD   1886 }
+               -[Lo], -[Po], -[Mn], s,
+                {10d0  166d   1734 }
+               -[So],  -[Ll],  -[Sc],  -[Ll],  -[Lu], s,
+                {1f086  2cf3     20ba    052b    13f5 }
+               -~[Lo], -~[Lo], -~[Ll], -~[Po], -~[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -~[Nd], -~[Po], -~[Po], -~[So], -~[Nd], s,
+                {1fbf7   2e54    11b00   2ffc    10d40 }
+               -~[Nd], s.
+                {11de0 }
+
+unicode-9.0  = -[Po], -[Ps], -[Pe], -[Ps], -[Lu], -[Mn], s,
+                { A7   2308   FD3E , FD3F   13DD   1886 }
+               -[Lo], -[Po], -[Mn], s,
+                {10d0  166d   1734 }
+               -[So],  -[Ll],  -[Sc],  -[Ll],  -[Lu], s,
+                {1f086  2cf3     20ba    052b    13f5 }
+               -[Lo],  -~[Lo], -~[Ll], -~[Po], -~[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -~[Nd], -~[Po], -~[Po], -~[So], -~[Nd], s,
+                {1fbf7   2e54    11b00   2ffc    10d40 }
+               -~[Nd], s.
+                {11de0 }
+
+unicode-10.0 = -[Po], -[Ps], -[Pe], -[Ps], -[Lu], -[Mn], s,
+                { A7   2308   FD3E , FD3F   13DD   1886 }
+               -[Lo], -[Po], -[Mn], s,
+                {10d0  166d   1734 }
+               -[So],  -[Ll],  -[Sc],  -[Ll],  -[Lu], s,
+                {1f086  2cf3     20ba    052b    13f5 }
+               -[Lo],  -[Lo],  -~[Ll], -~[Po], -~[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -~[Nd], -~[Po], -~[Po], -~[So], -~[Nd], s,
+                {1fbf7   2e54    11b00   2ffc    10d40 }
+               -~[Nd], s.
+                {11de0 }
+
+unicode-11.0 = -[Po], -[Ps], -[Pe], -[Ps], -[Lu], -[Mn], s,
+                { A7   2308   FD3E , FD3F   13DD   1886 }
+               -[Ll], -[Po], -[Mn], s,
+                {10d0  166d   1734 }
+               -[So],  -[Ll],  -[Sc],  -[Ll],  -[Lu], s,
+                {1f086  2cf3     20ba    052b    13f5 }
+               -[Lo],  -[Lo],  -[Ll],  -~[Po], -~[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -~[Nd], -~[Po], -~[Po], -~[So], -~[Nd], s,
+                {1fbf7   2e54    11b00   2ffc    10d40 }
+               -~[Nd], s.
+                {11de0 }
+
+unicode-12.0 = -[Po], -[Ps], -[Pe], -[Ps], -[Lu], -[Mn], s,
+                { A7   2308   FD3E , FD3F   13DD   1886 }
+               -[Ll], -[So], -[Mn], s,
+                {10d0  166d   1734 }
+               -[So],  -[Ll],  -[Sc],  -[Ll],  -[Lu], s,
+                {1f086  2cf3     20ba    052b    13f5 }
+               -[Lo],  -[Lo],  -[Ll],  -[Po],  -~[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -~[Nd], -~[Po], -~[Po], -~[So], -~[Nd], s,
+                {1fbf7   2e54    11b00   2ffc    10d40 }
+               -~[Nd], s.
+                {11de0 }
+
+unicode-12.1 = -[Po], -[Ps], -[Pe], -[Ps], -[Lu], -[Mn], s,
+                { A7   2308   FD3E , FD3F   13DD   1886 }
+               -[Ll], -[So], -[Mn], s,
+                {10d0  166d   1734 }
+               -[So],  -[Ll],  -[Sc],  -[Ll],  -[Lu], s,
+                {1f086  2cf3     20ba    052b    13f5 }
+               -[Lo],  -[Lo],  -[Ll],  -[Po],  -[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -~[Nd], -~[Po], -~[Po], -~[So], -~[Nd], s,
+                {1fbf7   2e54    11b00   2ffc    10d40 }
+               -~[Nd], s.
+                {11de0 }
+
+unicode-13.0 = -[Po], -[Ps], -[Pe], -[Ps], -[Lu], -[Mn], s,
+                { A7   2308   FD3E , FD3F   13DD   1886 }
+               -[Ll], -[So], -[Mn], s,
+                {10d0  166d   1734 }
+               -[So],  -[Ll],  -[Sc],  -[Ll],  -[Lu], s,
+                {1f086  2cf3     20ba    052b    13f5 }
+               -[Lo],  -[Lo],  -[Ll],  -[Po],  -[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -[Nd],  -~[Po], -~[Po], -~[So], -~[Nd], s,
+                {1fbf7   2e54    11b00   2ffc    10d40 }
+               -~[Nd], s.
+                {11de0 }
+
+unicode-14.0 = -[Po], -[Ps], -[Pe], -[Ps], -[Lu], -[Mn], s,
+                { A7   2308   FD3E , FD3F   13DD   1886 }
+               -[Ll], -[So], -[Mc], s,
+                {10d0  166d   1734 }
+               -[So],  -[Ll],  -[Sc],  -[Ll],  -[Lu], s,
+                {1f086  2cf3     20ba    052b    13f5 }
+               -[Lo],  -[Lo],  -[Ll],  -[Po],  -[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -[Nd],  -[Po], -~[Po], -~[So], -~[Nd], s,
+                {1fbf7   2e54    11b00   2ffc   10d40 }
+               -~[Nd], s.
+                {11de0 }
+
+unicode-15.0 = -[Po], -[Ps], -[Pe], -[Ps], -[Lu], -[Mn], s,
+                { A7   2308   FD3E , FD3F   13DD   1886 }
+               -[Ll], -[So], -[Mc], s,
+                {10d0  166d   1734 }
+               -[So],  -[Ll],  -[Sc],  -[Ll],  -[Lu], s,
+                {1f086  2cf3     20ba    052b    13f5 }
+               -[Lo],  -[Lo],  -[Ll],  -[Po],  -[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -[Nd],  -[Po],  -[Po], -~[So], -~[Nd], s,
+                {1fbf7   2e54    11b00   2ffc   10d40 }
+               -~[Nd], s.
+                {11de0 }
+
+unicode-15.1 = -[Po], -[Ps], -[Pe], -[Ps], -[Lu], -[Mn], s,
+                { A7   2308   FD3E , FD3F   13DD   1886 }
+               -[Ll], -[So], -[Mc], s,
+                {10d0  166d   1734 }
+               -[So],  -[Ll],  -[Sc],  -[Ll],  -[Lu], s,
+                {1f086  2cf3     20ba    052b    13f5 }
+               -[Lo],  -[Lo],  -[Ll],  -[Po],  -[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -[Nd],  -[Po],  -[Po],  -[So], -~[Nd], s,
+                {1fbf7   2e54    11b00  2ffc    10d40 }
+               -~[Nd], s.
+                {11de0 }
+
+unicode-16.0 = -[Po], -[Ps], -[Pe], -[Ps], -[Lu], -[Mn], s,
+                { A7   2308   FD3E , FD3F   13DD   1886 }
+               -[Ll], -[So], -[Mc], s,
+                {10d0  166d   1734 }
+               -[So],  -[Ll],  -[Sc],  -[Ll],  -[Lu], s,
+                {1f086  2cf3     20ba    052b    13f5 }
+               -[Lo],  -[Lo],  -[Ll],  -[Po],  -[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -[Nd],  -[Po],  -[Po],  -[So],  -[Nd], s,
+                {1fbf7   2e54    11b00  2ffc    10d40 }
+               -~[Nd], s.
+                {11de0 }
+
+unicode-17.0 = -[Po], -[Ps], -[Pe], -[Ps], -[Lu], -[Mn], s,
+                { A7   2308   FD3E , FD3F   13DD   1886 }
+               -[Ll], -[So], -[Mc], s,
+                {10d0  166d   1734 }
+               -[So],  -[Ll],  -[Sc],  -[Ll],  -[Lu], s,
+                {1f086  2cf3     20ba    052b    13f5 }
+               -[Lo],  -[Lo],  -[Ll],  -[Po],  -[So], s,
+                {1715c   0860    0560    0c77    32ff }
+               -[Nd],  -[Po],  -[Po],  -[So],  -[Nd], s,
+                {1fbf7   2e54    11b00  2ffc    10d40 }
+               -[Nd], s.
+                {11de0 }
+
+
+-s = -[Zs; #9; #A; #D]+.

@@ -1,0 +1,1198 @@
+<test-catalog xmlns="https://github.com/invisibleXML/ixml/test-catalog"
+		 xmlns:ixml="http://invisiblexml.org/NS"
+		 name="A-star"
+		 release-date="2022-07-10"
+		 >
+  <description>
+    <p>A set of grammars differing only in whitespace and comments,
+    and a set of inputs differing mostly in size.</p>
+    <p>The goal is to try to measure the cost of increased input size.</p>
+    <p>Note: There are two distinct sets of grammars and inputs here:
+    in this one, each grammar or input is ten times the size of its
+    predecessor, and in the other each step doubles in size.</p>
+  </description>
+  
+  <description>
+    <p>Every grammar is a variation on "S = 'a'*."</p>
+    <p>Every positive input consists of zero or more occurrences of
+    'a'; each negative input adds a 'b'.</p>
+  </description>
+  
+  <test-set name="base">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d1.m.lc.ixml"/>
+    <grammar-test>
+      <result>
+	<assert-xml-ref href="vxml/G.d1.m.lc.xml"/>
+      </result>
+    </grammar-test>
+
+  </test-set>
+
+  <!-- duplicates:
+       G.d1.m.sc.ixml
+       G.d1.m.ws.ixml
+       G.d1.s.lc.ixml
+       G.d1.s.sc.ixml
+       G.d1.s.ws.ixml
+  -->
+  
+  <test-set name="G.d2.m.lc">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d2.m.lc.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d2.m.lc.xml"/></result>
+    </grammar-test>
+    
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>    
+  </test-set>
+  
+  <test-set name="G.d2.m.sc">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d2.m.sc.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d2.m.sc.xml"/></result>
+    </grammar-test>
+
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+  </test-set>
+  
+  <test-set name="G.d2.m.ws">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d2.m.ws.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d2.m.ws.xml"/></result>
+    </grammar-test>
+
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+  </test-set>
+  
+  <test-set name="G.d2.s.lc">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d2.s.lc.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d2.s.lc.xml"/></result>
+    </grammar-test>
+
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>    
+    
+  </test-set>
+  
+  <test-set name="G.d2.s.sc">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d2.s.sc.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d2.s.sc.xml"/></result>
+    </grammar-test>
+
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+  </test-set>
+  
+  <test-set name="G.d2.s.ws">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d2.s.ws.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d2.s.ws.xml"/></result>
+    </grammar-test>
+
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+  </test-set>
+  
+  <test-set name="G.d3.m.lc">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d3.m.lc.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d3.m.lc.xml"/></result>
+    </grammar-test>
+
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+  </test-set>
+  
+  <test-set name="G.d3.m.sc">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d3.m.sc.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d3.m.sc.xml"/></result>
+    </grammar-test>
+
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+  </test-set>
+  
+  <test-set name="G.d3.m.ws">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d3.m.ws.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d3.m.ws.xml"/></result>
+    </grammar-test>
+
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+  </test-set>
+  
+  <test-set name="G.d3.s.lc">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d3.s.lc.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d3.s.lc.xml"/></result>
+    </grammar-test>
+
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+  </test-set>
+  
+  <test-set name="G.d3.s.sc">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d3.s.sc.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d3.s.sc.xml"/></result>
+    </grammar-test>
+
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+  </test-set>
+  
+  <test-set name="G.d3.s.ws">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d3.s.ws.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d3.s.ws.xml"/></result>
+    </grammar-test>
+
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+  </test-set>
+  
+  <test-set name="G.d4.m.lc">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d4.m.lc.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d4.m.lc.xml"/></result>
+    </grammar-test>
+
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+  </test-set>
+  
+  <test-set name="G.d4.m.sc">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d4.m.sc.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d4.m.sc.xml"/></result>
+    </grammar-test>
+
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+  </test-set>
+  
+  <test-set name="G.d4.m.ws">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d4.m.ws.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d4.m.ws.xml"/></result>
+    </grammar-test>
+
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+  </test-set>
+  
+  <test-set name="G.d4.s.lc">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d4.s.lc.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d4.s.lc.xml"/></result>
+    </grammar-test>
+
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+  </test-set>
+  
+  <test-set name="G.d4.s.sc">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d4.s.sc.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d4.s.sc.xml"/></result>
+    </grammar-test>
+
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+  </test-set>
+  
+  <test-set name="G.d4.s.ws">
+    <created on="2022-07-10" by="cmsmcq"/>
+    <ixml-grammar-ref href="ixml/G.d4.s.ws.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/G.d4.s.ws.xml"/></result>
+    </grammar-test>
+    
+    <test-case name="P-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/P0.txt"/>
+      <result><assert-xml-ref href="trees/P0.xml"/></result>
+    </test-case>
+    <test-case name="N-0">
+      <created on="2022-07-10" by="cmsmcq"/>
+      <test-string-ref href="input/N0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e0">
+      <test-string-ref href="input/P1e0.txt"/>
+      <result><assert-xml-ref href="trees/P1e0.xml"/></result>
+    </test-case>
+    <test-case name="N1e0">
+      <test-string-ref href="input/N1e0.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e1">
+      <test-string-ref href="input/P1e1.txt"/>
+      <result><assert-xml-ref href="trees/P1e1.xml"/></result>
+    </test-case>
+    <test-case name="N1e1">
+      <test-string-ref href="input/N1e1.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e2">
+      <test-string-ref href="input/P1e2.txt"/>
+      <result><assert-xml-ref href="trees/P1e2.xml"/></result>
+    </test-case>
+    <test-case name="N1e2">
+      <test-string-ref href="input/N1e2.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e3">
+      <test-string-ref href="input/P1e3.txt"/>
+      <result><assert-xml-ref href="trees/P1e3.xml"/></result>
+    </test-case>
+    <test-case name="N1e3">
+      <test-string-ref href="input/N1e3.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+    <test-case name="P1e4">
+      <test-string-ref href="input/P1e4.txt"/>
+      <result><assert-xml-ref href="trees/P1e4.xml"/></result>
+    </test-case>
+    <test-case name="N1e4">
+      <test-string-ref href="input/N1e4.txt"/>
+      <result><assert-not-a-sentence/></result>
+    </test-case>
+    
+  </test-set>
+  
+</test-catalog>

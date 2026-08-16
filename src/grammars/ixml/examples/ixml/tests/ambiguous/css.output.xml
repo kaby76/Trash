@@ -1,0 +1,32 @@
+<!-- AMBIGUOUS
+     The input from line.pos 2.7 to 2.7 can be interpreted as 'property*(-";", S)' in 2 different ways:
+     1: property*(-";", S)[2.7:]:  
+     2: property*(-";", S)[2.7:]:  property+(-";", S)[:2.7] 
+-->
+
+<css ixml:state="ambiguous" xmlns:ixml="http://invisiblexml.org/NS"
+     ><rule
+          ><selector
+	       ><name
+		    >body</name
+          ></selector
+          ><block
+               ><property name='color'
+                    ><value name='blue'
+               /></property
+               ><property name='font-weight'
+                    ><value name='bold'
+               /></property
+	       ><property name='margin'
+                    ><value number='0'
+               /></property
+               ><property
+          /></block
+     ></rule
+     ><rule
+          ><selector
+               ><name>head</name
+          ></selector
+          ><block
+     /></rule
+></css>

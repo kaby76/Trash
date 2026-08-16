@@ -1,0 +1,106 @@
+<test-catalog xmlns="https://github.com/invisibleXML/ixml/test-catalog"
+	      xmlns:ixml="http://invisiblexml.org/NS"
+	      name="Spec grammar tests"
+	      release-date="2023-11-21"
+	      >
+  <description>
+    <p>A set of ixml grammars for various notations and of various
+    sizes.  The goal of the test set is to provide straightforward
+    performance testing for (more or less) naturally occurring
+    grammars.</p>
+    <p>For comparison, the size of each input grammar is given in
+    characters, in number of rules, and in the number of symbols in
+    the grammar (nonterminals plus terminals in left- and right-hand
+    sides).</p>
+  </description>
+
+  <test-set name="spec-grammar">
+    <created on="2023-11-21" by="cmsmcq"/>
+    
+    <description>
+      <p>This test set uses the current ixml grammar of 7 June
+      2022.</p>
+    </description>    
+    <ixml-grammar-ref href="grammar/ixml.2022-06-07.ixml"/>
+
+    <test-case name="ABNF">
+      <created on="2023-11-21" by="cmsmcq"/>
+      <description>
+        <p>Input size:  3885 characters, 
+        33 rules,
+        132 symbols.</p>
+      </description>
+      <test-string-ref href="../../../samples/ABNF-errata/ABNF.ixml"/>
+      <result>
+	<assert-xml-ref href="trees/ABNF.xml"/>
+      </result>
+    </test-case>
+
+    <test-case name="bcp47">
+      <created on="2023-11-21" by="cmsmcq"/>
+      <description>
+        <p>Input size:  4102 characters, 
+        25 rules,
+        147 symbols.</p>
+      </description>
+      <test-string-ref href="../../../samples/bcp47/bcp47.ixml"/>
+      <result>
+	<assert-xml-ref href="trees/bcp47.xml"/>
+      </result>
+    </test-case>
+
+    <test-case name="ixml">
+      <created on="2023-11-21" by="cmsmcq"/>
+      <description>
+        <p>Input size:  2328 characters, 
+        50 rules,
+        211 symbols.</p>
+      </description>
+      <test-string-ref href="grammar/ixml.2022-06-07.ixml"/>
+      <result>
+	<assert-xml-ref href="trees/ixml.2022-06-07.xml"/>
+      </result>
+    </test-case>
+
+    <test-case name="rfc3987">
+      <created on="2023-11-21" by="cmsmcq"/>
+      <description>
+        <p>Input size:  5000 characters, 
+        59 rules,
+        316 symbols.</p>
+      </description>
+      <test-string-ref href="../../../samples/URI/rfc-3987.ixml"/>
+      <result>
+	<assert-xml-ref href="trees/rfc-3987.xml"/>
+      </result>
+    </test-case>
+
+    <test-case name="Oberon">
+      <created on="2023-11-21" by="cmsmcq"/>
+      <description>
+        <p>Input size:  14216 characters, 
+        160 rules,
+        615 symbols.</p>
+      </description>
+      <test-string-ref href="../../../samples/Oberon/Grammars/Oberon.ixml"/>
+      <result>
+	<assert-xml-ref href="trees/Oberon.xml"/>
+      </result>
+    </test-case>
+
+    <test-case name="XPath">
+      <created on="2023-11-21" by="cmsmcq"/>
+      <description>
+        <p>Input size:  10756 characters, 
+        172 rules,
+        797 symbols.</p>
+      </description>
+      <test-string-ref href="../../../samples/XPath/XPath.reducedTree.ixml"/>
+      <result>
+	<assert-xml-ref href="trees/XPath.reducedTree.xml"/>
+      </result>
+    </test-case>
+    
+  </test-set>
+
+</test-catalog>

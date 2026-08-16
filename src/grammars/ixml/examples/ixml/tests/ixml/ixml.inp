@@ -1,0 +1,67 @@
+         ixml: s, rule+s, s.
+
+           -s: (whitespace; comment)*.
+  -whitespace: -[Zs]; tab; lf; cr.
+         -tab: -#9.
+          -lf: -#a.
+          -cr: -#d.
+      comment: -"{", (cchar; comment)*, -"}".
+       -cchar: ~["{}"].
+
+         rule: (mark, s)?, name, s, -["=:"], s, -alts, -".".
+        @mark: ["@^-"].
+         alts: alt+(-[";|"], s).
+          alt: term*(-",", s).
+        -term: factor;
+               option;
+               repeat0;
+               repeat1.
+      -factor: terminal;
+               nonterminal;
+               -"(", s, alts, -")", s.
+      repeat0: factor, -"*", s, sep?.
+      repeat1: factor, -"+", s, sep?.
+       option: factor, -"?", s.
+          sep: factor.
+  nonterminal: (mark, s)?, name, s.
+
+    -terminal: literal; 
+               charset.
+      literal: quoted;
+               encoded.
+      -quoted: (tmark, s)?, -string.
+
+        @name: namestart, namefollower*.
+   -namestart: ["_"; L].
+-namefollower: namestart; ["-.·‿⁀"; Nd; Mn].
+
+       @tmark: ["^-"].
+       string: -'"', dstring, -'"', s;
+               -"'", sstring, -"'", s.
+     @dstring: dchar+.
+     @sstring: schar+.
+        dchar: ~['"'; #a; #d];
+               '"', -'"'. {all characters except line breaks; quotes must be doubled}
+        schar: ~["'"; #a; #d];
+               "'", -"'". {all characters except line breaks; quotes must be doubled}
+     -encoded: (tmark, s)?, -"#", @hex, s.
+          hex: ["0"-"9"; "a"-"f"; "A"-"F"]+.
+
+     -charset: inclusion; 
+               exclusion.
+    inclusion: (tmark, s)?,          set.
+    exclusion: (tmark, s)?, -"~", s, set.
+         -set: -"[", s,  member*(-[";|"], s), -"]", s.
+      -member: literal;
+               range;
+               class.
+        range: from, -"-", s, to.
+        @from: character.
+          @to: character.
+   -character: -'"', dchar, -'"', s;
+               -"'", schar, -"'", s;
+               "#", hex, s.
+        class: code, s.
+        @code: capital, letter?.
+     -capital: ["A"-"Z"].
+      -letter: ["a"-"z"].

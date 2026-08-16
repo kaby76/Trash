@@ -1,0 +1,20 @@
+chars: punctuation, nonpunct?; upper, nonupper?; lower, nonlower?; digit, nondigit?.
+-nonpunct: upper, nonupper?; lower, nonlower?; digit, nondigit?.
+-nonupper: punctuation, nonpunct?; lower, nonlower?; digit, nondigit?.
+-nonlower: punctuation, nonpunct?; upper, nonupper?; digit, nondigit?.
+-nondigit: punctuation, nonpunct?; upper, nonupper?; lower, nonlower?.
+
+upper: [#41-#5A]+.
+lower: [#61-#7A]+.
+digit: [#30-#39]+.
+punctuation: ~[#a; #d; #30-#39; #41-#5A; #61-#7A]+.
+{-lf: -#a.}
+{
+0123456789abcdef
+ !"#$%&'()*+,-./
+0123456789:;<=>?
+@ABCDEFGHIJKLMNO
+PQRSTUVWXYZ[\]^_
+`abcdefghijklmno
+pqrstuvwxyz{|}~
+}

@@ -1,0 +1,7 @@
+<!-- UNAMBIGUOUS 
+     The input from line.pos 1.1 to 1.1 can be interpreted as 'a' in 2 different ways: 
+     1: a[1.1:]:  "a"*[:1.1] 
+     2: a[1.1:]:  "b"*[:1.1]
+     But there is only one parse tree.     
+-->
+<a/>

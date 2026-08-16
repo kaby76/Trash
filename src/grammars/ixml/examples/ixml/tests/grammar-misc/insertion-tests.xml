@@ -1,0 +1,248 @@
+<test-catalog xmlns="https://github.com/invisibleXML/ixml/test-catalog"
+	      xmlns:ixml="http://invisiblexml.org/NS"
+	      release-date="2022-06-01"
+	      name="Insertion tests">
+
+  <description>
+    <p>This test set collects some grammars that use textual insertion.</p>
+  </description>
+
+
+  <test-set name="insert">
+    <created by="jwL" on="2022-05-16"/>
+    <description>
+      <p>A grammar with a simple textual insertion.</p>
+    </description>
+    <ixml-grammar> S: 'a', b. b: +"xml". </ixml-grammar>
+    <test-case name="i-1">
+      <test-string>a</test-string>
+      <result>
+        <assert-xml>
+          <S xmlns="">a<b>xml</b></S>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="insert-attribute">
+    <created by="jwL" on="2022-05-16"/>
+    <description>
+      <p>A grammar with a simple textual insertion bound to attributes, either directly or via a
+        non-terminal.</p>
+    </description>
+    <ixml-grammar> S: +"text1 ", b, @c,+"text2". @b: +"BBB". c: +"CCC". </ixml-grammar>
+    <test-case name="iAtt-1">
+      <test-string/>
+      <result>
+        <assert-xml>
+          <S xmlns="" b="BBB" c="CCC">text1 text2</S>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="insert-example">
+    <created by="jwL" on="2022-05-16"/>
+    <description>
+      <p>A grammar with textual insertion as given as an example in the spec.</p>
+    </description>
+    <ixml-grammar> data: value++-",", @source. source: +"ixml". value: pos; neg. -pos: +"+", digit+.
+      -neg: +"-", -"(", digit+, -")". -digit: ["0"-"9"]. </ixml-grammar>
+    <test-case name="iEx-1">
+      <test-string>100,200,(300),400</test-string>
+      <result>
+        <assert-xml>
+          <data xmlns="" source="ixml"
+            ><value>+100</value
+            ><value>+200</value
+            ><value>-300</value
+            ><value>+400</value
+          ></data>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="insert-multiple">
+    <created by="jwL" on="2022-05-28"/>
+    <description>
+      <p>A grammar with a repeated simple textual insertion.</p>
+    </description>
+    <ixml-grammar> S: 'a', b, b. b: +"xml". </ixml-grammar>
+    <test-case name="iMult-1">
+      <test-string>a</test-string>
+      <result>
+        <assert-xml>
+          <S xmlns="">a<b>xml</b><b>xml</b></S>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="insert-multiple-attribute">
+    <created by="jwL" on="2022-05-28"/>
+    <description>
+      <p>A grammar with a repeated simple and attributed textual insertion.</p>
+    </description>
+    <ixml-grammar> S: 'a', b, @b, b. b: +"xml". </ixml-grammar>
+    <test-case name="iMultAtt-1">
+      <test-string>a</test-string>
+      <result>
+        <assert-xml>
+          <S xmlns="" b="xml">a<b>xml</b><b>xml</b></S>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="insert-ambiguous">
+    <created by="jwL" on="2022-05-29"/>
+    <description>
+      <p>A grammar with two alternative textual insertions.</p>
+    </description>
+    <ixml-grammar> S: +'A' ; +'B'. </ixml-grammar>
+    <test-case name="iAmb-1">
+      <test-string/>
+      <result>
+        <assert-xml>
+          <S xmlns="" ixml:state="ambiguous">A</S>
+        </assert-xml>
+        <assert-xml>
+          <S xmlns="" ixml:state="ambiguous">B</S>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="insert-separator">
+    <created by="jwL" on="2022-05-29"/>
+    <description>
+      <p>A grammar with a simple textual insertion acting as a repetition separator.</p>
+    </description>
+    <ixml-grammar> S: [L]+++",". </ixml-grammar>
+    <test-case name="iSep-1">
+      <test-string>abcdef</test-string>
+      <result>
+        <assert-xml>
+          <S xmlns="">a,b,c,d,e,f</S>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="insert-separator-hex">
+    <created by="jwL" on="2022-05-29"/>
+    <description>
+      <p>A grammar with a simple hex insertion acting as a repetition separator.</p>
+    </description>
+    <ixml-grammar> S: [L]+++#7c. </ixml-grammar>
+    <test-case name="iSepHex-1">
+      <test-string>abcdef</test-string>
+      <result>
+        <assert-xml>
+          <S xmlns="">a|b|c|d|e|f</S>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="insert-separator-whitespace">
+    <created by="jwL" on="2022-05-29"/>
+    <description>
+      <p>A grammar with a simple textual insertion acting as a repetition separator, with additional
+        whitespace in the grammar.</p>
+    </description>
+    <ixml-grammar> S: [L]++ + ", ". </ixml-grammar>
+    <test-case name="iSepWs-1">
+      <test-string>abcdef</test-string>
+      <result>
+        <assert-xml>
+          <S xmlns="">a, b, c, d, e, f</S>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="insert-separator-multiple">
+    <created by="jwL" on="2022-05-29"/>
+    <description>
+      <p>A grammar with multiple textual insertions acting as a repetition separator.</p>
+    </description>
+    <ixml-grammar> S: [L]++ (+":", +"="). </ixml-grammar>
+    <test-case name="iSepMul-1">
+      <test-string>abcdef</test-string>
+      <result>
+        <assert-xml>
+          <S xmlns="">a:=b:=c:=d:=e:=f</S>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="insert-separator-alternate">
+    <created by="jwL" on="2022-05-29"/>
+    <description>
+      <p>A grammar with a pair of alternate insertions acting as a repetition separator.</p>
+    </description>
+    <ixml-grammar> S: [L]++(+':';+'='). </ixml-grammar>
+    <test-case name="iSepAlt-1">
+      <test-string xmlns:jwL="https://lists.w3.org/Archives/Public/public-ixml/2022May/0099.html"
+                   jwL:showStates="">abc</test-string>
+      <result>
+        <assert-xml>
+          <S xmlns="" ixml:state="ambiguous">a:b:c</S>
+        </assert-xml>
+        <assert-xml>
+          <S xmlns="" ixml:state="ambiguous">a=b=c</S>
+        </assert-xml>
+        <assert-xml>
+          <S xmlns="" ixml:state="ambiguous">a:b=c</S>
+        </assert-xml>
+        <assert-xml>
+          <S xmlns="" ixml:state="ambiguous">a=b:c</S>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="insert-alternate">
+    <created by="jwL" on="2022-05-29"/>
+    <description>
+      <p>A grammar with two alternative insertions.</p>
+    </description>
+    <ixml-grammar> S: +'A' ; +'B'. </ixml-grammar>
+    <test-case name="iAlt-1">
+      <test-string/>
+      <result>
+        <assert-xml>
+          <S xmlns="" ixml:state="ambiguous">A</S>
+        </assert-xml>
+        <assert-xml>
+          <S xmlns="" ixml:state="ambiguous">B</S>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="insert-special">
+    <created by="SP" on="2022-08-20"/>
+    <description>
+      <p>A grammar that parses and inserts special characters. From an email message.</p>
+    </description>
+    <ixml-grammar>element: @attribute, -content.
+attribute: -content.
+content:   +#26, +#22, +#27, +#3C, +#3E,
+            #26,  #22,  #27,  #3C,  #3E.</ixml-grammar>
+    <test-case name="insert-special">
+      <test-string>&amp;"'&lt;&gt;&amp;"'&lt;&gt;</test-string>
+      <result>
+        <assert-xml>
+          <element xmlns=""
+                   attribute="&amp;&quot;'&lt;>&amp;&quot;'&lt;>">&amp;"'&lt;>&amp;"'&lt;></element>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+
+</test-catalog>

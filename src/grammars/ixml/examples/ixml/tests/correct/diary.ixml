@@ -1,0 +1,16 @@
+diary: entry+.
+entry: date, para.
+date: day, s, month, s,  year, nl.
+day: digit, digit?.
+-digit:["0"-"9"].
+month: "January"; "February"; "March"; "April"; "May"; "June";
+       "July"; "August"; "September"; "October"; "November"; "December".
+year: digit, digit, digit, digit.
+
+para: word++s, s?, blank.
+-blank: nl, nl.
+-word: (letter; punctuation)+.
+-letter: [L].
+-punctuation: [".;:,'?!"].
+-s: " "+.
+-nl: -#a | -#d, -#a .

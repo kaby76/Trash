@@ -1,0 +1,61 @@
+<test-catalog xmlns="https://github.com/invisibleXML/ixml/test-catalog"
+              release-date="2022-06-01"
+	      name="parse tests">
+
+  <description>
+    <p>Tests provided by Steven Pemberton in December 2021, with
+    corrections of 21 December. Reorganized by Norm Tovey-Walsh,
+    February 2022.</p>
+    </description>
+
+      <test-set name="parse-error">
+        <created by="SP" on="2021-12-16"/>
+        <ixml-grammar-ref href="parse-error.ixml"/>
+        <test-case name="parse-error">
+  	<created by="SP" on="2021-12-16"/>
+  	<modified by="SP" on="2021-12-30"
+  		  change="replace grammar and input"/>
+  	<test-string-ref href="parse-error.inp"/>
+  	<result>
+  	  <assert-not-a-sentence/>
+  	</result>
+        </test-case>
+      </test-set>
+
+      <test-set name="url">
+        <created by="SP" on="2021-12-16"/>
+        <ixml-grammar-ref href="url.ixml"/>
+        <test-case name="url">
+  	<created by="SP" on="2021-12-16"/>
+  	<test-string-ref href="url.inp"/>
+  	<result>
+  	  <assert-not-a-sentence/>
+  	</result>
+        </test-case>
+      </test-set>
+
+
+      <test-set name="url1">
+        <created by="SP" on="2021-12-16"/>
+        <ixml-grammar-ref href="url1.ixml"/>
+        <test-case name="url1">
+  	<created by="SP" on="2021-12-16"/>
+  	<test-string-ref href="url1.inp"/>
+  	<result>
+  	  <assert-not-a-sentence/>
+  	  <!--
+  	      <assert-xml-ref href="url1.output.xml"/>
+  	  -->
+  	</result>
+  	<description>
+  	  <p>The grammar as written allows no hash mark and fragment
+  	  identifier.  The intent may have been to formulate a grammar
+  	  that allowed them, but the simplest change to bring it into
+  	  a consistent state is to change the result.</p>
+  	  <p>For the record, the originally asserted result is now in
+  	  file 'url1.disputed-output.xml'.</p>
+  	</description>
+        </test-case>
+      </test-set>
+
+</test-catalog>

@@ -1,0 +1,36 @@
+<test-catalog xmlns="https://github.com/invisibleXML/ixml/test-catalog"
+	      release-date="2023-10-23"
+	      name="iXML Community Group Test Suite">
+
+  <description>
+    <p>Top-level catalog for tests in the iXML Community Group
+    Test Suite.</p>
+    <p>Tests have been contributed from several sources, but
+    the core of the test collection are the tests contributed
+    by Steven Pemberton in December 2021.</p>
+  </description>
+
+  <!--* The three syntaxtests catalogs use the
+      * same test cases but test them in slightly
+      * different ways.  You may want all three,
+      * or only one or two, depending on the processor
+      * you are testing.
+      *-->
+  <test-set-ref href="syntax/catalog-as-grammar-tests.xml"/>
+  <test-set-ref href="syntax/catalog-as-instance-tests-ixml.xml"/>
+  <test-set-ref href="syntax/catalog-as-instance-tests-xml.xml"/>
+  <test-set-ref href="syntax/catalog-of-correct-tests.xml"/>
+
+  <test-set-ref href="ambiguous/test-catalog.xml"/>
+  <test-set-ref href="correct/test-catalog.xml"/>
+  <test-set-ref href="ixml/test-catalog.xml"/>
+  <test-set-ref href="parse/test-catalog.xml"/>
+  <test-set-ref href="error/test-catalog.xml"/>
+  <test-set-ref href="grammar-misc/test-catalog.xml"/>
+  <test-set-ref href="grammar-misc/prolog-tests.xml"/>
+  <test-set-ref href="grammar-misc/insertion-tests.xml"/>
+  <test-set-ref href="misc/misc-001-020-catalog.xml"/>
+  <test-set-ref href="misc/misc-021-040-catalog.xml"/>
+  <test-set-ref href="misc/misc-041-060-catalog.xml"/>
+  <test-set-ref href="chars/test-catalog.xml"/>
+</test-catalog>

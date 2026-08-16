@@ -12,7 +12,7 @@ grammarSpec
 ├── rules
 │   ├── ruleSpec
 │   │   └── parserRuleSpec
-│   │       ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│   │       ├── Attribute WS Value '&#10;' chnl:OFF_CHANNEL
 │   │       ├── RULE_REF
 │   │       │   └── "e"
 │   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
@@ -59,7 +59,7 @@ grammarSpec
 │   │       │       │                   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
 │   │       │       │                   └── RULE_REF
 │   │       │       │                       └── "e"
-│   │       │       ├── Attribute WS Value '\n  ' chnl:OFF_CHANNEL
+│   │       │       ├── Attribute WS Value '&#10;  ' chnl:OFF_CHANNEL
 │   │       │       ├── OR
 │   │       │       │   └── "|"
 │   │       │       ├── labeledAlt
@@ -101,7 +101,7 @@ grammarSpec
 │   │       │       │                   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
 │   │       │       │                   └── RULE_REF
 │   │       │       │                       └── "e"
-│   │       │       ├── Attribute WS Value '\n  ' chnl:OFF_CHANNEL
+│   │       │       ├── Attribute WS Value '&#10;  ' chnl:OFF_CHANNEL
 │   │       │       ├── OR
 │   │       │       │   └── "|"
 │   │       │       ├── labeledAlt
@@ -124,7 +124,7 @@ grammarSpec
 │   │       │       │                   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
 │   │       │       │                   └── STRING_LITERAL
 │   │       │       │                       └── "')'"
-│   │       │       ├── Attribute WS Value '\n  ' chnl:OFF_CHANNEL
+│   │       │       ├── Attribute WS Value '&#10;  ' chnl:OFF_CHANNEL
 │   │       │       ├── OR
 │   │       │       │   └── "|"
 │   │       │       └── labeledAlt
@@ -164,14 +164,14 @@ grammarSpec
 │   │       │                           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
 │   │       │                           └── RULE_REF
 │   │       │                               └── "a"
-│   │       ├── Attribute WS Value '\n  ' chnl:OFF_CHANNEL
+│   │       ├── Attribute WS Value '&#10;  ' chnl:OFF_CHANNEL
 │   │       ├── SEMI
 │   │       │   └── ";"
 │   │       └── exceptionGroup
 │   ├── ruleSpec
 │   ├── ruleSpec
 │   │   └── lexerRuleSpec
-│   │       ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│   │       ├── Attribute WS Value '&#10;' chnl:OFF_CHANNEL
 │   │       ├── TOKEN_REF
 │   │       │   └── "INT"
 │   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
@@ -210,7 +210,7 @@ grammarSpec
 │   │           └── ";"
 │   ├── ruleSpec
 │   │   └── lexerRuleSpec
-│   │       ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│   │       ├── Attribute WS Value '&#10;' chnl:OFF_CHANNEL
 │   │       ├── TOKEN_REF
 │   │       │   └── "MUL"
 │   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
@@ -231,7 +231,7 @@ grammarSpec
 │   │           └── ";"
 │   ├── ruleSpec
 │   │   └── lexerRuleSpec
-│   │       ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│   │       ├── Attribute WS Value '&#10;' chnl:OFF_CHANNEL
 │   │       ├── TOKEN_REF
 │   │       │   └── "DIV"
 │   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
@@ -252,7 +252,7 @@ grammarSpec
 │   │           └── ";"
 │   ├── ruleSpec
 │   │   └── lexerRuleSpec
-│   │       ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│   │       ├── Attribute WS Value '&#10;' chnl:OFF_CHANNEL
 │   │       ├── TOKEN_REF
 │   │       │   └── "ADD"
 │   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
@@ -273,7 +273,7 @@ grammarSpec
 │   │           └── ";"
 │   ├── ruleSpec
 │   │   └── lexerRuleSpec
-│   │       ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│   │       ├── Attribute WS Value '&#10;' chnl:OFF_CHANNEL
 │   │       ├── TOKEN_REF
 │   │       │   └── "SUB"
 │   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
@@ -294,7 +294,7 @@ grammarSpec
 │   │           └── ";"
 │   ├── ruleSpec
 │   │   └── lexerRuleSpec
-│   │       ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│   │       ├── Attribute WS Value '&#10;' chnl:OFF_CHANNEL
 │   │       ├── TOKEN_REF
 │   │       │   └── "LP"
 │   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
@@ -315,7 +315,7 @@ grammarSpec
 │   │           └── ";"
 │   ├── ruleSpec
 │   │   └── lexerRuleSpec
-│   │       ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│   │       ├── Attribute WS Value '&#10;' chnl:OFF_CHANNEL
 │   │       ├── TOKEN_REF
 │   │       │   └── "RP"
 │   │       ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
@@ -336,7 +336,7 @@ grammarSpec
 │   │           └── ";"
 │   └── ruleSpec
 │       └── lexerRuleSpec
-│           ├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+│           ├── Attribute WS Value '&#10;' chnl:OFF_CHANNEL
 │           ├── TOKEN_REF
 │           │   └── "WS"
 │           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
@@ -350,7 +350,7 @@ grammarSpec
 │           │           │       ├── lexerAtom
 │           │           │       │   ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
 │           │           │       │   └── LEXER_CHAR_SET
-│           │           │       │       └── "[ \\r\\n\\t]"
+│           │           │       │       └── "[ \r\n\t]"
 │           │           │       └── ebnfSuffix
 │           │           │           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
 │           │           │           └── PLUS
@@ -368,7 +368,7 @@ grammarSpec
 │           ├── Attribute WS Value ' ' chnl:OFF_CHANNEL
 │           └── SEMI
 │               └── ";"
-├── Attribute WS Value '\n' chnl:OFF_CHANNEL
+├── Attribute WS Value '&#10;' chnl:OFF_CHANNEL
 └── EOF
     └── ""
 

@@ -1,0 +1,182 @@
+<test-catalog xmlns="https://github.com/invisibleXML/ixml/test-catalog"
+              release-date="2022-06-01"
+	      name="ixml tests">
+
+  <description>
+    <p>Tests provided by Steven Pemberton in December 2021,
+    with corrections of 21 December. Reorganized by Norm Tovey-Walsh, February 2022.</p>
+    </description>
+
+    <test-set name="ixml-no-spaces">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="ixml-no-spaces.ixml"/>
+      <test-case name="ixml-no-spaces">
+	<created by="SP" on="2021-12-16"/>
+	<modified
+	    by="MSM"
+	    on="2021-12-30"
+	    change="stripped non-significant whitespace from result"/>
+	<test-string-ref href="ixml-no-spaces.inp"/>
+	<result>
+	  <assert-xml-ref href="ixml-no-spaces.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+    <test-set name="bnf">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="bnf.ixml"/>
+      <test-case name="bnf">
+	<created by="SP" on="2021-12-16"/>
+	<modified
+	    by="MSM"
+	    on="2022-01-01"
+	    change="stripped non-significant whitespace from result"/>
+	<test-string-ref href="bnf.inp"/>
+	<result>
+	  <assert-xml-ref href="bnf.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="ixml-one-line">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="ixml-one-line.ixml"/>
+      <test-case name="ixml-one-line">
+	<created by="SP" on="2021-12-16"/>
+	<modified by="SP" on="2021-12-21"
+		  change="replace input, output"/>
+	<modified
+	    by="MSM"
+	    on="2021-12-30"
+	    change="stripped non-significant whitespace from result"/>
+	<modified
+	    by="MSM"
+	    on="2022-01-01"
+	    change="replace expected result"/>
+	<description>
+	  <p>Note that the input and the grammar are the same.</p>
+	  <p>The expected result supplied in tests.zip cannot be
+	  right: it excludes the delimiter characters like ":" and
+	  ",", although they are not marked hidden in the grammar, and
+	  it marks whitespace as "s", not as "S".  It appears to be
+	  parsing the input with a different grammar more like the
+	  current ixml grammar.  It has been replaced by output
+	  thought correct.  However, the old file has been left in
+	  place, in case of disputes over correctness.</p>
+	  <p>The comment text "allcharacters,quotesmustbedoubled"
+	  looks like a possible error, but the comments in the input
+	  are also missing inter-word spaces.</p>
+	</description>
+	<test-string-ref href="ixml-one-line.inp"/>
+	<result>
+	  <!-- <assert-xml-ref href="ixml-one-line.output.xml"/> -->
+	  <assert-xml-ref href="ixml-one-line.corr.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="ixml-spaces">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="ixml-spaces.ixml"/>
+      <test-case name="ixml-spaces">
+	<created by="SP" on="2021-12-16"/>
+	<modified
+	    by="MSM"
+	    on="2021-12-30"
+	    change="stripped non-significant whitespace from result"/>
+	<test-string-ref href="ixml-spaces.inp"/>
+	<result>
+	  <assert-xml-ref href="ixml-spaces.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="ixml">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="ixml.ixml"/>
+      <test-case name="ixml">
+	<created by="SP" on="2021-12-16"/>
+	<modified
+	    by="MSM"
+	    on="2021-12-30"
+	    change="stripped non-significant whitespace from result"/>
+	<test-string-ref href="ixml.inp"/>
+	<result>
+	  <assert-xml-ref href="ixml.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="ixml1">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="ixml1.ixml"/>
+      <test-case name="ixml1">
+	<created by="SP" on="2021-12-16"/>
+	<modified
+	    by="MSM"
+	    on="2021-12-30"
+	    change="stripped non-significant whitespace from result"/>
+	<!--* not sure it all got stripped ... *-->
+	<modified
+	    by="MSM"
+	    on="2022-01-01"
+	    change="stripped erroneous blanks from
+		    dchar rule in expected result"/>
+	<description>
+	  <p>The exclude element in the rule for dchar included 18
+	  extraneous blanks; after the exclude, the terminal element
+	  concluded with an extraneous blank line containing 12
+	  blanks.  These have now been removed.</p>
+	</description>
+	<test-string-ref href="ixml1.inp"/>
+	<result>
+	  <assert-xml-ref href="ixml1.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="ixml2">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="ixml2.ixml"/>
+      <test-case name="ixml2">
+	<created by="SP" on="2021-12-16"/>
+	<modified
+	    by="MSM"
+	    on="2021-12-30"
+	    change="stripped non-significant whitespace from result"/>
+	<modified by="MSM" on="2022-01-01"
+		  change="changed result to not-a-grammar"/>
+	<modified by="ndw" on="2022-02-05"
+		  change="grammar updates mean this test now passes"/>
+	<test-string-ref href="ixml2.inp"/>
+	<result>
+	  <assert-xml-ref href="ixml2.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+
+    <test-set name="ixml3">
+      <created by="SP" on="2021-12-16"/>
+      <ixml-grammar-ref href="ixml3.ixml"/>
+      <test-case name="ixml3">
+	<created by="SP" on="2021-12-16"/>
+	<modified
+	    by="MSM"
+	    on="2021-12-30"
+	    change="stripped non-significant whitespace from result"/>
+	<!--* not sure it all got stripped ... *-->
+	<test-string-ref href="ixml3.inp"/>
+	<result>
+	  <assert-xml-ref href="ixml3.output.xml"/>
+	</result>
+      </test-case>
+    </test-set>
+
+</test-catalog>

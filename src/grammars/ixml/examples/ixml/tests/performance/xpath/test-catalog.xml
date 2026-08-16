@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<tc:test-catalog xmlns:tc="https://github.com/invisibleXML/ixml/test-catalog"
+		 xmlns:ixml="http://invisiblexml.org/NS"
+		 name="xpath-performance-tests"
+		 release-date="2023-11-22"
+		 >
+  <tc:description>
+    <tc:p>A collection of tests for use in measuring performance
+    of an invisible XML processor.</tc:p>
+  </tc:description>
+ 
+  <tc:test-set name="XPath">
+    <tc:created by="cmsmcq" on="2022-08-25"/>
+    <tc:description>
+      <tc:p>The grammar is the reduced-tree grammar provided by John
+      Lumley for the ixml samples directory.  The test cases are drawn
+      from the XPath expressions in various collections of
+      stylesheets.</tc:p>
+    </tc:description>
+
+    
+    <!-- the real grammar: -->
+    <tc:ixml-grammar-ref href="../../../samples/XPath/XPath.reducedTree.ixml"/>
+
+    <!-- a temporary stopgap -->
+    <!--
+    <tc:vxml-grammar-ref href="out/xpath.rt.ixml.xml"/>
+    -->
+
+    <!-- full, unreduced parse tree:
+    <tc:ixml-grammar-ref href="../../../../cmsmcq-ixml/samples/XPath/XPath.ixml"/>
+    -->
+    <!--
+    <tc:grammar-test>
+      <tc:result>
+	<tc:assert-xml-ref href="out/XPath.reducedTree.ixml.xml"/>
+      </tc:result>
+    </tc:grammar-test>
+    -->
+
+    <!-- three from naxos, Debbie Pickett's XSLT 1.0 interpreter in XSLT 1.0 -->
+    <tc:test-case name="naxos-1">
+      <tc:created on="2022-08-26" by="cmsmcq"/>
+      <tc:test-string>concat(
+      substring-before($hash, concat(';', $key-encoded, ':')),
+                     ';', $key-encoded, ':', $value-encoded, ';',
+                     substring-after(substring-after($hash, concat(';', $key-encoded, ':')), ';'))
+      </tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="out/naxos-1.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="naxos-2">
+      <tc:created on="2022-08-26" by="cmsmcq"/>
+      <tc:test-string>
+        string($grammar-document
+              /xsl:stylesheet
+              /*
+              [local-name() = 'rule']
+              [namespace-uri() = concat($grammar-namespace-prefix, $rule)]
+              /sequence[$alternation]/*[$step]/@name)
+      </tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="out/naxos-2.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="naxos-3">
+      <tc:created on="2022-08-26" by="cmsmcq"/>
+      <tc:test-string>
+      $function-documents/xsl:stylesheet/*
+      [namespace-uri() = concat('http://futzle.com/2006/xslt-function/', 
+                                 $fname-namespace, 
+                                 '/', $fname-local-name, '
+                                 /0')]</tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="out/naxos-3.xml"/>
+      </tc:result>
+    </tc:test-case>
+
+    <!-- three from XSLTForms, Alain Couthures's XSLT-based XForms processor -->
+    <tc:test-case name="xsltforms-1">
+      <tc:created on="2022-08-26" by="cmsmcq"/>
+      <tc:test-string>xsd:length|xsd:minLength|xsd:maxLength|xsd:enumeration|xsd:whiteSpace|xsd:maxInclusive|xsd:minInclusive|xsd:maxExclusive|xsd:minExclusive|xsd:totalDigits|xsd:fractionDigits|xsd:maxScale|xsd:minScale</tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="out/xsltforms-1.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="xsltforms-2">
+      <tc:created on="2022-08-26" by="cmsmcq"/>
+      <tc:test-string>namespace-uri(($piformdoc/descendant::*|$piformdoc/descendant::*/@*)[starts-with(translate(name(),'ABCDEFGHIJKLMNOPQRSTUVWXYZ','abcdefghijklmnopqrstuvwxyz'),concat($pmin,':'))][1])</tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="out/xsltforms-2.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="xsltforms-3">
+      <tc:created on="2022-08-26" by="cmsmcq"/>
+      <tc:test-string>xhtml:head/xhtml:*[local-name() != 'script' and local-name() != 'style' and local-name() != 'link' and local-name() != 'meta'] | xhtml:head/comment() | head/title | head/comment()
+      </tc:test-string>     
+      <tc:result>
+	<tc:assert-xml-ref href="out/xsltforms-3.xml"/>
+	<tc:assert-xml-ref href="out/xsltforms-3-alt.xml"/>
+      </tc:result>
+    </tc:test-case>
+
+    <!-- three from Gingersnap -->
+    <tc:test-case name="gingersnap-1">
+      <tc:created on="2022-08-26" by="cmsmcq"/>
+      <tc:test-string>
+	if ($e/@dstring) then
+          concat(
+          string($e/@tmark),
+          '"' ,
+          string($e/@dstring),
+          '"'
+           )
+        else if ($e/@sstring) then
+          concat(
+          string($e/@tmark),
+           "'" ,
+           string($e/@sstring),
+          "'"
+          )
+        else if ($e/@string) then
+          concat(
+          string($e/@tmark),
+           "'" ,
+           string($e/@string),
+          "'"
+          )
+        else
+          concat(
+          string($e/@tmark),
+           '#',
+           string($e/@hex)
+          )
+      </tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="out/gingersnap-1.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="gingersnap-2">
+      <tc:created on="2022-08-26" by="cmsmcq"/>
+      <tc:test-string>
+	if (/descendant::rule/@gt:recursive)
+	then /descendant::rule[@recursive='true']
+	else
+	for $r in /descendant::rule
+	return let $n := $r/@name/string()
+	return let $ln := gt:lnDescXGN($G, $n)
+	return if ($n = $ln) then $r else ()	
+      </tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="out/gingersnap-2.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="gingersnap-3">
+      <tc:created on="2022-08-26" by="cmsmcq"/>
+      <tc:test-string>
+	if (string-length($s) eq 1)
+	then $s
+	else if (starts-with($s, '#') and (translate($s, '#0123456789abcdefABCDEF', '') eq ''))
+	then codepoints-to-string(d2x:x2d(substring($s, 2)))
+	else ''
+      </tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="out/gingersnap-3.xml"/>
+      </tc:result>
+    </tc:test-case>
+
+    <!-- three from DocBook xslTNG stylesheets -->
+    <tc:test-case name="xsltng-1">
+      <tc:created on="2022-08-26" by="cmsmcq"/>
+      <tc:test-string>($node/ancestor-or-self::db:set
+      |$node/ancestor-or-self::db:book
+      |$node/ancestor-or-self::db:part
+      |$node/ancestor-or-self::db:reference
+      |$node/ancestor-or-self::db:partintro
+      |$node/ancestor-or-self::db:chapter
+      |$node/ancestor-or-self::db:appendix
+      |$node/ancestor-or-self::db:preface
+      |$node/ancestor-or-self::db:article
+      |$node/ancestor-or-self::db:section
+      |$node/ancestor-or-self::db:sect1
+      |$node/ancestor-or-self::db:sect2
+      |$node/ancestor-or-self::db:sect3
+      |$node/ancestor-or-self::db:sect4
+      |$node/ancestor-or-self::db:sect5
+      |$node/ancestor-or-self::db:refentry
+      |$node/ancestor-or-self::db:refsect1
+      |$node/ancestor-or-self::db:refsect2
+      |$node/ancestor-or-self::db:refsect3
+      |$node/ancestor-or-self::db:simplesect
+      |$node/ancestor-or-self::db:bibliography
+      |$node/ancestor-or-self::db:glossary
+      |$node/ancestor-or-self::db:index)[last()]
+      </tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="out/xsltng-1.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="xsltng-2">
+      <tc:created on="2022-08-26" by="cmsmcq"/>
+      <tc:test-string>
+	$nodes/self::processing-instruction(oxy_comment_start)[following-sibling::processing-instruction()
+        [not(name() = ('oxy_delete', 'oxy_attributes'))][1]
+        /self::processing-instruction(oxy_comment_end)]
+        union
+        $nodes/self::processing-instruction(oxy_insert_start)[following-sibling::processing-instruction()
+        [not(name() = ('oxy_delete', 'oxy_attributes'))][1]
+        /self::processing-instruction(oxy_insert_end)]
+      </tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="out/xsltng-2.xml"/>
+      </tc:result>
+    </tc:test-case>
+    <tc:test-case name="xsltng-3">
+      <tc:created on="2022-08-26" by="cmsmcq"/>
+      <tc:test-string>
+	if ((starts-with($expected-value, '''')
+        and ends-with($expected-value, ''''))
+        or
+        (starts-with($expected-value, '"')
+        and ends-with($expected-value, '"')))
+        then substring($expected-value, 2, string-length($expected-value) - 2)
+        else $expected-value
+      </tc:test-string>
+      <tc:result>
+	<tc:assert-xml-ref href="out/xsltng-3.xml"/>
+      </tc:result>
+    </tc:test-case>
+    
+  </tc:test-set>
+  
+</tc:test-catalog>

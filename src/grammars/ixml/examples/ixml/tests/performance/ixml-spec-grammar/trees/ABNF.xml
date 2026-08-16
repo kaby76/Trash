@@ -1,0 +1,47 @@
+<ixml><comment> The grammar notation defined by RFC 5234, "Augmented BNF for Syntax
+Specifications: ABNF", ed. D. Crocker and P. Overell, January 2008.
+
+The nonterminals used here are those of RFC 5234, but some definitions
+have been reformulated to use ixml idioms.  The definition of ABNF has
+no analogue to ixml marks for guiding XML serialization; the marks
+used here have been supplied by the transcriber.
+
+Transcribed into ixml by C. M. Sperberg-McQueen, February 2022.
+Updated by Norm Tovey-Walsh to incorporate errata, July 2023. </comment><rule name='rulelist'><alt><repeat1><alts><alt><nonterminal name='rule'/></alt><alt><alts><alt><repeat0><nonterminal name='WSP'/></repeat0><nonterminal name='c-nl'/></alt></alts></alt></alts></repeat1></alt></rule><rule name='rule'><alt><nonterminal name='rulename'/><nonterminal name='defined-as'/><nonterminal name='elements'/><nonterminal name='c-nl'/></alt></rule><comment> continues if next line starts 
+                       with white space </comment><rule name='rulename'><alt><nonterminal name='ALPHA'/><repeat0><alts><alt><nonterminal name='ALPHA'/></alt><alt><nonterminal name='DIGIT'/></alt><alt><literal string='-'/></alt></alts></repeat0></alt></rule><rule name='defined-as'><alt><repeat0><nonterminal name='c-wsp'/></repeat0><alts><alt><literal string='='/></alt><alt><literal string='=/'/></alt></alts><repeat0><nonterminal name='c-wsp'/></repeat0></alt></rule><comment>  basic rules definition and 
+                        incremental alternatives </comment><rule name='elements'><alt><nonterminal name='alternation'/><repeat0><nonterminal name='WSP'/></repeat0></alt></rule><rule name='c-wsp'><alt><nonterminal name='WSP'/></alt><alt><alts><alt><nonterminal name='c-nl'/><nonterminal name='WSP'/></alt></alts></alt></rule><rule name='c-nl'><alt><nonterminal name='comment'/></alt><alt><nonterminal name='CRLF'/></alt></rule><comment> comment or newline </comment><rule name='comment'><alt><literal string=';'/><repeat0><alts><alt><nonterminal name='WSP'/></alt><alt><nonterminal name='VCHAR'/></alt></alts></repeat0><nonterminal name='CRLF'/></alt></rule><rule name='alternation'><alt><repeat0><nonterminal name='concatenation'/><sep><alts><alt><repeat0><nonterminal name='c-wsp'/></repeat0><literal string='/'/><repeat0><nonterminal name='c-wsp'/></repeat0></alt></alts></sep></repeat0></alt></rule><rule name='concatenation'><alt><repeat0><nonterminal name='repetition'/><sep><alts><alt><repeat1><nonterminal name='c-wsp'/></repeat1></alt></alts></sep></repeat0></alt></rule><rule name='repetition'><alt><option><nonterminal name='repeat'/></option><nonterminal name='element'/></alt></rule><rule name='repeat'><alt><repeat1><nonterminal name='DIGIT'/></repeat1></alt><alt><alts><alt><repeat0><nonterminal name='DIGIT'/></repeat0><literal string='*'/><repeat0><nonterminal name='DIGIT'/></repeat0></alt></alts></alt></rule><rule name='element'><alt><nonterminal name='rulename'/></alt><alt><nonterminal name='group'/></alt><alt><nonterminal name='option'/></alt><alt><nonterminal name='char-val'/></alt><alt><nonterminal name='num-val'/></alt><alt><nonterminal name='prose-val'/></alt></rule><rule name='group'><alt><literal string='('/><repeat0><nonterminal name='c-wsp'/></repeat0><nonterminal name='alternation'/><repeat0><nonterminal name='c-wsp'/></repeat0><literal string=')'/></alt></rule><rule name='option'><alt><literal string='['/><repeat0><nonterminal name='c-wsp'/></repeat0><nonterminal name='alternation'/><repeat0><nonterminal name='c-wsp'/></repeat0><literal string=']'/></alt></rule><rule name='char-val'><alt><nonterminal name='DQUOTE'/><repeat0><inclusion><member from='#20' to='#21'/><member from='#23' to='#7E'/></inclusion></repeat0><nonterminal name='DQUOTE'/></alt></rule><comment> quoted string of SP and VCHAR 
+                       without DQUOTE </comment><rule name='num-val'><alt><literal string='%'/><alts><alt><nonterminal name='bin-val'/></alt><alt><nonterminal name='dec-val'/></alt><alt><nonterminal name='hex-val'/></alt></alts></alt></rule><rule name='bin-val'><alt><literal string='b'/><repeat1><nonterminal name='BIT'/></repeat1><option><alts><alt><repeat1><alts><alt><literal string='.'/><repeat1><nonterminal name='BIT'/></repeat1></alt></alts></repeat1></alt><alt><alts><alt><literal string='-'/><repeat1><nonterminal name='BIT'/></repeat1></alt></alts></alt></alts></option></alt></rule><comment> series of concatenated bit values
+                       or single ONEOF range </comment><rule name='dec-val'><alt><literal string='d'/><repeat1><nonterminal name='DIGIT'/></repeat1><option><alts><alt><repeat1><alts><alt><literal string='.'/><repeat1><nonterminal name='DIGIT'/></repeat1></alt></alts></repeat1></alt><alt><alts><alt><literal string='-'/><repeat1><nonterminal name='DIGIT'/></repeat1></alt></alts></alt></alts></option></alt></rule><rule name='hex-val'><alt><literal string='x'/><repeat1><nonterminal name='HEXDIG'/></repeat1><option><alts><alt><repeat1><alts><alt><literal string='.'/><repeat1><nonterminal name='HEXDIG'/></repeat1></alt></alts></repeat1></alt><alt><alts><alt><literal string='-'/><repeat1><nonterminal name='HEXDIG'/></repeat1></alt></alts></alt></alts></option></alt></rule><rule name='prose-val'><alt><literal string='&lt;'/><repeat0><inclusion><member from='#20' to='#3D'/><member from='#3F' to='#7E'/></inclusion></repeat0><literal string='&gt;'/></alt></rule><comment> bracketed string of SP and VCHAR
+                       without angles
+                       prose description, to be used as
+                       last resort </comment><comment> 'Core rules' from Appendix B, intended for re-use. </comment><rule name='ALPHA'><alt><inclusion><member from='A' to='Z'/><member from='a' to='z'/></inclusion></alt></rule><comment> #41-#5A; #61-#7A </comment><rule name='BIT'><alt><literal string='0'/></alt><alt><literal string='1'/></alt></rule><rule name='CR'><alt><literal hex='0D'/></alt></rule><comment> carriage return </comment><rule name='CRLF'><alt><nonterminal name='CR'/><nonterminal name='LF'><comment> Internet standard newline </comment></nonterminal></alt><alt><nonterminal name='LF'/></alt></rule><comment> Extension: support single LF convention for newlines </comment><rule name='DIGIT'><alt><inclusion><member from='0' to='9'/></inclusion></alt></rule><comment> #30 - #39 </comment><rule name='DQUOTE'><alt><literal hex='22'/></alt></rule><comment> (Double Quote) </comment><rule name='HEXDIG'><alt><nonterminal name='DIGIT'/></alt><alt><inclusion><member from='A' to='F'/></inclusion></alt></rule><rule name='HTAB'><alt><literal hex='09'/></alt></rule><comment> horizontal tab </comment><rule name='LF'><alt><literal hex='0A'/></alt></rule><comment> linefeed </comment><rule name='SP'><alt><literal hex='20'/></alt></rule><rule name='VCHAR'><alt><inclusion><member from='#21' to='#7E'/></inclusion></alt></rule><comment> visible (printing) characters </comment><rule name='WSP'><alt><nonterminal name='SP'/></alt><alt><nonterminal name='HTAB'/></alt></rule><comment> white space </comment><comment> Included in Appendix B for reuse elsewhere, but not used
+by ABNF itself: </comment><comment>
+
+CHAR          = [#01 - #7F].  
+                     <comment> Any 7-bit US-ASCII chracter, 
+                       excluding NUL </comment>
+		       
+CTL           = [#00 - #1F; #7F]. <comment> controls </comment>
+		       
+LWSP	      = (WSP | CRLF, WSP)*.
+                     <comment> Use of this linear-white-space rule
+                       permits lines containing only white
+                       space that are no longer legal in
+                       mail headers and have caused 
+                       interoperability problems in other
+                       contexts.
+                       Do not use when defining mail
+                       headers and use with caution in 
+                       other contexts. </comment>
+
+OCTET         = [#00 - #FF]. <comment> 8 bits of data </comment>
+
+</comment><comment> Notes:
+
+- As noted in the comments, this grammar has been reported ambiguous
+  in a couple of places.
+
+- ABNF nonterminals are case-insensitive unless specified using
+  numeric values for the characters.
+
+</comment></ixml>

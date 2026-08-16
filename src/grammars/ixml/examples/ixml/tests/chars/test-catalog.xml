@@ -1,0 +1,70 @@
+<test-catalog xmlns="https://github.com/invisibleXML/ixml/test-catalog"
+	      release-date="2022-12-17"
+	      name="Character class tests">
+
+  <description>
+    <p>The initial tests are derived from
+    <a href="https://lists.w3.org/Archives/Public/public-ixml/2022Dec/0003.html">an
+    email thread</a>.</p>
+  </description>
+
+  <test-set name="chars.char1a">
+    <created by="NW" on="2022-12-17"/>
+    <ixml-grammar-ref href="char1a.ixml"/>
+    <test-case name="char1a">
+      <created by="NW" on="2022-12-17"/>
+      <test-string>Abʰ</test-string>
+      <result>
+        <assert-xml>
+          <input xmlns=""><L>A</L><L>b</L><L>ʰ</L></input>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="chars.char1b">
+    <created by="NW" on="2022-12-17"/>
+    <ixml-grammar-ref href="char1b.ixml"/>
+    <test-case name="char1a">
+      <created by="NW" on="2022-12-17"/>
+      <test-string>Abʰ</test-string>
+      <result>
+        <assert-xml>
+          <input xmlns=""><LC>A</LC><LC>b</LC><Lm>ʰ</Lm></input>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="chars.char2">
+    <created by="NW" on="2022-12-17"/>
+    <ixml-grammar-ref href="char2.ixml"/>
+    <test-case name="char1a">
+      <created by="NW" on="2022-12-17"/>
+      <test-string>Abʰ</test-string>
+      <result>
+        <assert-xml>
+          <input xmlns=""><Lu>A</Lu><Ll>b</Ll><Lm>ʰ</Lm></input>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="chars.astral">
+    <created by="NW" on="2023-06-20"/>
+    <ixml-grammar-ref href="chars-astral.ixml"/>
+    <test-case name="chars.astral.1">
+      <created by="NW" on="2023-06-20"/>
+      <test-string>Happy 😼</test-string>
+      <result>
+        <assert-xml>
+          <S xmlns=""><A>Happy</A><B>😸</B><C D="🙀">😾</C></S>
+        </assert-xml>
+        <assert-xml>
+          <S xmlns=""><A>Happy</A><B>😼</B><C D="🙀">😾</C></S>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+</test-catalog>

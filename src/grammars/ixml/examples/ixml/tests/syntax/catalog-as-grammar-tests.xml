@@ -1,0 +1,403 @@
+<test-catalog xmlns="https://github.com/invisibleXML/ixml/test-catalog"
+	      release-date="2022-06-03"
+	      name="Grammar Syntax tests">
+
+  <description>
+    <p>Syntax tests provided by Steven Pemberton in December 2021.</p>
+    <p>All tests are negative (the file.ixml files do not conform
+    to the grammar for ixml).</p>
+    <p>Since these are all parsed against the grammar for ixml
+    grammars, the expected result could be given as
+    'assert-not-a-grammar' as well as 'assert-not-a-sentence'. The
+    inputs are not sentences in the language defined by the grammar
+    for grammars, which means they are not ixml grammars.</p>
+    <p>Three catalogs are provided, using different formulations. This
+    one describes all the tests as grammar tests and relies on
+    the ixml grammar built into the processor.</p>
+  </description>
+
+  <test-set name="class-range.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="class-range.ixml"/>
+    <grammar-test>
+      <result>
+	<assert-not-a-grammar error-code="none"/>
+      </result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="defn1.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="defn1.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="defn10.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="defn10.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="defn11.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="defn11.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="defn2.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="defn2.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="defn3.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="defn3.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="defn4.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="defn4.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="defn5.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="defn5.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="defn6.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="defn6.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="defn8.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="defn8.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="defn9.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="defn9.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="elem1">
+    <created by="SP" on="2021-12-16"/>
+    <modified by="ndw" on="2022-02-08"
+              change="Convert to a passing test."/>
+    <ixml-grammar-ref href="elem1.ixml"/>
+    <test-case name="elem1">
+      <created by="ndw" on="2022-02-08"/>
+      <test-string-ref href="elem1.inp"/>
+      <result>
+	<assert-not-a-sentence/>
+      </result>
+    </test-case>
+  </test-set>
+  
+  <test-set name="elem2.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="elem2.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="elem3.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="elem3.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="elem4.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="elem4.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="elem5.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="elem5.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="elem6.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="elem6.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="elem7.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="elem7.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="empty-string.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="empty-string.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="expr10.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="expr10.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="hex2.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="hex2.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="illegal-class.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="illegal-class.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="S10"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="name-with-spaces.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="name-with-spaces.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="rule.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="rule.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="rule1.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="rule1.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="rule2.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="rule2.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="S03"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="rule3.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="rule3.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="rule4.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="rule4.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="rule5.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="rule5.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="rule6.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="rule6.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="rule7.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="rule7.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="rule8.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="rule8.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="rule9.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="rule9.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+
+  <test-set name="rule10.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="rule10.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="rule11.ixml">
+    <created by="NDW" on="2021-06-02"/>
+    <ixml-grammar-ref href="rule11.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="S01 S12"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="unterminated-comment.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="unterminated-comment.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="unterminated-comment1.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="unterminated-comment1.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="unterminated-comment2.ixml">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="unterminated-comment2.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="none"/></result>
+    </grammar-test>
+  </test-set>
+
+  <test-set name="unused-rule">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="unused-rule.ixml"/>
+    <test-case name="unused-rule">
+      <created by="ndw" on="2022-03-01"/>
+      <modified by="ndw" on="2022-03-01"
+	        change="remove undefined symbol from test"/>
+      <test-string></test-string>
+      <result>
+        <assert-xml><a xmlns=""><b><c/></b></a></assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="unused-rules">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="unused-rules.ixml"/>
+    <test-case name="unused-rules">
+      <created by="ndw" on="2022-03-01"/>
+      <modified by="ndw" on="2022-03-01"
+	        change="remove undefined symbol from test"/>
+      <test-string></test-string>
+      <result>
+        <assert-xml><a xmlns=""><b><c/></b></a></assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+  
+  <test-set name="undefined-symbol">
+    <created by="SP" on="2021-12-16"/>
+    <modified by="ndw" on="2022-03-01"
+	      change="remove unused rule from test"/>
+    <ixml-grammar-ref href="undefined-symbol.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="S02"/></result>
+    </grammar-test>
+  </test-set>
+  
+  <test-set name="undefined-symbols">
+    <created by="SP" on="2021-12-16"/>
+    <modified by="ndw" on="2022-03-01"
+	      change="remove unused rules from test"/>
+    <ixml-grammar-ref href="undefined-symbol.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="S02"/></result>
+    </grammar-test>
+  </test-set>
+
+  <test-set name="nothexdigits">
+    <created by="NDW" on="2022-06-02"/>
+    <vxml-grammar-ref href="nothexdigits.xml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="S06 S12"/></result>
+    </grammar-test>
+  </test-set>
+
+  <test-set name="multiline-strings-LF">
+    <created by="CMSMcQ" on="2022-06-03"/>
+    <ixml-grammar-ref href="multiline-string.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="S11 S12"/></result>
+    </grammar-test>
+  </test-set>
+
+  <test-set name="multiline-strings-CRLF">
+    <created by="CMSMcQ" on="2022-06-03"/>
+    <ixml-grammar-ref href="multiline-string.crlf.ixml"/>
+    <grammar-test>
+      <result><assert-not-a-grammar error-code="S11 S12"/></result>
+    </grammar-test>
+  </test-set>
+  
+</test-catalog>

@@ -1,0 +1,5 @@
+properties: property+.
+property: name, "=", value++",", eol.
+name: [L]+.
+value: ~[","]+.
+eol: -#a | -#d, -#a .

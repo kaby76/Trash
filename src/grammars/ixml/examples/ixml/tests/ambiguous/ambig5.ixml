@@ -1,0 +1,3 @@
+data: number+.
+number: digit+.
+digit: ["0"-"9"].

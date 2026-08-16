@@ -1,0 +1,15 @@
+<Sum
+  ><Sum
+    ><Product
+      ><Factor
+        ><Number>42</Number
+      ></Factor
+    ></Product
+  ></Sum
+  ><SOp>-</SOp
+  ><Product
+    ><Factor
+      ><Number>3</Number
+    ></Factor
+  ></Product
+></Sum>
