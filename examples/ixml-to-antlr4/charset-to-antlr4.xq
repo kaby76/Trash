@@ -9,7 +9,8 @@
 (: Step 1: Strip quotes from string members inside character sets.
    e.g., [";"] -> [;],  ["@^-"] -> [@^-]. :)
 (for $s in //set_/member/string_
- let $inner := substring(string($s), 2, string-length(string($s)) - 2)
+ let $raw   := substring(string($s), 2, string-length(string($s)) - 2)
+ let $inner := fn:replace($raw, "\\'", "'")
  return replace value of node $s with $inner),
 
 (: Step 2: Strip quotes from single-character range bounds.
