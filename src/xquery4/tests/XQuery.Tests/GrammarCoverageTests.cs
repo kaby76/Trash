@@ -23,12 +23,25 @@ namespace XQuery.Tests;
 /// Files inside any _pending/ subdirectory are excluded from discovery.
 /// Move a file into _pending/ when the grammar parses it but the AstBuilder
 /// does not yet handle the resulting node.  Current pending areas:
-///   xpath4/_pending/let/           — let destructuring ($(...), $[...])
-///   xpath4/_pending/constructors/  — namespace computed constructor
-///   xquery4/_pending/typeswitch/   — typeswitch (AstBuilder: "not yet supported")
-///   xquery4/_pending/validate/     — validate lax/strict (AstBuilder: NullReferenceException)
-///   xquery4/_pending/constructors/ — ordered{}/unordered{} (AstBuilder: unknown primary)
-///   xquery4/_pending/update/       — rename node; transform/copy (grammar double-$ quirk)
+///   xpath4/_pending/let/                         — let destructuring ($(...), $[...], ${ })
+///   xpath4/_pending/constructors/                — namespace computed constructor
+///   xpath4/_pending/if/                          — braced if: if (c) { e } (no else)
+///   xpath4/_pending/kind-tests/                  — union node test: (element()|text())
+///   xpath4/_pending/axes/                        — dynamic node test: axis::{ expr }
+///   xpath4/_pending/arrow/                       — dynamic arrow target: expr => $f()
+///   xquery4/_pending/typeswitch/                 — typeswitch (AstBuilder: "not yet supported")
+///   xquery4/_pending/validate/                   — validate lax/strict (AstBuilder: NullReferenceException)
+///   xquery4/_pending/constructors/               — ordered{}/unordered{} (AstBuilder: unknown primary)
+///   xquery4/_pending/update/                     — rename node; transform/copy (grammar double-$ quirk)
+///   xquery4/_pending/expressions/if/             — braced if
+///   xquery4/_pending/expressions/kind-tests/     — union node test, dynamic node test
+///   xquery4/_pending/expressions/axes/           — dynamic node test
+///   xquery4/_pending/expressions/arrow/          — dynamic arrow target
+///   xquery4/_pending/expressions/let/            — let destructuring
+///   xquery4/_pending/expressions/for/            — window clauses (tumbling/sliding)
+///   xquery4/_pending/expressions/extension/      — extension expressions (pragma)
+///   xquery4/_pending/expressions/constructors/   — namespace constructor; direct XML constructors
+///   xquery4/_pending/modules/prolog/             — declare type; declare record; while/trace clauses
 ///</summary>
 public class GrammarCoverageTests
 {
