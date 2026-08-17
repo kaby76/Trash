@@ -1,3 +1,4 @@
+using System.Reflection;
 using Xunit;
 using XQuery.Parser;
 using XQuery.Parser.Ast;
@@ -6,12 +7,23 @@ namespace XQuery.Tests;
 
 public class ParserTests
 {
+    private static readonly string ExamplesDir = Path.Combine(
+        Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
+        "examples");
+
+    private static string LoadXPath(string name) =>
+        File.ReadAllText(Path.Combine(ExamplesDir, "xpath4", "parser-tests", name + ".xpath")).Trim();
+
+    private static string LoadXQuery(string name) =>
+        File.ReadAllText(Path.Combine(ExamplesDir, "xquery4", "parser-tests", name + ".xquery")).Trim();
+
+
     #region Parser Tests - Literals
 
     [Fact]
     public void Parse_IntegerLiteral()
     {
-        var parser = new XPathParser("42");
+        var parser = new XPathParser(LoadXPath("integer-literal"));
         var ast = parser.Parse();
 
         Assert.IsType<IntegerLiteralExpr>(ast);
@@ -21,7 +33,7 @@ public class ParserTests
     [Fact]
     public void Parse_StringLiteral()
     {
-        var parser = new XPathParser("'hello'");
+        var parser = new XPathParser(LoadXPath("string-literal"));
         var ast = parser.Parse();
 
         Assert.IsType<StringLiteralExpr>(ast);
@@ -31,7 +43,7 @@ public class ParserTests
     [Fact]
     public void Parse_DoubleLiteral()
     {
-        var parser = new XPathParser("3.14e2");
+        var parser = new XPathParser(LoadXPath("double-literal"));
         var ast = parser.Parse();
 
         Assert.IsType<DoubleLiteralExpr>(ast);
@@ -44,7 +56,7 @@ public class ParserTests
     [Fact]
     public void Parse_Addition()
     {
-        var parser = new XPathParser("1 + 2");
+        var parser = new XPathParser(LoadXPath("addition"));
         var ast = parser.Parse();
 
         Assert.IsType<BinaryExpr>(ast);
@@ -55,7 +67,7 @@ public class ParserTests
     [Fact]
     public void Parse_Subtraction()
     {
-        var parser = new XPathParser("5 - 3");
+        var parser = new XPathParser(LoadXPath("subtraction"));
         var ast = parser.Parse();
 
         Assert.IsType<BinaryExpr>(ast);
@@ -66,7 +78,7 @@ public class ParserTests
     [Fact]
     public void Parse_Multiplication()
     {
-        var parser = new XPathParser("2 * 3");
+        var parser = new XPathParser(LoadXPath("multiplication"));
         var ast = parser.Parse();
 
         Assert.IsType<BinaryExpr>(ast);
@@ -77,7 +89,7 @@ public class ParserTests
     [Fact]
     public void Parse_Division()
     {
-        var parser = new XPathParser("10 div 2");
+        var parser = new XPathParser(LoadXPath("division"));
         var ast = parser.Parse();
 
         Assert.IsType<BinaryExpr>(ast);
@@ -88,7 +100,7 @@ public class ParserTests
     [Fact]
     public void Parse_Precedence()
     {
-        var parser = new XPathParser("1 + 2 * 3");
+        var parser = new XPathParser(LoadXPath("precedence"));
         var ast = parser.Parse();
 
         Assert.IsType<BinaryExpr>(ast);
@@ -100,7 +112,7 @@ public class ParserTests
     [Fact]
     public void Parse_UnaryMinus()
     {
-        var parser = new XPathParser("-5");
+        var parser = new XPathParser(LoadXPath("unary-minus"));
         var ast = parser.Parse();
 
         Assert.IsType<UnaryExpr>(ast);
@@ -115,7 +127,7 @@ public class ParserTests
     [Fact]
     public void Parse_ValueComparison()
     {
-        var parser = new XPathParser("$x eq 5");
+        var parser = new XPathParser(LoadXPath("value-comparison"));
         var ast = parser.Parse();
 
         Assert.IsType<ComparisonExpr>(ast);
@@ -126,7 +138,7 @@ public class ParserTests
     [Fact]
     public void Parse_GeneralComparison()
     {
-        var parser = new XPathParser("$x = 5");
+        var parser = new XPathParser(LoadXPath("general-comparison"));
         var ast = parser.Parse();
 
         Assert.IsType<ComparisonExpr>(ast);
@@ -137,7 +149,7 @@ public class ParserTests
     [Fact]
     public void Parse_And()
     {
-        var parser = new XPathParser("$x and $y");
+        var parser = new XPathParser(LoadXPath("and"));
         var ast = parser.Parse();
 
         Assert.IsType<BinaryExpr>(ast);
@@ -148,7 +160,7 @@ public class ParserTests
     [Fact]
     public void Parse_Or()
     {
-        var parser = new XPathParser("$x or $y");
+        var parser = new XPathParser(LoadXPath("or"));
         var ast = parser.Parse();
 
         Assert.IsType<BinaryExpr>(ast);
@@ -163,7 +175,7 @@ public class ParserTests
     [Fact]
     public void Parse_EmptySequence()
     {
-        var parser = new XPathParser("()");
+        var parser = new XPathParser(LoadXPath("empty-sequence"));
         var ast = parser.Parse();
 
         Assert.IsType<SequenceExpr>(ast);
@@ -173,7 +185,7 @@ public class ParserTests
     [Fact]
     public void Parse_Sequence()
     {
-        var parser = new XPathParser("(1, 2, 3)");
+        var parser = new XPathParser(LoadXPath("sequence"));
         var ast = parser.Parse();
 
         Assert.IsType<ParenthesizedExpr>(ast);
@@ -184,7 +196,7 @@ public class ParserTests
     [Fact]
     public void Parse_Range()
     {
-        var parser = new XPathParser("1 to 10");
+        var parser = new XPathParser(LoadXPath("range"));
         var ast = parser.Parse();
 
         Assert.IsType<RangeExpr>(ast);
@@ -197,7 +209,7 @@ public class ParserTests
     [Fact]
     public void Parse_RootPath()
     {
-        var parser = new XPathParser("/");
+        var parser = new XPathParser(LoadXPath("root-path"));
         var ast = parser.Parse();
 
         Assert.IsType<PathExpr>(ast);
@@ -209,7 +221,7 @@ public class ParserTests
     [Fact]
     public void Parse_SimpleChildPath()
     {
-        var parser = new XPathParser("/root/child");
+        var parser = new XPathParser(LoadXPath("child-path"));
         var ast = parser.Parse();
 
         Assert.IsType<PathExpr>(ast);
@@ -221,7 +233,7 @@ public class ParserTests
     [Fact]
     public void Parse_DescendantPath()
     {
-        var parser = new XPathParser("//item");
+        var parser = new XPathParser(LoadXPath("descendant-path"));
         var ast = parser.Parse();
 
         Assert.IsType<PathExpr>(ast);
@@ -232,7 +244,7 @@ public class ParserTests
     [Fact]
     public void Parse_AttributeAxis()
     {
-        var parser = new XPathParser("@id");
+        var parser = new XPathParser(LoadXPath("attribute-axis"));
         var ast = parser.Parse();
 
         Assert.IsType<AxisStepExpr>(ast);
@@ -244,7 +256,7 @@ public class ParserTests
     public void Parse_Predicate()
     {
         // "item[1]" is an axis step with name test "item" and predicate [1]
-        var parser = new XPathParser("item[1]");
+        var parser = new XPathParser(LoadXPath("predicate"));
         var ast = parser.Parse();
 
         Assert.IsType<AxisStepExpr>(ast);
@@ -256,7 +268,7 @@ public class ParserTests
     public void Parse_FilterExpr()
     {
         // FilterExpr applies predicates to primary expressions like variable references
-        var parser = new XPathParser("$x[1]");
+        var parser = new XPathParser(LoadXPath("filter"));
         var ast = parser.Parse();
 
         Assert.IsType<FilterExpr>(ast);
@@ -267,7 +279,7 @@ public class ParserTests
     [Fact]
     public void Parse_ContextItem()
     {
-        var parser = new XPathParser(".");
+        var parser = new XPathParser(LoadXPath("context-item"));
         var ast = parser.Parse();
 
         Assert.IsType<ContextItemExpr>(ast);
@@ -276,7 +288,7 @@ public class ParserTests
     [Fact]
     public void Parse_ParentAxis()
     {
-        var parser = new XPathParser("..");
+        var parser = new XPathParser(LoadXPath("parent-axis"));
         var ast = parser.Parse();
 
         Assert.IsType<AxisStepExpr>(ast);
@@ -291,7 +303,7 @@ public class ParserTests
     [Fact]
     public void Parse_FunctionCall()
     {
-        var parser = new XPathParser("concat('a', 'b')");
+        var parser = new XPathParser(LoadXPath("function-call"));
         var ast = parser.Parse();
 
         Assert.IsType<FunctionCallExpr>(ast);
@@ -303,7 +315,7 @@ public class ParserTests
     [Fact]
     public void Parse_FunctionCallWithQName()
     {
-        var parser = new XPathParser("fn:concat('a', 'b')");
+        var parser = new XPathParser(LoadXPath("function-call-qname"));
         var ast = parser.Parse();
 
         Assert.IsType<FunctionCallExpr>(ast);
@@ -315,7 +327,7 @@ public class ParserTests
     [Fact]
     public void Parse_VariableRef()
     {
-        var parser = new XPathParser("$myVar");
+        var parser = new XPathParser(LoadXPath("variable-ref"));
         var ast = parser.Parse();
 
         Assert.IsType<VariableRefExpr>(ast);
@@ -329,7 +341,7 @@ public class ParserTests
     [Fact]
     public void Parse_IfExpression()
     {
-        var parser = new XPathParser("if ($x > 0) then 'positive' else 'non-positive'");
+        var parser = new XPathParser(LoadXPath("if-expression"));
         var ast = parser.Parse();
 
         Assert.IsType<IfExpr>(ast);
@@ -344,7 +356,7 @@ public class ParserTests
     [Fact]
     public void Parse_ForExpression()
     {
-        var parser = new XPathParser("for $x in (1, 2, 3) return $x * 2");
+        var parser = new XPathParser(LoadXPath("for-expression"));
         var ast = parser.Parse();
 
         Assert.IsType<FlworExpr>(ast);
@@ -356,7 +368,7 @@ public class ParserTests
     [Fact]
     public void Parse_LetExpression()
     {
-        var parser = new XPathParser("let $x := 5 return $x + 1");
+        var parser = new XPathParser(LoadXPath("let-expression"));
         var ast = parser.Parse();
 
         Assert.IsType<FlworExpr>(ast);
@@ -367,7 +379,7 @@ public class ParserTests
     [Fact]
     public void Parse_ForLetWhere()
     {
-        var parser = new XQueryParser("for $x in (1, 2, 3) let $y := $x * 2 where $y > 2 return $y");
+        var parser = new XQueryParser(LoadXQuery("for-let-where"));
         var ast = parser.Parse();
 
         Assert.IsType<FlworExpr>(ast);
@@ -382,7 +394,7 @@ public class ParserTests
     [Fact]
     public void Parse_Some()
     {
-        var parser = new XPathParser("some $x in (1, 2, 3) satisfies $x > 2");
+        var parser = new XPathParser(LoadXPath("some"));
         var ast = parser.Parse();
 
         Assert.IsType<QuantifiedExpr>(ast);
@@ -393,7 +405,7 @@ public class ParserTests
     [Fact]
     public void Parse_Every()
     {
-        var parser = new XPathParser("every $x in (1, 2, 3) satisfies $x > 0");
+        var parser = new XPathParser(LoadXPath("every"));
         var ast = parser.Parse();
 
         Assert.IsType<QuantifiedExpr>(ast);
@@ -408,7 +420,7 @@ public class ParserTests
     [Fact]
     public void Parse_MapConstructor()
     {
-        var parser = new XPathParser("map { 'key': 'value' }");
+        var parser = new XPathParser(LoadXPath("map-constructor"));
         var ast = parser.Parse();
 
         Assert.IsType<MapConstructorExpr>(ast);
@@ -419,7 +431,7 @@ public class ParserTests
     [Fact]
     public void Parse_SquareArrayConstructor()
     {
-        var parser = new XPathParser("[1, 2, 3]");
+        var parser = new XPathParser(LoadXPath("square-array"));
         var ast = parser.Parse();
 
         Assert.IsType<ArrayConstructorExpr>(ast);
@@ -431,7 +443,7 @@ public class ParserTests
     [Fact]
     public void Parse_CurlyArrayConstructor()
     {
-        var parser = new XPathParser("array { 1, 2, 3 }");
+        var parser = new XPathParser(LoadXPath("curly-array"));
         var ast = parser.Parse();
 
         Assert.IsType<ArrayConstructorExpr>(ast);
@@ -444,7 +456,7 @@ public class ParserTests
     {
         // NCName keys like $map?key fail because 'key' is a grammar keyword.
         // Use an integer key or a parenthesised string key instead.
-        var parser = new XPathParser("$map?1");
+        var parser = new XPathParser(LoadXPath("lookup"));
         var ast = parser.Parse();
 
         Assert.IsType<PostfixLookupExpr>(ast);
@@ -457,7 +469,7 @@ public class ParserTests
     [Fact]
     public void Parse_ArrowExpression()
     {
-        var parser = new XPathParser("'hello' => upper-case()");
+        var parser = new XPathParser(LoadXPath("arrow-expression"));
         var ast = parser.Parse();
 
         Assert.IsType<ArrowExpr>(ast);
@@ -466,7 +478,7 @@ public class ParserTests
     [Fact]
     public void Parse_PipelineExpression()
     {
-        var parser = new XPathParser("(1, 2, 3) -> count()");
+        var parser = new XPathParser(LoadXPath("pipeline-expression"));
         var ast = parser.Parse();
 
         Assert.IsType<ArrowExpr>(ast);
@@ -502,7 +514,7 @@ public class ParserTests
     [Fact]
     public void Parse_StringConcat()
     {
-        var parser = new XPathParser("'hello' || ' ' || 'world'");
+        var parser = new XPathParser(LoadXPath("string-concat"));
         var ast = parser.Parse();
 
         Assert.IsType<ConcatExpr>(ast);
