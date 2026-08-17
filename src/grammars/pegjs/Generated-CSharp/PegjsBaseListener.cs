@@ -72,17 +72,17 @@ public partial class PegjsBaseListener : IPegjsListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitEos([NotNull] PegjsParser.EosContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="PegjsParser.rule"/>.
+	/// Enter a parse tree produced by <see cref="PegjsParser.rule_"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterRule([NotNull] PegjsParser.RuleContext context) { }
+	public virtual void EnterRule_([NotNull] PegjsParser.Rule_Context context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="PegjsParser.rule"/>.
+	/// Exit a parse tree produced by <see cref="PegjsParser.rule_"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitRule([NotNull] PegjsParser.RuleContext context) { }
+	public virtual void ExitRule_([NotNull] PegjsParser.Rule_Context context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="PegjsParser.expression"/>.
 	/// <para>The default implementation does nothing.</para>

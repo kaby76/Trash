@@ -1,9 +1,9 @@
 grammar Pegjs;
 
-grammar_ : initializer? rule+ EOF;
+grammar_ : initializer? rule_+ EOF;
 initializer : CodeBlock eos ;
 eos : ';' | ;
-rule : identifier StringLiteral? '=' expression eos ;
+rule_ : identifier StringLiteral? '=' expression eos ;
 expression : choiceexpression ;
 choiceexpression : actionexpression ('/' actionexpression)* ;
 actionexpression : sequenceexpression CodeBlock? ;

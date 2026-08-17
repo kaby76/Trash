@@ -135,7 +135,6 @@ public class Grammar
                     .evaluate(dynamicContext, new object[] { prod })
                     .Select(x => x.NativeValue as UnvParseTreeElement)
                     .FirstOrDefault();
-                string name = null;
                 prod.Validate(true);
                 using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dc2 = ate.Try(prod))
                 {

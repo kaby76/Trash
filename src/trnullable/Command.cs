@@ -262,7 +262,6 @@ class Command
                     if (v == null) return null;
                     else if (v == true) return true;
                     else return false;
-                    break;
                 }
             case "atom":
                 {
@@ -270,7 +269,6 @@ class Command
                     if (v == null) return null;
                     else if (v == true) return true;
                     else return false;
-                    break;
                 }
             case "ebnf":
                 {
@@ -278,7 +276,6 @@ class Command
                     if (v == null) return null;
                     else if (v == true) return true;
                     else return false;
-                    break;
                 }
             default:
                 break;
