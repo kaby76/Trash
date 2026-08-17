@@ -680,22 +680,61 @@ public class EvaluatorTests
     }
 
     [Fact]
-    public void Eval_Cast()
+    public void Eval_Cast_StringToInteger()
     {
         var result = Eval("'42' cast as xs:integer");
         Assert.Equal(42, (result.Single() as XdmAtomicValue)!.AsInteger());
     }
 
     [Fact]
+    public void Eval_Cast_IntegerToString()
+    {
+        var result = Eval("42 cast as xs:string");
+        Assert.Equal("42", result.StringValue);
+    }
+
+    [Fact]
+    public void Eval_Cast_StringToDecimal()
+    {
+        var result = Eval("'3.14' cast as xs:decimal");
+        Assert.Equal(3.14m, (result.Single() as XdmAtomicValue)!.AsDecimal());
+    }
+
+    [Fact]
+    public void Eval_Cast_StringToDouble()
+    {
+        var result = Eval("'2.5' cast as xs:double");
+        Assert.Equal(2.5, (result.Single() as XdmAtomicValue)!.AsDouble(), 0.0001);
+    }
+
+    [Fact]
+    public void Eval_Cast_StringToBoolean()
+    {
+        Assert.True(Eval("'true' cast as xs:boolean").EffectiveBooleanValue);
+        Assert.False(Eval("'false' cast as xs:boolean").EffectiveBooleanValue);
+    }
+
+    [Fact]
+    public void Eval_Cast_IntegerToBoolean()
+    {
+        Assert.True(Eval("1 cast as xs:boolean").EffectiveBooleanValue);
+        Assert.False(Eval("0 cast as xs:boolean").EffectiveBooleanValue);
+    }
+
+    [Fact]
     public void Eval_Castable_True()
     {
         Assert.True(Eval("'42' castable as xs:integer").EffectiveBooleanValue);
+        Assert.True(Eval("'3.14' castable as xs:decimal").EffectiveBooleanValue);
+        Assert.True(Eval("'true' castable as xs:boolean").EffectiveBooleanValue);
     }
 
     [Fact]
     public void Eval_Castable_False()
     {
         Assert.False(Eval("'hello' castable as xs:integer").EffectiveBooleanValue);
+        Assert.False(Eval("'hello' castable as xs:decimal").EffectiveBooleanValue);
+        Assert.False(Eval("'hello' castable as xs:double").EffectiveBooleanValue);
     }
 
     #endregion

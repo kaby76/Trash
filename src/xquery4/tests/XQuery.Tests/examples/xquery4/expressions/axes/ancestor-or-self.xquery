@@ -1,0 +1,1 @@
+ancestor-or-self::foo

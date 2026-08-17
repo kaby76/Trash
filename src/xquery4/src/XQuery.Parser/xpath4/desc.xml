@@ -3,5 +3,4 @@
    <entry-point>auxilary</entry-point>
    <targets>CSharp;Java;JavaScript</targets>
    <inputs>../../../tests/XQuery.Tests/examples/xpath4/**/*.xpath</inputs>
-   <inputs>!../../../tests/XQuery.Tests/examples/xpath4/_pending/**/*.xpath</inputs>
 </desc>

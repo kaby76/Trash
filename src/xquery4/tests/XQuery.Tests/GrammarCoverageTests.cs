@@ -41,6 +41,8 @@ namespace XQuery.Tests;
 ///   xquery4/_pending/expressions/for/            — window clauses (tumbling/sliding)
 ///   xquery4/_pending/expressions/extension/      — extension expressions (pragma)
 ///   xquery4/_pending/expressions/constructors/   — namespace constructor; direct XML constructors
+///   xquery4/_pending/expressions/types/           — complex castTarget: choiceItemType, enumerationType, typedArrayType, typedMapType, typedRecordType
+///   xpath4/_pending/types/                        — complex castTarget: choiceItemType, enumerationType, typedArrayType, typedMapType, typedRecordType
 ///   xquery4/_pending/modules/prolog/             — declare type; declare record; while/trace clauses
 ///</summary>
 public class GrammarCoverageTests

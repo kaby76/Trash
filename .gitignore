@@ -45,6 +45,13 @@ examples/**/Generated-*/
 src/xquery4/**/Generated-CSharp/
 examples/**/interp/
 examples/**/grammar.json
+# Ignore trcover per-file parse output
+**/*.xpath.errors
+**/*.xpath.tree
+**/*.xquery.errors
+**/*.xquery.tree
+**/*.xqm.errors
+**/*.xqm.tree
 x/
 packages-microsoft-prod.deb
 tests/trcombine/o3.pt
