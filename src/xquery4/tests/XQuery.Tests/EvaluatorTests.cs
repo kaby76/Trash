@@ -734,5 +734,18 @@ public class EvaluatorTests
         Assert.Equal("HELLO", result.StringValue);
     }
 
+    [Fact]
+    public void Eval_MappingArrow_EqualsSimpleMap()
+    {
+        var arrow  = Eval("(1, 2, 3) =!> string()");
+        var simple = Eval("(1, 2, 3) ! string(.)");
+
+        Assert.Equal(simple.Count, arrow.Count);
+        for (int i = 0; i < simple.Count; i++)
+            Assert.Equal(
+                (simple[i] as XdmAtomicValue)!.StringValue,
+                (arrow[i]  as XdmAtomicValue)!.StringValue);
+    }
+
     #endregion
 }
