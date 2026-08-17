@@ -322,6 +322,34 @@ public abstract class XdmNode : XdmItem
         }
     }
 
+    public IEnumerable<XdmNode> FollowingOrSelf()
+    {
+        yield return this;
+        foreach (var node in Following())
+            yield return node;
+    }
+
+    public IEnumerable<XdmNode> FollowingSiblingOrSelf()
+    {
+        yield return this;
+        foreach (var node in FollowingSiblings())
+            yield return node;
+    }
+
+    public IEnumerable<XdmNode> PrecedingOrSelf()
+    {
+        foreach (var node in Preceding())
+            yield return node;
+        yield return this;
+    }
+
+    public IEnumerable<XdmNode> PrecedingSiblingOrSelf()
+    {
+        foreach (var node in PrecedingSiblings())
+            yield return node;
+        yield return this;
+    }
+
     public override bool Equals(XdmItem? other)
     {
         // Node identity comparison

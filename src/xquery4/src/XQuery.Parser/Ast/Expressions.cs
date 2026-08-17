@@ -135,10 +135,14 @@ public enum Axis
     DescendantOrSelf,
     FollowingSibling,
     Following,
+    FollowingOrSelf,
+    FollowingSiblingOrSelf,
     Parent,
     Ancestor,
     PrecedingSibling,
     Preceding,
+    PrecedingOrSelf,
+    PrecedingSiblingOrSelf,
     AncestorOrSelf,
     Namespace
 }

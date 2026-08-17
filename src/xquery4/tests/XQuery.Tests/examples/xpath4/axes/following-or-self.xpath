@@ -1,0 +1,1 @@
+following-or-self::foo

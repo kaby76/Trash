@@ -269,9 +269,13 @@ public class XPathEvaluator : IAstVisitor<XdmSequence>
             Axis.Ancestor => node.Ancestors(),
             Axis.AncestorOrSelf => node.AncestorsAndSelf(),
             Axis.Following => node.Following(),
+            Axis.FollowingOrSelf => node.FollowingOrSelf(),
             Axis.FollowingSibling => node.FollowingSiblings(),
+            Axis.FollowingSiblingOrSelf => node.FollowingSiblingOrSelf(),
             Axis.Preceding => node.Preceding(),
+            Axis.PrecedingOrSelf => node.PrecedingOrSelf(),
             Axis.PrecedingSibling => node.PrecedingSiblings(),
+            Axis.PrecedingSiblingOrSelf => node.PrecedingSiblingOrSelf(),
             Axis.Self => new[] { node },
             Axis.Attribute => node.Attributes.Cast<XdmNode>(),
             Axis.Namespace => Array.Empty<XdmNode>(), // Not commonly used

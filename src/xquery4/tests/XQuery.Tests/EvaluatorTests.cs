@@ -662,6 +662,67 @@ public class EvaluatorTests
         Assert.Equal("b", ((XdmElement)result.First!).LocalName);
     }
 
+    [Fact]
+    public void Eval_Axis_Parent()
+    {
+        var doc = XmlDocumentReader.Parse("<root><child/></root>");
+        var result = Eval("/root/child/parent::root", doc);
+        Assert.Single(result);
+        Assert.Equal("root", ((XdmElement)result.First!).LocalName);
+    }
+
+    [Fact]
+    public void Eval_Axis_Attribute()
+    {
+        var doc = XmlDocumentReader.Parse("<root id='42' name='x'/>");
+        var result = Eval("/root/attribute::id", doc);
+        Assert.Single(result);
+        Assert.Equal("42", result.StringValue);
+    }
+
+    [Fact]
+    public void Eval_Axis_FollowingOrSelf()
+    {
+        // context=a; following-or-self should include a, b, c
+        var doc = XmlDocumentReader.Parse("<root><a/><b/><c/></root>");
+        var result = Eval("/root/a/following-or-self::*", doc);
+        Assert.Equal(3, result.Count);
+        Assert.Equal("a", ((XdmElement)result[0]).LocalName);
+        Assert.Equal("b", ((XdmElement)result[1]).LocalName);
+        Assert.Equal("c", ((XdmElement)result[2]).LocalName);
+    }
+
+    [Fact]
+    public void Eval_Axis_FollowingSiblingOrSelf()
+    {
+        // context=b; following-sibling-or-self should include b, c
+        var doc = XmlDocumentReader.Parse("<root><a/><b/><c/></root>");
+        var result = Eval("/root/b/following-sibling-or-self::*", doc);
+        Assert.Equal(2, result.Count);
+        Assert.Equal("b", ((XdmElement)result[0]).LocalName);
+        Assert.Equal("c", ((XdmElement)result[1]).LocalName);
+    }
+
+    [Fact]
+    public void Eval_Axis_PrecedingOrSelf()
+    {
+        // context=c; preceding-or-self should include a, b, c (self last)
+        var doc = XmlDocumentReader.Parse("<root><a/><b/><c/></root>");
+        var result = Eval("/root/c/preceding-or-self::*", doc);
+        Assert.Equal(3, result.Count);
+        Assert.Equal("c", ((XdmElement)result[result.Count - 1]).LocalName);
+    }
+
+    [Fact]
+    public void Eval_Axis_PrecedingSiblingOrSelf()
+    {
+        // context=b; preceding-sibling-or-self should include a then b
+        var doc = XmlDocumentReader.Parse("<root><a/><b/><c/></root>");
+        var result = Eval("/root/b/preceding-sibling-or-self::*", doc);
+        Assert.Equal(2, result.Count);
+        Assert.Equal("b", ((XdmElement)result[result.Count - 1]).LocalName);
+    }
+
     #endregion
 
     #region Type Expressions
