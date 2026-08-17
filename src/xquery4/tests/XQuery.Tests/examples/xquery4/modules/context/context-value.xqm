@@ -1,0 +1,1 @@
+declare context value external; .

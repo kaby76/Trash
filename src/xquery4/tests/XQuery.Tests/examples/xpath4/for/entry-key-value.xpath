@@ -1,0 +1,1 @@
+for key $k value $v in map {'a': 1} return string($k)

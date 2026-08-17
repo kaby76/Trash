@@ -20,6 +20,17 @@ public class EvaluatorTests
         return evaluator.Evaluate(ast);
     }
 
+    private XdmSequence EvalXQuery(string expr, XdmItem? contextItem = null)
+    {
+        var ast = new XQueryParser(expr).Parse();
+        var context = EvaluationContext.CreateDefault();
+        var evaluator = new XPathEvaluator(context);
+
+        if (contextItem != null)
+            return evaluator.Evaluate(ast, contextItem);
+        return evaluator.Evaluate(ast);
+    }
+
     private XdmSequence EvalWithVars(string expr, Dictionary<string, XdmSequence> vars)
     {
         var parser = new XPathParser(expr);
@@ -305,10 +316,10 @@ public class EvaluatorTests
         Assert.Equal(20, (result[1] as XdmAtomicValue)!.AsInteger());
     }
 
-    [Fact(Skip = "'where' clause is XQuery-only and not part of the XPath 4.0 grammar")]
+    [Fact]
     public void Eval_ForWhere()
     {
-        var result = Eval("for $x in (1, 2, 3, 4, 5) where $x > 3 return $x");
+        var result = EvalXQuery("for $x in (1, 2, 3, 4, 5) where $x > 3 return $x");
         Assert.Equal(2, result.Count);
         Assert.Equal(4, (result[0] as XdmAtomicValue)!.AsInteger());
         Assert.Equal(5, (result[1] as XdmAtomicValue)!.AsInteger());

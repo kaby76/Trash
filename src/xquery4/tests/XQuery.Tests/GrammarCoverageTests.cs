@@ -1,0 +1,96 @@
+using System.Reflection;
+using Xunit;
+using XQuery.Parser;
+using XQuery.Parser.Ast;
+
+namespace XQuery.Tests;
+
+/// <summary>
+/// File-based grammar coverage tests. Each file under examples/ exercises one or
+/// a small group of grammar constructs. Files are parsed end-to-end through the
+/// ANTLR4 grammar and AST builder, so failures indicate either a grammar gap or
+/// an unimplemented AstBuilder node.
+///
+/// File extension determines the parser used:
+///   .xpath   — XPathParser  (XPath 4.0 grammar)
+///   .xquery  — XQueryParser.Parse()        (XQuery 4.0 expression)
+///   .xqm     — XQueryParser.ParseModule()  (XQuery 4.0 full module)
+///
+/// Example files live under:
+///   examples/xpath4/   — XPath 4.0 constructs
+///   examples/xquery4/  — XQuery 4.0 constructs
+///
+/// Files inside any _pending/ subdirectory are excluded from discovery.
+/// Move a file into _pending/ when the grammar parses it but the AstBuilder
+/// does not yet handle the resulting node.  Current pending areas:
+///   xpath4/_pending/let/           — let destructuring ($(...), $[...])
+///   xpath4/_pending/constructors/  — namespace computed constructor
+///   xquery4/_pending/typeswitch/   — typeswitch (AstBuilder: "not yet supported")
+///   xquery4/_pending/validate/     — validate lax/strict (AstBuilder: NullReferenceException)
+///   xquery4/_pending/constructors/ — ordered{}/unordered{} (AstBuilder: unknown primary)
+///   xquery4/_pending/update/       — rename node; transform/copy (grammar double-$ quirk)
+///</summary>
+public class GrammarCoverageTests
+{
+    private static readonly string ExamplesDir = Path.Combine(
+        Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)!,
+        "examples");
+
+    // ── Data sources ──────────────────────────────────────────────────────────
+
+    public static IEnumerable<object[]> XPath4Files()
+    {
+        var dir = Path.Combine(ExamplesDir, "xpath4");
+        return Directory.GetFiles(dir, "*.xpath", SearchOption.AllDirectories)
+            .Where(f => !f.Contains("_pending"))
+            .OrderBy(f => f)
+            .Select(f => new object[] { f });
+    }
+
+    public static IEnumerable<object[]> XQuery4ExprFiles()
+    {
+        var dir = Path.Combine(ExamplesDir, "xquery4");
+        return Directory.GetFiles(dir, "*.xquery", SearchOption.AllDirectories)
+            .Where(f => !f.Contains("_pending"))
+            .OrderBy(f => f)
+            .Select(f => new object[] { f });
+    }
+
+    public static IEnumerable<object[]> XQuery4ModuleFiles()
+    {
+        var dir = Path.Combine(ExamplesDir, "xquery4");
+        return Directory.GetFiles(dir, "*.xqm", SearchOption.AllDirectories)
+            .Where(f => !f.Contains("_pending"))
+            .OrderBy(f => f)
+            .Select(f => new object[] { f });
+    }
+
+    // ── Tests ─────────────────────────────────────────────────────────────────
+
+    [Theory]
+    [MemberData(nameof(XPath4Files))]
+    public void XPath4_Parses(string file)
+    {
+        var input = File.ReadAllText(file);
+        ExprNode ast = new XPathParser(input).Parse();
+        Assert.NotNull(ast);
+    }
+
+    [Theory]
+    [MemberData(nameof(XQuery4ExprFiles))]
+    public void XQuery4_Expression_Parses(string file)
+    {
+        var input = File.ReadAllText(file);
+        ExprNode ast = new XQueryParser(input).Parse();
+        Assert.NotNull(ast);
+    }
+
+    [Theory]
+    [MemberData(nameof(XQuery4ModuleFiles))]
+    public void XQuery4_Module_Parses(string file)
+    {
+        var input = File.ReadAllText(file);
+        ModuleNode module = new XQueryParser(input).ParseModule();
+        Assert.NotNull(module);
+    }
+}

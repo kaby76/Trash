@@ -1,0 +1,1 @@
+xquery version "4.0"; 1 + 1

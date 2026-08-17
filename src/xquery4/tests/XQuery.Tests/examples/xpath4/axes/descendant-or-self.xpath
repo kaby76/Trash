@@ -1,0 +1,1 @@
+descendant-or-self::foo
