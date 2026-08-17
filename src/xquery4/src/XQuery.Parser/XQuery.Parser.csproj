@@ -12,6 +12,11 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Compile Remove="xpath4\Generated-CSharp\**" />
+    <Compile Remove="xquery4\Generated-CSharp\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Antlr4 Include="xpath4\XPath4Lexer.g4" />
     <Antlr4 Include="xpath4\XPath4Parser.g4" />
     <Antlr4 Include="xquery4\XQuery4Lexer.g4" />

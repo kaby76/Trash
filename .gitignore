@@ -40,6 +40,9 @@ tests/**/Generated-*/
 
 # Ignore generated example output
 examples/**/Generated-*/
+
+# Ignore trgen/trcover output for xquery4 grammars
+src/xquery4/**/Generated-CSharp/
 examples/**/interp/
 examples/**/grammar.json
 x/
