@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <desc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../_scripts/desc.xsd">
    <targets>CSharp;Java;JavaScript</targets>
-   <inputs>examples/**/*.xq</inputs>
+   <inputs>../../../tests/XQuery.Tests/examples/xquery4/**/*.xquery</inputs>
+   <inputs>!../../../tests/XQuery.Tests/examples/xquery4/_pending/**/*.xquery</inputs>
 </desc>

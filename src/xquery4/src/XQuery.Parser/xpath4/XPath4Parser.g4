@@ -20,7 +20,7 @@ options {
 // See https://github.com/qt4cg/qtspecs/blob/060ec4f3a70b78326248be58691aca5e7b107e0d/specifications/grammar-40/xpath-grammar.xml#L34-L36
 
 auxilary
-    : (expr ';')+ EOF
+    : xPathQuery (';' xPathQuery?)* EOF
     ;
 
 // Start of official Spec EBNF translation.
@@ -947,6 +947,10 @@ xNodeType
     | anyXNodeType
     ;
 
+xPathQuery
+    : (defaultElementNamespaceDecl ';')? (namespaceDecl ';')* expr
+    ;
+
 xPath
-    : (defaultElementNamespaceDecl ';')? (namespaceDecl ';')* expr EOF
+    : xPathQuery EOF
     ;

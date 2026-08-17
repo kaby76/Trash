@@ -77,7 +77,7 @@ public class XPathParser
 
         public AstBuilder(Dictionary<string, string> namespaces) => _ns = namespaces;
 
-        public ExprNode Build(XPath4Parser.XPathContext ctx) => BuildExpr(ctx.expr());
+        public ExprNode Build(XPath4Parser.XPathContext ctx) => BuildExpr(ctx.xPathQuery().expr());
 
         // ── Expr ─────────────────────────────────────────────────────────
 
