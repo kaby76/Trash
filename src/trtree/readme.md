@@ -18,7 +18,7 @@ Reads a tree from stdin and prints the tree as an indented node list.
 
 ## Current version
 
-Release 2.3.0.
+Release 2.4.0.
 
 ## License
 

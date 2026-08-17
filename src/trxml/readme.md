@@ -18,7 +18,7 @@ Read a tree from stdin and write an XML represenation of it.
 
 ## Current version
 
-Release 2.3.0.
+Release 2.4.0.
 
 ## License
 

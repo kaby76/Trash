@@ -17,6 +17,7 @@ This program is part of the Trash toolkit.
 		<ToolCommandName>trxquery</ToolCommandName>
 		<RootNamespace>trxquery</RootNamespace>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
+		<Nullable>enable</Nullable>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
 		<Version>2.4.0</Version>

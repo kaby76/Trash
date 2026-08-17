@@ -18,7 +18,7 @@ Reads a tree from stdin and prints lines and caret marks.
 
 ## Current version
 
-Release 2.3.0.
+Release 2.4.0.
 
 ## License
 

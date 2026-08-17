@@ -296,7 +296,7 @@ class Command
         }
         else if (b != null)
         {
-            return VisitRuleBlock(b);
+            return VisitBlock(b);
         }
         else
         {

@@ -33,17 +33,17 @@ prolog
     ;
 
 version
-    : IXML_KW rs VERSION_KW rs string_ s DOT
+    :  'ixml' rs  'version' rs string_ s  '.'
     ;
 
 rule_
-    : (mark s)? name s ASSIGN s alts DOT
+    : (mark s)? name s ASSIGN s alts  '.'
     ;
 
 mark
-    : AT
-    | CARET
-    | MINUS
+    :  '@'
+    |  '^'
+    |  '-'
     ;
 
 alts
@@ -51,7 +51,7 @@ alts
     ;
 
 alt
-    : (term_ (COMMA s term_)*)?
+    : (term_ ( ',' s term_)*)?
     ;
 
 term_
@@ -65,21 +65,21 @@ factor
     : terminal_
     | nonterminal
     | insertion
-    | LPAREN s alts RPAREN s
+    |  '(' s alts  ')' s
     ;
 
 repeat0
-    : factor STAR s
-    | factor DSTAR s sep
+    : factor  '*' s
+    | factor  '**' s sep
     ;
 
 repeat1
-    : factor PLUS s
-    | factor DPLUS s sep
+    : factor  '+' s
+    | factor  '++' s sep
     ;
 
 option
-    : factor QMARK s
+    : factor  '?' s
     ;
 
 sep
@@ -92,8 +92,8 @@ nonterminal
 
 name
     : NAME
-    | IXML_KW
-    | VERSION_KW
+    |  'ixml'
+    |  'version'
     | CODE
     ;
 
@@ -112,8 +112,8 @@ quoted
     ;
 
 tmark
-    : CARET
-    | MINUS
+    :  '^'
+    |  '-'
     ;
 
 string_
@@ -149,11 +149,11 @@ inclusion
     ;
 
 exclusion
-    : (tmark s)? TILDE s set_
+    : (tmark s)?  '~' s set_
     ;
 
 set_
-    : LBRACKET s (member s (ALT_SEP s member s)*)? RBRACKET s
+    :  '[' s (member s (ALT_SEP s member s)*)?  ']' s
     ;
 
 member
@@ -164,7 +164,7 @@ member
     ;
 
 range_
-    : from_ s MINUS s to_
+    : from_ s  '-' s to_
     ;
 
 from_
@@ -193,7 +193,7 @@ code
     ;
 
 insertion
-    : PLUS s (string_ | HASH hex) s
+    :  '+' s (string_ | HASH hex) s
     ;
 
 // These rules mirror iXML spec names. Their content is handled by

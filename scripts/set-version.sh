@@ -42,7 +42,7 @@ do
     do
         sed -i -e "s%[<][Vv]ersion[>].*[<][/][Vv]ersion[>]%<Version\>$version</Version>%" $csproj
     done
-    sed -i -E 's%^[0-9]*[.][0-9]*([.][0-9]*)*.*$%Release '"$version"'.%' readme.md
+    sed -i -E 's%^Release [0-9]*[.][0-9]*([.][0-9]*)*.*$%Release '"$version"'.%' readme.md
     for cs in *.cs
     do
         sed -i -E "s%public string Version \{ get; set; \} = \"[0-9][.][0-9]*([.][0-9]*)*\";%public string Version \{ get; set; \} = \"$version\";%" $cs
@@ -80,7 +80,7 @@ do
     rm -f asdfasdf
     cat *.csproj | sed -e "s%[<][Vv]ersion[>].*[<][/][Vv]ersion[>]%<Version\>$version</Version>%" > asdfasdf
     mv asdfasdf *.csproj    
-    sed -i -E 's%^[0-9]*[.][0-9]*([.][0-9]*)*.*$%Release '"$version"'.%' readme.md
+    sed -i -E 's%^Release [0-9]*[.][0-9]*([.][0-9]*)*.*$%Release '"$version"'.%' readme.md
     cd ..
 done
 

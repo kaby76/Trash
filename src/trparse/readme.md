@@ -76,17 +76,17 @@ works without modification.
 
 ### How it works
 
-Release 2.3.0.
+Release 2.4.0.
    channel/mode names, and the raw ATN integer array.
-Release 2.3.0.
+Release 2.4.0.
    `MyTransition` structures (custom types in `EarleyAtnParser/`, no Antlr4
    runtime dependency).
-Release 2.3.0.
+Release 2.4.0.
    characters to produce a full token stream (all channels).
-Release 2.3.0.
+Release 2.4.0.
    producing a complete single-derivation parse tree
    (`ParserRuleContext`-compatible).
-Release 2.3.0.
+Release 2.4.0.
    `ParsingResultSet` compatible with the rest of the toolkit.
 
 ## Usage
@@ -112,7 +112,7 @@ Release 2.3.0.
 
 ## Current version
 
-Release 2.3.0.
+Release 2.4.0.
 
 ## License
 

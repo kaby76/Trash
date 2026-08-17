@@ -1,4 +1,0 @@
-a: b, c, d.
-b: "b".
-c: "" {not allowed}.
-d: "d".

@@ -35,8 +35,8 @@ public class StringLiteralExpr : ExprNode
 public class VariableRefExpr : ExprNode
 {
     public string Name { get; set; } = string.Empty;
-    public string? Prefix { get; set; }
-    public string? NamespaceUri { get; set; }
+    public string Prefix { get; set; }
+    public string NamespaceUri { get; set; }
 
     public XdmQName QName => string.IsNullOrEmpty(NamespaceUri)
         ? new XdmQName(Name)
@@ -53,8 +53,8 @@ public class ContextItemExpr : ExprNode
 public class FunctionCallExpr : ExprNode
 {
     public string Name { get; set; } = string.Empty;
-    public string? Prefix { get; set; }
-    public string? NamespaceUri { get; set; }
+    public string Prefix { get; set; }
+    public string NamespaceUri { get; set; }
     public List<ExprNode> Arguments { get; set; } = new();
 
     public XdmQName QName => string.IsNullOrEmpty(NamespaceUri)
@@ -67,7 +67,7 @@ public class FunctionCallExpr : ExprNode
 public class InlineFunctionExpr : ExprNode
 {
     public List<ParameterNode> Parameters { get; set; } = new();
-    public SequenceTypeNode? ReturnType { get; set; }
+    public SequenceTypeNode ReturnType { get; set; }
     public ExprNode Body { get; set; } = null!;
     public override T Accept<T>(IAstVisitor<T> visitor) => visitor.VisitInlineFunctionExpr(this);
 }
@@ -75,7 +75,7 @@ public class InlineFunctionExpr : ExprNode
 public class ParameterNode : AstNode
 {
     public string Name { get; set; } = string.Empty;
-    public SequenceTypeNode? Type { get; set; }
+    public SequenceTypeNode Type { get; set; }
     public override T Accept<T>(IAstVisitor<T> visitor) => throw new NotImplementedException();
 }
 
@@ -89,16 +89,16 @@ public class SequenceTypeNode : AstNode
 public class ItemTypeNode : AstNode
 {
     public ItemTypeKind Kind { get; set; }
-    public XdmQName? TypeName { get; set; }
-    public XdmQName? ElementName { get; set; }
+    public XdmQName TypeName { get; set; }
+    public XdmQName ElementName { get; set; }
     public override T Accept<T>(IAstVisitor<T> visitor) => throw new NotImplementedException();
 }
 
 public class NamedFunctionRefExpr : ExprNode
 {
     public string Name { get; set; } = string.Empty;
-    public string? Prefix { get; set; }
-    public string? NamespaceUri { get; set; }
+    public string Prefix { get; set; }
+    public string NamespaceUri { get; set; }
     public int Arity { get; set; }
 
     public XdmQName QName => string.IsNullOrEmpty(NamespaceUri)
@@ -110,7 +110,7 @@ public class NamedFunctionRefExpr : ExprNode
 
 public class ParenthesizedExpr : ExprNode
 {
-    public ExprNode? Inner { get; set; }
+    public ExprNode Inner { get; set; }
     public override T Accept<T>(IAstVisitor<T> visitor) => visitor.VisitParenthesized(this);
 }
 
@@ -166,14 +166,14 @@ public class PredicateListExpr : ExprNode
 
 public class NameTestExpr : ExprNode
 {
-    public string? Prefix { get; set; }
+    public string Prefix { get; set; }
     public string LocalName { get; set; } = string.Empty;
-    public string? NamespaceUri { get; set; }
+    public string NamespaceUri { get; set; }
     public bool IsWildcard { get; set; }
     public bool IsPrefixWildcard { get; set; }
     public bool IsLocalWildcard { get; set; }
 
-    public XdmQName? QName => IsWildcard ? null :
+    public XdmQName QName => IsWildcard ? null :
         string.IsNullOrEmpty(NamespaceUri) ? new XdmQName(LocalName) :
         new XdmQName(NamespaceUri, LocalName, Prefix ?? string.Empty);
 
@@ -183,8 +183,8 @@ public class NameTestExpr : ExprNode
 public class KindTestExpr : ExprNode
 {
     public XdmNodeKind Kind { get; set; }
-    public XdmQName? Name { get; set; }
-    public XdmQName? TypeName { get; set; }
+    public XdmQName Name { get; set; }
+    public XdmQName TypeName { get; set; }
     public override T Accept<T>(IAstVisitor<T> visitor) => visitor.VisitKindTest(this);
 }
 
@@ -319,8 +319,8 @@ public abstract class FlworClause : AstNode
 public class ForClause : FlworClause
 {
     public string Variable { get; set; } = string.Empty;
-    public string? PositionalVariable { get; set; }
-    public SequenceTypeNode? Type { get; set; }
+    public string PositionalVariable { get; set; }
+    public SequenceTypeNode Type { get; set; }
     public bool AllowingEmpty { get; set; }
     public ExprNode Expression { get; set; } = null!;
     public override T Accept<T>(IAstVisitor<T> visitor) => visitor.VisitForClause(this);
@@ -329,7 +329,7 @@ public class ForClause : FlworClause
 public class LetClause : FlworClause
 {
     public string Variable { get; set; } = string.Empty;
-    public SequenceTypeNode? Type { get; set; }
+    public SequenceTypeNode Type { get; set; }
     public ExprNode Expression { get; set; } = null!;
     public override T Accept<T>(IAstVisitor<T> visitor) => visitor.VisitLetClause(this);
 }
@@ -352,7 +352,7 @@ public class OrderSpec
     public ExprNode Expression { get; set; } = null!;
     public bool Descending { get; set; }
     public bool EmptyGreatest { get; set; }
-    public string? Collation { get; set; }
+    public string Collation { get; set; }
 }
 
 public class GroupByClause : FlworClause
@@ -364,9 +364,9 @@ public class GroupByClause : FlworClause
 public class GroupSpec
 {
     public string Variable { get; set; } = string.Empty;
-    public SequenceTypeNode? Type { get; set; }
-    public ExprNode? Expression { get; set; }
-    public string? Collation { get; set; }
+    public SequenceTypeNode Type { get; set; }
+    public ExprNode Expression { get; set; }
+    public string Collation { get; set; }
 }
 
 public class CountClause : FlworClause
@@ -390,7 +390,7 @@ public class QuantifiedExpr : ExprNode
 public class QuantifiedBinding
 {
     public string Variable { get; set; } = string.Empty;
-    public SequenceTypeNode? Type { get; set; }
+    public SequenceTypeNode Type { get; set; }
     public ExprNode Expression { get; set; } = null!;
 }
 
@@ -443,7 +443,7 @@ public class ArrowExpr : ExprNode
 
 public class LookupExpr : ExprNode
 {
-    public ExprNode? KeyExpr { get; set; }
+    public ExprNode KeyExpr { get; set; }
     public bool IsWildcard { get; set; }
     public override T Accept<T>(IAstVisitor<T> visitor) => visitor.VisitLookupExpr(this);
 }
@@ -451,7 +451,7 @@ public class LookupExpr : ExprNode
 public class PostfixLookupExpr : ExprNode
 {
     public ExprNode Base { get; set; } = null!;
-    public ExprNode? KeyExpr { get; set; }
+    public ExprNode KeyExpr { get; set; }
     public bool IsWildcard { get; set; }
     public override T Accept<T>(IAstVisitor<T> visitor) => visitor.VisitPostfixLookupExpr(this);
 }
@@ -481,8 +481,8 @@ public class ArrayConstructorExpr : ExprNode
 
 public class ElementConstructorExpr : ExprNode
 {
-    public XdmQName? Name { get; set; }
-    public ExprNode? NameExpr { get; set; }
+    public XdmQName Name { get; set; }
+    public ExprNode NameExpr { get; set; }
     public List<ExprNode> Content { get; set; } = new();
     public bool IsComputed { get; set; }
     public override T Accept<T>(IAstVisitor<T> visitor) => visitor.VisitElementConstructor(this);
@@ -490,9 +490,9 @@ public class ElementConstructorExpr : ExprNode
 
 public class AttributeConstructorExpr : ExprNode
 {
-    public XdmQName? Name { get; set; }
-    public ExprNode? NameExpr { get; set; }
-    public ExprNode? Value { get; set; }
+    public XdmQName Name { get; set; }
+    public ExprNode NameExpr { get; set; }
+    public ExprNode Value { get; set; }
     public bool IsComputed { get; set; }
     public override T Accept<T>(IAstVisitor<T> visitor) => visitor.VisitAttributeConstructor(this);
 }
@@ -511,9 +511,9 @@ public class CommentConstructorExpr : ExprNode
 
 public class PIConstructorExpr : ExprNode
 {
-    public string? Target { get; set; }
-    public ExprNode? TargetExpr { get; set; }
-    public ExprNode? Content { get; set; }
+    public string Target { get; set; }
+    public ExprNode TargetExpr { get; set; }
+    public ExprNode Content { get; set; }
     public override T Accept<T>(IAstVisitor<T> visitor) => visitor.VisitPIConstructor(this);
 }
 
@@ -526,8 +526,8 @@ public class DocumentConstructorExpr : ExprNode
 public class ComputedConstructorExpr : ExprNode
 {
     public string ConstructorType { get; set; } = string.Empty;
-    public ExprNode? Name { get; set; }
-    public ExprNode? Content { get; set; }
+    public ExprNode Name { get; set; }
+    public ExprNode Content { get; set; }
     public override T Accept<T>(IAstVisitor<T> visitor) => visitor.VisitComputedConstructor(this);
 }
 
@@ -537,10 +537,10 @@ public class ComputedConstructorExpr : ExprNode
 
 public class ModuleNode : AstNode
 {
-    public string? ModuleNamespace { get; set; }
-    public string? ModulePrefix { get; set; }
+    public string ModuleNamespace { get; set; }
+    public string ModulePrefix { get; set; }
     public PrologNode Prolog { get; set; } = new();
-    public ExprNode? Body { get; set; }
+    public ExprNode Body { get; set; }
     public override T Accept<T>(IAstVisitor<T> visitor) => visitor.VisitModule(this);
 }
 
@@ -551,8 +551,8 @@ public class PrologNode : AstNode
     public List<VariableDeclNode> VariableDecls { get; set; } = new();
     public List<FunctionDeclNode> FunctionDecls { get; set; } = new();
     public List<OptionDeclNode> OptionDecls { get; set; } = new();
-    public string? DefaultElementNamespace { get; set; }
-    public string? DefaultFunctionNamespace { get; set; }
+    public string DefaultElementNamespace { get; set; }
+    public string DefaultFunctionNamespace { get; set; }
     public override T Accept<T>(IAstVisitor<T> visitor) => visitor.VisitProlog(this);
 }
 
@@ -566,7 +566,7 @@ public class NamespaceDeclNode : AstNode
 public class ImportNode : AstNode
 {
     public bool IsSchema { get; set; }
-    public string? Prefix { get; set; }
+    public string Prefix { get; set; }
     public string Namespace { get; set; } = string.Empty;
     public List<string> LocationHints { get; set; } = new();
     public override T Accept<T>(IAstVisitor<T> visitor) => throw new NotImplementedException();
@@ -575,9 +575,9 @@ public class ImportNode : AstNode
 public class VariableDeclNode : AstNode
 {
     public string Name { get; set; } = string.Empty;
-    public string? Prefix { get; set; }
-    public SequenceTypeNode? Type { get; set; }
-    public ExprNode? Value { get; set; }
+    public string Prefix { get; set; }
+    public SequenceTypeNode Type { get; set; }
+    public ExprNode Value { get; set; }
     public bool IsExternal { get; set; }
     public override T Accept<T>(IAstVisitor<T> visitor) => visitor.VisitVariableDecl(this);
 }
@@ -585,10 +585,10 @@ public class VariableDeclNode : AstNode
 public class FunctionDeclNode : AstNode
 {
     public string Name { get; set; } = string.Empty;
-    public string? Prefix { get; set; }
+    public string Prefix { get; set; }
     public List<ParameterNode> Parameters { get; set; } = new();
-    public SequenceTypeNode? ReturnType { get; set; }
-    public ExprNode? Body { get; set; }
+    public SequenceTypeNode ReturnType { get; set; }
+    public ExprNode Body { get; set; }
     public bool IsExternal { get; set; }
     public List<AnnotationNode> Annotations { get; set; } = new();
     public override T Accept<T>(IAstVisitor<T> visitor) => visitor.VisitFunctionDecl(this);

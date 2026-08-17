@@ -1,3 +1,0 @@
-data: range1, range2, -".".
-range1: ["0"-"9"].
-range2: [#0-#9].

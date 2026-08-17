@@ -307,7 +307,7 @@ public class XQueryParser
                 var mod = os.orderModifier();
                 bool desc = mod.GetText().Contains("descending");
                 bool emptyGreatest = mod.GetText().Contains("greatest");
-                string? coll = mod.uriLiteral()?.StringLiteral()?.GetText() is { } c ? StripQuotes(c) : null;
+                string coll = mod.uriLiteral()?.StringLiteral()?.GetText() is { } c ? StripQuotes(c) : null;
                 return new OrderSpec { Expression = BuildExprSingle(os.exprSingle()), Descending = desc, EmptyGreatest = emptyGreatest, Collation = coll };
             }).ToList();
             clauses.Add(new OrderByClause { Stable = ctx.KW_STABLE() != null, Specs = specs, Line = ctx.Start.Line, Column = ctx.Start.Column });
@@ -319,7 +319,7 @@ public class XQueryParser
             {
                 var (name, _, seqType) = GetVarNameAndType(gs.varName().eqName(), gs.typeDeclaration());
                 var expr = gs.exprSingle() is { } e ? BuildExprSingle(e) : null;
-                string? coll = gs.uriLiteral()?.StringLiteral()?.GetText() is { } c ? StripQuotes(c) : null;
+                string coll = gs.uriLiteral()?.StringLiteral()?.GetText() is { } c ? StripQuotes(c) : null;
                 return new GroupSpec { Variable = name, Type = seqType, Expression = expr, Collation = coll };
             }).ToList();
             clauses.Add(new GroupByClause { Specs = specs, Line = ctx.Start.Line, Column = ctx.Start.Column });
@@ -622,7 +622,7 @@ public class XQueryParser
         }
 
         private (XdmQName qname, bool allowEmpty) BuildCastTarget(
-            XQuery4Parser.CastTargetContext ctx, XQuery4Parser.OccurrenceIndicatorContext? occ)
+            XQuery4Parser.CastTargetContext ctx, XQuery4Parser.OccurrenceIndicatorContext occ)
         {
             if (ctx.typeName_() is { } tn)
                 return (ResolveEqName(tn.eqName()), occ?.QM() != null);
@@ -838,19 +838,19 @@ public class XQueryParser
 
             if (ctx.processingInstructionNodeType() is { } pi)
             {
-                XdmQName? name = pi.QName() != null ? new XdmQName(pi.QName().GetText()) : null;
+                XdmQName name = pi.QName() != null ? new XdmQName(pi.QName().GetText()) : null;
                 return new KindTestExpr { Kind = XdmNodeKind.ProcessingInstruction, Name = name, Line = ln, Column = col };
             }
             if (ctx.elementNodeType() is { } en)
             {
-                XdmQName? name = null;
+                XdmQName name = null;
                 var nt = en.nameTestUnion()?.nameTest();
                 if (nt is { Length: > 0 } && nt[0].eqName() is { } eqn) name = ResolveEqName(eqn);
                 return new KindTestExpr { Kind = XdmNodeKind.Element, Name = name, Line = ln, Column = col };
             }
             if (ctx.attributeNodeType() is { } an)
             {
-                XdmQName? name = null;
+                XdmQName name = null;
                 var nt = an.nameTestUnion()?.nameTest();
                 if (nt is { Length: > 0 } && nt[0].eqName() is { } eqn) name = ResolveEqName(eqn);
                 return new KindTestExpr { Kind = XdmNodeKind.Attribute, Name = name, Line = ln, Column = col };
@@ -914,7 +914,7 @@ public class XQueryParser
             return result;
         }
 
-        private ExprNode? BuildKeySpecifier(XQuery4Parser.KeySpecifierContext ctx)
+        private ExprNode BuildKeySpecifier(XQuery4Parser.KeySpecifierContext ctx)
         {
             if (ctx.lookupWildcard()    != null) return null;
             if (ctx.QName()             is { } qn)  return new StringLiteralExpr { Value = qn.GetText(),   Line = ctx.Start.Line, Column = ctx.Start.Column };
@@ -996,7 +996,7 @@ public class XQueryParser
             return [];
         }
 
-        private ExprNode? BuildArgument(XQuery4Parser.ArgumentContext ctx)
+        private ExprNode BuildArgument(XQuery4Parser.ArgumentContext ctx)
         {
             if (ctx.exprSingle() is { } es) return BuildExprSingle(es);
             return null;
@@ -1062,7 +1062,7 @@ public class XQueryParser
             return new StringLiteralExpr { Value = ctx.GetText(), Line = ctx.Start.Line, Column = ctx.Start.Column };
         }
 
-        private string? BuildCompNodeNCName(XQuery4Parser.CompNodeNCNameContext ctx)
+        private string BuildCompNodeNCName(XQuery4Parser.CompNodeNCNameContext ctx)
         {
             if (ctx.unreservedNCName() is { } un) return un.NCName().GetText();
             if (ctx.markedNCName()     is { } mn) return mn.QName().GetText();
@@ -1083,12 +1083,12 @@ public class XQueryParser
                 var (name, _, seqType) = GetVarNameAndType(vnt);
                 return new ParameterNode { Name = name, Type = seqType, Line = vnt.Start.Line, Column = vnt.Start.Column };
             }).ToList() ?? [];
-            SequenceTypeNode? retType = sig?.typeDeclaration() is { } td ? BuildSequenceType(td.sequenceType()) : null;
+            SequenceTypeNode retType = sig?.typeDeclaration() is { } td ? BuildSequenceType(td.sequenceType()) : null;
             var body = BuildEnclosedExpr(ifn.functionBody().enclosedExpr()) ?? new SequenceExpr { Items = [] };
             return new InlineFunctionExpr { Parameters = parms, ReturnType = retType, Body = body, Line = ctx.Start.Line, Column = ctx.Start.Column };
         }
 
-        private ExprNode? BuildEnclosedExpr(XQuery4Parser.EnclosedExprContext ctx)
+        private ExprNode BuildEnclosedExpr(XQuery4Parser.EnclosedExprContext ctx)
             => ctx.expr() != null ? BuildExpr(ctx.expr()!) : null;
 
         private ExprNode BuildMapConstructor(XQuery4Parser.MapConstructorContext ctx)
@@ -1179,15 +1179,15 @@ public class XQueryParser
 
         // ── Helpers ───────────────────────────────────────────────────────────
 
-        private (string name, string? prefix, SequenceTypeNode? seqType) GetVarNameAndType(XQuery4Parser.VarNameAndTypeContext ctx)
+        private (string name, string prefix, SequenceTypeNode seqType) GetVarNameAndType(XQuery4Parser.VarNameAndTypeContext ctx)
         {
             var (local, prefix, _) = SplitEqName(ctx.eqName().GetText());
             var seqType = ctx.typeDeclaration() is { } td ? BuildSequenceType(td.sequenceType()) : null;
             return (local, prefix, seqType);
         }
 
-        private (string name, string? prefix, SequenceTypeNode? seqType) GetVarNameAndType(
-            XQuery4Parser.EqNameContext nameCtx, XQuery4Parser.TypeDeclarationContext? tdCtx)
+        private (string name, string prefix, SequenceTypeNode seqType) GetVarNameAndType(
+            XQuery4Parser.EqNameContext nameCtx, XQuery4Parser.TypeDeclarationContext tdCtx)
         {
             var (local, prefix, _) = SplitEqName(nameCtx.GetText());
             var seqType = tdCtx != null ? BuildSequenceType(tdCtx.sequenceType()) : null;
@@ -1202,7 +1202,7 @@ public class XQueryParser
             return new XdmQName(ns ?? string.Empty, local, prefix);
         }
 
-        private (string local, string? prefix, string? ns) SplitEqName(string text)
+        private (string local, string prefix, string ns) SplitEqName(string text)
         {
             // Q{uri}local or Q{uri}prefix:local
             if (text.StartsWith("Q{"))

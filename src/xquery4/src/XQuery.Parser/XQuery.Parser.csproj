@@ -3,8 +3,7 @@
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <ImplicitUsings>enable</ImplicitUsings>
-    <Nullable>enable</Nullable>
-    <RootNamespace>XQuery.Parser</RootNamespace>
+<RootNamespace>XQuery.Parser</RootNamespace>
   </PropertyGroup>
 
   <ItemGroup>

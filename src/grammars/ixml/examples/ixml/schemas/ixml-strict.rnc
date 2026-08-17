@@ -1,4 +1,0 @@
-include "ixml.rnc" {
-  extension-attributes = empty
-  extension-elements = empty
-}
