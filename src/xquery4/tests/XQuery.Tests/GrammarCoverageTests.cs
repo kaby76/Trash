@@ -44,6 +44,8 @@ namespace XQuery.Tests;
 ///   xquery4/_pending/expressions/types/           — complex castTarget: choiceItemType, enumerationType, typedArrayType, typedMapType, typedRecordType
 ///   xpath4/_pending/types/                        — complex castTarget: choiceItemType, enumerationType, typedArrayType, typedMapType, typedRecordType
 ///   xquery4/_pending/modules/prolog/             — declare type; declare record; while/trace clauses
+///   xpath4/_pending/namespace/                   — URIQualifiedName Q{uri}local: ANTLR4 4.13.1 lexer bug; produces QName for 'Q' instead of URIQualifiedName
+///   xquery4/_pending/expressions/namespace/      — same URIQualifiedName lexer bug
 ///</summary>
 public class GrammarCoverageTests
 {
