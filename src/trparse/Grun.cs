@@ -270,20 +270,33 @@ public class Grun
 
         if (resolvedPInterp != null && resolvedLInterp != null)
         {
-            DateTime earleyBefore = DateTime.Now;
-            var (rs, earleyTokenCount) = Trash.EarleyAtn.InterpRunner.Run(
-                resolvedPInterp, resolvedLInterp, txt, input_name, config.LineNumbers);
-            DateTime earleyAfter = DateTime.Now;
-            double earleyParseSeconds = (earleyAfter - earleyBefore).TotalSeconds;
+            DateTime interpBefore = DateTime.Now;
+            AntlrJson.ParsingResultSet rs;
+            long interpTokenCount;
+            string interpLabel;
+            if (config.AllStar)
+            {
+                (rs, interpTokenCount) = Trash.EarleyAtn.AllStarRunner.Run(
+                    resolvedPInterp, resolvedLInterp, txt, input_name, config.LineNumbers);
+                interpLabel = "ALL(*)";
+            }
+            else
+            {
+                (rs, interpTokenCount) = Trash.EarleyAtn.InterpRunner.Run(
+                    resolvedPInterp, resolvedLInterp, txt, input_name, config.LineNumbers);
+                interpLabel = "Earley";
+            }
+            DateTime interpAfter = DateTime.Now;
+            double interpParseSeconds = (interpAfter - interpBefore).TotalSeconds;
             data.Add(rs);
             if (!config.Quiet)
             {
-                long tps = earleyParseSeconds > 0 ? (long)(earleyTokenCount / earleyParseSeconds) : 0L;
-                System.Console.Error.WriteLine(prefix + "Earley " + row_number + " " + input_name + " success "
-                    + earleyParseSeconds + " s " + earleyTokenCount + " tokens " + tps + " tps");
+                long tps = interpParseSeconds > 0 ? (long)(interpTokenCount / interpParseSeconds) : 0L;
+                System.Console.Error.WriteLine(prefix + interpLabel + " " + row_number + " " + input_name + " success "
+                    + interpParseSeconds + " s " + interpTokenCount + " tokens " + tps + " tps");
             }
-            UpdateStats(earleyParseSeconds, earleyTokenCount);
-            return (0, earleyParseSeconds, earleyTokenCount);
+            UpdateStats(interpParseSeconds, interpTokenCount);
+            return (0, interpParseSeconds, interpTokenCount);
         }
 
         Type type = null;

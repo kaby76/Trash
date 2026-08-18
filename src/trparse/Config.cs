@@ -58,4 +58,7 @@ public class Config
 
     [Option('L', "lib", Required = false, HelpText = "Directory to search for .interp files (resolves relative --pinterp / --linterp paths).")]
     public string Lib { get; set; }
+
+    [Option("allstar", Required = false, HelpText = "Use ALL(*) parser instead of Earley when --pinterp / --linterp are specified.")]
+    public bool AllStar { get; set; }
 }
