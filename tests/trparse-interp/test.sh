@@ -9,24 +9,37 @@ cd "$where"
 where=`pwd`
 echo "$where"
 
-# Generate .interp files from the grammar.
-rm -rf interp grammar.json
-dotnet trash parse Expression.g4 > grammar.json
-dotnet trash interp -o interp/ < grammar.json
-# Parse a sample expression using the Earley ATN-based path.
-printf "1 + 2 + 3" | dotnet trash parse --lib interp/ | dotnet trash tree > trparse-interp.tree
+rm -rf Generated-CSharp
+rm -rf interp grammar.json *.tree
 
-# Generate native CSharp parser and parse.
+echo Generate native CSharp parser and parse.
 dotnet trash gen -t CSharp
 cd Generated-CSharp
 bash build.sh
 printf "1 + 2 + 3" | dotnet trash parse | dotnet trash tree > trparse.tree
+dos2unix trparse.tree
+dos2unix ../Gold/trparse.tree
+diff trparse.tree Gold/trparse.tree
+if [ "$?" != "0" ]
+then
+    echo Test failed.
+    exit 1
+else
+    echo Test succeeded.
+    exit 0
+fi
 cd ..
+rm -rf Generated-CSharp
+
+echo Generate .interp files from the grammar and parse.
+dotnet trash parse Expression.g4 > grammar.json
+dotnet trash interp -o interp/ < grammar.json
+printf "1 + 2 + 3" | dotnet trash parse --lib interp/ | dotnet trash tree > trparse.tree
 
 # Diff against the golden file.
-dos2unix trparse-interp.tree
-dos2unix Gold/trparse-interp.tree
-diff trparse-interp.tree Gold/trparse-interp.tree
+dos2unix trparse.tree
+dos2unix Gold/trparse.tree
+diff trparse.tree Gold/trparse.tree
 if [ "$?" != "0" ]
 then
     echo Test failed.
