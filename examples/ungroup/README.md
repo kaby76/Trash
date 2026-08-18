@@ -6,11 +6,12 @@ with an external variable parameter.
 
 ## Grammar
 
-`A.g4` contains a rule with a plain grouped alternative:
+`A.g4` contains a rule with a plain grouped alternative preceded by a rule reference:
 
 ```antlr
 grammar A;
-a : (a | 'X') 'B' 'Z' | 'C' ;
+a : d(a | 'X') 'B' 'Z' | 'C' ;
+d : 'd';
 ```
 
 ## Transform
@@ -25,9 +26,9 @@ Each inner alternative of the group becomes a separate top-level alternative,
 with the elements before and after the group prepended / appended:
 
 ```
-a : (X | Y) B C | D ;
-          ↓
-a : X B C | Y B C | D ;
+a : d (X | Y) B C | D ;
+            ↓
+a : d X B C | d Y B C | D ;
 ```
 
 Run the query multiple times to expand further groups in the same rule or
@@ -37,7 +38,8 @@ other rules.
 
 ```antlr
 grammar A;
-a : a 'B' 'Z' | 'X' 'B' 'Z' | 'C' ;
+a : d a 'B' 'Z' | d 'X' 'B' 'Z' | 'C' ;
+d : 'd';
 ```
 
 ## Running

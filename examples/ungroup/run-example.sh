@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 # run-example.sh
 # Ungroup the first plain grouped alternative in rule 'a' of A.g4.
-# Input:   grammar A;  a : (a | 'X') 'B' 'Z' | 'C' ;
-# Output:  grammar A;  a : a 'B' 'Z' | 'X' 'B' 'Z' | 'C' ;
+# Input:   grammar A;  a : d(a | 'X') 'B' 'Z' | 'C' ;
+# Output:  grammar A;  a : d a 'B' 'Z' | d 'X' 'B' 'Z' | 'C' ;
 set -x
 set -e
 cd "$(dirname "$0")"
