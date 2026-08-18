@@ -11,6 +11,10 @@
 for $rule in //parserRuleSpec[
     RULE_REF/text() = ruleBlock/ruleAltList/labeledAlt/alternative
                           /*[name()="element"][last()]/atom/ruleref/*[1]/text()
+    and not(
+        ruleBlock/ruleAltList/labeledAlt/alternative
+            /*[name()="element"][position() < last()]/atom/ruleref/*[1]/text() = RULE_REF/text()
+    )
 ]
 let $name     := string($rule/RULE_REF/text())
 let $alts     := $rule/ruleBlock/ruleAltList/labeledAlt/alternative
