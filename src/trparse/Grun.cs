@@ -276,6 +276,7 @@ public class Grun
             string interpLabel;
             if (config.AllStar)
             {
+                Trash.EarleyAtn.AllStarParser.Trace = config.Verbose;
                 (rs, interpTokenCount) = Trash.EarleyAtn.AllStarRunner.Run(
                     resolvedPInterp, resolvedLInterp, txt, input_name, config.LineNumbers);
                 interpLabel = "ALL(*)";

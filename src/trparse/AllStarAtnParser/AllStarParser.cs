@@ -9,6 +9,9 @@ namespace Trash.EarleyAtn;
 /// </summary>
 public static class AllStarParser
 {
+    /// <summary>Set to true to emit prediction/consume trace lines on stderr.</summary>
+    public static bool Trace { get; set; } = false;
+
     private const int DEFAULT_CHANNEL = 0;
     private const int EOF_TYPE = -1;
 
@@ -91,8 +94,16 @@ public static class AllStarParser
                 {
                     // Decision point: use ALL(*) prediction to choose an alternative.
                     int alt = _sim.AdaptivePredict(decision, _tokenTypes, Pos, callerCtx);
+                    if (AllStarParser.Trace)
+                        Console.Error.WriteLine(
+                            $"[ALLSTAR] dec={decision} state={state.stateNumber} pos={Pos} " +
+                            $"tok={(_onIdx.Count > Pos ? _allTokens[_onIdx[Pos]].Type : -1)} → alt={alt}");
                     if (alt <= 0 || alt > state.transitions.Count)
+                    {
+                        if (AllStarParser.Trace)
+                            Console.Error.WriteLine($"[ALLSTAR] FAIL: alt out of range");
                         return false;
+                    }
                     state = state.transitions[alt - 1].target;
                 }
                 else if (state.transitions.Count == 1)
@@ -118,7 +129,16 @@ public static class AllStarParser
                         default:
                             // Terminal transition: consume the next on-channel token.
                             if (!ConsumeToken(tr, events))
+                            {
+                                if (AllStarParser.Trace)
+                                {
+                                    int tokType = _onIdx.Count > Pos ? _allTokens[_onIdx[Pos]].Type : -999;
+                                    Console.Error.WriteLine(
+                                        $"[ALLSTAR] FAIL: ConsumeToken at state={state.stateNumber} " +
+                                        $"pos={Pos} tok={tokType} tr={tr.GetType().Name}");
+                                }
                                 return false;
+                            }
                             state = tr.target;
                             break;
                     }
@@ -141,6 +161,8 @@ public static class AllStarParser
             int allTokIdx = _onIdx[Pos];
             var tok = _allTokens[allTokIdx];
             if (!TerminalMatches(tr, tok.Type)) return false;
+            if (AllStarParser.Trace)
+                Console.Error.WriteLine($"[ALLSTAR] consume pos={Pos} tok={tok.Type} '{tok.Text}'");
             events.Add(ParseEvent.Consume(allTokIdx));
             Pos++;
             return true;

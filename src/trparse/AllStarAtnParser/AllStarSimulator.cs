@@ -18,13 +18,32 @@ public sealed class AllStarSimulator
         int n = decisionState.transitions.Count;
         if (n == 1) return 1; // trivial
 
-        // SLL phase: simulate with EMPTY context
-        int sllAlt = ExecATN(decisionState, tokenTypes, startPos, PredictionContext.EMPTY, fullCtx: false);
-        if (sllAlt > 0) return sllAlt;
+        bool isLoop = decisionState.stateType == MyStateType.StarLoopEntry ||
+                      decisionState.stateType == MyStateType.PlusLoopBack;
 
-        // LL fallback: simulate with actual caller context
+        // SLL phase: only for non-loop decisions.
+        // For loop decisions, SLL can't properly evaluate the exit alt because it stops
+        // at RuleStop and cannot see that the exit alt may be viable via caller context.
+        int sllAlt = -1;
+        if (!isLoop)
+        {
+            sllAlt = ExecATN(decisionState, tokenTypes, startPos, PredictionContext.EMPTY, fullCtx: false);
+            if (AllStarParser.Trace)
+                Console.Error.WriteLine($"[SIM] dec={decision} state={decisionState.stateNumber} type={decisionState.stateType} sllAlt={sllAlt}");
+            if (sllAlt > 0) return sllAlt;
+        }
+
+        // LL prediction using actual caller context
         int llAlt = ExecATN(decisionState, tokenTypes, startPos, callerCtx, fullCtx: true);
-        return llAlt > 0 ? llAlt : 1; // default to alt 1 on failure
+        if (AllStarParser.Trace)
+            Console.Error.WriteLine($"[SIM] dec={decision} state={decisionState.stateNumber} type={decisionState.stateType} llAlt={llAlt}");
+        if (llAlt > 0) return llAlt;
+
+        // LL also couldn't determine: loop decisions exit (last alt), others take alt=1 (greedy).
+        int def = isLoop ? n : 1;
+        if (AllStarParser.Trace)
+            Console.Error.WriteLine($"[SIM] dec={decision} default={def} (isLoop={isLoop})");
+        return def;
     }
 
     private int ExecATN(MyATNState decisionState, int[] tokenTypes, int startPos,
@@ -58,8 +77,8 @@ public sealed class AllStarSimulator
             current = reach;
         }
 
-        // Ambiguous or exhausted input: return lowest alt (greedy)
-        return current.MinAlt();
+        // Exhausted lookahead without finding a unique alt — signal caller.
+        return -1;
     }
 
     private ATNConfigSet ComputeReachSet(ATNConfigSet configs, int tokenType, bool fullCtx)
