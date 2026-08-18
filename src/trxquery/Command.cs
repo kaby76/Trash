@@ -9,6 +9,7 @@ using System.Text.Json;
 using XQuery.DataModel;
 using XQuery.Engine;
 using XQuery.Parser;
+using XQuery.Parser.Ast;
 
 namespace Trash;
 
@@ -86,6 +87,23 @@ class Command
         var xqueryParser = new XQueryParser(query);
         var moduleNode = xqueryParser.ParseModule();
 
+        // Collect external variable bindings: positional CLI args map to
+        // declare variable $name external; declarations in the module prolog,
+        // in declaration order.  This supports the idiom:
+        //
+        //   declare variable $name external;   ← in the .xq file
+        //   dotnet trash xquery --query file.xq value1 value2 ...   ← on the CLI
+        //
+        // When --query is used, all positional args are params.
+        // When an inline query is used, config.Query[0] is the query itself,
+        // so params start at index 1.
+        var externalVarDecls = (moduleNode.Prolog?.VariableDecls ?? [])
+            .Where(v => v.IsExternal)
+            .ToList();
+        var positionalParams = (config.QueryFile != null && config.QueryFile != "")
+            ? config.Query.ToList()
+            : config.Query.Skip(1).ToList();
+
         // Build a base context that includes fn:doc() so queries can load external
         // parse tree files and navigate them with standard XPath axes.
         AdapterDocument LoadDocFile(string path)
@@ -139,6 +157,16 @@ class Command
         baseCtx.RegisterFunction(new XdmQName(XdmQName.FnNamespace, "doc", "fn"), docFn);
         baseCtx.RegisterFunction(new XdmQName("exec"), execFn);
         baseCtx.RegisterFunction(new XdmQName("exec"), exec2Fn);
+
+        // Bind external variables to the positional args collected above.
+        for (int i = 0; i < Math.Min(externalVarDecls.Count, positionalParams.Count); i++)
+        {
+            var varName  = externalVarDecls[i].Name;
+            var varValue = new XdmSequence(new XdmAtomicValue(positionalParams[i]));
+            if (config.Verbose)
+                Console.Error.WriteLine($"binding external variable ${varName} = '{positionalParams[i]}'");
+            baseCtx.SetVariable(varName, varValue);
+        }
 
         var results = new List<ParsingResultSet>();
 

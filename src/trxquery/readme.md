@@ -43,6 +43,28 @@ Rename an element:
 
     rename node //ruleName as "newName"
 
+## External variables (query parameters)
+
+XQuery files can declare external variables using standard XQuery syntax:
+
+    declare variable $name external;
+
+Positional arguments after `--query <file>` are bound to declared external
+variables in declaration order:
+
+    dotnet trash parse A.g4 | dotnet trash xquery --query transform.xq 'value1' 'value2'
+
+Given a query file with:
+
+    declare variable $first external;
+    declare variable $second external;
+
+the call above binds `$first = "value1"` and `$second = "value2"`.  Any number
+of positional arguments can be passed; each maps to the next external variable
+in declaration order.  Extra arguments beyond the number of declared external
+variables are ignored, and extra declarations beyond the number of supplied
+arguments are left unbound (which will produce an error if the query uses them).
+
 ## Options
 
     -q, --query   File containing the XQuery expression.
@@ -60,3 +82,7 @@ Delete all `WS` tokens from a parse tree:
 Replace the text of the first `ID` token:
 
     dotnet trash parse Foo.g4 | dotnet trash xquery 'replace value of node (//ID)[1] with "myNewName"'
+
+Expand grouped alternatives in rule `a` using an external variable:
+
+    dotnet trash parse A.g4 | dotnet trash xquery --query ungroup-rule.xq 'a'

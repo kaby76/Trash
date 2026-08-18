@@ -1,2 +1,3 @@
 grammar A;
-a : (a | 'X') 'B' 'Z' | 'C' ;
+a : d(a | 'X') 'B' 'Z' | 'C' ;
+d : 'd';

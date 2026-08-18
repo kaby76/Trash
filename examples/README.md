@@ -9,6 +9,7 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`java-antlr/`](java-antlr/) | Generate a Java-target Antlr4 parser for the Java grammar, build, and run |
 | [`lark-to-antlr4/`](lark-to-antlr4/) | Convert a Lark grammar to Antlr4 syntax using a multi-pass XQuery Update pipeline |
 | [`kleene/`](kleene/) | Eliminate direct left and right recursion from parser rules using XQuery Update scripts (`kleene-lr.xq`, `kleene-rr.xq`), replacing recursive alternatives with Kleene-star EBNF |
+| [`ungroup/`](ungroup/) | Expand a plain grouped alternative `(X \| Y) B` into distributed top-level alternatives `X B \| Y B` using an XQuery Update script with an external variable parameter |
 | [`strip-leading-attrs/`](strip-leading-attrs/) | Remove hidden-channel token attributes before `lexer`/`parser` in `grammarDecl` using an XQuery element constructor |
 | [`xpath31-to-antlr4/`](xpath31-to-antlr4/) | Parse the XPath 3.1 EBNF grammar using generated `.interp` files built from the XPath 3.1 meta-grammar (work in progress) |
 
