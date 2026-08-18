@@ -41,7 +41,7 @@ public partial class PegjsParser : Parser {
 		Comment=17, CharacterClassMatcher=18, DecimalDigit=19, HexDigit=20, AnyMatcher=21, 
 		CodeBlock=22, StringLiteral=23;
 	public const int
-		RULE_grammar_ = 0, RULE_initializer = 1, RULE_eos = 2, RULE_rule = 3, 
+		RULE_grammar_ = 0, RULE_initializer = 1, RULE_eos = 2, RULE_rule_ = 3, 
 		RULE_expression = 4, RULE_choiceexpression = 5, RULE_actionexpression = 6, 
 		RULE_sequenceexpression = 7, RULE_labeledexpression = 8, RULE_labelidentifier = 9, 
 		RULE_prefixedexpression = 10, RULE_prefixedoperator = 11, RULE_suffixedexpression = 12, 
@@ -49,7 +49,7 @@ public partial class PegjsParser : Parser {
 		RULE_semanticpredicateexpression = 16, RULE_semanticpredicateoperator = 17, 
 		RULE_identifier = 18, RULE_literalMatcher = 19;
 	public static readonly string[] ruleNames = {
-		"grammar_", "initializer", "eos", "rule", "expression", "choiceexpression", 
+		"grammar_", "initializer", "eos", "rule_", "expression", "choiceexpression", 
 		"actionexpression", "sequenceexpression", "labeledexpression", "labelidentifier", 
 		"prefixedexpression", "prefixedoperator", "suffixedexpression", "suffixedoperator", 
 		"primaryexpression", "rulereferenceexpression", "semanticpredicateexpression", 
@@ -102,11 +102,11 @@ public partial class PegjsParser : Parser {
 		[System.Diagnostics.DebuggerNonUserCode] public InitializerContext initializer() {
 			return GetRuleContext<InitializerContext>(0);
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public RuleContext[] rule() {
-			return GetRuleContexts<RuleContext>();
+		[System.Diagnostics.DebuggerNonUserCode] public Rule_Context[] rule_() {
+			return GetRuleContexts<Rule_Context>();
 		}
-		[System.Diagnostics.DebuggerNonUserCode] public RuleContext rule(int i) {
-			return GetRuleContext<RuleContext>(i);
+		[System.Diagnostics.DebuggerNonUserCode] public Rule_Context rule_(int i) {
+			return GetRuleContext<Rule_Context>(i);
 		}
 		public Grammar_Context(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
@@ -150,7 +150,7 @@ public partial class PegjsParser : Parser {
 				{
 				{
 				State = 43;
-				rule();
+				rule_();
 				}
 				}
 				State = 46;
@@ -272,7 +272,7 @@ public partial class PegjsParser : Parser {
 		return _localctx;
 	}
 
-	public partial class RuleContext : ParserRuleContext {
+	public partial class Rule_Context : ParserRuleContext {
 		[System.Diagnostics.DebuggerNonUserCode] public IdentifierContext identifier() {
 			return GetRuleContext<IdentifierContext>(0);
 		}
@@ -283,27 +283,27 @@ public partial class PegjsParser : Parser {
 			return GetRuleContext<EosContext>(0);
 		}
 		[System.Diagnostics.DebuggerNonUserCode] public ITerminalNode StringLiteral() { return GetToken(PegjsParser.StringLiteral, 0); }
-		public RuleContext(ParserRuleContext parent, int invokingState)
+		public Rule_Context(ParserRuleContext parent, int invokingState)
 			: base(parent, invokingState)
 		{
 		}
-		public override int RuleIndex { get { return RULE_rule; } }
+		public override int RuleIndex { get { return RULE_rule_; } }
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void EnterRule(IParseTreeListener listener) {
 			IPegjsListener typedListener = listener as IPegjsListener;
-			if (typedListener != null) typedListener.EnterRule(this);
+			if (typedListener != null) typedListener.EnterRule_(this);
 		}
 		[System.Diagnostics.DebuggerNonUserCode]
 		public override void ExitRule(IParseTreeListener listener) {
 			IPegjsListener typedListener = listener as IPegjsListener;
-			if (typedListener != null) typedListener.ExitRule(this);
+			if (typedListener != null) typedListener.ExitRule_(this);
 		}
 	}
 
 	[RuleVersion(0)]
-	public RuleContext rule() {
-		RuleContext _localctx = new RuleContext(Context, State);
-		EnterRule(_localctx, 6, RULE_rule);
+	public Rule_Context rule_() {
+		Rule_Context _localctx = new Rule_Context(Context, State);
+		EnterRule(_localctx, 6, RULE_rule_);
 		int _la;
 		try {
 			EnterOuterAlt(_localctx, 1);

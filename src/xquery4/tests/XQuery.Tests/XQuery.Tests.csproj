@@ -22,6 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Content Include="examples\**\*">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\src\XQuery.DataModel\XQuery.DataModel.csproj" />
     <ProjectReference Include="..\..\src\XQuery.Parser\XQuery.Parser.csproj" />
     <ProjectReference Include="..\..\src\XQuery.Engine\XQuery.Engine.csproj" />

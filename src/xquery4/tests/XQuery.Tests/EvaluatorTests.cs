@@ -20,6 +20,17 @@ public class EvaluatorTests
         return evaluator.Evaluate(ast);
     }
 
+    private XdmSequence EvalXQuery(string expr, XdmItem? contextItem = null)
+    {
+        var ast = new XQueryParser(expr).Parse();
+        var context = EvaluationContext.CreateDefault();
+        var evaluator = new XPathEvaluator(context);
+
+        if (contextItem != null)
+            return evaluator.Evaluate(ast, contextItem);
+        return evaluator.Evaluate(ast);
+    }
+
     private XdmSequence EvalWithVars(string expr, Dictionary<string, XdmSequence> vars)
     {
         var parser = new XPathParser(expr);
@@ -305,10 +316,10 @@ public class EvaluatorTests
         Assert.Equal(20, (result[1] as XdmAtomicValue)!.AsInteger());
     }
 
-    [Fact(Skip = "'where' clause is XQuery-only and not part of the XPath 4.0 grammar")]
+    [Fact]
     public void Eval_ForWhere()
     {
-        var result = Eval("for $x in (1, 2, 3, 4, 5) where $x > 3 return $x");
+        var result = EvalXQuery("for $x in (1, 2, 3, 4, 5) where $x > 3 return $x");
         Assert.Equal(2, result.Count);
         Assert.Equal(4, (result[0] as XdmAtomicValue)!.AsInteger());
         Assert.Equal(5, (result[1] as XdmAtomicValue)!.AsInteger());
@@ -651,6 +662,67 @@ public class EvaluatorTests
         Assert.Equal("b", ((XdmElement)result.First!).LocalName);
     }
 
+    [Fact]
+    public void Eval_Axis_Parent()
+    {
+        var doc = XmlDocumentReader.Parse("<root><child/></root>");
+        var result = Eval("/root/child/parent::root", doc);
+        Assert.Single(result);
+        Assert.Equal("root", ((XdmElement)result.First!).LocalName);
+    }
+
+    [Fact]
+    public void Eval_Axis_Attribute()
+    {
+        var doc = XmlDocumentReader.Parse("<root id='42' name='x'/>");
+        var result = Eval("/root/attribute::id", doc);
+        Assert.Single(result);
+        Assert.Equal("42", result.StringValue);
+    }
+
+    [Fact]
+    public void Eval_Axis_FollowingOrSelf()
+    {
+        // context=a; following-or-self should include a, b, c
+        var doc = XmlDocumentReader.Parse("<root><a/><b/><c/></root>");
+        var result = Eval("/root/a/following-or-self::*", doc);
+        Assert.Equal(3, result.Count);
+        Assert.Equal("a", ((XdmElement)result[0]).LocalName);
+        Assert.Equal("b", ((XdmElement)result[1]).LocalName);
+        Assert.Equal("c", ((XdmElement)result[2]).LocalName);
+    }
+
+    [Fact]
+    public void Eval_Axis_FollowingSiblingOrSelf()
+    {
+        // context=b; following-sibling-or-self should include b, c
+        var doc = XmlDocumentReader.Parse("<root><a/><b/><c/></root>");
+        var result = Eval("/root/b/following-sibling-or-self::*", doc);
+        Assert.Equal(2, result.Count);
+        Assert.Equal("b", ((XdmElement)result[0]).LocalName);
+        Assert.Equal("c", ((XdmElement)result[1]).LocalName);
+    }
+
+    [Fact]
+    public void Eval_Axis_PrecedingOrSelf()
+    {
+        // context=c; preceding-or-self should include a, b, c (self last)
+        var doc = XmlDocumentReader.Parse("<root><a/><b/><c/></root>");
+        var result = Eval("/root/c/preceding-or-self::*", doc);
+        Assert.Equal(3, result.Count);
+        Assert.Equal("c", ((XdmElement)result[result.Count - 1]).LocalName);
+    }
+
+    [Fact]
+    public void Eval_Axis_PrecedingSiblingOrSelf()
+    {
+        // context=b; preceding-sibling-or-self should include a then b
+        var doc = XmlDocumentReader.Parse("<root><a/><b/><c/></root>");
+        var result = Eval("/root/b/preceding-sibling-or-self::*", doc);
+        Assert.Equal(2, result.Count);
+        Assert.Equal("b", ((XdmElement)result[result.Count - 1]).LocalName);
+    }
+
     #endregion
 
     #region Type Expressions
@@ -669,22 +741,61 @@ public class EvaluatorTests
     }
 
     [Fact]
-    public void Eval_Cast()
+    public void Eval_Cast_StringToInteger()
     {
         var result = Eval("'42' cast as xs:integer");
         Assert.Equal(42, (result.Single() as XdmAtomicValue)!.AsInteger());
     }
 
     [Fact]
+    public void Eval_Cast_IntegerToString()
+    {
+        var result = Eval("42 cast as xs:string");
+        Assert.Equal("42", result.StringValue);
+    }
+
+    [Fact]
+    public void Eval_Cast_StringToDecimal()
+    {
+        var result = Eval("'3.14' cast as xs:decimal");
+        Assert.Equal(3.14m, (result.Single() as XdmAtomicValue)!.AsDecimal());
+    }
+
+    [Fact]
+    public void Eval_Cast_StringToDouble()
+    {
+        var result = Eval("'2.5' cast as xs:double");
+        Assert.Equal(2.5, (result.Single() as XdmAtomicValue)!.AsDouble(), 0.0001);
+    }
+
+    [Fact]
+    public void Eval_Cast_StringToBoolean()
+    {
+        Assert.True(Eval("'true' cast as xs:boolean").EffectiveBooleanValue);
+        Assert.False(Eval("'false' cast as xs:boolean").EffectiveBooleanValue);
+    }
+
+    [Fact]
+    public void Eval_Cast_IntegerToBoolean()
+    {
+        Assert.True(Eval("1 cast as xs:boolean").EffectiveBooleanValue);
+        Assert.False(Eval("0 cast as xs:boolean").EffectiveBooleanValue);
+    }
+
+    [Fact]
     public void Eval_Castable_True()
     {
         Assert.True(Eval("'42' castable as xs:integer").EffectiveBooleanValue);
+        Assert.True(Eval("'3.14' castable as xs:decimal").EffectiveBooleanValue);
+        Assert.True(Eval("'true' castable as xs:boolean").EffectiveBooleanValue);
     }
 
     [Fact]
     public void Eval_Castable_False()
     {
         Assert.False(Eval("'hello' castable as xs:integer").EffectiveBooleanValue);
+        Assert.False(Eval("'hello' castable as xs:decimal").EffectiveBooleanValue);
+        Assert.False(Eval("'hello' castable as xs:double").EffectiveBooleanValue);
     }
 
     #endregion
@@ -721,6 +832,19 @@ public class EvaluatorTests
     {
         var result = Eval("'  hello  ' => normalize-space() => upper-case()");
         Assert.Equal("HELLO", result.StringValue);
+    }
+
+    [Fact]
+    public void Eval_MappingArrow_EqualsSimpleMap()
+    {
+        var arrow  = Eval("(1, 2, 3) =!> string()");
+        var simple = Eval("(1, 2, 3) ! string(.)");
+
+        Assert.Equal(simple.Count, arrow.Count);
+        for (int i = 0; i < simple.Count; i++)
+            Assert.Equal(
+                (simple[i] as XdmAtomicValue)!.StringValue,
+                (arrow[i]  as XdmAtomicValue)!.StringValue);
     }
 
     #endregion

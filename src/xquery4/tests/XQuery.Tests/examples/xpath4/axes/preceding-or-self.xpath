@@ -1,0 +1,1 @@
+preceding-or-self::foo

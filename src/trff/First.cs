@@ -31,7 +31,6 @@ namespace trff
                 throw new ArgumentException("Invalid state number.");
             }
 
-            RuleContext ctx = null;
             ATNState s = _parser.Atn.states[stateNumber];
             IntervalSet following = _parser.Atn.NextTokens(s);
             return following;
@@ -80,7 +79,6 @@ namespace trff
             // Iteratively apply constraints until convergence
             bool changed;
             const int EPSILON = -2; // ANTLR uses -2 for ε in IntervalSet
-            const int EOF = -1;
 
             do
             {

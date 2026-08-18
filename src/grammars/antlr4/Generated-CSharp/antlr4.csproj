@@ -1,4 +1,4 @@
-<!-- Generated from trgen 2.2.0 -->
+<!-- Generated from trgen 2.4.0 -->
 <Project Sdk="Microsoft.NET.Sdk" >
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
@@ -19,7 +19,7 @@
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" >
+  <PropertyGroup>
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
   <PropertyGroup>

@@ -20,7 +20,7 @@ unicode.
 
 ## Current version
 
-Release 2.3.0.
+Release 2.4.0.
 
 ## License
 

@@ -638,22 +638,37 @@ _Original grammar_
     s : a ;
     a : a ';' e | e ;
     b : e ';' b | e ;
-    e : e '*' e | INT ;
+    e : INT ;
     INT : [0-9]+ ;
     WS : [ \t\n]+ -> skip ;
 
-_[Trash command](https://github.com/kaby76/AntlrVSIX/blob/master/Trash/doc/commands.md#kleene)_
+_Trash commands_
 
-    kleene "//parserRuleSpec/ruleBlock//RULE_REF[text() = 'a']"
-    kleene "//parserRuleSpec/ruleBlock//RULE_REF[text() = 'b']"
+Using [`kleene-lr.xq`](../examples/lr-rr-to-kleene/kleene-lr.xq) to eliminate direct left recursion:
 
-_Modified grammar_
+    dotnet trash parse Kleene.g4 | dotnet trash xquery kleene-lr.xq | dotnet trash text
+
+_Modified grammar (left recursion removed)_
 
     grammar Kleene;
     s : a ;
-    a : ( e ) ( ';' e ) * ;
-    b : ( e ';' ) * ( e ) ;
-    e : e '*' e | INT ;
+    a :( e ) ( ';' e )* ;
+    b : e ';' b | e ;
+    e : INT ;
+    INT : [0-9]+ ;
+    WS : [ \t\n]+ -> skip ;
+
+Using [`kleene-rr.xq`](../examples/lr-rr-to-kleene/kleene-rr.xq) to eliminate direct right recursion:
+
+    dotnet trash parse Kleene.g4 | dotnet trash xquery kleene-rr.xq | dotnet trash text
+
+_Modified grammar (right recursion removed)_
+
+    grammar Kleene;
+    s : a ;
+    a : a ';' e | e ;
+    b :( e ';' )* ( e ) ;
+    e : INT ;
     INT : [0-9]+ ;
     WS : [ \t\n]+ -> skip ;
 

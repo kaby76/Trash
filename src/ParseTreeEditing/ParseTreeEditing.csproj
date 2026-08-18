@@ -38,6 +38,10 @@
     <PackageReference Include="Antlr4BuildTasks" Version="12.10.0" PrivateAssets="all" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="../xquery4/src/XQuery.DataModel/XQuery.DataModel.csproj" />
+  </ItemGroup>
+
   <PropertyGroup Condition="'$(Platform)'=='AnyCPU'">
     <NoWarn>3021;1701;1702</NoWarn>
   </PropertyGroup>

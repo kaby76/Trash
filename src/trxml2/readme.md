@@ -18,7 +18,7 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 ## Current version
 
-Release 2.3.0.
+Release 2.4.0.
 
 ## License
 

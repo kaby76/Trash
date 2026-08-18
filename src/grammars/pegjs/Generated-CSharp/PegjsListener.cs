@@ -61,15 +61,15 @@ public interface IPegjsListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitEos([NotNull] PegjsParser.EosContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="PegjsParser.rule"/>.
+	/// Enter a parse tree produced by <see cref="PegjsParser.rule_"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void EnterRule([NotNull] PegjsParser.RuleContext context);
+	void EnterRule_([NotNull] PegjsParser.Rule_Context context);
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="PegjsParser.rule"/>.
+	/// Exit a parse tree produced by <see cref="PegjsParser.rule_"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	void ExitRule([NotNull] PegjsParser.RuleContext context);
+	void ExitRule_([NotNull] PegjsParser.Rule_Context context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="PegjsParser.expression"/>.
 	/// </summary>

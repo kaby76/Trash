@@ -28,7 +28,18 @@
       "Bash(gh api:*)",
       "Bash(for g in antlr2 antlr3 antlr4 bison grammophone iso14977 javacc lark lbnf pegjs pest princeton rex xtext)",
       "Read(//c/msys64/home/Kenne/issues/trash-add-ixml/src/grammars/$g/Generated-CSharp/**)",
-      "Bash(done)"
+      "Bash(done)",
+      "Bash(dotnet test:*)",
+      "Bash(python3:*)",
+      "Bash(for f in ancestor ancestor-or-self descendant descendant-or-self following following-sibling preceding preceding-sibling self)",
+      "Read(//c/msys64/home/Kenne/issues/trash-meta-meta/src/xquery4/tests/XQuery.Tests/examples/xpath4/axes/**)",
+      "Bash(for f in \"src/xquery4/tests/XQuery.Tests/examples/xpath4/operators/subtraction.xpath\" \"src/xquery4/tests/XQuery.Tests/examples/xpath4/let/simple.xpath\" \"src/xquery4/tests/XQuery.Tests/examples/xpath4/quantified/some.xpath\" \"src/xquery4/tests/XQuery.Tests/examples/xpath4/quantified/every.xpath\" \"src/xquery4/tests/XQuery.Tests/examples/xpath4/arrays/curly.xpath\" \"src/xquery4/tests/XQuery.Tests/examples/xpath4/lookup/integer.xpath\" \"src/xquery4/tests/XQuery.Tests/examples/xpath4/arrow/chained.xpath\" \"src/xquery4/tests/XQuery.Tests/examples/xpath4/if/then-else.xpath\" \"src/xquery4/tests/XQuery.Tests/examples/xpath4/axes/attribute.xpath\" \"src/xquery4/tests/XQuery.Tests/examples/xpath4/axes/parent.xpath\")",
+      "Bash(echo \"=== $f ===\")",
+      "Read(//c/msys64/home/Kenne/issues/trash-meta-meta/**)",
+      "Bash(printf for $x in \\(1, 2, 3\\) let $y := $x * 2 where $y > 2 return $y\\\\n:*)",
+      "Bash(echo if \\($x > 0\\) then ''positive'' else ''non-positive'':*)",
+      "Bash(\"C:/msys64/home/Kenne/issues/trash-meta-meta/src/xquery4/tests/XQuery.Tests/examples/xpath4/parser-tests/if-expression.xpath\":*)",
+      "Bash(xxd:*)"
     ]
   }
 }

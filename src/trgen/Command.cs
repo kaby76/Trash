@@ -3,7 +3,8 @@ using Antlr4.Runtime;
 using Antlr4.Runtime.Tree;
 using Antlr4.StringTemplate;
 using AntlrJson;
-using org.eclipse.wst.xml.xpath2.processor.util;
+using XQuery.Engine;
+using XPathParser = XQuery.Parser.XPathParser;
 using ParseTreeEditing.UnvParseTreeDOM;
 using System;
 using System.Collections.Generic;
@@ -145,38 +146,20 @@ namespace Trash
                         pr.Add(parsing_result_set);
                     }
 
-                    org.eclipse.wst.xml.xpath2.processor.Engine engine =
-                        new org.eclipse.wst.xml.xpath2.processor.Engine();
-                    var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
-                    List<UnvParseTreeElement> is_par = null;
-                    List<UnvParseTreeElement> is_lex = null;
-                    List<string> name_ = null;
-                    List<string> ss = null;
-                    using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
-                           ate.Try(pr.First().Nodes.First()))
-                    {
-                        is_par = engine.parseExpression(
-                                @"/grammarSpec/grammarDecl/grammarType/PARSER",
-                                new StaticContextBuilder()).evaluate(dynamicContext,
-                                new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
-                            .ToList();
-                        is_lex = engine.parseExpression(
-                                @"/grammarSpec/grammarDecl/grammarType/LEXER",
-                                new StaticContextBuilder()).evaluate(dynamicContext,
-                                new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                        name_ = engine.parseExpression(
-                                @"/grammarSpec/grammarDecl/identifier/(TOKEN_REF | RULE_REF)/text()",
-                                new StaticContextBuilder()).evaluate(dynamicContext,
-                                new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as UnvParseTreeText).NodeValue as string).ToList();
-                        ss = engine.parseExpression(
-                                @"//parserRuleSpec[ruleBlock//TOKEN_REF/text()='EOF']/RULE_REF/text()",
-                                new StaticContextBuilder()).evaluate(dynamicContext,
-                                new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as UnvParseTreeText).NodeValue as string).ToList();
-                    }
+                    var evaluator = new XPathEvaluator();
+                    var adapterDoc = AdapterDocument.Build(pr.First().Nodes);
+                    List<UnvParseTreeElement> is_par =
+                        evaluator.Evaluate(new XPathParser("/grammarSpec/grammarDecl/grammarType/PARSER").Parse(), adapterDoc)
+                            .OfType<AdapterElement>().Select(ae => ae.Source).ToList();
+                    List<UnvParseTreeElement> is_lex =
+                        evaluator.Evaluate(new XPathParser("/grammarSpec/grammarDecl/grammarType/LEXER").Parse(), adapterDoc)
+                            .OfType<AdapterElement>().Select(ae => ae.Source).ToList();
+                    List<string> name_ =
+                        evaluator.Evaluate(new XPathParser("/grammarSpec/grammarDecl/identifier/(TOKEN_REF | RULE_REF)/text()").Parse(), adapterDoc)
+                            .OfType<AdapterText>().Select(at => at.Source.Data).ToList();
+                    List<string> ss =
+                        evaluator.Evaluate(new XPathParser("//parserRuleSpec[ruleBlock//TOKEN_REF/text()='EOF']/RULE_REF/text()").Parse(), adapterDoc)
+                            .OfType<AdapterText>().Select(at => at.Source.Data).ToList();
 
                     var is_parser_grammar = is_par.Count() != 0;
                     var is_lexer_grammar = is_lex.Count() != 0;
@@ -586,7 +569,7 @@ namespace Trash
             }
         }
 
-        public static string version = "2.3.0";
+        public static string version = "2.4.0";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -2130,25 +2113,18 @@ namespace Trash
                 // Look at grammar file contents to draw dependencies out.
                 var v = t.GrammarName;
                 var parsing_result_set = t.ParsingResultSet;
-                org.eclipse.wst.xml.xpath2.processor.Engine engine =
-                    new org.eclipse.wst.xml.xpath2.processor.Engine();
-                var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
-                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext =
-                       ate.Try(parsing_result_set.Nodes, parsing_result_set.Parser))
+                var evaluator = new XPathEvaluator();
+                var adapterDoc = AdapterDocument.Build(parsing_result_set.Nodes);
                 {
                     // Add an edge from the current grammar to "imported" grammar.
                     // Note, we never include parser to lexer grammar depends.
                     // That will be added--with extreme care--later on.
-                    var importedGrammarNames = engine.parseExpression(
-                            @"//delegateGrammars/delegateGrammar[not(ASSIGN)]/identifier/(RULE_REF | TOKEN_REF)/text()",
-                            new StaticContextBuilder()).evaluate(dynamicContext,
-                            new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as UnvParseTreeText).NodeValue as string).ToList();
-                    var grammarTypeKeyword = engine.parseExpression(
-                            @"//grammarDecl/grammarType/(LEXER | PARSER)/text()",
-                            new StaticContextBuilder()).evaluate(dynamicContext,
-                            new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as UnvParseTreeText).NodeValue as string)
+                    var importedGrammarNames =
+                        evaluator.Evaluate(new XPathParser("//delegateGrammars/delegateGrammar[not(ASSIGN)]/identifier/(RULE_REF | TOKEN_REF)/text()").Parse(), adapterDoc)
+                            .OfType<AdapterText>().Select(at => at.Source.Data).ToList();
+                    var grammarTypeKeyword =
+                        evaluator.Evaluate(new XPathParser("//grammarDecl/grammarType/(LEXER | PARSER)/text()").Parse(), adapterDoc)
+                            .OfType<AdapterText>().Select(at => at.Source.Data)
                             .FirstOrDefault(); // "lexer", "parser", or null (combined)
                     var expectedKeyword = t.WhatTypeOriginating switch
                     {
@@ -2193,11 +2169,9 @@ namespace Trash
                     }
 
                     // Add an edge from the parser to lexer grammar if explicit.
-                    var bar = engine.parseExpression(
-                            @"//option[identifier/RULE_REF/text() = 'tokenVocab']/optionValue/identifier/(RULE_REF | TOKEN_REF)/text()",
-                            new StaticContextBuilder()).evaluate(dynamicContext,
-                            new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as UnvParseTreeText).NodeValue as string).ToList();
+                    var bar =
+                        evaluator.Evaluate(new XPathParser("//option[identifier/RULE_REF/text() = 'tokenVocab']/optionValue/identifier/(RULE_REF | TOKEN_REF)/text()").Parse(), adapterDoc)
+                            .OfType<AdapterText>().Select(at => at.Source.Data).ToList();
                     foreach (var id in bar)
                     {
                         // Make sure to mark lexer grammar as "top level".

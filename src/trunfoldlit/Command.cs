@@ -187,9 +187,9 @@ class Command
     /// <summary>
     /// Drills down through a chain of element names, returning the innermost match or null.
     /// </summary>
-    private static AdapterElement? DescendChild(AdapterElement parent, params string[] names)
+    private static AdapterElement DescendChild(AdapterElement parent, params string[] names)
     {
-        AdapterElement? current = parent;
+        AdapterElement current = parent;
         foreach (var name in names)
         {
             current = current?.Children.OfType<AdapterElement>()

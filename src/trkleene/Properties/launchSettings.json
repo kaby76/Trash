@@ -1,9 +1,0 @@
-{
-  "profiles": {
-    "trkleene": {
-      "commandName": "Project",
-      "commandLineArgs": "-f o.pt",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\scrape-c-plus-plus-spec\\scraper"
-    }
-  }
-}

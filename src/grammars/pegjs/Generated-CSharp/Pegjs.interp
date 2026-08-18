@@ -54,7 +54,7 @@ rule names:
 grammar_
 initializer
 eos
-rule
+rule_
 expression
 choiceexpression
 actionexpression

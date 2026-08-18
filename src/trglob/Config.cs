@@ -12,7 +12,7 @@ public class Config
     public bool Full { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "2.3.0";
+    public string Version { get; set; } = "2.4.0";
 
     [Value(0)] public IEnumerable<string> Files { get; set; }
 

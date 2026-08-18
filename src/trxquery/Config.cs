@@ -9,10 +9,10 @@ public class Config
     public bool NoParsingResultSets { get; set; }
 
     [Option('f', "file", Required = false, HelpText = "Read parse tree data from file instead of stdin.")]
-    public string File { get; set; }
+    public string File { get; set; } = string.Empty;
 
     [Option('q', "query", Required = false, HelpText = "File containing the XQuery expression.")]
-    public string QueryFile { get; set; }
+    public string QueryFile { get; set; } = string.Empty;
 
     [Option("fmt", Required = false, HelpText = "Output formatted parsing results set.")]
     public bool Format { get; set; }
@@ -21,7 +21,7 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "2.3.0";
+    public string Version { get; set; } = "2.4.0";
 
-    [Value(0)] public IEnumerable<string> Query { get; set; }
+    [Value(0)] public IEnumerable<string> Query { get; set; } = [];
 }

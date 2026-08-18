@@ -269,9 +269,13 @@ public class XPathEvaluator : IAstVisitor<XdmSequence>
             Axis.Ancestor => node.Ancestors(),
             Axis.AncestorOrSelf => node.AncestorsAndSelf(),
             Axis.Following => node.Following(),
+            Axis.FollowingOrSelf => node.FollowingOrSelf(),
             Axis.FollowingSibling => node.FollowingSiblings(),
+            Axis.FollowingSiblingOrSelf => node.FollowingSiblingOrSelf(),
             Axis.Preceding => node.Preceding(),
+            Axis.PrecedingOrSelf => node.PrecedingOrSelf(),
             Axis.PrecedingSibling => node.PrecedingSiblings(),
+            Axis.PrecedingSiblingOrSelf => node.PrecedingSiblingOrSelf(),
             Axis.Self => new[] { node },
             Axis.Attribute => node.Attributes.Cast<XdmNode>(),
             Axis.Namespace => Array.Empty<XdmNode>(), // Not commonly used
@@ -1206,26 +1210,48 @@ public class XPathEvaluator : IAstVisitor<XdmSequence>
     {
         var argument = Evaluate(node.Argument);
 
-        // Get the function
-        XdmFunction? func = null;
+        if (node.IsThinArrow)
+        {
+            // =!> mapping arrow: apply function to each item individually
+            var results = new List<XdmItem>();
+            foreach (var item in argument)
+            {
+                var itemSeq = new XdmSequence(item);
+                XdmSequence itemResult;
+                if (node.Function is FunctionCallExpr funcCallM)
+                {
+                    var args = new List<XdmSequence> { itemSeq };
+                    args.AddRange(node.AdditionalArguments.Select(a => Evaluate(a)));
+                    itemResult = _functions.Call(funcCallM.QName, args.ToArray(), _context);
+                }
+                else
+                {
+                    var funcResult = Evaluate(node.Function);
+                    var func = funcResult.Single() as XdmFunction
+                        ?? throw new XdmException("XPTY0004", "Arrow expression requires a function");
+                    var args = new List<XdmSequence> { itemSeq };
+                    args.AddRange(node.AdditionalArguments.Select(a => Evaluate(a)));
+                    itemResult = func.Invoke(args.ToArray());
+                }
+                results.AddRange(itemResult);
+            }
+            return new XdmSequence(results);
+        }
 
+        // => fat arrow: pass whole sequence as first argument
         if (node.Function is FunctionCallExpr funcCall)
         {
-            // Create argument list with argument as first parameter
             var args = new List<XdmSequence> { argument };
             args.AddRange(node.AdditionalArguments.Select(a => Evaluate(a)));
-
             return _functions.Call(funcCall.QName, args.ToArray(), _context);
         }
         else
         {
             var funcResult = Evaluate(node.Function);
-            func = funcResult.Single() as XdmFunction
+            var func = funcResult.Single() as XdmFunction
                 ?? throw new XdmException("XPTY0004", "Arrow expression requires a function");
-
             var args = new List<XdmSequence> { argument };
             args.AddRange(node.AdditionalArguments.Select(a => Evaluate(a)));
-
             return func.Invoke(args.ToArray());
         }
     }
@@ -1466,12 +1492,14 @@ public class XPathEvaluator : IAstVisitor<XdmSequence>
 
     public XdmSequence VisitSimpleMapExpr(SimpleMapExpr node)
     {
-        var result = _context.ContextItem != null
-            ? new XdmSequence(_context.ContextItem)
-            : XdmSequence.Empty;
+        if (node.Steps.Count == 0)
+            return XdmSequence.Empty;
 
-        foreach (var step in node.Steps)
+        var result = Evaluate(node.Steps[0]);
+
+        for (int s = 1; s < node.Steps.Count; s++)
         {
+            var step = node.Steps[s];
             var newResult = new List<XdmItem>();
             var items = result.ToList();
 

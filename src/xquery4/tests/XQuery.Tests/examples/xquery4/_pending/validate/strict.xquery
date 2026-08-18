@@ -1,0 +1,1 @@
+validate strict { 'hello' }

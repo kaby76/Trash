@@ -1,5 +1,6 @@
 ﻿using AntlrJson;
-using org.eclipse.wst.xml.xpath2.processor.util;
+using XQuery.Engine;
+using XPathParser = XQuery.Parser.XPathParser;
 using org.w3c.dom;
 using ParseTreeEditing.UnvParseTreeDOM;
 using System.Collections.Generic;
@@ -111,24 +112,17 @@ namespace Trash
             serializeOptions.MaxDepth = 10000;
             var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
             var results = new List<ParsingResultSet>();
-            List<UnvParseTreeElement> nodes = new List<UnvParseTreeElement>();
+            var evaluator = new XPathEvaluator();
+            var exprNode = new XPathParser(expr).Parse();
+            List<AdapterElement> nodes = new List<AdapterElement>();
             // First pass: gather all lexer rules.
             foreach (var parse_info in data)
             {
                 var atrees = parse_info.Nodes;
-                var parser = parse_info.Parser;
-                var lexer = parse_info.Lexer;
-                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
-                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser))
-                {
-                    var n = engine.parseExpression(expr,
-                            new StaticContextBuilder())
-                        .evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                        .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                    if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
-                    nodes.AddRange(n);
-                }
+                var adapterDoc = AdapterDocument.Build(atrees);
+                var n = evaluator.Evaluate(exprNode, adapterDoc).OfType<AdapterElement>().ToList();
+                if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + nodes.Count + " nodes.");
+                nodes.AddRange(n);
             }
             // Second pass to replace.
             foreach (var parse_info in data)
@@ -137,25 +131,17 @@ namespace Trash
                 var atrees = parse_info.Nodes;
                 var parser = parse_info.Parser;
                 var lexer = parse_info.Lexer;
-                org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-                var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
-                using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser))
+                var adapterDoc = AdapterDocument.Build(atrees);
                 {
                     // Go through lexer LHS symbols.
                     foreach (var node in nodes)
                     {
-                        var lhs = this.StrictReconstruct(node);
+                        var lhs = this.StrictReconstruct(node.Source);
                         // Get RHS string literal of the lexer rule.
-                        var parent = node.ParentNode;
-
-                        var expr3 = "../lexerRuleBlock";
-                        var refs3 = engine.parseExpression(expr3,
-                                new StaticContextBuilder()).evaluate(dynamicContext,
-                                new object[] { node })
-                            .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
-                            .ToList()
-                            .First();
-
+                        // Navigate ../lexerRuleBlock: parent is lexerRuleSpec, find child lexerRuleBlock.
+                        var refs3 = ((UnvParseTreeElement)node.Source.ParentNode).AllChildren
+                            .OfType<UnvParseTreeElement>()
+                            .First(c => c.LocalName == "lexerRuleBlock");
 
                         var rhs = refs3;
                         var str = this.StrictReconstruct(rhs).Trim();
@@ -164,16 +150,13 @@ namespace Trash
                         // Find string literals on RHS of parser rules that match lexer
                         // string literal.
                         var expr2 = "//parserRuleSpec/ruleBlock//STRING_LITERAL[text() = \"" + str + "\"]";
-                        var refs = engine.parseExpression(expr2,
-                                new StaticContextBuilder()).evaluate(dynamicContext,
-                                new object[] { dynamicContext.Document })
-                            .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement))
-                            .ToList();
+                        var refs = evaluator.Evaluate(new XPathParser(expr2).Parse(), adapterDoc)
+                            .OfType<AdapterElement>().Select(ae => ae.Source).ToList();
                         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("Found " + refs.Count + " nodes.");
                         // Replace all occurrences of string literal with the lexer LHS symbol.
                         foreach (var r in refs)
                         {
-                            TreeEdits.Replace(r, this.StrictReconstruct(node));
+                            TreeEdits.Replace(r, this.StrictReconstruct(node.Source));
                         }
                     }
                     var tuple = new ParsingResultSet()

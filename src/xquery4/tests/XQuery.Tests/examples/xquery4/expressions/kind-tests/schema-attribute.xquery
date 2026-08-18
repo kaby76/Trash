@@ -1,0 +1,1 @@
+child::schema-attribute(id)
