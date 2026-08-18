@@ -50,10 +50,10 @@ public class Config
     [Option("xf", Required = false, HelpText = "Read input file names from file provided on command line.")]
     public string ReadFileNameFile { get; set; }
 
-    [Option("pinterp", Required = false, HelpText = "Path to parser .interp file for Earley ATN-based parsing.")]
+    [Option("pinterp", Required = false, HelpText = "Path to parser .interp file for ATN-based parsing.")]
     public string PInterp { get; set; }
 
-    [Option("linterp", Required = false, HelpText = "Path to lexer .interp file for Earley ATN-based parsing.")]
+    [Option("linterp", Required = false, HelpText = "Path to lexer .interp file for ATN-based parsing.")]
     public string LInterp { get; set; }
 
     [Option('L', "lib", Required = false, HelpText = "Directory to search for .interp files (resolves relative --pinterp / --linterp paths).")]

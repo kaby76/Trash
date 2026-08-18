@@ -18,10 +18,10 @@ dotnet trash parse -l Abnf.g4 > grammar.json
 dotnet trash interp -o interp/ --atn < grammar.json
 
 # Parse each .abnf and .bnf example file using the interpreter.
-for f in examples/*.abnf examples/*.bnf examples/apg-java/*.bnf; do
-    [ -f "$f" ] || continue
-    echo "--- Parsing $f ---"
-    dotnet trash parse --lib interp/ < "$f" | dotnet trash tree
-done
+files=`find examples -name '*.*bnf'`
+dotnet trash parse --lib interp/ $files > earley.pt
+dotnet trash tree -f earley.pt > earley.tree
+dotnet trash parse --lib interp/ --allstar $files > allstar.pt
+dotnet trash tree -f earley.pt > allstar.tree
 
 echo "Done."
