@@ -2,22 +2,30 @@ s
 ├── e
 │   ├── e
 │   │   ├── e
-│   │   │   └── INT
-│   │   │       └── "1"
+│   │   │   ├── e
+│   │   │   │   └── INT
+│   │   │   │       └── "1"
+│   │   │   ├── Attribute Skip Value ' '
+│   │   │   ├── T__3
+│   │   │   │   └── "+"
+│   │   │   └── e
+│   │   │       ├── Attribute Skip Value ' '
+│   │   │       └── INT
+│   │   │           └── "2"
 │   │   ├── Attribute Skip Value ' '
 │   │   ├── T__3
 │   │   │   └── "+"
 │   │   └── e
 │   │       ├── Attribute Skip Value ' '
 │   │       └── INT
-│   │           └── "2"
+│   │           └── "3"
 │   ├── Attribute Skip Value ' '
 │   ├── T__3
 │   │   └── "+"
 │   └── e
 │       ├── Attribute Skip Value ' '
 │       └── INT
-│           └── "3"
+│           └── "4"
 └── EOF
     └── ""
 
