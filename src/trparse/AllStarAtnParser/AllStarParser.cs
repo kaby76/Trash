@@ -1,39 +1,52 @@
 namespace Trash.EarleyAtn;
 
-using Antlr4.Runtime;
-using Antlr4.Runtime.Tree;
+// No Antlr4.Runtime.Standard types used anywhere in this file.
 
-// Interpretive ALL(*) parser.
-// Drives a top-down LL parse using AdaptivePredict at every decision point.
-// Produces an IParseTree (GenericRuleContext / TerminalNodeImpl) compatible with ConvertToDOM.
+/// <summary>
+/// Interpretive ALL(*) parser.
+/// Drives a top-down LL parse using AdaptivePredict at every decision point.
+/// Produces a ParseEvent sequence from which DomBuilder builds a DOM tree.
+/// </summary>
 public static class AllStarParser
 {
-    // allTokens: full token list (all channels); EOF at end.
-    // Returns the root parse tree, or null if parsing fails.
-    public static IParseTree Parse(MyATN atn, IReadOnlyList<IToken> allTokens, int startRuleIndex)
+    private const int DEFAULT_CHANNEL = 0;
+    private const int EOF_TYPE = -1;
+
+    /// <summary>
+    /// Parse allTokens (all channels, EOF at end) and return an ordered
+    /// ParseEvent list, or null if the input is rejected by the grammar.
+    /// </summary>
+    public static List<ParseEvent>? Parse(
+        MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex)
     {
         if (atn == null) throw new ArgumentNullException(nameof(atn));
         if (startRuleIndex < 0 || startRuleIndex >= atn.start.Length)
             throw new ArgumentOutOfRangeException(nameof(startRuleIndex));
 
-        // Build on-channel token list (DEFAULT_CHANNEL + EOF), same filter as EarleyParser.
-        var onChannel = new List<IToken>();
-        foreach (var t in allTokens)
-            if (t.Channel == TokenConstants.DefaultChannel || t.Type == TokenConstants.EOF)
-                onChannel.Add(t);
+        // Build on-channel index map: on-channel position → index in allTokens.
+        var onIdx = new List<int>();
+        for (int i = 0; i < allTokens.Count; i++)
+        {
+            var t = allTokens[i];
+            if (t.Channel == DEFAULT_CHANNEL || t.Type == EOF_TYPE)
+                onIdx.Add(i);
+        }
 
-        // Extract token types for the simulator (no Antlr4 types needed there).
-        var tokenTypes = new int[onChannel.Count];
-        for (int i = 0; i < onChannel.Count; i++)
-            tokenTypes[i] = onChannel[i].Type;
+        // Parallel int[] of token types for the simulator (no Antlr4 types).
+        var tokenTypes = new int[onIdx.Count];
+        for (int i = 0; i < onIdx.Count; i++)
+            tokenTypes[i] = allTokens[onIdx[i]].Type;
 
         // Build reverse map: ATN state number → decision index.
         var stateToDecision = new Dictionary<int, int>();
         for (int i = 0; i < atn.decisionToState.Length; i++)
             stateToDecision[atn.decisionToState[i].stateNumber] = i;
 
-        var instance = new ParserInstance(atn, onChannel, tokenTypes, stateToDecision);
-        return instance.ParseRule(startRuleIndex, null, PredictionContext.EMPTY);
+        var events = new List<ParseEvent>();
+        var instance = new ParserInstance(atn, allTokens, onIdx, tokenTypes, stateToDecision);
+        if (!instance.ParseRule(startRuleIndex, events, PredictionContext.EMPTY))
+            return null;
+        return events;
     }
 
     // =========================================================================
@@ -43,31 +56,30 @@ public static class AllStarParser
     private sealed class ParserInstance
     {
         private readonly MyATN _atn;
-        private readonly IReadOnlyList<IToken> _tokens; // on-channel
-        private readonly int[] _tokenTypes;             // parallel int[] for simulator
+        private readonly IReadOnlyList<LexerToken> _allTokens;
+        private readonly IReadOnlyList<int> _onIdx;  // on-channel pos → all-token index
+        private readonly int[] _tokenTypes;
         private readonly Dictionary<int, int> _stateToDecision;
         private readonly AllStarSimulator _sim;
 
         public int Pos { get; private set; } // current on-channel token position
 
-        public ParserInstance(MyATN atn, IReadOnlyList<IToken> tokens, int[] tokenTypes,
+        public ParserInstance(MyATN atn, IReadOnlyList<LexerToken> allTokens,
+                              IReadOnlyList<int> onIdx, int[] tokenTypes,
                               Dictionary<int, int> stateToDecision)
         {
             _atn = atn;
-            _tokens = tokens;
+            _allTokens = allTokens;
+            _onIdx = onIdx;
             _tokenTypes = tokenTypes;
             _stateToDecision = stateToDecision;
             _sim = new AllStarSimulator(atn);
         }
 
-        // Parse one rule; returns the rule context or null on error.
-        // callerCtx: the PredictionContext representing the call stack above this rule.
-        public GenericRuleContext ParseRule(int ruleIndex, GenericRuleContext parent, PredictionContext callerCtx)
+        /// <summary>Parse one rule; emits Enter/Exit/Consume events. Returns false on error.</summary>
+        public bool ParseRule(int ruleIndex, List<ParseEvent> events, PredictionContext callerCtx)
         {
-            var ctx = new GenericRuleContext(parent, -1, ruleIndex);
-            if (Pos < _tokens.Count)
-                ctx.Start = _tokens[Pos];
-
+            events.Add(ParseEvent.EnterRule(ruleIndex));
             var state = _atn.start[ruleIndex];
 
             while (state.stateType != MyStateType.RuleStop)
@@ -80,8 +92,7 @@ public static class AllStarParser
                     // Decision point: use ALL(*) prediction to choose an alternative.
                     int alt = _sim.AdaptivePredict(decision, _tokenTypes, Pos, callerCtx);
                     if (alt <= 0 || alt > state.transitions.Count)
-                        return null; // prediction failure
-
+                        return false;
                     state = state.transitions[alt - 1].target;
                 }
                 else if (state.transitions.Count == 1)
@@ -97,59 +108,56 @@ public static class AllStarParser
                             break;
 
                         case MyRuleTransition rt:
-                            // Push the follow state onto the context for LL prediction inside the sub-rule.
+                            // Push follow state onto context for LL prediction inside the sub-rule.
                             var childCtx = new SingletonPredictionContext(callerCtx, rt.target.stateNumber);
-                            var child = ParseRule(rt.ruleIndex, ctx, childCtx);
-                            if (child != null) ctx.AddChild(child);
-                            // Advance to the follow state (after the rule call).
+                            if (!ParseRule(rt.ruleIndex, events, childCtx))
+                                return false;
                             state = rt.target;
                             break;
 
                         default:
-                            // Terminal transition: consume the next token.
-                            if (!ConsumeToken(tr, ctx))
-                                return null;
+                            // Terminal transition: consume the next on-channel token.
+                            if (!ConsumeToken(tr, events))
+                                return false;
                             state = tr.target;
                             break;
                     }
                 }
                 else
                 {
-                    // Multiple transitions but not in decisionToState — shouldn't happen in a valid ATN.
                     throw new InvalidOperationException(
                         $"ATN state {state.stateNumber} (type={state.stateType}) has " +
                         $"{state.transitions.Count} transitions but is not a registered decision state.");
                 }
             }
 
-            if (Pos > 0)
-                ctx.Stop = _tokens[Math.Min(Pos - 1, _tokens.Count - 1)];
-            return ctx;
+            events.Add(ParseEvent.ExitRule(ruleIndex));
+            return true;
         }
 
-        private bool ConsumeToken(MyTransition tr, GenericRuleContext ctx)
+        private bool ConsumeToken(MyTransition tr, List<ParseEvent> events)
         {
-            if (Pos >= _tokens.Count) return false;
-            var tok = _tokens[Pos];
-            if (!tr.Matches(tok.Type, 0, _atn.maxTokenType)) return false;
-            var term = new TerminalNodeImpl(tok);
-            ctx.AddChild(term);
-            ctx.Stop = tok;
+            if (Pos >= _onIdx.Count) return false;
+            int allTokIdx = _onIdx[Pos];
+            var tok = _allTokens[allTokIdx];
+            if (!TerminalMatches(tr, tok.Type)) return false;
+            events.Add(ParseEvent.Consume(allTokIdx));
             Pos++;
             return true;
         }
     }
 
     // =========================================================================
-    // Generic parse-tree node (same shape as EarleyParser's private equivalent).
+    // Terminal helpers
     // =========================================================================
 
-    private sealed class GenericRuleContext : ParserRuleContext
+    private static bool TerminalMatches(MyTransition t, int tokenType) => t switch
     {
-        private readonly int _ruleIndex;
-        public override int RuleIndex => _ruleIndex;
-
-        public GenericRuleContext(ParserRuleContext parent, int invokingState, int ruleIndex)
-            : base(parent, invokingState) => _ruleIndex = ruleIndex;
-    }
+        MyAtomTransition a    => a.label == tokenType,
+        MySetTransition s     => s.set.Contains(tokenType),
+        MyNotSetTransition ns => !ns.set.Contains(tokenType) && tokenType != EOF_TYPE,
+        MyWildcardTransition  => tokenType != EOF_TYPE,
+        MyRangeTransition r   => tokenType >= r.from && tokenType <= r.to,
+        _ => false
+    };
 }

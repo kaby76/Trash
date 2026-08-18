@@ -1,7 +1,6 @@
 namespace Trash.EarleyAtn;
 
 using Antlr4.Runtime;
-using Antlr4.Runtime.Tree;
 using ParseTreeEditing.UnvParseTreeDOM;
 using EditableAntlrTree;
 using AntlrJson;
@@ -19,7 +18,6 @@ public static class AllStarRunner
         string fileName,
         bool lineNumbers)
     {
-        // Read and deserialize .interp files (same infrastructure as InterpRunner).
         var parserInterp = InterpFileReader.Read(File.ReadAllText(parserInterpPath));
         var lexerInterp  = InterpFileReader.Read(File.ReadAllText(lexerInterpPath));
 
@@ -29,36 +27,10 @@ public static class AllStarRunner
         var lexerVocab  = new Vocabulary(lexerInterp.LiteralNames,  lexerInterp.SymbolicNames);
         var parserVocab = new Vocabulary(parserInterp.LiteralNames, parserInterp.SymbolicNames);
 
-        // Lex the input using the same character-level NFA simulator.
         var sim = new LexerAtnSimulator(lexerAtn);
         var rawTokens = sim.Tokenize(inputText);
 
-        var antlrTokens = new List<IToken>(rawTokens.Count);
-        foreach (var lt in rawTokens)
-        {
-            var ct = new CommonToken(lt.Type)
-            {
-                Channel    = lt.Channel,
-                Text       = lt.Text,
-                StartIndex = lt.StartIndex,
-                StopIndex  = lt.StopIndex,
-                Line       = lt.Line,
-                Column     = lt.Column,
-                TokenIndex = lt.TokenIndex
-            };
-            antlrTokens.Add(ct);
-        }
-
-        var charStream  = new AntlrInputStream(inputText);
-        var tokenSource = new ListTokenSource(antlrTokens);
-        var tokenStream = new CommonTokenStream(tokenSource);
-        tokenStream.Fill();
-
-        var onChannel = antlrTokens
-            .Where(t => t.Channel == TokenConstants.DefaultChannel || t.Type == TokenConstants.EOF)
-            .ToList();
-
-        // Determine start rule from the 'start-rule:' section.
+        // Determine the start rule from the 'start-rule:' section in the parser interp file.
         int startRule = 0;
         if (parserInterp.StartStateNumber >= 0)
         {
@@ -77,29 +49,38 @@ public static class AllStarRunner
                     $"Start state {parserInterp.StartStateNumber} not found in deserialized parser ATN.");
         }
 
-        var parseTree = AllStarParser.Parse(parserAtn, antlrTokens, startRule);
-        if (parseTree == null)
+        var events = AllStarParser.Parse(parserAtn, rawTokens, startRule);
+        if (events == null)
             throw new InvalidOperationException(
                 $"ALL(*) parse failed for '{fileName}': input rejected by grammar.");
 
-        // Build stub lexer/parser objects used by ConvertToDOM and the JSON serializer.
+        var domTree = DomBuilder.Build(
+            events, rawTokens,
+            parserInterp.RuleNames,
+            parserInterp.SymbolicNames,
+            parserInterp.LiteralNames,
+            lineNumbers);
+
+        // Stub lexer/parser objects required by ParsingResultSet and the JSON serializer.
+        var charStream = new AntlrInputStream(inputText);
         var myLexer = new MyLexer(charStream);
-        myLexer._ruleNames    = lexerInterp.RuleNames;
-        myLexer._modeNames    = lexerInterp.ModeNames.Length > 0
+        myLexer._ruleNames       = lexerInterp.RuleNames;
+        myLexer._modeNames       = lexerInterp.ModeNames.Length > 0
             ? lexerInterp.ModeNames : new[] { "DEFAULT_MODE" };
-        myLexer._channelNames = lexerInterp.ChannelNames.Length > 0
+        myLexer._channelNames    = lexerInterp.ChannelNames.Length > 0
             ? lexerInterp.ChannelNames : new[] { "DEFAULT_TOKEN_CHANNEL", "HIDDEN" };
-        myLexer._vocabulary   = lexerVocab;
-        myLexer._tokenTypeMap = BuildTokenTypeMap(lexerInterp.SymbolicNames);
+        myLexer._vocabulary      = lexerVocab;
+        myLexer._tokenTypeMap    = BuildTokenTypeMap(lexerInterp.SymbolicNames);
         myLexer._grammarFileName = Path.GetFileNameWithoutExtension(lexerInterpPath);
 
-        var myParser = new MyParser();
+        var myParser = new EditableAntlrTree.MyParser();
         myParser._ruleNames       = parserInterp.RuleNames;
         myParser._vocabulary      = parserVocab;
         myParser._grammarFileName = Path.GetFileNameWithoutExtension(parserInterpPath);
 
-        var converter = new ConvertToDOM(lineNumbers);
-        var domTree = converter.BottomUpConvert(parseTree, null, myParser, myLexer, tokenStream);
+        int tokenCount = 0;
+        foreach (var t in rawTokens)
+            if (t.Channel == 0 || t.Type == -1) tokenCount++;
 
         return (new ParsingResultSet
         {
@@ -107,7 +88,7 @@ public static class AllStarRunner
             Nodes    = new[] { (UnvParseTreeNode)domTree },
             Parser   = myParser,
             Lexer    = myLexer
-        }, onChannel.Count);
+        }, tokenCount);
     }
 
     private static IDictionary<string, int> BuildTokenTypeMap(string[] symbolicNames)
