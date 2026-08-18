@@ -24,10 +24,9 @@ echo Diff against the golden file.
 if [ "$?" != "0" ]
 then
     echo Test failed.
+    cd ..
+    rm -rf Generated-CSharp
     exit 1
-else
-    echo Test succeeded.
-    exit 0
 fi
 cd ..
 rm -rf Generated-CSharp
@@ -44,8 +43,12 @@ diff trparse.tree Gold/trparse.tree
 if [ "$?" != "0" ]
 then
     echo Test failed.
+    rm -rf Generated-CSharp
+    rm -rf interp *.json *.tree
     exit 1
-else
-    echo Test succeeded.
-    exit 0
 fi
+
+echo Test succeeded.
+rm -rf Generated-CSharp
+rm -rf interp *.json *.tree
+exit 0
