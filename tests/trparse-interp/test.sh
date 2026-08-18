@@ -10,7 +10,7 @@ where=`pwd`
 echo "$where"
 
 rm -rf Generated-CSharp
-rm -rf interp grammar.json *.tree
+rm -rf interp *.json *.tree
 
 echo Generate native CSharp parser and parse.
 dotnet trash gen -t CSharp
@@ -20,6 +20,7 @@ printf "1 + 2 + 3" | dotnet trash parse | dotnet trash tree > trparse.tree
 dos2unix trparse.tree
 dos2unix ../Gold/trparse.tree
 diff trparse.tree Gold/trparse.tree
+echo Diff against the golden file.
 if [ "$?" != "0" ]
 then
     echo Test failed.
@@ -36,7 +37,7 @@ dotnet trash parse Expression.g4 > grammar.json
 dotnet trash interp -o interp/ < grammar.json
 printf "1 + 2 + 3" | dotnet trash parse --lib interp/ | dotnet trash tree > trparse.tree
 
-# Diff against the golden file.
+echo Diff against the golden file.
 dos2unix trparse.tree
 dos2unix Gold/trparse.tree
 diff trparse.tree Gold/trparse.tree
