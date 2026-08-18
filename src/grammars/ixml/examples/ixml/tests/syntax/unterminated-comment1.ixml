@@ -1,0 +1,4 @@
+a: b. {This is an unterminated comment
+{with a nested comment}
+b: c.
+c: .

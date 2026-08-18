@@ -1,0 +1,45 @@
+<card name='VCARD' endname='VCARD'
+   ><property name='VERSION'
+      ><parameters
+      /><attribute value='3.0'
+   /></property
+   ><property name='N'
+      ><parameters
+      /><attribute value='Lastname'
+      /><attribute value='Surname'
+   /></property
+   ><property name='FN'
+      ><parameters
+      /><attribute value='Displayname'
+   /></property
+   ><property name='ORG'
+      ><parameters
+      /><attribute value='EVenX'
+   /></property
+   ><property name='URL'
+      ><parameters
+      /><attribute value='http://www.evenx.com/'
+   /></property
+   ><property name='EMAIL'
+      ><parameters
+      /><attribute value='info@evenx.com'
+   /></property
+   ><property name='TEL'
+      ><parameters
+         ><parameter name='TYPE' pvalue='voice,work,pref'
+      /></parameters
+      ><attribute value='+49 1234 56788'
+   /></property
+   ><property name='ADR'
+      ><parameters
+         ><parameter name='TYPE' pvalue='intl,work,postal,parcel'
+      /></parameters
+      ><attribute value=''
+      /><attribute value=''
+      /><attribute value='Wallstr. 1'
+      /><attribute value='Berlin'
+      /><attribute value=''
+      /><attribute value='12345'
+      /><attribute value='Germany'
+   /></property
+></card>

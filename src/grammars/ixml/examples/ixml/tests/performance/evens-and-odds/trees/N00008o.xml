@@ -1,0 +1,1 @@
+<fail xmlns:ixml="http://invisiblexml.org/NS" ixml:state="failed"><line>1</line><column>9</column><pos>9</pos><unexpected>o</unexpected><permitted>'a', 'e'</permitted></fail>

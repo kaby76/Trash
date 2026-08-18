@@ -1,0 +1,16 @@
+<!-- AMBIGUOUS
+     The input from line.pos 1.1 to 1.55 can be interpreted as 'date' in 2 different ways:
+     1: date[1.1:]:  bla[:1.23] day[:1.31] ","[:1.32] S[:1.33] number[:1.36] S[:1.37] month[:1.40] S[:1.41] year[:1.45] bla[:1.55] 
+     2: date[1.1:]:  bla[:1.33] number[:1.36] S[:1.37] month[:1.40] S[:1.41] year[:1.45] bla[:1.55] 
+-->
+
+<date ixml:state="ambiguous" xmlns:ixml="http://invisiblexml.org/NS"
+   >The conference starts <day
+      ><Thursday>Thursday</Thursday
+   ></day>, <number
+      ><cardinal>9th</cardinal
+   ></number
+   > <month
+      ><February>Feb</February
+   ></month
+   > <year>2017</year> at 10:00.</date>

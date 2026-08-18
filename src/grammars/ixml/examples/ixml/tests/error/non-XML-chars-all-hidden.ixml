@@ -1,0 +1,54 @@
+{ Grammar for experiments with non-XML characters in input.
+
+  In this grammar, non-XML characters are accepted in the
+  input but are not shown in the output.  It's used for
+  sanity-checking the inputs for tests of the companion
+  grammar in which not all control characters are hidden.
+
+  Since we need non-XML characters in the input, and the only 
+  non-XML characters we can make are in the C0 range, the 
+  input and output are likely to be challenging to check.
+  
+  You have been warned.
+}
+S: (show; hide; printable)*.
+
+NUL: -#00 { null }.
+SOH: -#01 { start of header }.
+STX: -#02 { start of text }.
+ETX: -#03 { end of text }.
+EOT: -#04 { end of transmission }.
+ENQ: -#05 { enquiry ('are you there?') }.
+ACK: -#06 { acknowledgement ('yes i am here') }.
+BEL: -#07 { bell }.
+BS:  -#08 { backspace }.
+HT:  -#09 { horizontal tab, an XML character, but 
+           not a prime, so it's in the 'hide' category }.
+LF:  -#0A { linefeed, also an XML character }.
+VT:  -#0B { vertical tabulation }.
+FF:  -#0C { form feed }.
+CR:  -#0D { carriage return (an XML character) }.
+SO:  -#0E { shift out (to alternate character set }.
+SI:  -#0F { shift in (from alternate character set }.
+DLE: -#10 { data link escape }.
+DC1: -#11 { device-control 1 / XON }.
+DC2: -#12 { device-control 2 }.
+DC3: -#13 { device-control 3 / XOFF }.
+DC4: -#14 { device-control 4 }.
+NAK: -#15 { negative acknowledgement }.
+SYN: -#16 { synchronous idle }.
+ETB: -#17 { end of transmission block / end of paragraph }.
+CAN: -#18 { cancel }.
+EM:  -#19 { end of medium / em-space / beginning of paragraph }.
+SUB: -#1A { substitute (often used for end of file) }.
+ESC: -#1B { escape }.
+FS:  -#1C { file separator }.
+GS:  -#1D { group separator }.
+RS:  -#1E { record separator }.
+US:  -#1F { unit separator }.
+
+show: STX; ETX; ENQ; BEL; VT; CR; DC1; DC3; ETB; GS; US.
+hide:  NUL; SOH; EOT; ACK; BS; HT; LF; FF; SO; SI; DLE; DC2;
+        DC4; NAK; SYN; CAN; EM; SUB; ESC; FS; RS.
+
+-printable: [#20 - #7E].

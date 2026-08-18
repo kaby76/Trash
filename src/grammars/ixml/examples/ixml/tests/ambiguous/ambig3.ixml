@@ -1,0 +1,3 @@
+a: "a", spaces, b.
+b: spaces, "b".
+spaces: " "*.

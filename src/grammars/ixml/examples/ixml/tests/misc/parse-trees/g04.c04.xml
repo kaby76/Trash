@@ -1,0 +1,21 @@
+<Sum
+  ><Sum
+    ><Product
+      ><Product
+        ><Factor
+          ><Number>42</Number
+        ></Factor
+      ></Product
+      ><POp>*</POp
+      ><Factor
+        ><Number>3</Number
+      ></Factor
+    ></Product
+  ></Sum
+  ><SOp>-</SOp
+  ><Product
+    ><Factor
+      ><Number>7</Number
+    ></Factor
+  ></Product
+></Sum>

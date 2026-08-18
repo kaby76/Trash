@@ -1,0 +1,827 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<grammar ns="https://github.com/invisibleXML/ixml/test-catalog" xmlns="http://relaxng.org/ns/structure/1.0" datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+  <!--
+    RNC grammar for test catalog.
+    
+    Revisions:
+    2023-03-13 : CMSMcQ : Add metadata for dependencies (and correct typos)
+    2022-05-31 : CMSMcQ : Make 'error' attribute obligatory,
+                          add 'wrong-error' as result.
+    2022-04-12 : CMSMcQ : Move base version of this to ixml repo
+    2022-04-11 : CMSMcQ : Add dynamic-error as expected result
+    2022-02-14 : CMSMcQ : Move metadata from attributes to elements
+    2022-02-06 : CMSMcQ : Add a quick and dirty report format.
+    2021-12-22 : CMSMcQ : Make 'created' optional on individual tests;
+                          notionally, let it be inherited from test set.
+    2021-11-11 : CMSMcQ : Revamp result to allow multiple results
+                          and include assert-not-a-grammar.
+                          Rewrite some comments.
+    2021-10-31 : CMSMcQ : Commit some changes:  @name on test-case,
+                          allow at most one grammar for each test
+                          set (grammars may be inherited from ancestor
+                          test sets).
+    2021-01-25 : CMSMcQ : Sketch this out by hand.
+    
+    To do:
+    - rewrite test-set to allow test cases only if a grammar is
+      specified on the test-set or some ancestor.
+    - allow description to be (p+ | xhtml:div+) HTML
+    - supply types for tokenized attributes?
+    
+  -->
+  <!--
+    Notational convention:  definitions starting in uppercase (e.g.
+    Metadata, Grammar-spec) are for content-model expressions.
+    Definitions starting in lowercase (e.g. test-catalog) are for
+    individual elements, usually with the same name as the element.
+    
+    (Exception:  element test-set has two definitions, test-set-0
+    and test-set-1.)
+  -->
+  <!--
+    The normal starting points are test-catalog and test-report.
+    But to allow individual test sets and tests to be reported
+    separately, we also allow lower-level result elements as the
+    start symbol.
+  -->
+  <start>
+    <choice>
+      <ref name="test-catalog"/>
+      <ref name="test-report"/>
+      <ref name="test-set-results"/>
+      <ref name="grammar-result"/>
+      <ref name="test-result"/>
+    </choice>
+  </start>
+  <!-- test-catalog, test-report -->
+  <!--
+    A test catalog is a collection of test sets, with common
+    metadata.
+  -->
+  <define name="test-catalog">
+    <element name="test-catalog">
+      <attribute name="name"/>
+      <attribute name="release-date">
+        <data type="date"/>
+      </attribute>
+      <ref name="external-atts"/>
+      <interleave>
+        <ref name="Metadata"/>
+        <zeroOrMore>
+          <choice>
+            <ref name="test-set-0"/>
+            <ref name="test-set-ref"/>
+          </choice>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <!--
+    A test report is a collection of test set reports, with common
+    metadata.
+  -->
+  <define name="test-report">
+    <element name="test-report">
+      <element name="metadata">
+        <interleave>
+          <group>
+            <element name="name">
+              <text/>
+            </element>
+            <element name="report-date">
+              <choice>
+                <data type="date"/>
+                <data type="dateTime"/>
+              </choice>
+            </element>
+            <element name="processor">
+              <text/>
+            </element>
+            <optional>
+              <element name="processor-version">
+                <text/>
+              </element>
+            </optional>
+            <element name="catalog-uri">
+              <text/>
+            </element>
+            <optional>
+              <element name="catalog-date">
+                <text/>
+              </element>
+            </optional>
+          </group>
+          <ref name="Metadata"/>
+        </interleave>
+      </element>
+      <ref name="external-atts"/>
+      <interleave>
+        <ref name="Metadata"/>
+        <zeroOrMore>
+          <ref name="test-set-results"/>
+        </zeroOrMore>
+      </interleave>
+    </element>
+  </define>
+  <!-- Metadata -->
+  <!--
+    At various levels we allow metadata: prose descriptions,
+    pointers to external documentation, or arbitrary XML
+    elements ('application-specific information'), and
+    miscellaneous technical details about dependencies of a test
+    (or, usually, of the test result) and for a test result the
+    environment within which a test was run.
+  -->
+  <define name="Metadata">
+    <zeroOrMore>
+      <choice>
+        <ref name="description"/>
+        <ref name="app-info"/>
+        <ref name="doc"/>
+        <ref name="dependencies"/>
+      </choice>
+    </zeroOrMore>
+  </define>
+  <!--
+    The 'description' element contains a prose description.
+    Say what you think needs saying.
+  -->
+  <define name="description">
+    <element name="description">
+      <ref name="external-atts"/>
+      <zeroOrMore>
+        <ref name="p"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <!--
+    The 'doc' element carries an 'href' attribute pointing to
+    relevant external documentation.
+  -->
+  <define name="doc">
+    <element name="doc">
+      <ref name="external-atts"/>
+      <attribute name="href">
+        <data type="anyURI"/>
+      </attribute>
+    </element>
+  </define>
+  <!--
+    The 'app-info' is an escape hatch which can contain any XML
+    at all.  It can be used for processor-specific information.
+    (Please document what you do!)
+  -->
+  <define name="app-info">
+    <element name="app-info">
+      <ref name="external-atts"/>
+      <zeroOrMore>
+        <ref name="any-element"/>
+      </zeroOrMore>
+    </element>
+  </define>
+  <!--
+    The 'options' element (in the test-catalog namespace, but
+    allowed only within app-info) is used to mark results which
+    depend (for a given processor) on the options with which the
+    processor was invoked.  Options are assumed describable with
+    name/value pairs encoded as namespace-qualified attributes.
+    Typically the attribute name names the option, and the value
+    says how to set it.  Examples and some discussion are in
+    ../tests/grammar-misc/test-catalog.xml
+  -->
+  <!--
+    If all the option/setting pairs on any options element in
+    the app-info element apply, then any of the results
+    specified in that app-info element is acceptable.
+  -->
+  <!--
+    So: for both the options elements and the results in the
+    app-info there is an implicit disjunction: if any of the
+    options elements applies, then any of the results is OK.
+    For the various name/value pairs on an options element,
+    there is an implicit conjunction: the options element
+    applies if ALL of the name/value pairs apply.
+  -->
+  <!--
+    N.B. The options element, and the method of handling options
+    it represents, is to be regarded as experimental.
+  -->
+  <define name="options">
+    <element name="options">
+      <ref name="external-atts"/>
+      <empty/>
+    </element>
+  </define>
+  <!--
+    The environment element works much the same way as the
+    options element; when results reported for a test depend on
+    the environment (e.g. which version of Java is used, or
+    which browser an in-browser processor uses, or ...), then
+    the relevant information should be given on an 'environment'
+    element wrapped in an 'app-info' element at the appropriate
+    level of the test results.  (Top level if applicable to all,
+    test set if applicable only to that test set, test result if
+    applicable to that result.)
+  -->
+  <!--
+    The difference between options and environment is that
+    options are assumed to be settable at parse time by whoever
+    calls the ixml processor, and the environment is less likely
+    to be settable that way.  In case of gray areas, explain
+    your usage in the test catalog.
+  -->
+  <define name="environment">
+    <element name="environment">
+      <ref name="external-atts"/>
+      <empty/>
+    </element>
+  </define>
+  <!--
+    The difference between options and environment is that
+    options are assumed to be settable at parse time by whoever
+    calls the ixml processor, and the environment is less likely
+    to be settable that way.  In case of gray areas, explain
+    your usage in the test catalog.
+  -->
+  <!--
+    The 'dependencies' element identifies conditions that must
+    hold for the results given for a test to hold.  Like
+    'options' and 'environment', it allows an arbitrary set of
+    name/value pairs (namespace-qualified attributes).  If all
+    of them apply, the test result given is applicable.
+  -->
+  <!--
+    Some dependencies are standardized:  any processor must
+    conform to some version of Unicode but we don't specify which,
+    so the processor must specify.  Test results must be labeled
+    with the appropriate Unicode version(s).
+  -->
+  <define name="dependencies">
+    <element name="dependencies">
+      <attribute name="Unicode-version"/>
+      <ref name="external-atts"/>
+      <empty/>
+    </element>
+  </define>
+  <!--
+    The differences are:
+    options - implementation-defined, typically settable by caller
+              at parse time.  Wrap in app-info to label results
+              (often non-standard) which depend on how the
+              processor was invoked.
+    environment - relevant but not under implementation control.
+              Wrap in app-info, use to label results which depend
+              on the environment within which the processor is
+              running (or within which a test result was obtained).
+    dependencies - used to label test cases whose results 
+              depend on which version of another spec is applicable.
+  -->
+  <!-- test-set, test-set-results -->
+  <!--
+    A test set is a collection of tests (or possibly subordinate
+    test sets, or both) with common metadata and a common
+    grammar.
+  -->
+  <!-- Test cases are allowed only after a grammar is specified. -->
+  <!--
+    We keep track of whether an ancestor has specified a grammar
+    by having two nonterminals for test sets:  test-set-0 is used
+    when no ancestor has specified a grammar, test-set-1 when
+    at least one grammar has been specified.
+  -->
+  <!--
+    If no ancestor has specified a grammar, test cases are allowed
+    in this test set only if this test set does specify a grammar.
+    Use test-set-0 or -1 to pass the news along.
+  -->
+  <define name="test-set-0">
+    <element name="test-set">
+      <attribute name="name"/>
+      <ref name="external-atts"/>
+      <interleave>
+        <ref name="Metadata"/>
+        <group>
+          <ref name="History"/>
+          <choice>
+            <zeroOrMore>
+              <choice>
+                <ref name="test-set-0"/>
+                <ref name="test-set-ref"/>
+              </choice>
+            </zeroOrMore>
+            <group>
+              <ref name="Grammar-spec"/>
+              <zeroOrMore>
+                <choice>
+                  <ref name="test-set-1"/>
+                  <ref name="test-set-ref"/>
+                  <ref name="test-case"/>
+                </choice>
+              </zeroOrMore>
+            </group>
+          </choice>
+        </group>
+      </interleave>
+    </element>
+  </define>
+  <!--
+    If an ancestor has specified a grammar, test cases are allowed
+    in this test set even if there is no grammar at this level.
+  -->
+  <define name="test-set-1">
+    <element name="test-set">
+      <attribute name="name"/>
+      <ref name="external-atts"/>
+      <interleave>
+        <ref name="Metadata"/>
+        <group>
+          <ref name="History"/>
+          <optional>
+            <ref name="Grammar-spec"/>
+          </optional>
+          <zeroOrMore>
+            <choice>
+              <ref name="test-set-1"/>
+              <ref name="test-set-ref"/>
+              <ref name="test-case"/>
+            </choice>
+          </zeroOrMore>
+        </group>
+      </interleave>
+    </element>
+  </define>
+  <define name="test-set-results">
+    <element name="test-set-results">
+      <attribute name="name"/>
+      <ref name="external-atts"/>
+      <interleave>
+        <ref name="Metadata"/>
+        <group>
+          <optional>
+            <ref name="Grammar-results"/>
+          </optional>
+          <zeroOrMore>
+            <choice>
+              <ref name="test-set-results"/>
+              <ref name="test-result"/>
+            </choice>
+          </zeroOrMore>
+        </group>
+      </interleave>
+    </element>
+  </define>
+  <!--
+    Grammars can be in invisible XML or in visible XML.
+    They can be inline or external.  They can be marked
+    as a grammar test or not.
+  -->
+  <define name="Grammar-data">
+    <choice>
+      <ref name="ixml-grammar"/>
+      <ref name="vxml-grammar"/>
+      <ref name="ixml-grammar-ref"/>
+      <ref name="vxml-grammar-ref"/>
+    </choice>
+  </define>
+  <define name="Grammar-spec">
+    <ref name="Grammar-data"/>
+    <optional>
+      <ref name="grammar-test"/>
+    </optional>
+  </define>
+  <!--
+    In the results file, we may omit the grammar, or include
+    it, possibly both reproducing the reference and giving
+    the grammar inline. 
+  -->
+  <define name="Grammar-results">
+    <zeroOrMore>
+      <ref name="Grammar-data"/>
+    </zeroOrMore>
+    <zeroOrMore>
+      <ref name="grammar-result"/>
+    </zeroOrMore>
+  </define>
+  <!--
+    Q. Why is the grammar optional?
+    A. Because in a nested test set we may want to inherit the
+       grammar from the parent test set.  In a top-level test
+       set with no direct test-case children, we may just be
+       pointing to multiple test sets which each provide their
+       own grammar.  By the time we reach a test case we must
+       have at least one grammar, but we don't need on at every
+       level.
+    Q. Why can't there be multiple grammars?
+    A. First, it's error prone:  it would work only if all of them
+       were guaranteed equivalent.  We don't want to have to check
+       that, and we don't want the mess that will result if it
+       turns out not to be true.  Second, it complicates reporting
+       unnecessarily.  It's simpler when one test case is one
+       grammar + input + result triple.
+  -->
+  <define name="test-set-ref">
+    <element name="test-set-ref">
+      <ref name="external-atts"/>
+      <attribute name="href">
+        <data type="anyURI"/>
+      </attribute>
+    </element>
+  </define>
+  <!-- ixml-grammar:  grammar in invisible-XML form -->
+  <define name="ixml-grammar">
+    <element name="ixml-grammar">
+      <ref name="external-atts"/>
+      <text/>
+    </element>
+  </define>
+  <define name="ixml-grammar-ref">
+    <element name="ixml-grammar-ref">
+      <ref name="external-atts"/>
+      <attribute name="href">
+        <data type="anyURI"/>
+      </attribute>
+    </element>
+  </define>
+  <!--
+    vxml-grammar:  grammar in visible-XML form (either a parsed
+    ixml grammar, translated into XML, or something created in
+    XML)
+    
+    N.B. It is tempting to embed a schema for ixml grammars here
+    to enforce the correct XML form.  But we do not require a
+    legal ixml grammar, because it may be a negative test case.
+  -->
+  <define name="vxml-grammar">
+    <element name="vxml-grammar">
+      <ref name="external-atts"/>
+      <ref name="any-element"/>
+    </element>
+  </define>
+  <define name="vxml-grammar-ref">
+    <element name="vxml-grammar-ref">
+      <ref name="external-atts"/>
+      <attribute name="href">
+        <data type="anyURI"/>
+      </attribute>
+    </element>
+  </define>
+  <!--
+    grammar-test:  signals that this grammar should be checked
+    and either accepted or declined as a grammar.
+  -->
+  <define name="grammar-test">
+    <element name="grammar-test">
+      <ref name="external-atts"/>
+      <interleave>
+        <ref name="Metadata"/>
+        <group>
+          <optional>
+            <ref name="History"/>
+          </optional>
+          <ref name="result"/>
+        </group>
+      </interleave>
+    </element>
+  </define>
+  <define name="grammar-result">
+    <element name="grammar-result">
+      <attribute name="result">
+        <ref name="result-type"/>
+      </attribute>
+      <ref name="external-atts"/>
+      <interleave>
+        <ref name="Metadata"/>
+        <optional>
+          <ref name="result-report"/>
+        </optional>
+      </interleave>
+    </element>
+  </define>
+  <!-- test-case -->
+  <!--
+    test-case:  describes one test case, with metadata, history,
+    and expected result.
+  -->
+  <define name="test-case">
+    <element name="test-case">
+      <attribute name="name"/>
+      <ref name="external-atts"/>
+      <interleave>
+        <ref name="Metadata"/>
+        <group>
+          <optional>
+            <ref name="History"/>
+          </optional>
+          <ref name="Test-string"/>
+          <ref name="result"/>
+        </group>
+      </interleave>
+    </element>
+  </define>
+  <define name="test-result">
+    <element name="test-result">
+      <attribute name="name"/>
+      <attribute name="result">
+        <ref name="result-type"/>
+      </attribute>
+      <ref name="external-atts"/>
+      <interleave>
+        <ref name="Metadata"/>
+        <group>
+          <zeroOrMore>
+            <ref name="Grammar-data"/>
+          </zeroOrMore>
+          <zeroOrMore>
+            <ref name="Test-string"/>
+          </zeroOrMore>
+          <optional>
+            <ref name="result-report"/>
+          </optional>
+        </group>
+      </interleave>
+    </element>
+  </define>
+  <define name="result-type">
+    <choice>
+      <value>pass</value>
+      <!-- results are as expected -->
+      <value>fail</value>
+      <!-- results not as expected -->
+      <value>wrong-error</value>
+      <!-- right overall result, wrong error code -->
+      <value>wrong-state</value>
+      <!-- right overall result, wrong ixml:state value(s) -->
+      <value>not-run</value>
+      <value>other</value>
+    </choice>
+  </define>
+  <!-- Test-string:  in-line or external -->
+  <define name="Test-string">
+    <choice>
+      <ref name="test-string"/>
+      <ref name="test-string-ref"/>
+    </choice>
+  </define>
+  <define name="test-string">
+    <element name="test-string">
+      <ref name="external-atts"/>
+      <text/>
+    </element>
+  </define>
+  <define name="test-string-ref">
+    <element name="test-string-ref">
+      <ref name="external-atts"/>
+      <attribute name="href">
+        <data type="anyURI"/>
+      </attribute>
+    </element>
+  </define>
+  <!-- result -->
+  <!--
+    result: specifies the expected result of a test;
+    contains an assertion of some kind.
+  -->
+  <define name="result">
+    <element name="result">
+      <ref name="external-atts"/>
+      <ref name="Assertion"/>
+    </element>
+  </define>
+  <define name="result-report">
+    <element name="result">
+      <ref name="external-atts"/>
+      <optional>
+        <ref name="Assertion"/>
+      </optional>
+      <optional>
+        <ref name="Observation"/>
+      </optional>
+    </element>
+  </define>
+  <!-- Test assertions -->
+  <!--
+    Several kinds of result are possible.
+    
+    - In the common case we will have one expected XML result.  We
+      specify it with assert-xml or assert-xml-ref (inline or
+      external).
+    
+    - For ambiguous sentences, we may and should specify several 
+      XML results, any of which is acceptable.  So the XML
+      assertions can repeat, with an implicit OR as their meaning.
+    
+    - In the case of infinite ambiguity, we can and should specify
+      a finite subset of the expected results, which we add to as
+      needed.
+    
+    - If the input is not be a sentence in the language defined
+      by the grammar, we use assert-not-a-sentence.
+    
+    - If the grammar specified is not a conforming ixml grammar, 
+      then we use assert-not-a-grammar.
+    
+    - If the particular grammar + input pair would produce 
+      ill-formed output if the normal rules were followed, then
+      we use assert-dynamic-error.
+    
+    Logically speaking, in the case of a grammar-test, there is no
+    useful distinction between assert-not-a-sentence and
+    assert-not-a-grammar.  Casuists can argue over which makes
+    more sense, but in practice they should be treated as
+    equivalent.  They are usefully different only for normal
+    test cases.
+    
+    Since dynamic errors are allowed to be caught statically,
+    some processors may return assert-not-a-grammar when the test
+    catalog expects assert-dynamic-error.
+    
+    Errors in the grammar and dynamic errors may be associated
+    with error codes.  These are now required.
+  -->
+  <define name="Assertion">
+    <choice>
+      <oneOrMore>
+        <choice>
+          <ref name="assert-xml-ref"/>
+          <ref name="assert-xml"/>
+        </choice>
+      </oneOrMore>
+      <ref name="assert-not-a-sentence"/>
+      <ref name="assert-not-a-grammar"/>
+      <ref name="assert-dynamic-error"/>
+    </choice>
+  </define>
+  <define name="Error-Code">
+    <attribute name="error-code"/>
+  </define>
+  <define name="assert-xml-ref">
+    <element name="assert-xml-ref">
+      <ref name="external-atts"/>
+      <attribute name="href">
+        <data type="anyURI"/>
+      </attribute>
+    </element>
+  </define>
+  <define name="assert-xml">
+    <element name="assert-xml">
+      <ref name="external-atts"/>
+      <oneOrMore>
+        <ref name="any-element"/>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="assert-not-a-sentence">
+    <element name="assert-not-a-sentence">
+      <ref name="external-atts"/>
+      <ref name="Metadata"/>
+    </element>
+  </define>
+  <define name="assert-not-a-grammar">
+    <element name="assert-not-a-grammar">
+      <ref name="Error-Code"/>
+      <ref name="external-atts"/>
+      <ref name="Metadata"/>
+    </element>
+  </define>
+  <define name="assert-dynamic-error">
+    <element name="assert-dynamic-error">
+      <ref name="Error-Code"/>
+      <ref name="external-atts"/>
+      <ref name="Metadata"/>
+    </element>
+  </define>
+  <define name="Observation">
+    <choice>
+      <oneOrMore>
+        <choice>
+          <ref name="reported-xml-ref"/>
+          <ref name="reported-xml"/>
+        </choice>
+      </oneOrMore>
+      <ref name="reported-not-a-sentence"/>
+      <ref name="reported-not-a-grammar"/>
+      <ref name="reported-dynamic-error"/>
+    </choice>
+  </define>
+  <define name="reported-xml-ref">
+    <element name="reported-xml-ref">
+      <ref name="external-atts"/>
+      <attribute name="href">
+        <data type="anyURI"/>
+      </attribute>
+    </element>
+  </define>
+  <define name="reported-xml">
+    <element name="reported-xml">
+      <ref name="external-atts"/>
+      <oneOrMore>
+        <ref name="any-element"/>
+      </oneOrMore>
+    </element>
+  </define>
+  <define name="reported-not-a-sentence">
+    <element name="reported-not-a-sentence">
+      <ref name="external-atts"/>
+      <ref name="Metadata"/>
+    </element>
+  </define>
+  <define name="reported-not-a-grammar">
+    <element name="reported-not-a-grammar">
+      <ref name="Error-Code"/>
+      <ref name="external-atts"/>
+      <ref name="Metadata"/>
+    </element>
+  </define>
+  <define name="reported-dynamic-error">
+    <element name="reported-dynamic-error">
+      <ref name="Error-Code"/>
+      <ref name="external-atts"/>
+      <ref name="Metadata"/>
+    </element>
+  </define>
+  <!-- Common constructs -->
+  <!-- History:  creation and modification history -->
+  <define name="History">
+    <ref name="created"/>
+    <zeroOrMore>
+      <ref name="modified"/>
+    </zeroOrMore>
+  </define>
+  <define name="who-when">
+    <attribute name="by"/>
+    <attribute name="on">
+      <data type="date"/>
+    </attribute>
+  </define>
+  <define name="created">
+    <element name="created">
+      <ref name="who-when"/>
+    </element>
+  </define>
+  <define name="modified">
+    <element name="modified">
+      <ref name="who-when"/>
+      <attribute name="change"/>
+    </element>
+  </define>
+  <!-- Elements for simple prose. -->
+  <define name="p">
+    <element name="p">
+      <ref name="phrases"/>
+    </element>
+  </define>
+  <define name="phrases">
+    <zeroOrMore>
+      <choice>
+        <text/>
+        <ref name="emph"/>
+        <ref name="code"/>
+      </choice>
+    </zeroOrMore>
+  </define>
+  <define name="emph">
+    <element name="emph">
+      <ref name="phrases"/>
+    </element>
+  </define>
+  <define name="code">
+    <element name="code">
+      <text/>
+    </element>
+  </define>
+  <!-- Arbitrary XML -->
+  <define name="anything">
+    <zeroOrMore>
+      <choice>
+        <ref name="any-element"/>
+        <ref name="any-attribute"/>
+        <text/>
+      </choice>
+    </zeroOrMore>
+  </define>
+  <define name="any-element">
+    <element>
+      <anyName/>
+      <ref name="anything"/>
+    </element>
+  </define>
+  <define name="any-attribute">
+    <attribute>
+      <anyName/>
+    </attribute>
+  </define>
+  <define name="external-atts">
+    <zeroOrMore>
+      <ref name="nsq-att"/>
+    </zeroOrMore>
+  </define>
+  <define name="nsq-att">
+    <attribute>
+      <anyName>
+        <except>
+          <nsName ns=""/>
+        </except>
+      </anyName>
+    </attribute>
+  </define>
+</grammar>

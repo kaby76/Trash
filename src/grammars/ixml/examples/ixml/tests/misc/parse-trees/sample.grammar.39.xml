@@ -1,0 +1,169 @@
+<ixml
+  ><rule name="syntax"
+    ><alt
+      ><option
+        ><nonterminal name="S"
+      /></option
+      ><repeat0
+        ><nonterminal name="production"
+        /><sep
+          ><nonterminal name="S"
+        /></sep
+      ></repeat0
+      ><option
+        ><nonterminal name="S"
+      /></option
+    ></alt
+  ></rule
+  ><rule name="production"
+    ><alt
+      ><nonterminal name="identifier"
+      /><option
+        ><nonterminal name="S"
+      /></option
+      ><literal string="="
+      /><option
+        ><nonterminal name="S"
+      /></option
+      ><nonterminal name="expression"
+      /><option
+        ><nonterminal name="S"
+      /></option
+      ><literal string="."
+    /></alt
+  ></rule
+  ><rule name="expression"
+    ><alt
+      ><repeat1
+        ><nonterminal name="term"
+        /><sep
+          ><alts
+            ><alt
+              ><option
+                ><nonterminal name="S"
+              /></option
+              ><literal tmark="-" string="|"
+              /><option
+                ><nonterminal name="S"
+              /></option
+            ></alt
+          ></alts
+        ></sep
+      ></repeat1
+    ></alt
+  ></rule
+  ><rule name="term"
+    ><alt
+      ><repeat1
+        ><nonterminal name="factor"
+        /><sep
+          ><nonterminal name="S"
+        /></sep
+      ></repeat1
+    ></alt
+  ></rule
+  ><rule name="factor"
+    ><alt
+      ><nonterminal name="identifier"
+    /></alt
+    ><alt
+      ><nonterminal name="string"
+    /></alt
+    ><alt
+      ><literal string="("
+      /><option
+        ><nonterminal name="S"
+      /></option
+      ><nonterminal name="expression"
+      /><option
+        ><nonterminal name="S"
+      /></option
+      ><literal string=")"
+    /></alt
+    ><alt
+      ><literal string="["
+      /><option
+        ><nonterminal name="S"
+      /></option
+      ><nonterminal name="expression"
+      /><option
+        ><nonterminal name="S"
+      /></option
+      ><literal string="]"
+    /></alt
+    ><alt
+      ><literal string="{"
+      /><option
+        ><nonterminal name="S"
+      /></option
+      ><nonterminal name="expression"
+      /><option
+        ><nonterminal name="S"
+      /></option
+      ><literal string="}"
+    /></alt
+  ></rule
+  ><rule name="identifier"
+    ><alt
+      ><nonterminal name="letter"
+      /><repeat0
+        ><alts
+          ><alt
+            ><nonterminal name="letter"
+          /></alt
+          ><alt
+            ><nonterminal name="digit"
+          /></alt
+        ></alts
+      ></repeat0
+    ></alt
+  ></rule
+  ><rule name="string"
+    ><alt
+      ><literal string="&quot;"
+      /><repeat0
+        ><nonterminal name="character"
+      /></repeat0
+      ><literal string="&quot;"
+    /></alt
+  ></rule
+  ><rule mark="-" name="letter"
+    ><alt
+      ><inclusion
+        ><member from="A" to="Z"
+        /><member from="a" to="z"
+      /></inclusion
+    ></alt
+  ></rule
+  ><rule mark="-" name="digit"
+    ><alt
+      ><inclusion
+        ><member from="0" to="9"
+      /></inclusion
+    ></alt
+  ></rule
+  ><comment> Wirth does not define character. </comment
+  ><rule mark="-" name="character"
+    ><alt
+      ><exclusion
+        ><member string="&quot;"
+      /></exclusion
+    ></alt
+  ></rule
+  ><comment> Wirth does not define empty-set symbol. </comment
+  ><rule name="nil"
+    ><alt
+  /></rule
+  ><rule mark="-" name="S"
+    ><alt
+      ><repeat1
+        ><inclusion tmark="-"
+          ><member string=" "
+          /><member hex="09"
+          /><member hex="0A"
+          /><member hex="0D"
+        /></inclusion
+      ></repeat1
+    ></alt
+  ></rule
+></ixml>

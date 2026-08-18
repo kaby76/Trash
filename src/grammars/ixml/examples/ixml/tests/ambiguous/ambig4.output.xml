@@ -1,0 +1,17 @@
+<!-- AMBIGUOUS
+     The input from line.pos 1.1 to 3.1 can be interpreted as 'property+' in 2 different ways:
+     1: property+[1.1:]:  property[:2.1] property+[:3.1] 
+     2: property+[1.1:]:  property[:3.1] 
+-->
+<properties ixml:state="ambiguous" xmlns:ixml="http://invisiblexml.org/NS"
+   ><property
+      ><name>red</name
+      >=<value>#f00</value
+      ><eol
+   /></property
+   ><property
+      ><name>green</name
+      >=<value>#0f0</value
+      ><eol
+   /></property
+></properties>

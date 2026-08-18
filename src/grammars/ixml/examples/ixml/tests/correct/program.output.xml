@@ -1,0 +1,25 @@
+
+<program
+   ><block
+      >{<statement
+         ><assignment
+            ><variable
+               ><identifier>a</identifier
+            ></variable
+            >=<expression
+               ><number>0</number
+            ></expression
+         ></assignment
+      ></statement
+      >;<statement
+         ><call
+            ><identifier>f</identifier
+            >(<parameter
+               ><identifier>a</identifier
+            ></parameter
+            >, <parameter
+               ><number>0</number
+            ></parameter>)</call
+      ></statement
+      >;<statement/>}</block
+></program>

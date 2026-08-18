@@ -1,0 +1,3 @@
+input: line++lf.
+line: ~[#a | #d]*.
+lf: -#a | -#d, -#a.

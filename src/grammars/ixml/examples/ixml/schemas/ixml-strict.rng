@@ -1,0 +1,10 @@
+<rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0">
+  <rng:include href="ixml.rng">
+    <rng:define name="extension-attributes">
+      <rng:empty/>
+    </rng:define>
+    <rng:define name="extension-elements">
+      <rng:empty/>
+    </rng:define>
+  </rng:include>
+</rng:grammar>

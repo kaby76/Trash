@@ -1,0 +1,4 @@
+a: b, c.
+b: c, d.
+c: ["a"-"dd"]. {Must be length 1} 
+d: .

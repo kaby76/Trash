@@ -18,5 +18,6 @@ namespace Trash
 
 	[Option("version", Required = false)]
 	public string Version { get; set; } = "2.4.0";
+
     }
 }

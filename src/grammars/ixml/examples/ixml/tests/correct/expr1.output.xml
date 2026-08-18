@@ -1,0 +1,19 @@
+<expression plusop='+' plusop='+' plusop='+'
+   ><term
+      ><number value='1'
+   /></term
+   ><term
+      ><number value='2'
+   /></term
+   ><term mulop='*'
+      ><factor
+         ><number value='3'
+      /></factor
+      ><factor
+         ><number value='4'
+      /></factor
+   ></term
+   ><term
+      ><number value='5'
+   /></term
+></expression>

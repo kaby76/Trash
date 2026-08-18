@@ -1,0 +1,1 @@
+<ixml><comment> a comment </comment><rule name="S"><comment> another comment </comment><alt><literal string="a"><comment> and another </comment></literal></alt></rule><comment> a final comment </comment></ixml>

@@ -1,0 +1,24 @@
+<ixml>::= <S> <rules>
+-<rules>::= <rule> | <rule> <rules>
+<rule>::= <mark> <name> "::=" <S> <def> |
+      <name> "::=" <S> <def>
+<def>::= <alts>
+-<alts>::= <alt> | <alt> "|" <S> <alts>
+<alt>::= <terms> | <empty>
+-<terms>::= <term> | <term> <S> <terms>
+<empty>::= 
+<term>::= <mark> <name> | <name> | <string> | <range>
+@<name>::= "<" <letters> ">" <S>
+@<mark>::= "@" <S> | "^" <S> | "-" <S>
+<letters>::= <letter> <more-letters>
+<letter>::= ["a"-"z"] | ["A"-"Z"] | ["0"-"9"]
+<more-letters>::= <letter> <more-letters> | "-" <more-letters> | <empty>
+@<string>::= """" <chars> """" <S>
+<chars>::= <char> <chars> | <char>
+<char>::= [" "-"!"] | ["#"-"~"] | """""" {all characters, quotes must be doubled}
+<range>::= "[" <S>  <character> <S> "-" <S> <character> <S> "]" <S>
+-<character>::= """" <char> """" | """" """" """" """"
+-<S>::= " " <S> | <comment> <S> | 
+<comment>::= "{" <schars> "}"
+-<schars>::= <schar> <schars> | 
+-<schar>::= [" "-"|"] | "~" {Everything except: }

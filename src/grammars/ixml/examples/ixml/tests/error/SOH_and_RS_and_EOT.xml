@@ -1,0 +1,1 @@
+<S><hide><SOH/></hide>This file begins with a start-of-header (SOH, ^A) character,<hide><LF/></hide>followed by some lines of text,<hide><LF/></hide>a record-separacter character (RS, ^^, right ><hide><RS/></hide>&lt; here),<hide><LF/></hide>and then more text<hide><LF/></hide>and finally at the end an end-of-transmission (EOT, ^D) character.<hide><EOT/></hide></S>

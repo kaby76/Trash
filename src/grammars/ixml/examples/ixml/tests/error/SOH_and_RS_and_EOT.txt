@@ -1,0 +1,5 @@
+This file begins with a start-of-header (SOH, ^A) character,
+followed by some lines of text,
+a record-separacter character (RS, ^^, right >< here),
+and then more text
+and finally at the end an end-of-transmission (EOT, ^D) character.

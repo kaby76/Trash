@@ -1,0 +1,1 @@
+<ixml><rule name="S"><alt><literal string="double"/></alt><alt><literal string="single"/></alt><alt><literal hex="41"/></alt></rule></ixml>

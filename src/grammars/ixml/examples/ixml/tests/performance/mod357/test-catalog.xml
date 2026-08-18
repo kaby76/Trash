@@ -1,0 +1,157 @@
+<test-catalog xmlns="https://github.com/invisibleXML/ixml/test-catalog"
+		 xmlns:ixml="http://invisiblexml.org/NS"
+		 name="mod357"
+		 release-date="2023-11-20"
+		 >
+  <description>
+    <p>A grammar that recognizes whitespace-delimited sequences of
+    decimal numerals denoting positive integers divisible by 3,
+    5, or 7.  If any integer is divisible by more than one of these,
+    the sentence is ambiguous.</p>
+    <p>The goal is to try to measure the cost of increased input
+    size.</p>
+    <p>The three sub-grammars are each regular and deterministic; each
+    requires one parse-tree node per digit of the number.</p>
+    
+    <p>The inputs grow by powers of two.  For individual processors it
+    may be helpful to add additional tests in particular size ranges
+    to get more detailed information, and to omit tests that take too
+    long to run.</p>
+    <p>The XQuery code used to generate the test input is included in
+    the misc/ directory to simplify the task of creating inputs of
+    different sizes.</p>
+  </description>  
+
+  <test-set name="mod357">
+    <created on="2023-11-20" by="cmsmcq"/>
+    <ixml-grammar-ref href="mod.ixml"/>
+    <grammar-test>
+      <result><assert-xml-ref href="vxml/mod.357.xml"/></result>
+    </grammar-test>
+
+    <test-case name="mod357-0000002">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0000002.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0000002.xml"/></result>
+    </test-case>
+
+    <test-case name="mod357-0000004">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0000004.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0000004.xml"/></result>
+    </test-case>
+
+    <test-case name="mod357-0000008">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0000008.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0000008.xml"/></result>
+    </test-case>
+    
+    <test-case name="mod357-0000016">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0000016.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0000016.xml"/></result>
+    </test-case>
+    
+    <test-case name="mod357-0000032">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0000032.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0000032.xml"/></result>
+    </test-case>
+    
+    <test-case name="mod357-0000064">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0000064.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0000064.xml"/></result>
+    </test-case>
+    
+    <test-case name="mod357-0000128">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0000128.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0000128.xml"/></result>
+    </test-case>
+    
+    <test-case name="mod357-0000256">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0000256.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0000256.xml"/></result>
+    </test-case>
+    
+    <test-case name="mod357-0000512">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0000512.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0000512.xml"/></result>
+    </test-case>
+    
+    <test-case name="mod357-0001024">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0001024.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0001024.xml"/></result>
+    </test-case>
+    
+    <test-case name="mod357-0002048">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0002048.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0002048.xml"/></result>
+    </test-case>
+    
+    <test-case name="mod357-0004096">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0004096.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0004096.xml"/></result>
+    </test-case>
+    
+    <test-case name="mod357-0008192">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0008192.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0008192.xml"/></result>
+    </test-case>
+    
+    <test-case name="mod357-0016384">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0016384.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0016384.xml"/></result>
+    </test-case>
+    
+    <test-case name="mod357-0032768">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0032768.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0032768.xml"/></result>
+    </test-case>
+    
+    <test-case name="mod357-0065536">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0065536.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0065536.xml"/></result>
+    </test-case>
+
+    <!-- Let's comment out the following; they are too big for
+         practical use -->
+    <!--
+    <test-case name="mod357-0131072">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0131072.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0131072.xml"/></result>
+    </test-case>
+    
+    <test-case name="mod357-0262144">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0262144.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0262144.xml"/></result>
+    </test-case>
+    
+    <test-case name="mod357-0524288">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.0524288.txt"/>
+      <result><assert-xml-ref href="trees/numbers.0524288.xml"/></result>
+    </test-case>
+    
+    <test-case name="mod357-1048576">
+      <created on="2023-11-20" by="cmsmcq"/>
+      <test-string-ref href="input/numbers.1048576.txt"/>
+      <result><assert-xml-ref href="trees/numbers.1048576.xml"/></result>
+    </test-case>
+    -->
+  </test-set>
+  
+</test-catalog>

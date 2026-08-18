@@ -1,0 +1,327 @@
+<test-catalog xmlns="https://github.com/invisibleXML/ixml/test-catalog"
+              release-date="2022-06-01"
+	      name="Ambiguous inputs">
+
+  <description>
+    <p>Tests provided by Steven Pemberton in December 2021, with
+    corrections of 21 December. Reorganized by Norm Tovey-Walsh,
+    February 2022.</p>
+  </description>
+
+  <test-set name="ambig">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="ambig.ixml"/>
+    <test-case name="ambig">
+      <created by="SP" on="2021-12-16"/>
+      <modified by="MSM" on="2021-12-30"
+		change="remove trailing whitespace from input"/>
+      <modified by="MSM" on="2022-01-01"
+		change="remove nonsignificant whitespace from
+			expected result"/>
+      <modified by="MSM" on="2022-01-01"
+		change="added alternate expected result"/>
+      <test-string-ref href="ambig.inp"/>
+      <result>
+	<assert-xml-ref href="ambig.output.xml"/>
+	<assert-xml-ref href="ambig.alt.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>
+
+
+  <test-set name="ambig2">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="ambig2.ixml"/>
+    <test-case name="ambig2">
+      <created by="SP" on="2021-12-16"/>
+      <modified by="MSM" on="2021-12-30"
+		change="add description and second result"/>
+      <description>
+	<p>The grammar is <code>a: "a"* ; "b"*.</code>
+	and the input is the empty string.</p>
+	<p>If the grammar is rewritten to BNF, it
+	will clearly have two parse trees against
+	the BNF grammar, but it does not have
+	two parse trees against the EBNF grammar.</p>
+	<p>So MSM has added an alternative result
+	which does <emph>not</emph> mark the
+	result ambiguous.</p>
+	<p>What the spec should say will require
+	careful discussion.</p>
+      </description>
+      <test-string-ref href="ambig2.inp"/>
+      <result>
+	<assert-xml-ref href="ambig2.output.xml"/>
+	<assert-xml-ref href="ambig2.alt.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>
+
+
+  <test-set name="ambig3">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="ambig3.ixml"/>
+    <test-case name="ambig3">
+      <created by="SP" on="2021-12-16"/>
+      <modified by="MSM" on="2021-12-30"
+		change="remove trailing whitespace from input"/>
+      <modified by="MSM" on="2022-01-01"
+		change="remove nonsignificant whitespace from
+			expected result"/>
+      <modified by="MSM" on="2022-01-01"
+		change="added the other three parses as
+			expected results"/>
+      <test-string-ref href="ambig3.inp"/>
+      <result>
+	<assert-xml-ref href="ambig3.output.xml"/>
+	<assert-xml-ref href="ambig3.alt.output.xml"/>
+	<assert-xml-ref href="ambig3.alt-2.output.xml"/>
+	<assert-xml-ref href="ambig3.alt-3.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>
+
+
+  <test-set name="ambig4">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="ambig4.ixml"/>
+    <test-case name="ambig4">
+      <created by="SP" on="2021-12-16"/>
+      <modified by="MSM" on="2021-12-30"
+		change="trim ungrammatical trailing LF from input"/>
+      <modified by="MSM" on="2022-01-01"
+		change="remove nonsignificant whitespace from
+			expected result"/>
+      <modified by="MSM" on="2022-01-01"
+		change="add alternate expected result"/>
+      <test-string-ref href="ambig4.inp"/>
+      <result>
+	<assert-xml-ref href="ambig4.output.xml"/>
+	<assert-xml-ref href="ambig4.alt.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>
+
+
+  <test-set name="ambig5">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="ambig5.ixml"/>
+    <test-case name="ambig5">
+      <created by="SP" on="2021-12-16"/>
+      <modified by="MSM" on="2021-12-30"
+		change="remove trailing whitespace from input"/>
+      <modified by="MSM" on="2022-01-01"
+		change="remove nonsignificant whitespace from
+			expected result"/>
+      <modified by="MSM" on="2022-01-01"
+		change="added second parse as expected result"/>
+      <test-string-ref href="ambig5.inp"/>
+      <result>
+	<assert-xml-ref href="ambig5.output.xml"/>
+	<assert-xml-ref href="ambig5.alt.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>
+
+
+  <test-set name="ambig6">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="ambig6.ixml"/>
+    <test-case name="ambig6">
+      <created by="SP" on="2021-12-16"/>
+      <modified by="MSM" on="2022-01-01"
+		change="remove trailing whitespace from input"/>
+      <modified by="MSM" on="2022-01-01"
+		change="remove nonsignificant whitespace from expected result"/>
+      <modified by="MSM" on="2022-01-01"
+		change="added second parse as expected result"/>
+      <test-string-ref href="ambig6.inp"/>
+      <result>
+	<assert-xml-ref href="ambig6.output.xml"/>
+	<assert-xml-ref href="ambig6.alt.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>
+
+
+  <test-set name="ambig7">
+    <created by="SP" on="2021-12-21"/>
+    <ixml-grammar-ref href="ambig7.ixml"/>
+    <test-case name="ambig6">
+      <created by="SP" on="2021-12-21"/>
+      <modified by="MSM" on="2021-12-30"
+		change="Supplied expected outputs"/>
+      <modified by="MSM" on="2022-01-01"
+		change="Correct second expected output"/>
+      <description>
+	<p>The grammar is <code>a: b, ()?, c. b: "b". c: "c".</code>
+	and the input is <code>bc</code>.</p>
+	<p>As with ambig2, this is or is not ambiguous depending on
+	exactly how we define ambiguity.  The parse may interpret
+	the middle term as present or as absent, so there are two
+	derivations, or may be depending on how we define
+	'derivation'.  There is only one parse tree for the EBNF
+	grammar.</p>
+	<p>So MSM has specified two alternative results
+	which differ only in including or excluding
+	the ambiguity flag.</p>
+	<p>What the spec should say will require
+	careful discussion.</p>
+      </description>
+      <test-string-ref href="ambig7.inp"/>
+      <result>
+	<assert-xml-ref href="ambig7.output.xml"/>
+	<assert-xml-ref href="ambig7.alt.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="css">
+    <created by="SP" on="2021-12-16"/>
+    <modified
+	by="MSM"
+	on="2021-12-30"
+	change="stripped non-significant whitespace from result"/>
+    <modified by="MSM" on="2022-01-01"
+	      change="supply alternate result"/>
+    <ixml-grammar-ref href="css.ixml"/>
+    <test-case name="css">
+      <created by="SP" on="2021-12-16"/>
+      <test-string-ref href="css.inp"/>
+      <result>
+	<assert-xml-ref href="css.output.xml"/>
+	<assert-xml-ref href="css.alt.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>
+
+
+  <test-set name="date">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="date.ixml"/>
+    <test-case name="date">
+      <created by="SP" on="2021-12-16"/>
+      <modified
+	  by="MSM"
+	  on="2022-01-01"
+	  change="stripped non-significant whitespace from result"/>
+      <modified
+	  by="ndw"
+	  on="2022-02-05"
+	  change="added alternative parse"/>
+      <test-string-ref href="date.inp"/>
+      <result>
+	<assert-xml-ref href="date.output.xml"/>
+	<assert-xml-ref href="date.alt.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="empty-parens">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="empty-parens.ixml"/>
+    <test-case name="empty-parens">
+      <created by="SP" on="2021-12-16"/>
+      <modified
+        by="jwL"
+        on="2022-05-15"
+        change="added alternative parse, given ()? can be ambiguous"/>
+      <test-string-ref href="empty-parens.inp"/>
+      <result>
+	<assert-xml-ref href="empty-parens.output.xml"/>
+        <assert-xml-ref href="empty-parens.alt.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="expr0">
+    <created by="SP" on="2021-12-16"/>
+    <ixml-grammar-ref href="expr0.ixml"/>
+    <test-case name="expr0">
+      <created by="SP" on="2021-12-16"/>
+      <modified by="MSM" on="2021-12-30"
+		change="remove trailing whitespace from input"/>
+      <modified
+	  by="MSM"
+	  on="2022-01-01"
+	  change="stripped non-significant whitespace from result"/>
+      <modified
+	  by="MSM"
+	  on="2022-01-01"
+	  change="supplied alternate result"/>
+      <test-string-ref href="expr0.inp"/>
+      <result>
+	<assert-xml-ref href="expr0.output.xml"/>
+	<assert-xml-ref href="expr0.alt.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="lf2">
+    <created by="ndw" on="2022-02-05"/>
+    <ixml-grammar-ref href="lf2.ixml"/>
+    <test-case name="lf2">
+      <created by="ndw" on="2022-02-05"/>
+      <modified by="ndw" on="2022-02-05"
+      change="Converted it into the catalog format"/>
+      <modified by="ndw" on="2022-02-05"
+      change="Added alternate output"/>
+      <test-string-ref href="lf2.inp"/>
+      <result>
+	<assert-xml-ref href="lf2.output.xml"/>
+	<assert-xml-ref href="lf2.alt.output.xml"/>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="ambiguous-marks">
+    <created by="ndw" on="2023-05-05"/>
+    <ixml-grammar>S = A, B, C | A, @B, C . A = 'a' . B = 'b' . C = 'c' .</ixml-grammar>
+    <test-case name="Battr">
+      <created by="ndw" on="2023-05-05"/>
+      <modified by="ndw" on="2023-05-09"
+		change="Attempted to improve the description."/>
+      <description>
+	<p>This grammar is ambiguous. That is, it matches exactly
+	“abc”, but it does so in two different ways. This difference
+        is visible in the selection of B as either an element or
+        an attribute.</p>
+      </description>
+      <test-string>abc</test-string>
+      <result>
+	<assert-xml>
+          <S xmlns="" xmlns:ixml="http://invisiblexml.org/NS"
+             ixml:state="ambiguous"><A>a</A><B>b</B><C>c</C></S>
+        </assert-xml>
+	<assert-xml>
+          <S xmlns="" xmlns:ixml="http://invisiblexml.org/NS"
+             ixml:state="ambiguous" B="b"><A>a</A><C>c</C></S>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+  <test-set name="ambiguous-without-marks">
+    <created by="ndw" on="2023-05-09"/>
+    <ixml-grammar>S = A, B, C | A, B, C . A = 'a' . B = 'b' . C = 'c' .</ixml-grammar>
+    <test-case name="B-or-B">
+      <created by="ndw" on="2023-05-09"/>
+      <description>
+	<p>This grammar is ambiguous only if the processor does not
+        remove duplicate rules. But there’s nothing in the specification
+        that says a processor must.</p>
+      </description>
+      <test-string>abc</test-string>
+      <result>
+	<assert-xml>
+          <S xmlns="" xmlns:ixml="http://invisiblexml.org/NS"
+             ixml:state="ambiguous"><A>a</A><B>b</B><C>c</C></S>
+        </assert-xml>
+	<assert-xml>
+          <S xmlns=""><A>a</A><B>b</B><C>c</C></S>
+        </assert-xml>
+      </result>
+    </test-case>
+  </test-set>
+
+</test-catalog>

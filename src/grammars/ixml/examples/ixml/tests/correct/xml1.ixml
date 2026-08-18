@@ -1,0 +1,10 @@
+xml: element.
+element: -"<", name, (-" "+, attribute)*, (-">", content, -"</", close, -">"; -"/>").
+@name: ["a"-"z"; "A"-"Z"]+.
+@close: name.
+attribute: name, -"=", value.
+@value: -'"', dchar*, -'"'; -"'", schar*, -"'".
+content: (cchar; element)*.
+-dchar: ~['"'; "<"].
+-schar: ~["'"; "<"].
+-cchar: ~["<"].

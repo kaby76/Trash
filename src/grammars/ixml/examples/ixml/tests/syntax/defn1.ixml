@@ -1,0 +1,4 @@
+a: b, c.
+b: c, d.
+c: @".". {Not allowed for terminals}
+d: .

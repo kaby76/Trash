@@ -1,0 +1,395 @@
+<ixml
+  ><comment> program is defined in section 4.8 </comment
+  ><rule name="program"
+    ><alt
+      ><nonterminal name="S"
+      /><repeat0
+        ><nonterminal name="decl"
+        /><sep
+          ><nonterminal name="S"
+        /></sep
+      ></repeat0
+      ><nonterminal name="S"
+      /><nonterminal name="cmd"
+      /><nonterminal name="S"
+    /></alt
+  ></rule
+  ><comment> Names are described in 4.3 but left indeterminate syntactically;
+I've made them like the SGML reference concrete syntax. </comment
+  ><rule name="NAME"
+    ><alt
+      ><nonterminal name="letter"
+      /><repeat0
+        ><nonterminal name="namechar"
+      /></repeat0
+    ></alt
+  ></rule
+  ><rule mark="-" name="letter"
+    ><alt
+      ><inclusion
+        ><member from="a" to="z"
+        /><member from="A" to="Z"
+      /></inclusion
+    ></alt
+  ></rule
+  ><rule mark="-" name="digit"
+    ><alt
+      ><inclusion
+        ><member from="0" to="9"
+      /></inclusion
+    ></alt
+  ></rule
+  ><rule mark="-" name="namechar"
+    ><alt
+      ><nonterminal name="letter"
+    /></alt
+    ><alt
+      ><nonterminal name="digit"
+    /></alt
+    ><alt
+      ><inclusion
+        ><member string="-"
+        /><member string="."
+        /><member string="_"
+      /></inclusion
+    ></alt
+  ></rule
+  ><comment> Types are described in 4.3 </comment
+  ><rule name="TYPE"
+    ><alt
+      ><literal string="int"
+    /></alt
+    ><alt
+      ><literal string="bool"
+    /></alt
+  ></rule
+  ><rule name="boolean"
+    ><alt
+      ><literal string="true"
+    /></alt
+    ><alt
+      ><literal string="false"
+    /></alt
+  ></rule
+  ><rule name="number"
+    ><alt
+      ><repeat1
+        ><nonterminal name="digit"
+      /></repeat1
+    ></alt
+  ></rule
+  ><comment> declarations:  section 4.4 </comment
+  ><rule name="decl"
+    ><alt
+      ><nonterminal name="NAME"
+      /><nonterminal name="S"
+      /><literal tmark="-" string=":"
+      /><nonterminal name="S"
+      /><nonterminal name="TYPE"
+      /><nonterminal name="S"
+      /><literal tmark="-" string=";"
+    /></alt
+  ></rule
+  ><comment> operators, section 4.5 </comment
+  ><rule name="unaryOp"
+    ><alt
+      ><nonterminal name="negate"
+    /></alt
+    ><alt
+      ><nonterminal name="not"
+    /></alt
+  ></rule
+  ><rule name="negate"
+    ><alt
+      ><literal string="-"
+    /></alt
+  ></rule
+  ><rule name="not"
+    ><alt
+      ><literal string="not"
+    /></alt
+  ></rule
+  ><rule name="binaryOp"
+    ><alt
+      ><nonterminal name="plus"
+    /></alt
+    ><alt
+      ><nonterminal name="minus"
+    /></alt
+    ><alt
+      ><nonterminal name="less"
+    /></alt
+    ><alt
+      ><nonterminal name="greater"
+    /></alt
+    ><alt
+      ><nonterminal name="equal"
+    /></alt
+    ><alt
+      ><nonterminal name="or"
+    /></alt
+    ><alt
+      ><nonterminal name="and"
+    /></alt
+  ></rule
+  ><rule name="plus"
+    ><alt
+      ><literal tmark="-" string="+"
+    /></alt
+  ></rule
+  ><rule name="minus"
+    ><alt
+      ><literal tmark="-" string="-"
+    /></alt
+  ></rule
+  ><rule name="less"
+    ><alt
+      ><literal tmark="-" string="&lt;"
+    /></alt
+  ></rule
+  ><rule name="greater"
+    ><alt
+      ><literal tmark="-" string="&gt;"
+    /></alt
+  ></rule
+  ><rule name="equal"
+    ><alt
+      ><literal tmark="-" string="="
+    /></alt
+  ></rule
+  ><rule name="or"
+    ><alt
+      ><literal tmark="-" string="or"
+    /></alt
+  ></rule
+  ><rule name="and"
+    ><alt
+      ><literal tmark="-" string="and"
+    /></alt
+  ></rule
+  ><comment> expressions:  4.6 </comment
+  ><rule name="expr"
+    ><alt
+      ><nonterminal name="constant"
+    /></alt
+    ><alt
+      ><nonterminal name="variable"
+    /></alt
+    ><alt
+      ><nonterminal name="unaryExpr"
+    /></alt
+    ><alt
+      ><nonterminal name="binaryExpr"
+    /></alt
+  ></rule
+  ><rule name="constant"
+    ><alt
+      ><nonterminal name="number"
+    /></alt
+    ><alt
+      ><nonterminal name="boolean"
+    /></alt
+  ></rule
+  ><rule name="variable"
+    ><alt
+      ><nonterminal name="NAME"
+    /></alt
+  ></rule
+  ><rule name="unaryExpr"
+    ><alt
+      ><nonterminal name="unaryOp"
+      /><nonterminal name="S"
+      /><nonterminal name="expr"
+    /></alt
+  ></rule
+  ><rule name="binaryExpr"
+    ><alt
+      ><literal tmark="-" string="("
+      /><nonterminal name="S"
+      /><nonterminal name="expr"
+      /><nonterminal name="S"
+      /><nonterminal name="binaryOp"
+      /><nonterminal name="S"
+      /><nonterminal name="expr"
+      /><nonterminal name="S"
+      /><literal tmark="-" string=")"
+    /></alt
+  ></rule
+  ><comment> commands:  4.7 </comment
+  ><rule name="cmd"
+    ><alt
+      ><alts
+        ><alt
+          ><nonterminal name="skip"
+        /></alt
+        ><alt
+          ><nonterminal name="block"
+        /></alt
+        ><alt
+          ><nonterminal name="assign"
+        /></alt
+        ><alt
+          ><nonterminal name="choice"
+        /></alt
+        ><alt
+          ><nonterminal name="loop"
+        /></alt
+        ><alt
+          ><nonterminal name="input"
+        /></alt
+        ><alt
+          ><nonterminal name="output"
+        /></alt
+      ></alts
+    ></alt
+  ></rule
+  ><rule name="cmdseq"
+    ><alt
+      ><repeat1
+        ><alts
+          ><alt
+            ><nonterminal name="cmd"
+            /><nonterminal name="S"
+            /><literal tmark="-" string=";"
+            /><nonterminal name="S"
+          /></alt
+        ></alts
+      ></repeat1
+    ></alt
+  ></rule
+  ><rule name="skip"
+    ><alt
+      ><literal tmark="-" string="skip"
+    /></alt
+  ></rule
+  ><rule name="block"
+    ><alt
+      ><literal tmark="-" string="begin"
+      /><nonterminal name="S"
+      /><nonterminal name="cmdseq"
+      /><literal tmark="-" string="end"
+    /></alt
+  ></rule
+  ><rule name="assign"
+    ><alt
+      ><nonterminal name="variable"
+      /><nonterminal name="S"
+      /><literal tmark="-" string=":="
+      /><nonterminal name="S"
+      /><nonterminal name="expr"
+    /></alt
+  ></rule
+  ><rule name="choice"
+    ><alt
+      ><literal tmark="-" string="if"
+      /><nonterminal name="S"
+      /><nonterminal name="condition"
+      /><nonterminal name="S"
+      /><literal tmark="-" string="then"
+      /><nonterminal name="S"
+      /><nonterminal name="iftrue"
+      /><literal tmark="-" string="else"
+      /><nonterminal name="S"
+      /><nonterminal name="iffalse"
+    /></alt
+  ></rule
+  ><rule name="condition"
+    ><alt
+      ><nonterminal mark="-" name="expr"
+    /></alt
+  ></rule
+  ><rule name="iftrue"
+    ><alt
+      ><nonterminal name="cmd"
+    /></alt
+  ></rule
+  ><rule name="iffalse"
+    ><alt
+      ><nonterminal name="cmd"
+    /></alt
+  ></rule
+  ><rule name="loop"
+    ><alt
+      ><literal tmark="-" string="while"
+      /><nonterminal name="S"
+      /><nonterminal name="expr"
+      /><nonterminal name="S"
+      /><literal tmark="-" string="do"
+      /><nonterminal name="S"
+      /><nonterminal name="cmd"
+    /></alt
+  ></rule
+  ><rule name="input"
+    ><alt
+      ><literal tmark="-" string="input"
+      /><nonterminal name="S"
+      /><nonterminal name="NAME"
+    /></alt
+  ></rule
+  ><rule name="output"
+    ><alt
+      ><literal tmark="-" string="output"
+      /><nonterminal name="S"
+      /><nonterminal name="expr"
+    /></alt
+  ></rule
+  ><comment> Stepney does not specify whitespace or comment rules. </comment
+  ><rule mark="-" name="S"
+    ><alt
+      ><repeat0
+        ><alts
+          ><alt
+            ><nonterminal name="ws"
+          /></alt
+          ><alt
+            ><nonterminal name="comment"
+          /></alt
+        ></alts
+      ></repeat0
+    ></alt
+  ></rule
+  ><rule mark="-" name="ws"
+    ><alt
+      ><inclusion tmark="-"
+        ><member hex="20"
+        /><member hex="0A"
+        /><member hex="09"
+        /><member hex="0D"
+      /></inclusion
+    ></alt
+  ></rule
+  ><rule name="comment"
+    ><alt
+      ><literal tmark="-" string="/*"
+      /><repeat0
+        ><nonterminal name="nonstar"
+      /></repeat0
+      ><repeat0
+        ><alts
+          ><alt
+            ><literal string="*"
+            /><repeat0
+              ><nonterminal name="nonstarnonslash"
+            /></repeat0
+          ></alt
+        ></alts
+      ></repeat0
+      ><literal tmark="-" string="*/"
+    /></alt
+  ></rule
+  ><rule name="nonstar"
+    ><alt
+      ><exclusion
+        ><member string="*"
+      /></exclusion
+    ></alt
+  ></rule
+  ><rule name="nonstarnonslash"
+    ><alt
+      ><exclusion
+        ><member string="*"
+        /><member string="/"
+      /></exclusion
+    ></alt
+  ></rule
+></ixml>

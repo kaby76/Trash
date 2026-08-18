@@ -1,0 +1,12 @@
+<!-- AMBIGUOUS
+     The input from line.pos 1.1 to 1.6 can be interpreted as 'a' in 4 different ways:
+     1: a[1.1:]:  "a"[:1.2] spaces[:1.2] b[:1.6] 
+     2: a[1.1:]:  "a"[:1.2] spaces[:1.3] b[:1.6] 
+     3: a[1.1:]:  "a"[:1.2] spaces[:1.4] b[:1.6] 
+     4: a[1.1:]:  "a"[:1.2] spaces[:1.5] b[:1.6] 
+-->
+<a ixml:state="ambiguous"
+   xmlns:ixml="http://invisiblexml.org/NS"
+   >a<spaces>  </spaces
+   ><b><spaces> </spaces>b</b
+></a>

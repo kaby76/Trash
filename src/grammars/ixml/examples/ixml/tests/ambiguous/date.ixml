@@ -1,0 +1,38 @@
+date: bla, day, S, number, S, month, S, year, bla;
+      bla, number, S, month, S, year, bla;
+      bla, day, ",", S, number, S, month, S, year, bla. 
+day: Monday; Tuesday; Wednesday; Thursday; Friday; Saturday; Sunday.
+Monday: "Mon"; "Monday".
+Tuesday: "Tue"; "Tuesday".
+Wednesday: "Wed"; "Weds"; "Wednesday".
+Thursday: "Thu"; "Thur"; "Thurs"; "Thursday".
+Friday: "Fri"; "Friday".
+Saturday: "Sat"; "Saturday".
+Sunday: "Sun"; "Sunday".
+number: cardinal; ordinal.
+cardinal: digits1, "st"; digits2, "nd"; digits3, "rd"; digits4,"th".
+ordinal: digits.
+-digits: digit+.
+-digit: ["0"-"9"].
+-digits1: "1"; digits, "1".
+-digits2: "2"; digits, "2".
+-digits3: "3"; digits, "3".
+-digits4: digit4; digits, digit4.
+-digit4: ["4"-"9"]; "0".
+-bla: ; char, bla.
+-char: [" "-"~"].
+month: January; February; March; April; May; June; July; August; September; October; November; December.
+year: digit, digit, digit, digit.
+January: "January"; "Jan".
+February: "February"; "Feb".
+March: "March"; "Mar".
+April: "April"; "Apr".
+May: "May".
+June: "June"; "Jun".
+July: "July"; "Jul".
+August: "August"; "Aug".
+September: "September"; "Sept"; "Sep".
+October: "October"; "Oct".
+November: "November"; "Nov".
+December: "December"; "Dec".
+-S: " "*.

@@ -1,0 +1,48 @@
+{ Unicode classes test}
+{Each input line starts with the one or two letter name of the class it is testing, a space, and a list of unicode characters that are in that class.
+
+The output is an element of that classname for each line of input, with the characters as content, with the exception of the control characters, for which the element content is a "." for each character in the input.}
+
+classes: line+.
+-line: ( C; Cc; Cf; Cn; Co; Cs; L; LC; Ll; Lm; Lo; Lt; Lu; M; Mc; Me; Mn; N; Nd; Nl; No; P; Pc; Pd; Pe; Pf; Pi; Po; Ps; S; Sc; Sk; Sm; So; Z; Zl; Zp; Zs), newline.
+-newline: (-#a; -#d)+.
+
+  C: -"C ", (-[C], +".")*.
+  L: -"L ", [L]*.
+  M: -"M ", [M]*.
+  N: -"N ", [N]*.
+  P: -"P ", [P]*.
+  S: -"S ", [S]*.
+  Z: -"Z ", [Z]*.
+  
+  Cc: -"Cc ", (-[Cc], +".")*.
+  Cf: -"Cf ", (-[Cf], +".")*.
+  Cn: -"Cn ", (-[Cn], +".")*.
+  Co: -"Co ", (-[Co], +".")*.
+  Cs: -"Cs ", (-[Cs], +".")*.
+  LC: -"LC ", [LC]*.
+  Ll: -"Ll ", [Ll]*.
+  Lm: -"Lm ", [Lm]*.
+  Lo: -"Lo ", [Lo]*.
+  Lt: -"Lt ", [Lt]*.
+  Lu: -"Lu ", [Lu]*.
+  Mc: -"Mc ", [Mc]*.
+  Me: -"Me ", [Me]*.
+  Mn: -"Mn ", [Mn]*.
+  Nd: -"Nd ", [Nd]*.
+  Nl: -"Nl ", [Nl]*.
+  No: -"No ", [No]*.
+  Pc: -"Pc ", [Pc]*.
+  Pd: -"Pd ", [Pd]*.
+  Pe: -"Pe ", [Pe]*.
+  Pf: -"Pf ", [Pf]*.
+  Pi: -"Pi ", [Pi]*.
+  Po: -"Po ", [Po]*.
+  Ps: -"Ps ", [Ps]*.
+  Sc: -"Sc ", [Sc]*.
+  Sk: -"Sk ", [Sk]*.
+  Sm: -"Sm ", [Sm]*.
+  So: -"So ", [So]*.
+  Zl: -"Zl ", [Zl]*.
+  Zp: -"Zp ", [Zp]*.
+  Zs: -"Zs ", [Zs]*.

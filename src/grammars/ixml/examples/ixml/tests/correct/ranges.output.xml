@@ -1,0 +1,9 @@
+<test
+   ><other> !"#$%&amp;'()*+,-./</other
+   ><digit>0123456789</digit
+   ><other>:;&lt;=>?@</other
+   ><cap>ABCDEFGHIJKLMNOPQRSTUVWXYZ</cap
+   ><other>[\]^_`</other
+   ><lc>abcdefghijklmnopqrstuvwxyz</lc
+   ><other>{|}~</other
+></test>

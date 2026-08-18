@@ -1,0 +1,7 @@
+S: atoz; AtoZ; NotZeroToNine; NotAtoF; Letters; NotLetters .
+atoz: ^["a"-"z"] .
+AtoZ: -["A"-"Z"] .
+NotZeroToNine: ~['0'-'9'] .
+NotAtoF: -~[#41-#46] .
+Letters: [L] .
+NotLetters: -~[L] .

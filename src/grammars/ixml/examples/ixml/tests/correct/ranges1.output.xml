@@ -1,0 +1,9 @@
+<chars
+   ><punctuation>!"#$%&amp;'()*+,-./</punctuation
+   ><digit>0123456789</digit
+   ><punctuation>:;&lt;=>?@</punctuation
+   ><upper>ABCDEFGHIJKLMNOPQRSTUVWXYZ</upper
+   ><punctuation>[\]^_`</punctuation
+   ><lower>abcdefghijklmnopqrstuvwxyz</lower
+   ><punctuation>{|}~</punctuation
+></chars>

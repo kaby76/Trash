@@ -1,0 +1,6 @@
+<expr plus='+'
+   ><open>(</open
+   ><left>a</left
+   ><right>b</right
+   ><close>)</close
+></expr>

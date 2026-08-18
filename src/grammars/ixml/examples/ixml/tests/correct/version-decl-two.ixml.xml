@@ -1,0 +1,12 @@
+<ixml
+  ><prolog
+    ><version string="experimental induction of parser failure under stress"
+      ><comment
+      /><comment
+    /></version
+  ></prolog
+  ><rule name="S"
+    ><alt
+    /><alt><literal string="done"/></alt 
+  ></rule
+></ixml>

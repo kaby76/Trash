@@ -1,0 +1,12 @@
+css: S, rule+.
+rule: selector, block.
+block: -"{", S, property**(-";", S), -"}", S.
+property:  @name, S, -":", S, value; empty.
+selector: name, S.
+name: letter+.
+-letter: ["a"-"z"; "-"].
+digit: ["0"-"9"].
+value: (@name; @number), S.
+number: digit+.
+-empty: .
+-S: -[" "; #a; #d]*.

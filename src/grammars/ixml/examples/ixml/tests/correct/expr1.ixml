@@ -1,0 +1,13 @@
+expression: expr.
+-expr: term++plusop.
+@plusop: "+"; "-".
+term: -factor; factor, mulop, factor++mulop.
+@mulop: "*"; "/".
+factor: id; number; bracketed.
+bracketed: -"(", expr, -")".
+id: @name.
+name: letter+.
+number: @value.
+value: digit+.
+-letter: ["a"-"z"].
+-digit: ["0"-"9"].

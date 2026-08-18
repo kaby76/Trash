@@ -1,0 +1,10 @@
+BEGIN:VCARD
+VERSION:3.0
+N:Lastname;Surname
+FN:Displayname
+ORG:EVenX
+URL:http://www.evenx.com/
+EMAIL:info@evenx.com
+TEL;TYPE=voice,work,pref:+49 1234 56788
+ADR;TYPE=intl,work,postal,parcel:;;Wallstr. 1;Berlin;;12345;Germany
+END:VCARD

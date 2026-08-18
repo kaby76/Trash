@@ -1,0 +1,50 @@
+
+<XPath
+   ><Expr
+      ><AndExpr
+         ><ComparisonExpr
+            ><StringConcatExpr
+               ><RangeExpr
+                  ><AdditiveExpr
+                     ><MultiplicativeExpr
+                        ><UnionExpr
+                           ><IntersectExceptExpr
+                              ><InstanceofExpr
+                                 ><TreatExpr
+                                    ><CastExpr
+                                       ><ArrowExpr
+                                          ><UnaryExpr
+                                             ><SimpleMapExpr
+                                                ><PathExpr
+                                                   ><RelativePathExpr
+                                                      ><ForwardStep
+                                                         ><AbbrevForwardStep
+                                                            ><QName
+                                                               ><QNameToken
+                                                                  ><UnprefixedName
+                                                                     ><LocalPart
+                                                                        ><NCName Name='a'
+                                                                     /></LocalPart
+                                                                  ></UnprefixedName
+                                                               ></QNameToken
+                                                            ></QName
+                                                         ></AbbrevForwardStep
+                                                      ></ForwardStep
+                                                   ></RelativePathExpr
+                                                ></PathExpr
+                                             ></SimpleMapExpr
+                                          ></UnaryExpr
+                                       ></ArrowExpr
+                                    ></CastExpr
+                                 ></TreatExpr
+                              ></InstanceofExpr
+                           ></IntersectExceptExpr
+                        ></UnionExpr
+                     ></MultiplicativeExpr
+                  ></AdditiveExpr
+               ></RangeExpr
+            ></StringConcatExpr
+         ></ComparisonExpr
+      ></AndExpr
+   ></Expr
+></XPath>

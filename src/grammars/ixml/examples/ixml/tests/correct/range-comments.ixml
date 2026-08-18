@@ -1,0 +1,2 @@
+name: letter*.
+letter: [{comment}"a"{comment}-{comment}"z"{comment}].

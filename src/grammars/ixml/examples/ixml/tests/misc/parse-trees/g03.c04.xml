@@ -1,0 +1,34 @@
+<css
+  ><rules
+    ><rules
+      ><rule
+        ><selector
+          ><name>p</name
+        ></selector
+        ><block>{<properties
+            ><property
+              ><name>a</name>:<value>x</value
+            ></property
+          ></properties>}</block
+      ></rule
+    ></rules
+    ><rule
+      ><selector
+        ><name>q</name
+      ></selector
+      ><block>{<properties
+          ><property
+            ><name>b</name>:<value>y</value
+          ></property>;<properties
+            ><property
+              ><name>b2</name>:<value>z</value
+            ></property>;<properties
+              ><property
+                ><name>xyz</name>:<value>x</value
+              ></property
+            ></properties
+          ></properties
+        ></properties>}</block
+    ></rule
+  ></rules
+></css>

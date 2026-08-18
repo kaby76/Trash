@@ -1,0 +1,14 @@
+if:=1
+then:=0
+read(if, then)
+while if<0
+do
+   begin
+      begin:=0 end:=1
+      if:=if+10
+      then:=then+1
+   end
+if if > 5
+then if then=0
+     then then:=0
+  else write(if+then)

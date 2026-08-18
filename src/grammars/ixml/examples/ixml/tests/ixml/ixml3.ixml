@@ -1,0 +1,61 @@
+{A test for what happens with comments in nonterminal attributes}
+ixml: S, rule+.
+rule: mark?, name, ["=:"], S, -alts, ".", S.
+alts: alt++([";|"], S).
+alt: term**(",", S).
+-term: factor;
+       repeat0;
+       repeat1;
+       option.
+repeat0: factor, "*", S, sep?.
+repeat1: factor, "+", S, sep?.
+option:  factor, "?", S.
+sep:     factor.
+
+-factor: nonterminal;
+         terminal;
+         "(", S, alts, ")", S.
+nonterminal: mark?, name.
+-terminal: literal; charset.
+-literal: quoted; encoded.
+-charset: inclusion; exclusion.
+
+quoted: tmark?, -string.
+encoded: tmark?, @hex, S.
+inclusion: tmark?, "[", S,  element++([";|"], S), "]", S.
+exclusion: tmark?, "~", S, "[", S,  element++([";|"], S), "]", S.
+
+@tmark: ["^-"], S.
+-element: range;
+          string;
+          hex;
+          class.
+range: from, S, "-", S, to, S.
+@from: character.
+@to: character.
+-character: -'"', dchar, -'"';
+            -"'", schar, -"'";
+            hex.
+class: letter, letter, S. {One of the Unicode character classes}
+-letter: ["a"-"z"; "A"-"Z"].
+@name: letgit, xletter*, S.
+-letgit: ["a" - "z" {AAA}; "A"-"Z"; "0"-"9"].
+-xletter: letgit; "-".
+
+@mark: ["@^-"], S.
+
+string: -'"', dstring, -'"', S;
+        -"'", sstring, -"'", S.
+@dstring: dchar+.
+@sstring: schar+.
+dchar: ~['"'];
+       '""'. {all characters, dquotes must be doubled}
+schar: ~["'"];
+       "''". {all characters, squotes must be doubled}
+hex: "#", ["0"-"9"; "a"-"f"; "A"-"F"]+.
+
+-S: (" "; #9 {comment}; -#a; -#d; comment)*.
+^comment: "{", cchar*, "}".
+-cchar: ~["}"].
+
+{the end}
