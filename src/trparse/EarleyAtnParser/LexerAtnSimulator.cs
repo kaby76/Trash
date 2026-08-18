@@ -55,12 +55,12 @@ public class LexerAtnSimulator
                 }
             }
 
-            if (!skip && tokenType != 0)
+            if (tokenType != 0)
             {
                 tokens.Add(new LexerToken
                 {
                     Type = tokenType,
-                    Channel = channel,
+                    Channel = skip ? LexerToken.SKIP_CHANNEL : channel,
                     Text = input.Substring(pos, matchEnd - pos),
                     StartIndex = pos,
                     StopIndex = matchEnd - 1,
@@ -270,6 +270,9 @@ public class LexerAtnSimulator
 
 public struct LexerToken
 {
+    /// <summary>Sentinel channel value for tokens matched by a 'skip' lexer action.</summary>
+    public const int SKIP_CHANNEL = -2;
+
     public int Type;
     public int Channel;
     public string Text;

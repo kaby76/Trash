@@ -24,6 +24,7 @@ public static class DomBuilder
         string[] ruleNames,
         string[] symbolicNames,
         string[] literalNames,
+        string[] lexerRuleNames,
         bool lineNumbers)
     {
         var stack = new Stack<UnvParseTreeElement>();
@@ -62,10 +63,10 @@ public static class DomBuilder
 
                     // Emit interleaved hidden tokens as attributes on the parent rule element.
                     if (parent != null)
-                        EmitHiddenTokens(parent, allTokens, prevAllIdx, allIdx, symbolicNames, literalNames, lineNumbers);
+                        EmitHiddenTokens(parent, allTokens, prevAllIdx, allIdx, symbolicNames, lexerRuleNames, lineNumbers);
 
                     // Build the terminal element.
-                    string tokenName = GetTokenName(tok.Type, symbolicNames, literalNames);
+                    string tokenName = GetTokenName(tok.Type, symbolicNames, lexerRuleNames);
                     var termElem = MakeTermElement(tokenName);
                     var textNode = new UnvParseTreeText { Data = tok.Type == EOF_TYPE ? "" : (tok.Text ?? "") };
                     textNode.ParentNode = termElem;
@@ -95,15 +96,18 @@ public static class DomBuilder
         int prevAllIdx,
         int currentAllIdx,
         string[] symbolicNames,
-        string[] literalNames,
+        string[] lexerRuleNames,
         bool lineNumbers)
     {
         for (int j = prevAllIdx + 1; j < currentAllIdx; j++)
         {
             var ht = allTokens[j];
+            string attrName = ht.Channel == LexerToken.SKIP_CHANNEL
+                ? "Skip"
+                : GetTokenName(ht.Type, symbolicNames, lexerRuleNames);
             var attr = new UnvParseTreeAttr
             {
-                Name        = GetTokenName(ht.Type, symbolicNames, literalNames),
+                Name        = attrName,
                 StringValue = ht.Text ?? "",
                 TokenType   = ht.Type,
                 Channel     = ht.Channel,
@@ -205,19 +209,14 @@ public static class DomBuilder
         }
     }
 
-    private static string GetTokenName(int type, string[] symbolicNames, string[] literalNames)
+    private static string GetTokenName(int type, string[] symbolicNames, string[] lexerRuleNames)
     {
         if (type == EOF_TYPE) return "EOF";
         if (type >= 0 && type < symbolicNames.Length && symbolicNames[type] != null)
             return symbolicNames[type];
-        if (type >= 0 && type < literalNames.Length && literalNames[type] != null)
-        {
-            var lit = literalNames[type];
-            // Strip surrounding single quotes from literal names like "'a'"
-            if (lit.Length > 2 && lit[0] == '\'' && lit[^1] == '\'')
-                return lit[1..^1];
-            return lit;
-        }
+        // Fall back to lexer rule name (mirrors ConvertToDOM: lexer.RuleNames[tokenType])
+        if (type >= 0 && type < lexerRuleNames.Length && lexerRuleNames[type] != null)
+            return lexerRuleNames[type];
         return "Unknown";
     }
 }

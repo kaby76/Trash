@@ -13,9 +13,15 @@ echo "$where"
 rm -rf interp grammar.json
 dotnet trash parse Expression.g4 > grammar.json
 dotnet trash interp -o interp/ < grammar.json
-
 # Parse a sample expression using the Earley ATN-based path.
 printf "1 + 2 + 3" | dotnet trash parse --lib interp/ | dotnet trash tree > trparse-interp.tree
+
+# Generate native CSharp parser and parse.
+dotnet trash gen -t CSharp
+cd Generated-CSharp
+bash build.sh
+printf "1 + 2 + 3" | dotnet trash parse | dotnet trash tree > trparse.tree
+cd ..
 
 # Diff against the golden file.
 dos2unix trparse-interp.tree

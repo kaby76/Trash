@@ -59,6 +59,7 @@ public static class AllStarRunner
             parserInterp.RuleNames,
             parserInterp.SymbolicNames,
             parserInterp.LiteralNames,
+            lexerInterp.RuleNames,
             lineNumbers);
 
         // Stub lexer/parser objects required by ParsingResultSet and the JSON serializer.
