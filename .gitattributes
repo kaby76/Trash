@@ -1,3 +1,4 @@
 * text=auto eol=lf
+.config/dotnet-tools.json -text
 web/** linguist-vendored
 tests/** eol=lf

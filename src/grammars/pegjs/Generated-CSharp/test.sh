@@ -1,4 +1,4 @@
-# Generated from trgen 0.23.44
+# Generated from trgen 2.4.0
 
 # Uncomment for debugging.
 #set -x
@@ -22,7 +22,7 @@ esac
 # Get a list of test files from the test directory. Do not include any
 # .errors or .tree files. Pay close attention to remove only file names
 # that end with the suffix .errors or .tree.
-files2=`dotnet trash glob '../examples' | grep -v '[.]errors$' | grep -v '[.]tree$' | grep -v '[.]trq$'`
+files2=`dotnet trash glob '../examples/' | tr -d '\r' | grep -v '[.]errors$' | grep -v '[.]tree$' | grep -v '[.]trq$'`
 files=()
 for f in $files2
 do
@@ -82,7 +82,7 @@ fi
 # Execute trquery parse tree validation.
 echo "Checking any trquery parse tree assertions..."
 assertions_err=0
-for file in `dotnet trash glob '../examples' | grep -v '[.]errors$' | grep -v '[.]tree$' | grep -v '[.]trq$'`
+for file in `dotnet trash glob '../examples/' | grep -v '[.]errors$' | grep -v '[.]tree$' | grep -v '[.]trq$'`
 do
     trq=$file.trq
     if [ -f "$trq" ]

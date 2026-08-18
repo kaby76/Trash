@@ -313,6 +313,7 @@ public class Grun
                 ".iso" => "Iso14977",
                 ".pegjs" => "Pegjs",
                 ".pest" => "Pest",
+                ".ixml" => "ixml",
                 _ => null
             };
             var subdir = parser_type switch
@@ -334,6 +335,7 @@ public class Grun
                 "Pest" => "pest",
                 "Grammophone" => "grammophone",
                 "Princeton" => "princeton",
+                "ixml" => "ixml",
                 _ => null
             };
             if (subdir != null)
@@ -436,8 +438,9 @@ public class Grun
                 "Pest" => "pest",
                 "Grammophone" => "grammophone",
                 "Princeton" => "princeton",
+                "ixml" => "ixml",
                 _ => throw new Exception(
-                    "Unknown built-in parser type. Supported: ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton, gen.")
+                    "Unknown built-in parser type. Supported: ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton, ixml, gen.")
             };
             // Get this assembly.
             System.Reflection.Assembly a = this.GetType().Assembly;

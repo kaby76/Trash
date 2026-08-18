@@ -16,7 +16,7 @@ class Command
 {
     public string Help()
     {
-        using Stream stream = GetType().Assembly.GetManifestResourceStream("trxquery.readme.md");
+        using Stream stream = GetType().Assembly.GetManifestResourceStream("trxquery.readme.md")!;
         using StreamReader reader = new StreamReader(stream);
         return reader.ReadToEnd();
     }

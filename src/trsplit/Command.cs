@@ -1,5 +1,6 @@
 ﻿using AntlrJson;
-using org.eclipse.wst.xml.xpath2.processor.util;
+using XQuery.Engine;
+using XPathParser = XQuery.Parser.XPathParser;
 using org.w3c.dom;
 using ParseTreeEditing.UnvParseTreeDOM;
 using System;
@@ -62,37 +63,21 @@ class Command
             var atrees = parse_info.Nodes;
             var parser = parse_info.Parser;
             var lexer = parse_info.Lexer;
-            org.eclipse.wst.xml.xpath2.processor.Engine engine = new org.eclipse.wst.xml.xpath2.processor.Engine();
-            var ate = new ParseTreeEditing.UnvParseTreeDOM.ConvertToDOM();
+            var evaluator = new XPathEvaluator();
+            var adapterDoc = AdapterDocument.Build(atrees);
             // Collect all parser rules.
-            List<ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement> parser_rules = null;
-            List<ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement> lexer_rules = null;
-            List<ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement> id = null;
-            UnvParseTreeElement z;
-            using (ParseTreeEditing.UnvParseTreeDOM.AntlrDynamicContext dynamicContext = ate.Try(atrees, parser))
-            {
-                id = engine.parseExpression(
-                        "/grammarSpec/grammarDecl/identifier",
-                        new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                parser_rules = engine.parseExpression(
-                        "//parserRuleSpec",
-                        new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                if (config.Verbose)
-                    LoggerNs.TimedStderrOutput.WriteLine("Found " + parser_rules.Count + " parser rules.");
-                lexer_rules = engine.parseExpression(
-                        "//lexerRuleSpec",
-                        new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList();
-                if (config.Verbose)
-                    LoggerNs.TimedStderrOutput.WriteLine("Found " + lexer_rules.Count + " parser rules.");
-                z = engine.parseExpression(
-                        "/grammarSpec",
-                        new StaticContextBuilder()).evaluate(dynamicContext, new object[] { dynamicContext.Document })
-                    .Select(x => (x.NativeValue as ParseTreeEditing.UnvParseTreeDOM.UnvParseTreeElement)).ToList()
-                    .First();
-            }
+            var id = evaluator.Evaluate(new XPathParser("/grammarSpec/grammarDecl/identifier").Parse(), adapterDoc)
+                .OfType<AdapterElement>().Select(ae => ae.Source).ToList();
+            var parser_rules = evaluator.Evaluate(new XPathParser("//parserRuleSpec").Parse(), adapterDoc)
+                .OfType<AdapterElement>().Select(ae => ae.Source).ToList();
+            if (config.Verbose)
+                LoggerNs.TimedStderrOutput.WriteLine("Found " + parser_rules.Count + " parser rules.");
+            var lexer_rules = evaluator.Evaluate(new XPathParser("//lexerRuleSpec").Parse(), adapterDoc)
+                .OfType<AdapterElement>().Select(ae => ae.Source).ToList();
+            if (config.Verbose)
+                LoggerNs.TimedStderrOutput.WriteLine("Found " + lexer_rules.Count + " lexer rules.");
+            var z = evaluator.Evaluate(new XPathParser("/grammarSpec").Parse(), adapterDoc)
+                .OfType<AdapterElement>().Select(ae => ae.Source).First();
 
             // Create text files.
             StringBuilder sb_parser = new StringBuilder();

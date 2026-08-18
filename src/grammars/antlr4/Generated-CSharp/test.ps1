@@ -1,10 +1,9 @@
-# Generated from trgen 0.23.44
+# Generated from trgen 2.4.0
 
 $workingDirectory = Get-Location
 $filePath = "$workingDirectory/tests.txt"
 
-$Tests = "../examples\**\*.g4"
-Write-Host "Test cases here: $Tests"
+Write-Host "Test cases: '..\examples\**\*.g4'"
 
 # Get a list of test files from the test directory. Do not include any
 # .errors or .tree files. Pay close attention to remove only file names
@@ -14,7 +13,7 @@ if (Test-Path -Path "$filePath" -PathType Leaf) {
 }
 
 $files = New-Object System.Collections.Generic.List[string]
-$allFiles = $(& dotnet trash glob "$Tests" ; $last = $LASTEXITCODE )
+$allFiles = $(& dotnet trash glob '..\examples\**\*.g4' ; $last = $LASTEXITCODE )
 foreach ($file in $allFiles) {
     $ext = $file | Split-Path -Extension
     if (Test-Path $file -PathType Container) {

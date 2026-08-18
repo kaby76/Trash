@@ -1,4 +1,4 @@
-# Generated from trgen 0.23.44
+# Generated from trgen 2.4.0
 
 SAVEIFS=$IFS
 IFS=$(echo -en "\n\b")
@@ -56,7 +56,7 @@ echo "" >> parse.txt
 # Get a list of test files from the test directory. Do not include any
 # .errors or .tree files. Pay close attention to remove only file names
 # that end with the suffix .errors or .tree.
-files2=`dotnet trash glob '../examples' | grep -v '.errors$' | grep -v '.tree$'`
+files2=`dotnet trash glob '../examples/' | grep -v '.errors$' | grep -v '.tree$'`
 files=()
 for f in $files2
 do

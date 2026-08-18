@@ -140,12 +140,6 @@ public partial class rexParser : Parser {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitGrammar_(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitGrammar_(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -217,12 +211,6 @@ public partial class rexParser : Parser {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitProlog(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitProlog(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -285,12 +273,6 @@ public partial class rexParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitProcessingInstruction(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitProcessingInstruction(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -375,12 +357,6 @@ public partial class rexParser : Parser {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitSyntaxDefinition(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSyntaxDefinition(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -446,12 +422,6 @@ public partial class rexParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitSyntaxProduction(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSyntaxProduction(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -525,12 +495,6 @@ public partial class rexParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitSyntaxChoice(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSyntaxChoice(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -635,12 +599,6 @@ public partial class rexParser : Parser {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitSyntaxSequence(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSyntaxSequence(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -701,12 +659,6 @@ public partial class rexParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitSyntaxItem(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSyntaxItem(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -776,12 +728,6 @@ public partial class rexParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitSyntaxPrimary(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitSyntaxPrimary(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -878,12 +824,6 @@ public partial class rexParser : Parser {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitLexicalDefinition(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLexicalDefinition(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -977,12 +917,6 @@ public partial class rexParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitLexicalProduction(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLexicalProduction(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1082,12 +1016,6 @@ public partial class rexParser : Parser {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitContextChoice(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitContextChoice(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1155,12 +1083,6 @@ public partial class rexParser : Parser {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitLexicalChoice(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLexicalChoice(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1225,12 +1147,6 @@ public partial class rexParser : Parser {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitContextExpression(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitContextExpression(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1290,12 +1206,6 @@ public partial class rexParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitLexicalSequence(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLexicalSequence(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1406,12 +1316,6 @@ public partial class rexParser : Parser {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitLexicalItem(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLexicalItem(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1486,12 +1390,6 @@ public partial class rexParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitLexicalPrimary(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitLexicalPrimary(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1612,12 +1510,6 @@ public partial class rexParser : Parser {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitNameOrString(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitNameOrString(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1698,12 +1590,6 @@ public partial class rexParser : Parser {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitContext(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitContext(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -1747,12 +1633,6 @@ public partial class rexParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitCharCode(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitCharCode(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1809,12 +1689,6 @@ public partial class rexParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitUnicode(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitUnicode(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1874,12 +1748,6 @@ public partial class rexParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitCharClass(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitCharClass(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -1964,12 +1832,6 @@ public partial class rexParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitOption(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitOption(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2078,12 +1940,6 @@ public partial class rexParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitPreference(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitPreference(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2194,12 +2050,6 @@ public partial class rexParser : Parser {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitDelimiter(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitDelimiter(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2270,12 +2120,6 @@ public partial class rexParser : Parser {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitEquivalence(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEquivalence(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2326,12 +2170,6 @@ public partial class rexParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitEquivalenceCharRange(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEquivalenceCharRange(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 
@@ -2407,12 +2245,6 @@ public partial class rexParser : Parser {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitEncore(this);
 		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitEncore(this);
-			else return visitor.VisitChildren(this);
-		}
 	}
 
 	[RuleVersion(0)]
@@ -2471,12 +2303,6 @@ public partial class rexParser : Parser {
 		public override void ExitRule(IParseTreeListener listener) {
 			IrexParserListener typedListener = listener as IrexParserListener;
 			if (typedListener != null) typedListener.ExitName(this);
-		}
-		[System.Diagnostics.DebuggerNonUserCode]
-		public override TResult Accept<TResult>(IParseTreeVisitor<TResult> visitor) {
-			IrexParserVisitor<TResult> typedVisitor = visitor as IrexParserVisitor<TResult>;
-			if (typedVisitor != null) return typedVisitor.VisitName(this);
-			else return visitor.VisitChildren(this);
 		}
 	}
 

@@ -1,5 +1,6 @@
 using System.Runtime.CompilerServices;
 
+[assembly: InternalsVisibleTo("ParseTreeEditing")]
 [assembly: InternalsVisibleTo("trxpath")]
 [assembly: InternalsVisibleTo("trsort")]
 [assembly: InternalsVisibleTo("trunfoldlit")]
@@ -320,6 +321,34 @@ public abstract class XdmNode : XdmItem
             foreach (var node in Parent.Preceding())
                 yield return node;
         }
+    }
+
+    public IEnumerable<XdmNode> FollowingOrSelf()
+    {
+        yield return this;
+        foreach (var node in Following())
+            yield return node;
+    }
+
+    public IEnumerable<XdmNode> FollowingSiblingOrSelf()
+    {
+        yield return this;
+        foreach (var node in FollowingSiblings())
+            yield return node;
+    }
+
+    public IEnumerable<XdmNode> PrecedingOrSelf()
+    {
+        foreach (var node in Preceding())
+            yield return node;
+        yield return this;
+    }
+
+    public IEnumerable<XdmNode> PrecedingSiblingOrSelf()
+    {
+        foreach (var node in PrecedingSiblings())
+            yield return node;
+        yield return this;
     }
 
     public override bool Equals(XdmItem? other)

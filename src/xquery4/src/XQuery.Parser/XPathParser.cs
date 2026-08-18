@@ -77,7 +77,7 @@ public class XPathParser
 
         public AstBuilder(Dictionary<string, string> namespaces) => _ns = namespaces;
 
-        public ExprNode Build(XPath4Parser.XPathContext ctx) => BuildExpr(ctx.expr());
+        public ExprNode Build(XPath4Parser.XPathContext ctx) => BuildExpr(ctx.xPathQuery().expr());
 
         // ── Expr ─────────────────────────────────────────────────────────
 
@@ -442,7 +442,7 @@ public class XPathParser
         }
 
         private (XdmQName qname, bool allowEmpty) BuildCastTarget(
-            XPath4Parser.CastTargetContext ctx, XPath4Parser.OccurrenceIndicatorContext? occ)
+            XPath4Parser.CastTargetContext ctx, XPath4Parser.OccurrenceIndicatorContext occ)
         {
             if (ctx.typeName_() is { } tn)
                 return (ResolveEqName(tn.eqName()), occ?.QM() != null);
@@ -611,12 +611,16 @@ public class XPathParser
                 XPath4Lexer.KW_CHILD                 => Axis.Child,
                 XPath4Lexer.KW_DESCENDANT            => Axis.Descendant,
                 XPath4Lexer.KW_DESCENDANT_OR_SELF    => Axis.DescendantOrSelf,
-                XPath4Lexer.KW_FOLLOWING             => Axis.Following,
-                XPath4Lexer.KW_FOLLOWING_SIBLING     => Axis.FollowingSibling,
-                XPath4Lexer.KW_NAMESPACE             => Axis.Namespace,
+                XPath4Lexer.KW_FOLLOWING                  => Axis.Following,
+                XPath4Lexer.KW_FOLLOWING_OR_SELF          => Axis.FollowingOrSelf,
+                XPath4Lexer.KW_FOLLOWING_SIBLING          => Axis.FollowingSibling,
+                XPath4Lexer.KW_FOLLOWING_SIBLING_OR_SELF  => Axis.FollowingSiblingOrSelf,
+                XPath4Lexer.KW_NAMESPACE                  => Axis.Namespace,
                 XPath4Lexer.KW_PARENT                => Axis.Parent,
-                XPath4Lexer.KW_PRECEDING             => Axis.Preceding,
-                XPath4Lexer.KW_PRECEDING_SIBLING     => Axis.PrecedingSibling,
+                XPath4Lexer.KW_PRECEDING                  => Axis.Preceding,
+                XPath4Lexer.KW_PRECEDING_OR_SELF          => Axis.PrecedingOrSelf,
+                XPath4Lexer.KW_PRECEDING_SIBLING          => Axis.PrecedingSibling,
+                XPath4Lexer.KW_PRECEDING_SIBLING_OR_SELF  => Axis.PrecedingSiblingOrSelf,
                 XPath4Lexer.KW_SELF                  => Axis.Self,
                 _                                    => Axis.Child
             };
@@ -658,19 +662,19 @@ public class XPathParser
 
             if (ctx.processingInstructionNodeType() is { } pi)
             {
-                XdmQName? name = pi.QName() != null ? new XdmQName(pi.QName().GetText()) : null;
+                XdmQName name = pi.QName() != null ? new XdmQName(pi.QName().GetText()) : null;
                 return new KindTestExpr { Kind = XdmNodeKind.ProcessingInstruction, Name = name, Line = ln, Column = col };
             }
             if (ctx.elementNodeType() is { } en)
             {
-                XdmQName? name = null;
+                XdmQName name = null;
                 var nt = en.nameTestUnion()?.nameTest();
                 if (nt is { Length: > 0 } && nt[0].eqName() is { } eqn) name = ResolveEqName(eqn);
                 return new KindTestExpr { Kind = XdmNodeKind.Element, Name = name, Line = ln, Column = col };
             }
             if (ctx.attributeNodeType() is { } an)
             {
-                XdmQName? name = null;
+                XdmQName name = null;
                 var nt = an.nameTestUnion()?.nameTest();
                 if (nt is { Length: > 0 } && nt[0].eqName() is { } eqn) name = ResolveEqName(eqn);
                 return new KindTestExpr { Kind = XdmNodeKind.Attribute, Name = name, Line = ln, Column = col };
@@ -758,7 +762,7 @@ public class XPathParser
             return result;
         }
 
-        private ExprNode? BuildKeySpecifier(XPath4Parser.KeySpecifierContext ctx)
+        private ExprNode BuildKeySpecifier(XPath4Parser.KeySpecifierContext ctx)
         {
             if (ctx.lookupWildcard()    != null) return null;
             if (ctx.QName()             is { } qn) return new StringLiteralExpr { Value = qn.GetText(),   Line = ctx.Start.Line, Column = ctx.Start.Column };
@@ -848,7 +852,7 @@ public class XPathParser
             return [];
         }
 
-        private ExprNode? BuildArgument(XPath4Parser.ArgumentContext ctx)
+        private ExprNode BuildArgument(XPath4Parser.ArgumentContext ctx)
         {
             if (ctx.exprSingle() is { } es) return BuildExprSingle(es);
             return null; // argumentplaceholder → omit
@@ -873,12 +877,12 @@ public class XPathParser
                 var (name, _, seqType) = GetVarNameAndType(vnt);
                 return new ParameterNode { Name = name, Type = seqType, Line = vnt.Start.Line, Column = vnt.Start.Column };
             }).ToList() ?? [];
-            SequenceTypeNode? retType = sig.typeDeclaration() is { } td ? BuildSequenceType(td.sequenceType()) : null;
+            SequenceTypeNode retType = sig.typeDeclaration() is { } td ? BuildSequenceType(td.sequenceType()) : null;
             var body = BuildEnclosedExpr(ifn.functionBody().enclosedExpr()) ?? new SequenceExpr { Items = [] };
             return new InlineFunctionExpr { Parameters = parms, ReturnType = retType, Body = body, Line = ctx.Start.Line, Column = ctx.Start.Column };
         }
 
-        private ExprNode? BuildEnclosedExpr(XPath4Parser.EnclosedExprContext ctx)
+        private ExprNode BuildEnclosedExpr(XPath4Parser.EnclosedExprContext ctx)
             => ctx.expr() != null ? BuildExpr(ctx.expr()!) : null;
 
         // ── Constructors ─────────────────────────────────────────────────
@@ -930,7 +934,7 @@ public class XPathParser
             throw new XPathParseException($"Unsupported computed constructor (line {ln})");
         }
 
-        private (XdmQName? name, ExprNode? nameExpr) BuildCompNodeName(XPath4Parser.CompNodeNameContext ctx)
+        private (XdmQName name, ExprNode nameExpr) BuildCompNodeName(XPath4Parser.CompNodeNameContext ctx)
         {
             if (ctx.qNameLiteral() is { } qnl) return (ResolveEqName(qnl.eqName()), null);
             return (null, BuildExpr(ctx.expr()!));
@@ -963,7 +967,7 @@ public class XPathParser
             return new ItemTypeNode { Kind = ItemTypeKind.Item };
         }
 
-        private static OccurrenceIndicator BuildOccurrence(XPath4Parser.OccurrenceIndicatorContext? ctx)
+        private static OccurrenceIndicator BuildOccurrence(XPath4Parser.OccurrenceIndicatorContext ctx)
         {
             if (ctx == null)       return OccurrenceIndicator.ExactlyOne;
             if (ctx.QM()   != null) return OccurrenceIndicator.ZeroOrOne;
@@ -1007,7 +1011,7 @@ public class XPathParser
 
         // ── Name helpers ──────────────────────────────────────────────────
 
-        private (string local, string? prefix, string? ns) SplitEqName(string text)
+        private (string local, string prefix, string ns) SplitEqName(string text)
         {
             if (text.StartsWith("Q{"))
             {
@@ -1032,10 +1036,10 @@ public class XPathParser
             return new XdmQName(local);
         }
 
-        private (string name, string? prefix, SequenceTypeNode? seqType) GetVarNameAndType(XPath4Parser.VarNameAndTypeContext ctx)
+        private (string name, string prefix, SequenceTypeNode seqType) GetVarNameAndType(XPath4Parser.VarNameAndTypeContext ctx)
         {
             var (local, prefix, _) = SplitEqName(ctx.eqName().GetText());
-            SequenceTypeNode? seqType = ctx.typeDeclaration() is { } td ? BuildSequenceType(td.sequenceType()) : null;
+            SequenceTypeNode seqType = ctx.typeDeclaration() is { } td ? BuildSequenceType(td.sequenceType()) : null;
             return (local, prefix, seqType);
         }
     }

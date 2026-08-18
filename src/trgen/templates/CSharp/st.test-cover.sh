@@ -11,12 +11,10 @@ files=()
 for f in $files2
 do
     if [ -d "$f" ]; then continue; fi
-    dotnet trash iconv -f utf-8 $f > /dev/null 2>&1
-    if [ "$?" = "0" ]
-    then
-        files+=( $f )
-    fi
+    files+=( $f )
 done
+
+old=`pwd`
 
 # People often specify a test file directory, but sometimes no
 # tests are provided. Git won't check in an empty directory.

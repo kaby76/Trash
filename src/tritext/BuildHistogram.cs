@@ -30,7 +30,7 @@ internal class BuildHistogram : ITextExtractionStrategy
         tree = parser.start();
     }
 
-    private static int xxxxxxx = 0;
+
     public virtual void EventOccurred(IEventData data, EventType type)
     {
         if (type.Equals(EventType.RENDER_TEXT))

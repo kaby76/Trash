@@ -19,7 +19,7 @@ This program is part of the Trash toolkit.]]>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>2.2.0</Version>
+		<Version>2.4.0</Version>
 		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trparse</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
@@ -50,6 +50,7 @@ This program is part of the Trash toolkit.]]>
 		<ProjectReference Include="../grammars/rex/Generated-CSharp/rex.csproj" />
 		<ProjectReference Include="../grammars/w3cebnf/Generated-CSharp/w3cebnf.csproj" />
 		<ProjectReference Include="../grammars/xtext/Generated-CSharp/xtext.csproj" />
+		<ProjectReference Include="../grammars/ixml/Generated-CSharp/ixml.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="readme.md" Pack="true" PackagePath="" />

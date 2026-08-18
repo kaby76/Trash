@@ -1,0 +1,1 @@
+//parserRuleSpec[RULE_REF/text() = ruleBlock/ruleAltList/labeledAlt/alternative/*[name()="element"][1]/atom/ruleref/*[1]/text()]

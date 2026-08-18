@@ -1,4 +1,4 @@
-// Generated from trgen 0.23.44
+// Generated from trgen 2.4.0
 
 using Antlr4.Runtime;
 using Antlr4.Runtime.Misc;
@@ -117,6 +117,17 @@ public class MyDiagnosticErrorListener : DiagnosticErrorListener
             return str;
         }
         return "";
+    }
+}
+
+public class AmbigCountListener : Antlr4.Runtime.BaseErrorListener
+{
+    public int ambiguity_count = 0;
+
+    public override void ReportAmbiguity(Parser recognizer, DFA dfa, int startIndex, int stopIndex,
+        bool exact, BitSet ambigAlts, ATNConfigSet configs)
+    {
+        ambiguity_count++;
     }
 }
 

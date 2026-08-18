@@ -1,9 +1,8 @@
-<!-- Generated from trgen 0.23.44 -->
+<!-- Generated from trgen 2.4.0 -->
 <Project Sdk="Microsoft.NET.Sdk" >
   <PropertyGroup>
     <TargetFramework>net10.0</TargetFramework>
     <OutputType>Exe</OutputType>
-		<UseAppHost>false</UseAppHost>
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
   </PropertyGroup>
   <ItemGroup>
@@ -12,12 +11,13 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="UTF.Unknown" Version="2.6.0" />
+    <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
+	  <!--PackageReference Include="Antlr4BuildTasks" Version="12.10" PrivateAssets="all" -->
   </ItemGroup>
-  <Import Project="Other.csproj"></Import>
   <PropertyGroup>
     <RestoreProjectStyle>PackageReference</RestoreProjectStyle>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'" >
+  <PropertyGroup>
     <NoWarn>1701;1702;3021</NoWarn>
   </PropertyGroup>
   <PropertyGroup>

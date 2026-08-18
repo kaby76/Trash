@@ -307,7 +307,7 @@ public class XQueryParser
                 var mod = os.orderModifier();
                 bool desc = mod.GetText().Contains("descending");
                 bool emptyGreatest = mod.GetText().Contains("greatest");
-                string? coll = mod.uriLiteral()?.StringLiteral()?.GetText() is { } c ? StripQuotes(c) : null;
+                string coll = mod.uriLiteral()?.StringLiteral()?.GetText() is { } c ? StripQuotes(c) : null;
                 return new OrderSpec { Expression = BuildExprSingle(os.exprSingle()), Descending = desc, EmptyGreatest = emptyGreatest, Collation = coll };
             }).ToList();
             clauses.Add(new OrderByClause { Stable = ctx.KW_STABLE() != null, Specs = specs, Line = ctx.Start.Line, Column = ctx.Start.Column });
@@ -319,7 +319,7 @@ public class XQueryParser
             {
                 var (name, _, seqType) = GetVarNameAndType(gs.varName().eqName(), gs.typeDeclaration());
                 var expr = gs.exprSingle() is { } e ? BuildExprSingle(e) : null;
-                string? coll = gs.uriLiteral()?.StringLiteral()?.GetText() is { } c ? StripQuotes(c) : null;
+                string coll = gs.uriLiteral()?.StringLiteral()?.GetText() is { } c ? StripQuotes(c) : null;
                 return new GroupSpec { Variable = name, Type = seqType, Expression = expr, Collation = coll };
             }).ToList();
             clauses.Add(new GroupByClause { Specs = specs, Line = ctx.Start.Line, Column = ctx.Start.Column });
@@ -622,7 +622,7 @@ public class XQueryParser
         }
 
         private (XdmQName qname, bool allowEmpty) BuildCastTarget(
-            XQuery4Parser.CastTargetContext ctx, XQuery4Parser.OccurrenceIndicatorContext? occ)
+            XQuery4Parser.CastTargetContext ctx, XQuery4Parser.OccurrenceIndicatorContext occ)
         {
             if (ctx.typeName_() is { } tn)
                 return (ResolveEqName(tn.eqName()), occ?.QM() != null);
@@ -796,11 +796,15 @@ public class XQueryParser
                 XQuery4Lexer.KW_CHILD                 => Axis.Child,
                 XQuery4Lexer.KW_DESCENDANT            => Axis.Descendant,
                 XQuery4Lexer.KW_DESCENDANT_OR_SELF    => Axis.DescendantOrSelf,
-                XQuery4Lexer.KW_FOLLOWING             => Axis.Following,
-                XQuery4Lexer.KW_FOLLOWING_SIBLING     => Axis.FollowingSibling,
-                XQuery4Lexer.KW_PARENT                => Axis.Parent,
-                XQuery4Lexer.KW_PRECEDING             => Axis.Preceding,
-                XQuery4Lexer.KW_PRECEDING_SIBLING     => Axis.PrecedingSibling,
+                XQuery4Lexer.KW_FOLLOWING                  => Axis.Following,
+                XQuery4Lexer.KW_FOLLOWING_OR_SELF          => Axis.FollowingOrSelf,
+                XQuery4Lexer.KW_FOLLOWING_SIBLING          => Axis.FollowingSibling,
+                XQuery4Lexer.KW_FOLLOWING_SIBLING_OR_SELF  => Axis.FollowingSiblingOrSelf,
+                XQuery4Lexer.KW_PARENT                     => Axis.Parent,
+                XQuery4Lexer.KW_PRECEDING                  => Axis.Preceding,
+                XQuery4Lexer.KW_PRECEDING_OR_SELF          => Axis.PrecedingOrSelf,
+                XQuery4Lexer.KW_PRECEDING_SIBLING          => Axis.PrecedingSibling,
+                XQuery4Lexer.KW_PRECEDING_SIBLING_OR_SELF  => Axis.PrecedingSiblingOrSelf,
                 XQuery4Lexer.KW_SELF                  => Axis.Self,
                 _                                     => Axis.Child
             };
@@ -838,19 +842,19 @@ public class XQueryParser
 
             if (ctx.processingInstructionNodeType() is { } pi)
             {
-                XdmQName? name = pi.QName() != null ? new XdmQName(pi.QName().GetText()) : null;
+                XdmQName name = pi.QName() != null ? new XdmQName(pi.QName().GetText()) : null;
                 return new KindTestExpr { Kind = XdmNodeKind.ProcessingInstruction, Name = name, Line = ln, Column = col };
             }
             if (ctx.elementNodeType() is { } en)
             {
-                XdmQName? name = null;
+                XdmQName name = null;
                 var nt = en.nameTestUnion()?.nameTest();
                 if (nt is { Length: > 0 } && nt[0].eqName() is { } eqn) name = ResolveEqName(eqn);
                 return new KindTestExpr { Kind = XdmNodeKind.Element, Name = name, Line = ln, Column = col };
             }
             if (ctx.attributeNodeType() is { } an)
             {
-                XdmQName? name = null;
+                XdmQName name = null;
                 var nt = an.nameTestUnion()?.nameTest();
                 if (nt is { Length: > 0 } && nt[0].eqName() is { } eqn) name = ResolveEqName(eqn);
                 return new KindTestExpr { Kind = XdmNodeKind.Attribute, Name = name, Line = ln, Column = col };
@@ -914,7 +918,7 @@ public class XQueryParser
             return result;
         }
 
-        private ExprNode? BuildKeySpecifier(XQuery4Parser.KeySpecifierContext ctx)
+        private ExprNode BuildKeySpecifier(XQuery4Parser.KeySpecifierContext ctx)
         {
             if (ctx.lookupWildcard()    != null) return null;
             if (ctx.QName()             is { } qn)  return new StringLiteralExpr { Value = qn.GetText(),   Line = ctx.Start.Line, Column = ctx.Start.Column };
@@ -961,6 +965,7 @@ public class XQueryParser
                 var raw   = sl.GetText();
                 var inner = raw.Length >= 2 ? raw[1..^1] : raw;
                 inner = raw[0] == '"' ? inner.Replace("\"\"", "\"") : inner.Replace("''", "'");
+                inner = ResolveXmlEscapes(inner);
                 return new StringLiteralExpr { Value = inner, Line = ctx.Start.Line, Column = ctx.Start.Column };
             }
             var num = ctx.numericLiteral()!;
@@ -995,7 +1000,7 @@ public class XQueryParser
             return [];
         }
 
-        private ExprNode? BuildArgument(XQuery4Parser.ArgumentContext ctx)
+        private ExprNode BuildArgument(XQuery4Parser.ArgumentContext ctx)
         {
             if (ctx.exprSingle() is { } es) return BuildExprSingle(es);
             return null;
@@ -1061,7 +1066,7 @@ public class XQueryParser
             return new StringLiteralExpr { Value = ctx.GetText(), Line = ctx.Start.Line, Column = ctx.Start.Column };
         }
 
-        private string? BuildCompNodeNCName(XQuery4Parser.CompNodeNCNameContext ctx)
+        private string BuildCompNodeNCName(XQuery4Parser.CompNodeNCNameContext ctx)
         {
             if (ctx.unreservedNCName() is { } un) return un.NCName().GetText();
             if (ctx.markedNCName()     is { } mn) return mn.QName().GetText();
@@ -1082,12 +1087,12 @@ public class XQueryParser
                 var (name, _, seqType) = GetVarNameAndType(vnt);
                 return new ParameterNode { Name = name, Type = seqType, Line = vnt.Start.Line, Column = vnt.Start.Column };
             }).ToList() ?? [];
-            SequenceTypeNode? retType = sig?.typeDeclaration() is { } td ? BuildSequenceType(td.sequenceType()) : null;
+            SequenceTypeNode retType = sig?.typeDeclaration() is { } td ? BuildSequenceType(td.sequenceType()) : null;
             var body = BuildEnclosedExpr(ifn.functionBody().enclosedExpr()) ?? new SequenceExpr { Items = [] };
             return new InlineFunctionExpr { Parameters = parms, ReturnType = retType, Body = body, Line = ctx.Start.Line, Column = ctx.Start.Column };
         }
 
-        private ExprNode? BuildEnclosedExpr(XQuery4Parser.EnclosedExprContext ctx)
+        private ExprNode BuildEnclosedExpr(XQuery4Parser.EnclosedExprContext ctx)
             => ctx.expr() != null ? BuildExpr(ctx.expr()!) : null;
 
         private ExprNode BuildMapConstructor(XQuery4Parser.MapConstructorContext ctx)
@@ -1178,15 +1183,15 @@ public class XQueryParser
 
         // ── Helpers ───────────────────────────────────────────────────────────
 
-        private (string name, string? prefix, SequenceTypeNode? seqType) GetVarNameAndType(XQuery4Parser.VarNameAndTypeContext ctx)
+        private (string name, string prefix, SequenceTypeNode seqType) GetVarNameAndType(XQuery4Parser.VarNameAndTypeContext ctx)
         {
             var (local, prefix, _) = SplitEqName(ctx.eqName().GetText());
             var seqType = ctx.typeDeclaration() is { } td ? BuildSequenceType(td.sequenceType()) : null;
             return (local, prefix, seqType);
         }
 
-        private (string name, string? prefix, SequenceTypeNode? seqType) GetVarNameAndType(
-            XQuery4Parser.EqNameContext nameCtx, XQuery4Parser.TypeDeclarationContext? tdCtx)
+        private (string name, string prefix, SequenceTypeNode seqType) GetVarNameAndType(
+            XQuery4Parser.EqNameContext nameCtx, XQuery4Parser.TypeDeclarationContext tdCtx)
         {
             var (local, prefix, _) = SplitEqName(nameCtx.GetText());
             var seqType = tdCtx != null ? BuildSequenceType(tdCtx.sequenceType()) : null;
@@ -1201,7 +1206,7 @@ public class XQueryParser
             return new XdmQName(ns ?? string.Empty, local, prefix);
         }
 
-        private (string local, string? prefix, string? ns) SplitEqName(string text)
+        private (string local, string prefix, string ns) SplitEqName(string text)
         {
             // Q{uri}local or Q{uri}prefix:local
             if (text.StartsWith("Q{"))
@@ -1226,6 +1231,51 @@ public class XQueryParser
             if (raw.Length >= 2 && ((raw[0] == '"' && raw[^1] == '"') || (raw[0] == '\'' && raw[^1] == '\'')))
                 return raw[1..^1];
             return raw;
+        }
+
+        /// <summary>
+        /// Resolves XML character references (&#N; &#xNN;) and predefined entity
+        /// references (&amp; &lt; &gt; &quot; &apos;) in the body of an XQuery
+        /// string literal, per XQuery 1.0 spec §2.6.
+        /// </summary>
+        private static string ResolveXmlEscapes(string s)
+        {
+            if (!s.Contains('&')) return s;
+            var sb = new System.Text.StringBuilder(s.Length);
+            int i = 0;
+            while (i < s.Length)
+            {
+                if (s[i] != '&') { sb.Append(s[i++]); continue; }
+                int semi = s.IndexOf(';', i + 1);
+                if (semi < 0) { sb.Append(s[i++]); continue; }
+                var entity = s[(i + 1)..semi];
+                switch (entity)
+                {
+                    case "amp":  sb.Append('&');  break;
+                    case "lt":   sb.Append('<');  break;
+                    case "gt":   sb.Append('>');  break;
+                    case "quot": sb.Append('"');  break;
+                    case "apos": sb.Append('\''); break;
+                    default:
+                        if (entity.Length > 1 && entity[0] == '#')
+                        {
+                            bool hex = entity.Length > 2 && (entity[1] == 'x' || entity[1] == 'X');
+                            var digits = hex ? entity[2..] : entity[1..];
+                            if (int.TryParse(digits,
+                                    hex ? System.Globalization.NumberStyles.HexNumber
+                                        : System.Globalization.NumberStyles.Integer,
+                                    null, out int cp))
+                                sb.Append(char.ConvertFromUtf32(cp));
+                            else
+                                sb.Append('&').Append(entity).Append(';');
+                        }
+                        else
+                            sb.Append('&').Append(entity).Append(';');
+                        break;
+                }
+                i = semi + 1;
+            }
+            return sb.ToString();
         }
     }
 }

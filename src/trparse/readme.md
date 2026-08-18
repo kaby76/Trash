@@ -76,17 +76,17 @@ works without modification.
 
 ### How it works
 
-1. **InterpFileReader** parses the `.interp` text into token names, rule names,
+Release 2.4.0.
    channel/mode names, and the raw ATN integer array.
-2. **AtnDeserializer** converts the integer array into `MyATN` / `MyATNState` /
+Release 2.4.0.
    `MyTransition` structures (custom types in `EarleyAtnParser/`, no Antlr4
    runtime dependency).
-3. **LexerAtnSimulator** runs a longest-match NFA simulation over the input
+Release 2.4.0.
    characters to produce a full token stream (all channels).
-4. **EarleyParser** runs the Earley algorithm directly over the parser ATN,
+Release 2.4.0.
    producing a complete single-derivation parse tree
    (`ParserRuleContext`-compatible).
-5. **InterpRunner** wraps the pipeline and converts the result to a
+Release 2.4.0.
    `ParsingResultSet` compatible with the rest of the toolkit.
 
 ## Usage
@@ -112,7 +112,7 @@ works without modification.
 
 ## Current version
 
-2.0 Unified dispatcher for the Trash toolkit. Fix broken Cpp target on Github. Add tokens per second perf measurement. Added more perf measurements to templates. Added Earley ATN-based parsing via --pinterp / --linterp.
+Release 2.4.0.
 
 ## License
 
