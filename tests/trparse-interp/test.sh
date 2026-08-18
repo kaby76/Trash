@@ -17,34 +17,33 @@ dotnet trash gen -t CSharp
 cd Generated-CSharp
 bash build.sh
 printf "1 + 2 + 3" | dotnet trash parse | dotnet trash tree > trparse.tree
+echo Diff of native against the golden file.
 dos2unix trparse.tree
 dos2unix ../Gold/trparse.tree
 diff trparse.tree Gold/trparse.tree
-echo Diff against the golden file.
 if [ "$?" != "0" ]
 then
-    echo Test failed.
+    echo Native parse test failed.
     cd ..
-    rm -rf Generated-CSharp
+    # Leave temp files around for debugging.
     exit 1
 fi
 cd ..
-rm -rf Generated-CSharp
+rm -r Generated-CSharp
 
 echo Generate .interp files from the grammar and parse.
 dotnet trash parse Expression.g4 > grammar.json
 dotnet trash interp -o interp/ < grammar.json
 printf "1 + 2 + 3" | dotnet trash parse --lib interp/ | dotnet trash tree > trparse.tree
 
-echo Diff against the golden file.
+echo Diff of interp against the golden file.
 dos2unix trparse.tree
 dos2unix Gold/trparse.tree
 diff trparse.tree Gold/trparse.tree
 if [ "$?" != "0" ]
 then
     echo Test failed.
-    rm -rf Generated-CSharp
-    rm -rf interp *.json *.tree
+    # Leave temp files around for debugging.
     exit 1
 fi
 
