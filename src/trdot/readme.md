@@ -63,7 +63,7 @@ The output will be:
 
 ## Current version
 
-Release 2.4.0.
+Release 2.5.0.
 
 ## License
 
