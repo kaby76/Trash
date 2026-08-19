@@ -1,0 +1,11 @@
+grammar Kleene2;
+s : a ;
+a : a ';' c d e | e f g ;
+b : e ';' b | e ;
+c : 'c';
+d : 'd';
+e : e '+' e | INT ;
+f : 'f';
+g : 'g';
+INT : [0-9]+ ;
+WS : [ \t\n]+ -> skip ;

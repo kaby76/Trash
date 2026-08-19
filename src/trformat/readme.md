@@ -18,7 +18,7 @@ Format of grammar using machine learning.
 
 ## Current version
 
-Release 2.4.0.
+Release 2.5.0.
 
 ## License
 

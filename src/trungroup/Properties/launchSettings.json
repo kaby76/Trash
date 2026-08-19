@@ -1,8 +1,0 @@
-{
-  "profiles": {
-    "trungroup": {
-      "commandName": "Project",
-      "commandLineArgs": "-f o.pt"
-    }
-  }
-}

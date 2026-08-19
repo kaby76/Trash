@@ -32,6 +32,15 @@ public static class AtnDeserializer
         for (int i = 0; i < stateCount; i++)
         {
             var stateType = (MyStateType)data[p++];
+
+            // InvalidType states are null placeholders — no ruleIndex word follows.
+            // Mirrors ATNDeserializer.ReadStates in the ANTLR4 runtime.
+            if (stateType == MyStateType.InvalidType)
+            {
+                states[i] = null;
+                continue;
+            }
+
             int ruleIndex = data[p++];
             states[i] = new MyATNState { stateNumber = i, ruleIndex = ruleIndex, stateType = stateType };
 
@@ -62,9 +71,10 @@ public static class AtnDeserializer
         int nonGreedyCount = data[p++];
         p += nonGreedyCount;
 
-        // --- Precedence states (skip) ---
+        // --- Precedence (left-recursive) rule start states ---
         int precedenceCount = data[p++];
-        p += precedenceCount;
+        for (int i = 0; i < precedenceCount; i++)
+            states[data[p++]].isPrecedenceRule = true;
 
         // --- Rules ---
         int ruleCount = data[p++];
@@ -195,6 +205,23 @@ public static class AtnDeserializer
                 int a1 = data[p++];
                 int a2 = data[p++];
                 atn.lexerActions[i] = new MyLexerAction(actionType, a1, a2);
+            }
+        }
+
+        // Mark StarLoopEntry states that are the precedence suffix loop of a left-recursive rule.
+        // Mirrors ATNDeserializer.MarkPrecedenceDecisions in the ANTLR4 runtime.
+        foreach (var s in states)
+        {
+            if (s == null) continue;
+            if (s.stateType != MyStateType.StarLoopEntry) continue;
+            if (s.ruleIndex < 0 || s.ruleIndex >= ruleCount || !atn.start[s.ruleIndex].isPrecedenceRule) continue;
+            // Last transition must lead to a LoopEnd whose sole transition exits to RuleStop.
+            var loopEnd = s.transitions[^1].target;
+            if (loopEnd.stateType == MyStateType.LoopEnd &&
+                loopEnd.transitions.Count == 1 &&
+                loopEnd.transitions[0].target.stateType == MyStateType.RuleStop)
+            {
+                s.isPrecedenceDecision = true;
             }
         }
 

@@ -1,4 +1,4 @@
-Release 2.4.0.
+Release 2.5.0.
 
 # trash
 
@@ -65,7 +65,6 @@ Both the full command name and a short alias (without the `tr` prefix) are accep
 | trtree         | tree        |
 | trunfold       | unfold      |
 | trunfoldlit    | unfoldlit   |
-| trungroup      | ungroup     |
 | trwdog         | wdog        |
 | trxpath        | xpath       |
 | trxml          | xml         |
