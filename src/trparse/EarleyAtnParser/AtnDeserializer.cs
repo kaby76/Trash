@@ -208,6 +208,17 @@ public static class AtnDeserializer
             }
         }
 
+        // Mark tail-call rule transitions: when the follow state is a RuleStop there is
+        // nothing left in the calling rule after the callee returns, so closure can skip
+        // pushing a context frame.
+        foreach (var s in states)
+        {
+            if (s == null) continue;
+            foreach (var tr in s.transitions)
+                if (tr is MyRuleTransition rt && rt.target.stateType == MyStateType.RuleStop)
+                    rt.isTailCall = true;
+        }
+
         // Mark StarLoopEntry states that are the precedence suffix loop of a left-recursive rule.
         // Mirrors ATNDeserializer.MarkPrecedenceDecisions in the ANTLR4 runtime.
         foreach (var s in states)

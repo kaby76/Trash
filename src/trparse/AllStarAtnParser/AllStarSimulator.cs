@@ -150,8 +150,11 @@ public sealed class AllStarSimulator
 
                     case MyRuleTransition rt:
                         // In SLL: don't push context (treat all stacks as EMPTY).
-                        // In LL: push the follow state so we can pop on RuleStop.
-                        PredictionContext newCtx = fullCtx
+                        // In LL: push the follow state so we can pop on RuleStop,
+                        // unless this is a tail call — the callee will return directly
+                        // to whatever is already on the context stack, so no new frame
+                        // is needed.
+                        PredictionContext newCtx = (fullCtx && !rt.isTailCall)
                             ? new SingletonPredictionContext(config.Context, rt.target.stateNumber)
                             : config.Context;
                         next = new ATNConfig(_atn.start[rt.ruleIndex], config.Alt, newCtx);
