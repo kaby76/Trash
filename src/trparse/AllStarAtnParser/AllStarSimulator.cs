@@ -100,56 +100,61 @@ public sealed class AllStarSimulator
         return closed;
     }
 
-    private void Closure(ATNConfig config, ATNConfigSet configs,
+    private void Closure(ATNConfig seed, ATNConfigSet configs,
                          HashSet<(int stateNum, int alt, int ctxHash)> busy, bool fullCtx)
     {
-        var key = (config.State.stateNumber, config.Alt, config.Context.GetHashCode());
-        if (!busy.Add(key)) return;
+        var stack = new Stack<ATNConfig>();
+        stack.Push(seed);
 
-        configs.Add(config);
-
-        if (config.State.stateType == MyStateType.RuleStop)
+        while (stack.Count > 0)
         {
-            if (!fullCtx)
-                return; // SLL: can't pop — leave config here
+            var config = stack.Pop();
 
-            // LL: pop the context stack
-            if (config.Context.IsEmpty)
-                return; // at outermost level — done
+            var key = (config.State.stateNumber, config.Alt, config.Context.GetHashCode());
+            if (!busy.Add(key)) continue;
 
-            int returnStateNum = config.Context.ReturnState;
-            PredictionContext parent = config.Context.Parent;
-            if (returnStateNum == PredictionContext.EMPTY_RETURN_STATE)
-                return;
+            configs.Add(config);
 
-            var returnState = _atn.allStates[returnStateNum];
-            Closure(new ATNConfig(returnState, config.Alt, parent), configs, busy, fullCtx);
-            return;
-        }
-
-        foreach (var tr in config.State.transitions)
-        {
-            ATNConfig next = null;
-            switch (tr)
+            if (config.State.stateType == MyStateType.RuleStop)
             {
-                case MyEpsilonTransition:
-                case MyActionTransition:
-                case MyPredicateTransition:
-                case MyPrecedencePredicateTransition:
-                    next = config.WithState(tr.target);
-                    break;
+                if (!fullCtx) continue; // SLL: can't pop — leave config here
 
-                case MyRuleTransition rt:
-                    // In SLL: don't push context (treat all stacks as EMPTY).
-                    // In LL: push the follow state so we can pop on RuleStop.
-                    PredictionContext newCtx = fullCtx
-                        ? new SingletonPredictionContext(config.Context, rt.target.stateNumber)
-                        : config.Context;
-                    next = new ATNConfig(_atn.start[rt.ruleIndex], config.Alt, newCtx);
-                    break;
-                // Terminal transitions are not followed during closure.
+                // LL: pop the context stack
+                if (config.Context.IsEmpty) continue; // at outermost level — done
+
+                int returnStateNum = config.Context.ReturnState;
+                PredictionContext parent = config.Context.Parent;
+                if (returnStateNum == PredictionContext.EMPTY_RETURN_STATE) continue;
+
+                var returnState = _atn.allStates[returnStateNum];
+                stack.Push(new ATNConfig(returnState, config.Alt, parent));
+                continue;
             }
-            if (next != null) Closure(next, configs, busy, fullCtx);
+
+            foreach (var tr in config.State.transitions)
+            {
+                ATNConfig next = null;
+                switch (tr)
+                {
+                    case MyEpsilonTransition:
+                    case MyActionTransition:
+                    case MyPredicateTransition:
+                    case MyPrecedencePredicateTransition:
+                        next = config.WithState(tr.target);
+                        break;
+
+                    case MyRuleTransition rt:
+                        // In SLL: don't push context (treat all stacks as EMPTY).
+                        // In LL: push the follow state so we can pop on RuleStop.
+                        PredictionContext newCtx = fullCtx
+                            ? new SingletonPredictionContext(config.Context, rt.target.stateNumber)
+                            : config.Context;
+                        next = new ATNConfig(_atn.start[rt.ruleIndex], config.Alt, newCtx);
+                        break;
+                    // Terminal transitions are not followed during closure.
+                }
+                if (next != null) stack.Push(next);
+            }
         }
     }
 
