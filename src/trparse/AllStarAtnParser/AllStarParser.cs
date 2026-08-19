@@ -1,3 +1,4 @@
+#nullable enable
 namespace Trash.EarleyAtn;
 
 // No Antlr4.Runtime.Standard types used anywhere in this file.
@@ -82,7 +83,8 @@ public static class AllStarParser
         /// <summary>Parse one rule; emits Enter/Exit/Consume events. Returns false on error.</summary>
         public bool ParseRule(int ruleIndex, List<ParseEvent> events, PredictionContext callerCtx)
         {
-            events.Add(ParseEvent.EnterRule(ruleIndex));
+            bool isRecursion = _atn.start[ruleIndex].isPrecedenceRule;
+            events.Add(isRecursion ? ParseEvent.EnterRecursionRule(ruleIndex) : ParseEvent.EnterRule(ruleIndex));
             var state = _atn.start[ruleIndex];
 
             while (state.stateType != MyStateType.RuleStop)
@@ -104,7 +106,13 @@ public static class AllStarParser
                             Console.Error.WriteLine($"[ALLSTAR] FAIL: alt out of range");
                         return false;
                     }
-                    state = state.transitions[alt - 1].target;
+                    var nextState = state.transitions[alt - 1].target;
+                    // Mirror ANTLR4 ParserInterpreter.visitDecisionState: when taking a non-exit
+                    // path from the precedence suffix loop, wrap the accumulated context as the
+                    // first child of a fresh rule element (PushNewRecursionContext equivalent).
+                    if (state.isPrecedenceDecision && nextState.stateType != MyStateType.LoopEnd)
+                        events.Add(ParseEvent.PushRecursionContext(state.ruleIndex));
+                    state = nextState;
                 }
                 else if (state.transitions.Count == 1)
                 {
@@ -151,7 +159,7 @@ public static class AllStarParser
                 }
             }
 
-            events.Add(ParseEvent.ExitRule(ruleIndex));
+            events.Add(isRecursion ? ParseEvent.ExitRecursionRule(ruleIndex) : ParseEvent.ExitRule(ruleIndex));
             return true;
         }
 

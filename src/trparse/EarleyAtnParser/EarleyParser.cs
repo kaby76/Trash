@@ -1,3 +1,4 @@
+#nullable enable
 namespace Trash.EarleyAtn;
 
 // No Antlr4.Runtime.Standard types used anywhere in this file.
