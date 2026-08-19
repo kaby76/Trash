@@ -88,9 +88,14 @@ public static class EarleyParser
 
         // Wrap with enter/exit for the start rule (the seed has no Predict back-pointer).
         var events = new List<ParseEvent>(innerEvents.Count + 2);
-        events.Add(ParseEvent.EnterRule(startRuleIndex));
+        bool startIsRecursion = atn.start[startRuleIndex].isPrecedenceRule;
+        events.Add(startIsRecursion
+            ? ParseEvent.EnterRecursionRule(startRuleIndex)
+            : ParseEvent.EnterRule(startRuleIndex));
         events.AddRange(innerEvents);
-        events.Add(ParseEvent.ExitRule(startRuleIndex));
+        events.Add(startIsRecursion
+            ? ParseEvent.ExitRecursionRule(startRuleIndex)
+            : ParseEvent.ExitRule(startRuleIndex));
         return events;
     }
 
@@ -112,13 +117,17 @@ public static class EarleyParser
             {
                 var (follow, rest) = it.CallStack.Pop();
                 var cont = new Item(follow, it.Origin, rest, pos);
+                int ri = it.State.ruleIndex;
+                Back completeBack = (ri >= 0 && ri < atn.start.Length && atn.start[ri].isPrecedenceRule)
+                    ? Back.CompleteRecursion(it, ri)
+                    : Back.Complete(it, ri);
                 if (set.Add(cont))
                 {
                     work.Push(cont);
-                    backs.TryAdd(cont, Back.Complete(it, it.State.ruleIndex));
+                    backs.TryAdd(cont, completeBack);
                 }
                 else if (!backs.ContainsKey(cont))
-                    backs[cont] = Back.Complete(it, it.State.ruleIndex);
+                    backs[cont] = completeBack;
             }
 
             foreach (var tr in it.State.transitions)
@@ -131,16 +140,28 @@ public static class EarleyParser
                     case MyPredicateTransition:
                     case MyPrecedencePredicateTransition:
                         next = new Item(tr.target, it.Origin, it.CallStack, pos);
-                        if (set.Add(next)) { work.Push(next); backs.TryAdd(next, Back.Epsilon(it)); }
-                        else if (!backs.ContainsKey(next)) backs[next] = Back.Epsilon(it);
+                        // Detect the suffix-loop entry of a left-recursive rule:
+                        // epsilon from StarLoopEntry.isPrecedenceDecision to a non-LoopEnd target.
+                        Back epsilonBack =
+                            it.State.stateType == MyStateType.StarLoopEntry &&
+                            it.State.isPrecedenceDecision &&
+                            tr.target.stateType != MyStateType.LoopEnd
+                                ? Back.PushRecursion(it, it.State.ruleIndex)
+                                : Back.Epsilon(it);
+                        if (set.Add(next)) { work.Push(next); backs.TryAdd(next, epsilonBack); }
+                        else if (!backs.ContainsKey(next)) backs[next] = epsilonBack;
                         break;
 
                     case MyRuleTransition rt:
                         var pushed    = it.CallStack.Push(rt.target);
                         var ruleStart = atn.start[rt.ruleIndex];
                         var enter     = new Item(ruleStart, it.Origin, pushed, pos);
-                        if (set.Add(enter)) { work.Push(enter); backs.TryAdd(enter, Back.Predict(it, rt.ruleIndex)); }
-                        else if (!backs.ContainsKey(enter)) backs[enter] = Back.Predict(it, rt.ruleIndex);
+                        // Left-recursive rule calls use Predict/Complete Recursion variants.
+                        Back predictBack = ruleStart.isPrecedenceRule
+                            ? Back.PredictRecursion(it, rt.ruleIndex)
+                            : Back.Predict(it, rt.ruleIndex);
+                        if (set.Add(enter)) { work.Push(enter); backs.TryAdd(enter, predictBack); }
+                        else if (!backs.ContainsKey(enter)) backs[enter] = predictBack;
                         break;
                 }
             }
@@ -176,6 +197,18 @@ public static class EarleyParser
                     break;
                 case BackKind.Complete:
                     ev.Add(ParseEvent.ExitRule(b.RuleIndex));
+                    cur = b.Prev;
+                    break;
+                case BackKind.PredictRecursion:
+                    ev.Add(ParseEvent.EnterRecursionRule(b.RuleIndex));
+                    cur = b.Prev;
+                    break;
+                case BackKind.CompleteRecursion:
+                    ev.Add(ParseEvent.ExitRecursionRule(b.RuleIndex));
+                    cur = b.Prev;
+                    break;
+                case BackKind.PushRecursion:
+                    ev.Add(ParseEvent.PushRecursionContext(b.RuleIndex));
                     cur = b.Prev;
                     break;
                 default:
@@ -272,7 +305,7 @@ public static class EarleyParser
     // Backpointers
     // =========================================================================
 
-    private enum BackKind { Seed, Epsilon, Predict, Complete, Scan }
+    private enum BackKind { Seed, Epsilon, Predict, Complete, Scan, PredictRecursion, CompleteRecursion, PushRecursion }
 
     private sealed class Back
     {
@@ -284,10 +317,13 @@ public static class EarleyParser
         private Back(BackKind k, Item p, int r, int t)
         { Kind = k; Prev = p; RuleIndex = r; TokenIndex = t; }
 
-        public static Back Seed()                    => new(BackKind.Seed,     default, -1, -1);
-        public static Back Epsilon(Item p)           => new(BackKind.Epsilon,  p,       -1, -1);
-        public static Back Predict(Item p, int r)    => new(BackKind.Predict,  p,       r,  -1);
-        public static Back Complete(Item p, int r)   => new(BackKind.Complete, p,       r,  -1);
-        public static Back Scan(Item p, int t)       => new(BackKind.Scan,     p,       -1, t );
+        public static Back Seed()                          => new(BackKind.Seed,             default, -1, -1);
+        public static Back Epsilon(Item p)                 => new(BackKind.Epsilon,          p,       -1, -1);
+        public static Back Predict(Item p, int r)          => new(BackKind.Predict,          p,       r,  -1);
+        public static Back Complete(Item p, int r)         => new(BackKind.Complete,         p,       r,  -1);
+        public static Back Scan(Item p, int t)             => new(BackKind.Scan,             p,       -1, t );
+        public static Back PredictRecursion(Item p, int r) => new(BackKind.PredictRecursion, p,       r,  -1);
+        public static Back CompleteRecursion(Item p, int r)=> new(BackKind.CompleteRecursion,p,       r,  -1);
+        public static Back PushRecursion(Item p, int r)    => new(BackKind.PushRecursion,    p,       r,  -1);
     }
 }

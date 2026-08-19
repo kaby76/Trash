@@ -7,6 +7,11 @@ public class MyATNState
     public MyStateType stateType;
     public List<MyTransition> transitions = new();
 
+    // For RuleStart states of left-recursive rules
+    public bool isPrecedenceRule;
+    // For StarLoopEntry states that are the top-level suffix loop of a left-recursive rule
+    public bool isPrecedenceDecision;
+
     // For LoopEnd states
     public MyATNState loopBackState;
     // For BlockStart/PlusBlockStart/StarBlockStart states

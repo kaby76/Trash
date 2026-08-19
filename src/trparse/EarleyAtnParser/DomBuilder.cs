@@ -28,6 +28,9 @@ public static class DomBuilder
         bool lineNumbers)
     {
         var stack = new Stack<UnvParseTreeElement>();
+        // For left-recursive rules: saves the parent element that will receive the
+        // final accumulated rule element when ExitRecursionRule fires.
+        var recursionParentStack = new Stack<UnvParseTreeElement>();
         UnvParseTreeElement root = null;
         int prevAllIdx = -1; // all-token index of the last consumed on-channel token
 
@@ -51,6 +54,47 @@ public static class DomBuilder
                         var done = stack.Pop();
                         SetSiblingLinks(done);
                         if (lineNumbers) PropagateLineColumn(done);
+                    }
+                    break;
+                }
+
+                // Left-recursive rule support (mirrors ANTLR4 ParserInterpreter behaviour)
+                case ParseEventKind.EnterRecursionRule:
+                {
+                    // Create element but do NOT add to parent yet — parent is saved for ExitRecursionRule.
+                    var parent = stack.Count > 0 ? stack.Peek() : null;
+                    var elem = MakeRuleElement(ruleNames[ev.Index], ev.Index);
+                    if (root == null && parent == null) root = elem;
+                    recursionParentStack.Push(parent);
+                    stack.Push(elem);
+                    break;
+                }
+
+                case ParseEventKind.PushRecursionContext:
+                {
+                    // Wrap the accumulated context as the first child of a fresh element.
+                    // Mirrors Parser.PushNewRecursionContext: previous._ctx becomes first child of new _ctx.
+                    var prev = stack.Pop();
+                    var next = MakeRuleElement(ruleNames[ev.Index], ev.Index);
+                    prev.ParentNode = next;
+                    next.ChildNodes.Add(prev);
+                    stack.Push(next);
+                    break;
+                }
+
+                case ParseEventKind.ExitRecursionRule:
+                {
+                    // Mirrors Parser.UnrollRecursionContexts: add accumulated element to saved parent.
+                    if (stack.Count > 0)
+                    {
+                        var done = stack.Pop();
+                        SetSiblingLinks(done);
+                        if (lineNumbers) PropagateLineColumn(done);
+                        var parent = recursionParentStack.Pop();
+                        if (parent != null)
+                            AddChild(parent, done);
+                        else
+                            root = done; // outermost recursion rule becomes the root
                     }
                     break;
                 }
