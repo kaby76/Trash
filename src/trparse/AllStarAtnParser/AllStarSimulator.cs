@@ -7,6 +7,12 @@ public sealed class AllStarSimulator
 {
     private readonly MyATN _atn;
 
+    // Reusable scratch buffers for Closure — cleared at the start of each use so
+    // behaviour is identical to allocating fresh collections, but without the
+    // per-call allocation cost on hot prediction paths.
+    private readonly Stack<ATNConfig> _closureStack = new();
+    private readonly HashSet<(int stateNum, int alt, int ctxHash)> _closureBusy = new();
+
     public AllStarSimulator(MyATN atn) => _atn = atn;
 
     // Returns the predicted alternative (1-indexed) for the given decision.
@@ -49,14 +55,14 @@ public sealed class AllStarSimulator
     private int ExecATN(MyATNState decisionState, int[] tokenTypes, int startPos,
                         PredictionContext baseCtx, bool fullCtx)
     {
-        var busy = new HashSet<(int stateNum, int alt, int ctxHash)>();
+        _closureBusy.Clear();
         var initial = new ATNConfigSet();
 
         for (int i = 0; i < decisionState.transitions.Count; i++)
         {
             var target = decisionState.transitions[i].target;
             var cfg = new ATNConfig(target, i + 1, baseCtx);
-            Closure(cfg, initial, busy, fullCtx);
+            Closure(cfg, initial, fullCtx);
         }
 
         int alt = initial.GetUniqueAlt();
@@ -93,25 +99,24 @@ public sealed class AllStarSimulator
             }
         }
 
+        _closureBusy.Clear();
         var closed = new ATNConfigSet();
-        var busy = new HashSet<(int, int, int)>();
         foreach (var c in reach.Configs)
-            Closure(c, closed, busy, fullCtx);
+            Closure(c, closed, fullCtx);
         return closed;
     }
 
-    private void Closure(ATNConfig seed, ATNConfigSet configs,
-                         HashSet<(int stateNum, int alt, int ctxHash)> busy, bool fullCtx)
+    private void Closure(ATNConfig seed, ATNConfigSet configs, bool fullCtx)
     {
-        var stack = new Stack<ATNConfig>();
-        stack.Push(seed);
+        _closureStack.Clear();
+        _closureStack.Push(seed);
 
-        while (stack.Count > 0)
+        while (_closureStack.Count > 0)
         {
-            var config = stack.Pop();
+            var config = _closureStack.Pop();
 
             var key = (config.State.stateNumber, config.Alt, config.Context.GetHashCode());
-            if (!busy.Add(key)) continue;
+            if (!_closureBusy.Add(key)) continue;
 
             configs.Add(config);
 
@@ -127,7 +132,7 @@ public sealed class AllStarSimulator
                 if (returnStateNum == PredictionContext.EMPTY_RETURN_STATE) continue;
 
                 var returnState = _atn.allStates[returnStateNum];
-                stack.Push(new ATNConfig(returnState, config.Alt, parent));
+                _closureStack.Push(new ATNConfig(returnState, config.Alt, parent));
                 continue;
             }
 
@@ -153,7 +158,7 @@ public sealed class AllStarSimulator
                         break;
                     // Terminal transitions are not followed during closure.
                 }
-                if (next != null) stack.Push(next);
+                if (next != null) _closureStack.Push(next);
             }
         }
     }
