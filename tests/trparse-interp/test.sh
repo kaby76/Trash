@@ -33,8 +33,24 @@ rm -r Generated-CSharp
 
 echo Generate .interp files from the grammar and parse.
 dotnet trash parse Expression.g4 > grammar.json
+echo Earley parse...
 dotnet trash interp -o interp/ < grammar.json
 printf "1 + 2 + 3 + 4" | dotnet trash parse --lib interp/ | dotnet trash tree > trparse.tree
+
+echo Diff of interp against the golden file.
+dos2unix trparse.tree
+dos2unix Gold/trparse.tree
+diff trparse.tree Gold/trparse.tree
+if [ "$?" != "0" ]
+then
+    echo Test failed.
+    # Leave temp files around for debugging.
+    exit 1
+fi
+
+echo 'ALL(*) parse...'
+dotnet trash interp -o interp/ < grammar.json
+printf "1 + 2 + 3 + 4" | dotnet trash parse --lib interp/ --allstar | dotnet trash tree > trparse.tree
 
 echo Diff of interp against the golden file.
 dos2unix trparse.tree
