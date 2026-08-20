@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using System.IO;
-using Trash.EarleyAtn;
+using EarleyAtnParser;
+using AllStarAtnParser;
 using Xunit;
 using Xunit.Abstractions;
 

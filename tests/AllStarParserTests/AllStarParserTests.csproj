@@ -38,6 +38,17 @@
     <Content Include="../../examples/abnf-interp/examples/apg-java/*.bnf"
              CopyToOutputDirectory="PreserveNewest"
              Link="TestData/examples/apg-java/%(Filename)%(Extension)" />
+
+    <!-- MySQL (Positive-Technologies) interp files and SQL examples -->
+    <Content Include="../grammars-v4/Positive-Technologies/interp/MySqlParser.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/mysql-interp/MySqlParser.interp" />
+    <Content Include="../grammars-v4/Positive-Technologies/interp/MySqlLexer.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/mysql-interp/MySqlLexer.interp" />
+    <Content Include="../grammars-v4/Positive-Technologies/examples/*.sql"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/mysql-examples/%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>

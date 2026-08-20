@@ -1,4 +1,4 @@
-namespace Trash.EarleyAtn;
+namespace Atn;
 
 // Standalone sorted-merged interval set with no Antlr4 runtime dependencies.
 public class MyIntervalSet

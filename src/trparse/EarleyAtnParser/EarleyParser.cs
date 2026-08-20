@@ -1,5 +1,6 @@
-#nullable enable
-namespace Trash.EarleyAtn;
+namespace EarleyAtnParser;
+
+using Atn;
 
 // No Antlr4.Runtime.Standard types used anywhere in this file.
 
@@ -18,7 +19,7 @@ public static class EarleyParser
     /// Parse allTokens (all channels, EOF at end) and return an ordered
     /// ParseEvent list, or null if the input is rejected by the grammar.
     /// </summary>
-    public static List<ParseEvent>? Parse(
+    public static List<ParseEvent> Parse(
         MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex)
     {
         if (atn == null) throw new ArgumentNullException(nameof(atn));
@@ -173,7 +174,7 @@ public static class EarleyParser
     // Backpointer reconstruction → ParseEvent list
     // =========================================================================
 
-    private static List<ParseEvent>? ReconstructEvents(Item accept, Dictionary<Item, Back> backs)
+    private static List<ParseEvent> ReconstructEvents(Item accept, Dictionary<Item, Back> backs)
     {
         var ev  = new List<ParseEvent>();
         var cur = accept;

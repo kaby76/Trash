@@ -1,8 +1,12 @@
-namespace Trash.EarleyAtn;
+namespace AllStarAtnParser;
+using EarleyAtnParser;
 
 // Represents a parser call stack for ALL(*) prediction.
 // Two concrete forms: Empty (bottom of stack) and Singleton (one frame).
-// No Antlr4.Runtime.Standard types used.
+
+// Absolutely no Antlr4.Runtime.Standard types used anywhere in this
+// file!
+
 public abstract class PredictionContext
 {
     public const int EMPTY_RETURN_STATE = int.MaxValue;

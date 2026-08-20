@@ -1,4 +1,4 @@
-namespace Trash.EarleyAtn;
+namespace Atn;
 
 // Base transition class - no Antlr4 runtime dependencies.
 public abstract class MyTransition

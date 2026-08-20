@@ -1,7 +1,10 @@
-#nullable enable
-namespace Trash.EarleyAtn;
+namespace AllStarAtnParser;
 
-// No Antlr4.Runtime.Standard types used anywhere in this file.
+using Atn;
+using EarleyAtnParser;
+
+// Absolutely no Antlr4.Runtime.Standard types used anywhere in this
+// file!
 
 /// <summary>
 /// Interpretive ALL(*) parser.
@@ -20,7 +23,7 @@ public static class AllStarParser
     /// Parse allTokens (all channels, EOF at end) and return an ordered
     /// ParseEvent list, or null if the input is rejected by the grammar.
     /// </summary>
-    public static List<ParseEvent>? Parse(
+    public static List<ParseEvent> Parse(
         MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex)
     {
         if (atn == null) throw new ArgumentNullException(nameof(atn));

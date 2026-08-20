@@ -1,4 +1,4 @@
-namespace Trash.EarleyAtn;
+namespace Atn;
 
 // Lightweight event produced by Earley and ALL(*) parsers.
 // No Antlr4.Runtime.Standard types used.

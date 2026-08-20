@@ -1,9 +1,15 @@
-namespace Trash.EarleyAtn;
+namespace AllStarAtnParser;
+
+using Atn;
+using EarleyAtnParser;
 
 // A set of ATNConfig values for ALL(*) prediction.
 // Deduplication key: (stateNumber, alt) — one config per (state, alt) pair.
 // This is correct for SLL (EMPTY context) and a pragmatic approximation for LL.
-// No Antlr4.Runtime.Standard types used.
+
+// Absolutely no Antlr4.Runtime.Standard types used anywhere in this
+// file!
+
 public sealed class ATNConfigSet
 {
     private readonly HashSet<(int stateNum, int alt)> _keys = new();

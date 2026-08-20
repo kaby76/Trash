@@ -1,9 +1,9 @@
-namespace Trash.EarleyAtn;
+namespace AllStarAtnParser;
 
-using Antlr4.Runtime;
 using ParseTreeEditing.UnvParseTreeDOM;
 using EditableAntlrTree;
 using AntlrJson;
+using Atn;
 
 /// <summary>
 /// Orchestrates interp-file-based parsing using the ALL(*) parser.
@@ -11,6 +11,8 @@ using AntlrJson;
 /// </summary>
 public static class AllStarRunner
 {
+    public static bool show_tokens = false;
+    
     public static (ParsingResultSet Result, int TokenCount) Run(
         string parserInterpPath,
         string lexerInterpPath,
@@ -18,17 +20,34 @@ public static class AllStarRunner
         string fileName,
         bool lineNumbers)
     {
+        // Get options to lexer from process args.
+        var args = Environment.GetCommandLineArgs().ToList();
+
+        // Determine which preprocessor to run: gcc or cl.exe or clang.
+        show_tokens = args?.Where(a => a.IndexOf("--tokens", StringComparison.OrdinalIgnoreCase) >= 0).Any() ?? false;
+
         var parserInterp = InterpFileReader.Read(File.ReadAllText(parserInterpPath));
         var lexerInterp  = InterpFileReader.Read(File.ReadAllText(lexerInterpPath));
 
         var parserAtn = AtnDeserializer.Deserialize(parserInterp.AtnData);
         var lexerAtn  = AtnDeserializer.Deserialize(lexerInterp.AtnData);
 
-        var lexerVocab  = new Vocabulary(lexerInterp.LiteralNames,  lexerInterp.SymbolicNames);
-        var parserVocab = new Vocabulary(parserInterp.LiteralNames, parserInterp.SymbolicNames);
+        var lexerVocab  = new Antlr4.Runtime.Vocabulary(lexerInterp.LiteralNames,  lexerInterp.SymbolicNames);
+        var parserVocab = new Antlr4.Runtime.Vocabulary(parserInterp.LiteralNames, parserInterp.SymbolicNames);
 
-        var sim = new LexerAtnSimulator(lexerAtn);
+        var sim = new EarleyAtnParser.LexerAtnSimulator(lexerAtn);
         var rawTokens = sim.Tokenize(inputText);
+        if (show_tokens)
+        {
+            var symNames = lexerInterp.SymbolicNames;
+            foreach (var tok in rawTokens)
+            {
+                string typeName = tok.Type >= 0 && tok.Type < symNames.Length && symNames[tok.Type] != null
+                    ? symNames[tok.Type] : tok.Type.ToString();
+                System.Console.Error.WriteLine(
+                    $"[@{tok.TokenIndex},{tok.StartIndex}:{tok.StopIndex}='{tok.Text}',<{typeName}>,channel={tok.Channel},{tok.Line}:{tok.Column}]");
+            }
+        }
 
         // Determine the start rule from the 'start-rule:' section in the parser interp file.
         int startRule = 0;
@@ -63,7 +82,7 @@ public static class AllStarRunner
             lineNumbers);
 
         // Stub lexer/parser objects required by ParsingResultSet and the JSON serializer.
-        var charStream = new AntlrInputStream(inputText);
+        var charStream = new Antlr4.Runtime.AntlrInputStream(inputText);
         var myLexer = new MyLexer(charStream);
         myLexer._ruleNames       = lexerInterp.RuleNames;
         myLexer._modeNames       = lexerInterp.ModeNames.Length > 0

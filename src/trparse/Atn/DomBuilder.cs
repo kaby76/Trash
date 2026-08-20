@@ -1,4 +1,4 @@
-namespace Trash.EarleyAtn;
+namespace Atn;
 
 using ParseTreeEditing.UnvParseTreeDOM;
 

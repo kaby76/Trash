@@ -1,4 +1,4 @@
-namespace Trash.EarleyAtn;
+namespace Atn;
 
 /// <summary>
 /// Converts the integer-array ATN format (as produced by trinterp's AtnSerializer)

@@ -276,14 +276,14 @@ public class Grun
             string interpLabel;
             if (config.AllStar)
             {
-                Trash.EarleyAtn.AllStarParser.Trace = config.Verbose;
-                (rs, interpTokenCount) = Trash.EarleyAtn.AllStarRunner.Run(
+                AllStarAtnParser.AllStarParser.Trace = config.Verbose;
+                (rs, interpTokenCount) = AllStarAtnParser.AllStarRunner.Run(
                     resolvedPInterp, resolvedLInterp, txt, input_name, config.LineNumbers);
                 interpLabel = "ALL(*)";
             }
             else
             {
-                (rs, interpTokenCount) = Trash.EarleyAtn.InterpRunner.Run(
+                (rs, interpTokenCount) = EarleyAtnParser.InterpRunner.Run(
                     resolvedPInterp, resolvedLInterp, txt, input_name, config.LineNumbers);
                 interpLabel = "Earley";
             }

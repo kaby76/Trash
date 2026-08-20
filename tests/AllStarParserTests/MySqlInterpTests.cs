@@ -7,34 +7,30 @@ using Xunit;
 namespace AllStarParserTests;
 
 /// <summary>
-/// End-to-end tests for AllStarParser using the checked-in ABNF example grammar
-/// and its pre-built interp files.  Each example .abnf / .bnf file is parsed as
-/// a separate theory case so failures are easy to pin down.
+/// End-to-end tests for AllStarParser using the MySQL (Positive-Technologies)
+/// grammar interp files and its pre-built SQL example inputs.
 /// </summary>
-public class AbnfInterpTests
+public class MySqlInterpTests
 {
     private static readonly string InterpDir =
-        Path.Combine(AppContext.BaseDirectory, "TestData", "interp");
+        Path.Combine(AppContext.BaseDirectory, "TestData", "mysql-interp");
 
     private static readonly string ExamplesDir =
-        Path.Combine(AppContext.BaseDirectory, "TestData", "examples");
+        Path.Combine(AppContext.BaseDirectory, "TestData", "mysql-examples");
 
     private static readonly string ParserInterp =
-        Path.Combine(InterpDir, "Abnf.interp");
+        Path.Combine(InterpDir, "MySqlParser.interp");
 
     private static readonly string LexerInterp =
-        Path.Combine(InterpDir, "AbnfLexer.interp");
+        Path.Combine(InterpDir, "MySqlLexer.interp");
 
-    /// <summary>
-    /// Enumerate all *.abnf and *.bnf files copied to the test output directory.
-    /// </summary>
-    public static IEnumerable<object[]> ExampleFiles() =>
-        Directory.EnumerateFiles(ExamplesDir, "*.*bnf", SearchOption.AllDirectories)
+    public static IEnumerable<object[]> SqlFiles() =>
+        Directory.EnumerateFiles(ExamplesDir, "*.sql", SearchOption.AllDirectories)
                  .OrderBy(f => f)
                  .Select(f => new object[] { f });
 
     [Theory]
-    [MemberData(nameof(ExampleFiles))]
+    [MemberData(nameof(SqlFiles))]
     public void AllStarParsesSuccessfully(string filePath)
     {
         var text = File.ReadAllText(filePath);
@@ -46,14 +42,8 @@ public class AbnfInterpTests
         Assert.True(tokenCount > 0, $"Expected at least one token in {Path.GetFileName(filePath)}");
     }
 
-    /// <summary>
-    /// Parse each example file with both the Earley and ALL(*) parsers and assert
-    /// that the resulting parse trees are identical (ANTLR-style parenthesised form).
-    /// This is the primary regression guard: any change to AllStarSimulator that
-    /// produces a different tree will be caught here.
-    /// </summary>
     [Theory]
-    [MemberData(nameof(ExampleFiles))]
+    [MemberData(nameof(SqlFiles))]
     public void AllStarTreeMatchesEarley(string filePath)
     {
         var text = File.ReadAllText(filePath);
