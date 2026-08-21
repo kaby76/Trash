@@ -98,7 +98,16 @@ public static class EarleyParser
         events.Add(startIsRecursion
             ? ParseEvent.ExitRecursionRule(startRuleIndex)
             : ParseEvent.ExitRule(startRuleIndex));
-        return events;
+
+        // Earley recognition can leave several derivations for the same chart
+        // item. This implementation stores a single backpointer, which is
+        // sufficient for acceptance but cannot reproduce ANTLR's ordered-alt
+        // choice for every ambiguous grammar. Use the ALL(*) simulator as the
+        // deterministic disambiguation phase after Earley has accepted. Keep
+        // the reconstructed Earley derivation as a fallback for grammars which
+        // ALL(*) cannot disambiguate.
+        return AllStarAtnParser.AllStarParser.Parse(atn, allTokens, startRuleIndex)
+            ?? events;
     }
 
     // =========================================================================

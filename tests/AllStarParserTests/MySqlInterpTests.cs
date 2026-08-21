@@ -29,6 +29,19 @@ public class MySqlInterpTests
                  .OrderBy(f => f)
                  .Select(f => new object[] { f });
 
+    [Fact]
+    public void LineCommentAtEofRemainsHidden()
+    {
+        var lexerInterp = Atn.InterpFileReader.Read(File.ReadAllText(LexerInterp));
+        var lexerAtn = Atn.AtnDeserializer.Deserialize(lexerInterp.AtnData);
+        var tokens = new LexerAtnSimulator(lexerAtn).Tokenize("#end");
+
+        var comment = Assert.Single(tokens, token => token.Type != -1);
+        Assert.Equal("#end", comment.Text);
+        Assert.NotEqual(0, comment.Channel);
+        Assert.Equal(-1, tokens[^1].Type);
+    }
+
     [Theory]
     [MemberData(nameof(SqlFiles))]
     public void AllStarParsesSuccessfully(string filePath)

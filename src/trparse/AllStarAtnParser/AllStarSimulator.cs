@@ -17,14 +17,20 @@ public sealed class AllStarSimulator
     // behaviour is identical to allocating fresh collections, but without the
     // per-call allocation cost on hot prediction paths.
     private readonly Stack<ATNConfig> _closureStack = new();
-    private readonly HashSet<(int stateNum, int alt, int ctxHash)> _closureBusy = new();
+    private readonly HashSet<(int stateNum, int alt, PredictionContext context)> _closureBusy = new();
+    private readonly Dictionary<(PredictionContext parent, int returnState), SingletonPredictionContext> _contextCache = new();
+    private readonly Dictionary<(int decision, int precedence), DecisionDfa> _decisionDfas = new();
 
-    public AllStarSimulator(MyATN atn) => _atn = atn;
+    public AllStarSimulator(MyATN atn)
+    {
+        _atn = atn;
+    }
 
     // Returns the predicted alternative (1-indexed) for the given decision.
     // tokenTypes: on-channel token types starting at startPos.
     // callerCtx:  the PredictionContext of the rule that contains this decision (for LL fallback).
-    public int AdaptivePredict(int decision, int[] tokenTypes, int startPos, PredictionContext callerCtx)
+    public int AdaptivePredict(int decision, int[] tokenTypes, int startPos,
+                               PredictionContext callerCtx, int precedence)
     {
         var decisionState = _atn.decisionToState[decision];
         int n = decisionState.transitions.Count;
@@ -33,12 +39,16 @@ public sealed class AllStarSimulator
         bool isLoop = decisionState.stateType == MyStateType.StarLoopEntry ||
                       decisionState.stateType == MyStateType.PlusLoopBack;
 
-        // Always use full-LL prediction with the actual caller context.
-        // SLL (EMPTY context) cannot follow rule-return transitions and therefore
-        // misidentifies the viable alternative in grammars with complex rules like uid /
-        // simpleId — it incorrectly returns the epsilon alt when a non-epsilon rule
-        // alternative is the right choice.  Full-LL is slower but always correct.
-        int llAlt = ExecATN(decisionState, tokenTypes, startPos, callerCtx, fullCtx: true);
+        // SLL uses a local prediction-context stack rooted at EMPTY. Conflicts
+        // are not resolved here; they signal full-context LL fallback below.
+        int sllAlt = ExecSllDfa(
+            decision, decisionState, tokenTypes, startPos, callerCtx, precedence,
+            decisionState.ruleIndex);
+        if (sllAlt > 0) return sllAlt;
+
+        int llAlt = ExecATN(
+            decisionState, tokenTypes, startPos, callerCtx, fullCtx: true,
+            precedence: precedence, precedenceRuleIndex: decisionState.ruleIndex);
         if (AllStarParser.Trace)
             Console.Error.WriteLine($"[SIM] dec={decision} state={decisionState.stateNumber} type={decisionState.stateType} llAlt={llAlt}");
         if (llAlt > 0) return llAlt;
@@ -51,7 +61,8 @@ public sealed class AllStarSimulator
         // body is clearly viable from a single-token lookahead.
         int def;
         if (isLoop)
-            def = LoopBodyCanMatchToken(decisionState, tokenTypes, startPos, callerCtx) ? 1 : n;
+            def = LoopBodyCanMatchToken(
+                decisionState, tokenTypes, startPos, callerCtx, precedence) ? 1 : n;
         else
             def = 1;
         if (AllStarParser.Trace)
@@ -59,8 +70,119 @@ public sealed class AllStarSimulator
         return def;
     }
 
+    // Run context-independent prediction through a per-decision DFA. DFA
+    // states are canonicalized SLL ATN configuration sets; edges memoize one
+    // token of reach/closure work and are reusable at every input position.
+    private int ExecSllDfa(int decision, MyATNState decisionState,
+                           int[] tokenTypes, int startPos, PredictionContext callerCtx,
+                           int precedence, int precedenceRuleIndex)
+    {
+        var dfaKey = (decision, precedence);
+        if (!_decisionDfas.TryGetValue(dfaKey, out DecisionDfa dfa))
+        {
+            dfa = new DecisionDfa();
+            _decisionDfas.Add(dfaKey, dfa);
+        }
+        if (dfa.Start == null)
+        {
+            _closureBusy.Clear();
+            var initial = new ATNConfigSet();
+            for (int i = 0; i < decisionState.transitions.Count; i++)
+                Closure(new ATNConfig(decisionState.transitions[i].target, i + 1,
+                                      PredictionContext.EMPTY),
+                        initial, fullCtx: false, precedence, precedenceRuleIndex);
+            dfa.Start = InternDfaState(dfa, initial);
+        }
+
+        DfaState state = dfa.Start;
+        int pos = startPos;
+        while (true)
+        {
+            if (state.Prediction > 0) return state.Prediction;
+            if (state.RequiresFullContext || state.IsError)
+            {
+                if (AllStarParser.Trace && state.RequiresFullContext)
+                    Console.Error.WriteLine($"[SLL] dec={decision} fallback=conflict");
+                return -1;
+            }
+            if (pos >= tokenTypes.Length) return -1;
+
+            int tokenType = tokenTypes[pos++];
+            if (!state.Edges.TryGetValue(tokenType, out DfaState target))
+            {
+                var reach = ComputeReachSet(
+                    state.Configs, tokenType, fullCtx: false, precedence,
+                    precedenceRuleIndex);
+                // A completed alternative only needs caller context when the
+                // same lookahead also keeps a competing path alive. If no path
+                // consumes it, the completed alternative is the SLL result.
+                if (state.CompletedPrediction > 0)
+                {
+                    target = reach.IsEmpty
+                        ? DfaState.Accept(state.CompletedPrediction)
+                        : InternDfaState(dfa, reach);
+                    if (!reach.IsEmpty)
+                        state.StopLiveEdges.Add(tokenType);
+                }
+                else
+                    target = reach.IsEmpty ? DfaState.Error : InternDfaState(dfa, reach);
+                state.Edges[tokenType] = target;
+            }
+            if (state.StopLiveEdges.Contains(tokenType) &&
+                CallerCanMatchToken(
+                    callerCtx, tokenType, state.CompletedPrediction, precedence,
+                    precedenceRuleIndex))
+            {
+                if (AllStarParser.Trace)
+                    Console.Error.WriteLine($"[SLL] dec={decision} fallback=stop-live tok={tokenType}");
+                return -1;
+            }
+            state = target;
+        }
+    }
+
+    private bool CallerCanMatchToken(PredictionContext callerCtx, int tokenType,
+                                     int alt, int precedence,
+                                     int precedenceRuleIndex)
+    {
+        if (callerCtx.IsEmpty) return false;
+        int returnState = callerCtx.ReturnState;
+        if (returnState == PredictionContext.EMPTY_RETURN_STATE) return false;
+
+        _closureBusy.Clear();
+        var continuation = new ATNConfigSet();
+        Closure(new ATNConfig(_atn.allStates[returnState], alt, callerCtx.Parent),
+                continuation, fullCtx: true, precedence,
+                precedenceRuleIndex);
+        foreach (var config in continuation.Configs)
+            foreach (var transition in config.State.transitions)
+                if (IsTerminal(transition) &&
+                    transition.Matches(tokenType, 0, _atn.maxTokenType))
+                    return true;
+        return false;
+    }
+
+    private static DfaState InternDfaState(DecisionDfa dfa, ATNConfigSet configs)
+    {
+        var key = new ConfigSetKey(configs);
+        if (dfa.States.TryGetValue(key, out DfaState existing))
+            return existing;
+
+        var state = new DfaState(configs);
+        int unique = configs.GetUniqueAlt();
+        if (unique > 0)
+            state.Prediction = unique;
+        else if (configs.GetAllSubsetsConflictAlt() > 0)
+            state.RequiresFullContext = true;
+        state.CompletedPrediction = configs.GetCompletedAlt();
+        dfa.States.Add(key, state);
+        return state;
+    }
+
     private int ExecATN(MyATNState decisionState, int[] tokenTypes, int startPos,
-                        PredictionContext baseCtx, bool fullCtx)
+                        PredictionContext baseCtx, bool fullCtx,
+                        bool resolveConflicts = true, int precedence = 0,
+                        int precedenceRuleIndex = -1)
     {
         _closureBusy.Clear();
         var initial = new ATNConfigSet();
@@ -69,11 +191,29 @@ public sealed class AllStarSimulator
         {
             var target = decisionState.transitions[i].target;
             var cfg = new ATNConfig(target, i + 1, baseCtx);
-            Closure(cfg, initial, fullCtx);
+            Closure(cfg, initial, fullCtx, precedence, precedenceRuleIndex);
         }
 
         int alt = initial.GetUniqueAlt();
         if (alt != -1) return alt;
+        // A stop configuration competing with another live alternative is
+        // context-sensitive in SLL: EMPTY cannot show whether the completed
+        // path continues through the caller. Retry it with the real context.
+        // Full LL must not accept the stop here; Closure has already followed
+        // its return states and the normal conflict analysis decides the alt.
+        if (!resolveConflicts && initial.GetCompletedAlt() != -1)
+            return -1;
+        if (resolveConflicts)
+        {
+            alt = initial.GetExactAmbiguityAlt();
+            if (alt != -1) return alt;
+            alt = initial.GetAllSubsetsConflictAlt();
+            if (alt != -1) return alt;
+        }
+        else if (initial.GetAllSubsetsConflictAlt() != -1)
+        {
+            return -1;
+        }
 
         var current = initial;
         int pos = startPos;
@@ -81,11 +221,25 @@ public sealed class AllStarSimulator
         while (pos < tokenTypes.Length)
         {
             int tokenType = tokenTypes[pos++];
-            var reach = ComputeReachSet(current, tokenType, fullCtx);
+            var reach = ComputeReachSet(
+                current, tokenType, fullCtx, precedence, precedenceRuleIndex);
             if (reach.IsEmpty) break;
 
             alt = reach.GetUniqueAlt();
             if (alt != -1) return alt;
+            if (!resolveConflicts && reach.GetCompletedAlt() != -1)
+                return -1;
+            if (resolveConflicts)
+            {
+                alt = reach.GetExactAmbiguityAlt();
+                if (alt != -1) return alt;
+                alt = reach.GetAllSubsetsConflictAlt();
+                if (alt != -1) return alt;
+            }
+            else if (reach.GetAllSubsetsConflictAlt() != -1)
+            {
+                return -1;
+            }
 
             current = reach;
         }
@@ -121,7 +275,9 @@ public sealed class AllStarSimulator
         return -1;
     }
 
-    private ATNConfigSet ComputeReachSet(ATNConfigSet configs, int tokenType, bool fullCtx)
+    private ATNConfigSet ComputeReachSet(ATNConfigSet configs, int tokenType,
+                                         bool fullCtx, int precedence,
+                                         int precedenceRuleIndex = -1)
     {
         var reach = new ATNConfigSet();
         foreach (var cfg in configs.Configs)
@@ -136,11 +292,12 @@ public sealed class AllStarSimulator
         _closureBusy.Clear();
         var closed = new ATNConfigSet();
         foreach (var c in reach.Configs)
-            Closure(c, closed, fullCtx);
+            Closure(c, closed, fullCtx, precedence, precedenceRuleIndex);
         return closed;
     }
 
-    private void Closure(ATNConfig seed, ATNConfigSet configs, bool fullCtx)
+    private void Closure(ATNConfig seed, ATNConfigSet configs, bool fullCtx,
+                         int precedence, int precedenceRuleIndex)
     {
         _closureStack.Clear();
         _closureStack.Push(seed);
@@ -149,27 +306,28 @@ public sealed class AllStarSimulator
         {
             var config = _closureStack.Pop();
 
-            var key = (config.State.stateNumber, config.Alt, config.Context.GetHashCode());
+            var key = (config.State.stateNumber, config.Alt, config.Context);
             if (!_closureBusy.Add(key)) continue;
-
-            configs.Add(config);
 
             if (config.State.stateType == MyStateType.RuleStop)
             {
-                if (!fullCtx) continue; // SLL: can't pop — leave config here
+                configs.Add(config);
+                if (config.Context.IsEmpty) continue; // prediction boundary — done
 
-                // LL: pop the context stack
-                if (config.Context.IsEmpty) continue; // at outermost level — done
-
-                int returnStateNum = config.Context.ReturnState;
-                PredictionContext parent = config.Context.Parent;
-                if (returnStateNum == PredictionContext.EMPTY_RETURN_STATE) continue;
-
-                var returnState = _atn.allStates[returnStateNum];
-                _closureStack.Push(new ATNConfig(returnState, config.Alt, parent));
+                // An array context represents several call stacks merged at
+                // this configuration. Follow every return edge.
+                for (int i = 0; i < config.Context.Size; i++)
+                {
+                    int returnStateNum = config.Context.GetReturnState(i);
+                    if (returnStateNum == PredictionContext.EMPTY_RETURN_STATE) continue;
+                    var returnState = _atn.allStates[returnStateNum];
+                    _closureStack.Push(new ATNConfig(
+                        returnState, config.Alt, config.Context.GetParent(i)));
+                }
                 continue;
             }
 
+            bool hasTerminalTransition = false;
             foreach (var tr in config.State.transitions)
             {
                 ATNConfig next = null;
@@ -178,25 +336,36 @@ public sealed class AllStarSimulator
                     case MyEpsilonTransition:
                     case MyActionTransition:
                     case MyPredicateTransition:
-                    case MyPrecedencePredicateTransition:
                         next = config.WithState(tr.target);
                         break;
 
+                    case MyPrecedencePredicateTransition pt:
+                        if (config.State.ruleIndex != precedenceRuleIndex ||
+                            pt.precedence >= precedence)
+                            next = config.WithState(tr.target);
+                        break;
+
                     case MyRuleTransition rt:
-                        // In SLL: don't push context (treat all stacks as EMPTY).
-                        // In LL: push the follow state so we can pop on RuleStop,
-                        // unless this is a tail call � the callee will return directly
-                        // to whatever is already on the context stack, so no new frame
-                        // is needed.
-                        PredictionContext newCtx = (fullCtx && !rt.isTailCall)
-                            ? new SingletonPredictionContext(config.Context, rt.target.stateNumber)
+                        // Both SLL and LL need local rule-return frames. SLL is
+                        // rooted at EMPTY; LL is rooted in the caller context.
+                        // Tail calls inherit the existing context.
+                        PredictionContext newCtx = !rt.isTailCall
+                            ? GetChildContext(config.Context, rt.target.stateNumber)
                             : config.Context;
                         next = new ATNConfig(_atn.start[rt.ruleIndex], config.Alt, newCtx);
                         break;
-                    // Terminal transitions are not followed during closure.
+                    // Terminal transitions form the closure frontier and are
+                    // followed later by ComputeReachSet.
+                    default:
+                        if (IsTerminal(tr))
+                            hasTerminalTransition = true;
+                        break;
                 }
                 if (next != null) _closureStack.Push(next);
             }
+
+            if (hasTerminalTransition)
+                configs.Add(config);
         }
     }
 
@@ -204,7 +373,8 @@ public sealed class AllStarSimulator
     // terminal transition that matches the token at startPos.  Used to implement greedy
     // loop semantics: continue the loop iff the body can fire on the next token.
     private bool LoopBodyCanMatchToken(MyATNState decisionState, int[] tokenTypes,
-                                       int startPos, PredictionContext callerCtx)
+                                       int startPos, PredictionContext callerCtx,
+                                       int precedence)
     {
         if (startPos >= tokenTypes.Length) return false;
         int tok = tokenTypes[startPos];
@@ -214,7 +384,9 @@ public sealed class AllStarSimulator
         for (int i = 0; i < decisionState.transitions.Count; i++)
         {
             var target = decisionState.transitions[i].target;
-            Closure(new ATNConfig(target, i + 1, callerCtx), initial, fullCtx: true);
+            Closure(new ATNConfig(target, i + 1, callerCtx), initial,
+                    fullCtx: true, precedence,
+                    precedenceRuleIndex: decisionState.ruleIndex);
         }
 
         foreach (var c in initial.Configs)
@@ -231,11 +403,76 @@ public sealed class AllStarSimulator
         t is MyAtomTransition || t is MySetTransition || t is MyNotSetTransition ||
         t is MyWildcardTransition || t is MyRangeTransition;
 
+    private SingletonPredictionContext GetChildContext(PredictionContext parent, int returnState)
+    {
+        var key = (parent, returnState);
+        if (!_contextCache.TryGetValue(key, out var context))
+        {
+            context = new SingletonPredictionContext(parent, returnState);
+            _contextCache.Add(key, context);
+        }
+        return context;
+    }
+
     // Number of frames in the context chain (0 for EMPTY).
     private static int ContextDepth(PredictionContext ctx)
     {
-        int d = 0;
-        while (!ctx.IsEmpty) { ctx = ctx.Parent; d++; }
-        return d;
+        if (ctx.IsEmpty) return 0;
+        int minimum = int.MaxValue;
+        for (int i = 0; i < ctx.Size; i++)
+        {
+            if (ctx.GetReturnState(i) == PredictionContext.EMPTY_RETURN_STATE)
+                return 0;
+            minimum = Math.Min(minimum, 1 + ContextDepth(ctx.GetParent(i)));
+        }
+        return minimum;
+    }
+
+    private sealed class DecisionDfa
+    {
+        public DfaState Start;
+        public readonly Dictionary<ConfigSetKey, DfaState> States = new();
+    }
+
+    private sealed class DfaState
+    {
+        public static readonly DfaState Error = new(null) { IsError = true };
+        public readonly ATNConfigSet Configs;
+        public readonly Dictionary<int, DfaState> Edges = new();
+        public readonly HashSet<int> StopLiveEdges = new();
+        public int Prediction;
+        public int CompletedPrediction;
+        public bool RequiresFullContext;
+        public bool IsError;
+
+        public DfaState(ATNConfigSet configs) => Configs = configs;
+
+        public static DfaState Accept(int prediction) =>
+            new(null) { Prediction = prediction };
+    }
+
+    private sealed class ConfigSetKey : IEquatable<ConfigSetKey>
+    {
+        private readonly HashSet<(int state, int alt, PredictionContext context)> _items;
+        private readonly int _hash;
+
+        public ConfigSetKey(ATNConfigSet configs)
+        {
+            _items = new HashSet<(int, int, PredictionContext)>();
+            int hash = 0;
+            foreach (var c in configs.Configs)
+            {
+                var item = (c.State.stateNumber, c.Alt, c.Context);
+                _items.Add(item);
+                hash ^= HashCode.Combine(item.stateNumber, item.Alt, item.Context);
+            }
+            _hash = HashCode.Combine(hash, _items.Count);
+        }
+
+        public bool Equals(ConfigSetKey other) =>
+            other != null && _hash == other._hash && _items.SetEquals(other._items);
+
+        public override bool Equals(object obj) => obj is ConfigSetKey other && Equals(other);
+        public override int GetHashCode() => _hash;
     }
 }

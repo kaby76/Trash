@@ -106,6 +106,19 @@ public class LexerAtnSimulator
             CheckAccepts(current, pos, ref bestRule, ref bestEnd, ref bestActions);
         }
 
+        // EOF is a real lexer-ATN symbol. It does not consume a character, but
+        // rules such as line comments commonly use (... | EOF) to terminate at
+        // the end of a file that has no trailing newline.
+        if (pos == input.Length)
+        {
+            var eof = Scan(current, EOF);
+            if (eof.Count != 0)
+            {
+                EpsClosure(eof);
+                CheckAccepts(eof, pos, ref bestRule, ref bestEnd, ref bestActions);
+            }
+        }
+
         if (bestRule < 0) return (-1, startPos, new());
 
         var resolvedActions = new List<IMyLexerAction>();
@@ -269,4 +282,3 @@ public class LexerAtnSimulator
         public override int GetHashCode() => _node?.GetHashCode() ?? 0;
     }
 }
-
