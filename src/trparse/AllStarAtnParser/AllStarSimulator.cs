@@ -39,6 +39,25 @@ public sealed class AllStarSimulator
         bool isLoop = decisionState.stateType == MyStateType.StarLoopEntry ||
                       decisionState.stateType == MyStateType.PlusLoopBack;
 
+        // Precedence belongs to the current rule invocation. Enforce it when
+        // the parser actually reaches the left-recursive suffix decision,
+        // rather than leaking it into speculative calls of the same rule in
+        // subqueries or parentheses.
+        if (decisionState.isPrecedenceDecision)
+        {
+            for (int i = 0; i < decisionState.transitions.Count; i++)
+            {
+                var target = decisionState.transitions[i].target;
+                if (target.stateType != MyStateType.LoopEnd &&
+                    !PrecedencePathAllowed(target, precedence))
+                {
+                    for (int exit = 0; exit < decisionState.transitions.Count; exit++)
+                        if (decisionState.transitions[exit].target.stateType == MyStateType.LoopEnd)
+                            return exit + 1;
+                }
+            }
+        }
+
         // SLL uses a local prediction-context stack rooted at EMPTY. Conflicts
         // are not resolved here; they signal full-context LL fallback below.
         int sllAlt = ExecSllDfa(
@@ -207,8 +226,6 @@ public sealed class AllStarSimulator
         {
             alt = initial.GetExactAmbiguityAlt();
             if (alt != -1) return alt;
-            alt = initial.GetAllSubsetsConflictAlt();
-            if (alt != -1) return alt;
         }
         else if (initial.GetAllSubsetsConflictAlt() != -1)
         {
@@ -232,9 +249,8 @@ public sealed class AllStarSimulator
             if (resolveConflicts)
             {
                 alt = reach.GetExactAmbiguityAlt();
-                if (alt != -1) return alt;
-                alt = reach.GetAllSubsetsConflictAlt();
-                if (alt != -1) return alt;
+                if (alt != -1)
+                    return alt;
             }
             else if (reach.GetAllSubsetsConflictAlt() != -1)
             {
@@ -340,9 +356,7 @@ public sealed class AllStarSimulator
                         break;
 
                     case MyPrecedencePredicateTransition pt:
-                        if (config.State.ruleIndex != precedenceRuleIndex ||
-                            pt.precedence >= precedence)
-                            next = config.WithState(tr.target);
+                        next = config.WithState(pt.target);
                         break;
 
                     case MyRuleTransition rt:
@@ -402,6 +416,26 @@ public sealed class AllStarSimulator
     private static bool IsTerminal(MyTransition t) =>
         t is MyAtomTransition || t is MySetTransition || t is MyNotSetTransition ||
         t is MyWildcardTransition || t is MyRangeTransition;
+
+    private static bool PrecedencePathAllowed(MyATNState start, int precedence)
+    {
+        var work = new Stack<MyATNState>();
+        var seen = new HashSet<int>();
+        work.Push(start);
+        while (work.Count > 0)
+        {
+            var state = work.Pop();
+            if (!seen.Add(state.stateNumber)) continue;
+            foreach (var transition in state.transitions)
+            {
+                if (transition is MyPrecedencePredicateTransition predicate)
+                    return predicate.precedence >= precedence;
+                if (transition is MyEpsilonTransition or MyActionTransition or MyPredicateTransition)
+                    work.Push(transition.target);
+            }
+        }
+        return true;
+    }
 
     private SingletonPredictionContext GetChildContext(PredictionContext parent, int returnState)
     {
