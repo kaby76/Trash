@@ -47,12 +47,12 @@ public static class AllStarRunner
                 string typeName = (!numeric_token_types && tok.Type >= 0 && tok.Type < symNames.Length && symNames[tok.Type] != null)
                     ? symNames[tok.Type] : tok.Type.ToString();
                 string text = tok.Text
-                    .Replace("\\", "\\\\")
                     .Replace("\n", "\\n")
                     .Replace("\r", "\\r")
                     .Replace("\t", "\\t");
+                string channel = tok.Channel != 0 ? $",channel={tok.Channel}" : "";
                 System.Console.Error.WriteLine(
-                    $"[@{tok.TokenIndex},{tok.StartIndex}:{tok.StopIndex}='{text}',<{typeName}>,channel={tok.Channel},{tok.Line}:{tok.Column}]");
+                    $"[@{tok.TokenIndex},{tok.StartIndex}:{tok.StopIndex}='{text}',<{typeName}>{channel},{tok.Line}:{tok.Column}]");
             }
         }
 

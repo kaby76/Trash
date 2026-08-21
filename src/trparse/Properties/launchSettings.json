@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "../examples/iri.abnf",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\trash-release-2.6.0\\examples\\abnf-interp\\Generated-CSharp"
+      "commandLineArgs": "-L . --tokens ../examples/dml_select.sql",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\trash-release-2.6.0\\tests\\grammars-v4\\Positive-Technologies\\interp"
     }
   }
 }
