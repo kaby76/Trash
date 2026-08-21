@@ -12,7 +12,8 @@ using Atn;
 public static class AllStarRunner
 {
     public static bool show_tokens = false;
-    
+    public static bool numeric_token_types = false;
+
     public static (ParsingResultSet Result, int TokenCount) Run(
         string parserInterpPath,
         string lexerInterpPath,
@@ -25,6 +26,7 @@ public static class AllStarRunner
 
         // Determine which preprocessor to run: gcc or cl.exe or clang.
         show_tokens = args?.Where(a => a.IndexOf("--tokens", StringComparison.OrdinalIgnoreCase) >= 0).Any() ?? false;
+        numeric_token_types = args?.Where(a => a.IndexOf("--numeric-token-types", StringComparison.OrdinalIgnoreCase) >= 0).Any() ?? false;
 
         var parserInterp = InterpFileReader.Read(File.ReadAllText(parserInterpPath));
         var lexerInterp  = InterpFileReader.Read(File.ReadAllText(lexerInterpPath));
@@ -42,7 +44,7 @@ public static class AllStarRunner
             var symNames = lexerInterp.SymbolicNames;
             foreach (var tok in rawTokens)
             {
-                string typeName = tok.Type >= 0 && tok.Type < symNames.Length && symNames[tok.Type] != null
+                string typeName = (!numeric_token_types && tok.Type >= 0 && tok.Type < symNames.Length && symNames[tok.Type] != null)
                     ? symNames[tok.Type] : tok.Type.ToString();
                 string text = tok.Text
                     .Replace("\\", "\\\\")
