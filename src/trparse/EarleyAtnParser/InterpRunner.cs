@@ -32,7 +32,7 @@ public static class InterpRunner
         // Determine which preprocessor to run: gcc or cl.exe or clang.
         show_tokens = args?.Where(a => a.IndexOf("--tokens", StringComparison.OrdinalIgnoreCase) >= 0).Any() ?? false;
 
-        var parserInterp =pwdw InterpFileReader.Read(File.ReadAllText(parserInterpPath));
+        var parserInterp = InterpFileReader.Read(File.ReadAllText(parserInterpPath));
         var lexerInterp  = InterpFileReader.Read(File.ReadAllText(lexerInterpPath));
 
         var parserAtn = AtnDeserializer.Deserialize(parserInterp.AtnData);
@@ -50,8 +50,13 @@ public static class InterpRunner
             {
                 string typeName = tok.Type >= 0 && tok.Type < symNames.Length && symNames[tok.Type] != null
                     ? symNames[tok.Type] : tok.Type.ToString();
+                string text = tok.Text
+                    .Replace("\\", "\\\\")
+                    .Replace("\n", "\\n")
+                    .Replace("\r", "\\r")
+                    .Replace("\t", "\\t");
                 System.Console.Error.WriteLine(
-                    $"[@{tok.TokenIndex},{tok.StartIndex}:{tok.StopIndex}='{tok.Text}',<{typeName}>,channel={tok.Channel},{tok.Line}:{tok.Column}]");
+                    $"[@{tok.TokenIndex},{tok.StartIndex}:{tok.StopIndex}='{text}',<{typeName}>,channel={tok.Channel},{tok.Line}:{tok.Column}]");
             }
         }
         // Determine the start rule from the 'start-rule:' section in the parser interp file.

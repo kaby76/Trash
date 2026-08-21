@@ -95,7 +95,7 @@ public class ParsingResultSetSerializer : JsonConverter<ParsingResultSet[]>
                 {
                     if (!(reader.TokenType == JsonTokenType.StartArray)) throw new JsonException();
                     reader.Read();
-                    while (reader.TokenType == JsonTokenType.String)
+                    while (reader.TokenType == JsonTokenType.String || reader.TokenType == JsonTokenType.Null)
                     {
                         channel_names.Add(reader.GetString());
                         reader.Read();
