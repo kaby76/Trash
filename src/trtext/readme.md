@@ -24,7 +24,7 @@ specified, the line number range for the tree is printed.
 
 ## Current version
 
-Release 2.5.0.
+Release 2.6.0.
 
 ## License
 
