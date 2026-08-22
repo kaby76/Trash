@@ -1,9 +1,15 @@
-namespace Trash.EarleyAtn;
+namespace AllStarAtnParser;
+
+using Atn;
+using EarleyAtnParser;
 
 // A single configuration in the ALL(*) ATN simulation:
 // the ATN state we're at, which alternative we're tracking (1-indexed),
 // and the prediction context (call stack above this point).
-// No Antlr4.Runtime.Standard types used.
+
+// Absolutely no Antlr4.Runtime.Standard types used anywhere in this
+// file!
+
 public sealed class ATNConfig
 {
     public readonly MyATNState State;

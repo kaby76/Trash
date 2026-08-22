@@ -1,5 +1,6 @@
-#nullable enable
-namespace Trash.EarleyAtn;
+namespace EarleyAtnParser;
+
+using Atn;
 
 // No Antlr4.Runtime.Standard types used anywhere in this file.
 
@@ -18,7 +19,7 @@ public static class EarleyParser
     /// Parse allTokens (all channels, EOF at end) and return an ordered
     /// ParseEvent list, or null if the input is rejected by the grammar.
     /// </summary>
-    public static List<ParseEvent>? Parse(
+    public static List<ParseEvent> Parse(
         MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex)
     {
         if (atn == null) throw new ArgumentNullException(nameof(atn));
@@ -97,7 +98,16 @@ public static class EarleyParser
         events.Add(startIsRecursion
             ? ParseEvent.ExitRecursionRule(startRuleIndex)
             : ParseEvent.ExitRule(startRuleIndex));
-        return events;
+
+        // Earley recognition can leave several derivations for the same chart
+        // item. This implementation stores a single backpointer, which is
+        // sufficient for acceptance but cannot reproduce ANTLR's ordered-alt
+        // choice for every ambiguous grammar. Use the ALL(*) simulator as the
+        // deterministic disambiguation phase after Earley has accepted. Keep
+        // the reconstructed Earley derivation as a fallback for grammars which
+        // ALL(*) cannot disambiguate.
+        return AllStarAtnParser.AllStarParser.Parse(atn, allTokens, startRuleIndex)
+            ?? events;
     }
 
     // =========================================================================
@@ -173,7 +183,7 @@ public static class EarleyParser
     // Backpointer reconstruction → ParseEvent list
     // =========================================================================
 
-    private static List<ParseEvent>? ReconstructEvents(Item accept, Dictionary<Item, Back> backs)
+    private static List<ParseEvent> ReconstructEvents(Item accept, Dictionary<Item, Back> backs)
     {
         var ev  = new List<ParseEvent>();
         var cur = accept;

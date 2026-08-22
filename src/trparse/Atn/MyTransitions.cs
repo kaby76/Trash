@@ -1,4 +1,4 @@
-namespace Trash.EarleyAtn;
+namespace Atn;
 
 // Base transition class - no Antlr4 runtime dependencies.
 public abstract class MyTransition
@@ -54,6 +54,13 @@ public class MyRuleTransition : MyTransition
 {
     public int ruleIndex;
     public int precedence;
+    /// <summary>
+    /// True when the follow state (target) is a RuleStop, meaning there is nothing
+    /// left to do in the calling rule after the callee returns.  In that case the
+    /// closure can inherit the caller's context rather than pushing a new frame,
+    /// matching the tail-call optimisation in the ANTLR4 C# and Rust runtimes.
+    /// </summary>
+    public bool isTailCall;
 
     public MyRuleTransition(MyATNState followState, int ruleIndex, int precedence)
         : base(followState)

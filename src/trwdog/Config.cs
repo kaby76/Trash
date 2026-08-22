@@ -11,5 +11,5 @@ public class Config
     public int? Timeout { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "2.5.0";
+    public string Version { get; set; } = "2.6.0";
 }

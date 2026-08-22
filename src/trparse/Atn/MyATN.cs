@@ -1,4 +1,4 @@
-namespace Trash.EarleyAtn;
+namespace Atn;
 
 public enum MyATNType { Lexer = 0, Parser = 1 }
 

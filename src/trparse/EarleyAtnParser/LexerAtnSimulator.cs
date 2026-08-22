@@ -1,4 +1,6 @@
-namespace Trash.EarleyAtn;
+namespace EarleyAtnParser;
+
+using Atn;
 
 /// <summary>
 /// Character-level ATN-based lexer. Implements a longest-match NFA simulation
@@ -102,6 +104,19 @@ public class LexerAtnSimulator
             pos++;
             current = next;
             CheckAccepts(current, pos, ref bestRule, ref bestEnd, ref bestActions);
+        }
+
+        // EOF is a real lexer-ATN symbol. It does not consume a character, but
+        // rules such as line comments commonly use (... | EOF) to terminate at
+        // the end of a file that has no trailing newline.
+        if (pos == input.Length)
+        {
+            var eof = Scan(current, EOF);
+            if (eof.Count != 0)
+            {
+                EpsClosure(eof);
+                CheckAccepts(eof, pos, ref bestRule, ref bestEnd, ref bestActions);
+            }
         }
 
         if (bestRule < 0) return (-1, startPos, new());
@@ -266,19 +281,4 @@ public class LexerAtnSimulator
 
         public override int GetHashCode() => _node?.GetHashCode() ?? 0;
     }
-}
-
-public struct LexerToken
-{
-    /// <summary>Sentinel channel value for tokens matched by a 'skip' lexer action.</summary>
-    public const int SKIP_CHANNEL = -2;
-
-    public int Type;
-    public int Channel;
-    public string Text;
-    public int StartIndex;
-    public int StopIndex; // inclusive
-    public int Line;
-    public int Column;
-    public int TokenIndex; // index into full token list (all channels)
 }

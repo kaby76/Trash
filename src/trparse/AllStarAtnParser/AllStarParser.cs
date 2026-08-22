@@ -1,7 +1,10 @@
-#nullable enable
-namespace Trash.EarleyAtn;
+namespace AllStarAtnParser;
 
-// No Antlr4.Runtime.Standard types used anywhere in this file.
+using Atn;
+using EarleyAtnParser;
+
+// Absolutely no Antlr4.Runtime.Standard types used anywhere in this
+// file!
 
 /// <summary>
 /// Interpretive ALL(*) parser.
@@ -20,7 +23,7 @@ public static class AllStarParser
     /// Parse allTokens (all channels, EOF at end) and return an ordered
     /// ParseEvent list, or null if the input is rejected by the grammar.
     /// </summary>
-    public static List<ParseEvent>? Parse(
+    public static List<ParseEvent> Parse(
         MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex)
     {
         if (atn == null) throw new ArgumentNullException(nameof(atn));
@@ -81,7 +84,8 @@ public static class AllStarParser
         }
 
         /// <summary>Parse one rule; emits Enter/Exit/Consume events. Returns false on error.</summary>
-        public bool ParseRule(int ruleIndex, List<ParseEvent> events, PredictionContext callerCtx)
+        public bool ParseRule(int ruleIndex, List<ParseEvent> events,
+                              PredictionContext callerCtx, int precedence = 0)
         {
             bool isRecursion = _atn.start[ruleIndex].isPrecedenceRule;
             events.Add(isRecursion ? ParseEvent.EnterRecursionRule(ruleIndex) : ParseEvent.EnterRule(ruleIndex));
@@ -95,7 +99,8 @@ public static class AllStarParser
                 if (_stateToDecision.TryGetValue(state.stateNumber, out int decision))
                 {
                     // Decision point: use ALL(*) prediction to choose an alternative.
-                    int alt = _sim.AdaptivePredict(decision, _tokenTypes, Pos, callerCtx);
+                    int alt = _sim.AdaptivePredict(
+                        decision, _tokenTypes, Pos, callerCtx, precedence);
                     if (AllStarParser.Trace)
                         Console.Error.WriteLine(
                             $"[ALLSTAR] dec={decision} state={state.stateNumber} pos={Pos} " +
@@ -129,7 +134,7 @@ public static class AllStarParser
                         case MyRuleTransition rt:
                             // Push follow state onto context for LL prediction inside the sub-rule.
                             var childCtx = new SingletonPredictionContext(callerCtx, rt.target.stateNumber);
-                            if (!ParseRule(rt.ruleIndex, events, childCtx))
+                            if (!ParseRule(rt.ruleIndex, events, childCtx, rt.precedence))
                                 return false;
                             state = rt.target;
                             break;
