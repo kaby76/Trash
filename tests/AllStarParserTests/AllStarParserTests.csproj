@@ -49,6 +49,34 @@
     <Content Include="../grammars-v4/Positive-Technologies/examples/*.sql"
              CopyToOutputDirectory="PreserveNewest"
              Link="TestData/mysql-examples/%(Filename)%(Extension)" />
+
+    <!-- SysML v2 interp files, inputs, and native CSharp parse trees -->
+    <Content Include="../grammars-v4/sysml-v2/interp/SysMLv2Parser.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/sysml-v2/interp/SysMLv2Parser.interp" />
+    <Content Include="../grammars-v4/sysml-v2/interp/SysMLv2Lexer.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/sysml-v2/interp/SysMLv2Lexer.interp" />
+    <Content Include="../grammars-v4/sysml-v2/examples/*.sysml"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/sysml-v2/examples/%(Filename)%(Extension)" />
+    <Content Include="../grammars-v4/sysml-v2/examples/*.sysml.tree"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/sysml-v2/examples/%(Filename)%(Extension)" />
+
+    <!-- SystemVerilog interp files, inputs, and native CSharp parse trees -->
+    <Content Include="../grammars-v4/systemverilog/interp/SystemVerilogParser.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/systemverilog/interp/SystemVerilogParser.interp" />
+    <Content Include="../grammars-v4/systemverilog/interp/SystemVerilogLexer.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/systemverilog/interp/SystemVerilogLexer.interp" />
+    <Content Include="../grammars-v4/systemverilog/examples/*.sv"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/systemverilog/examples/%(Filename)%(Extension)" />
+    <Content Include="../grammars-v4/systemverilog/examples/*.sv.tree"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/systemverilog/examples/%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>

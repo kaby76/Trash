@@ -38,6 +38,9 @@ public sealed class AllStarSimulator
 
         bool isLoop = decisionState.stateType == MyStateType.StarLoopEntry ||
                       decisionState.stateType == MyStateType.PlusLoopBack;
+        int precedenceRuleIndex = decisionState.isPrecedenceDecision
+            ? decisionState.ruleIndex
+            : -1;
 
         // Precedence belongs to the current rule invocation. Enforce it when
         // the parser actually reaches the left-recursive suffix decision,
@@ -62,12 +65,12 @@ public sealed class AllStarSimulator
         // are not resolved here; they signal full-context LL fallback below.
         int sllAlt = ExecSllDfa(
             decision, decisionState, tokenTypes, startPos, callerCtx, precedence,
-            decisionState.ruleIndex);
+            precedenceRuleIndex);
         if (sllAlt > 0) return sllAlt;
 
         int llAlt = ExecATN(
             decisionState, tokenTypes, startPos, callerCtx, fullCtx: true,
-            precedence: precedence, precedenceRuleIndex: decisionState.ruleIndex);
+            precedence: precedence, precedenceRuleIndex: precedenceRuleIndex);
         if (AllStarParser.Trace)
             Console.Error.WriteLine($"[SIM] dec={decision} state={decisionState.stateNumber} type={decisionState.stateType} llAlt={llAlt}");
         if (llAlt > 0) return llAlt;
@@ -81,7 +84,8 @@ public sealed class AllStarSimulator
         int def;
         if (isLoop)
             def = LoopBodyCanMatchToken(
-                decisionState, tokenTypes, startPos, callerCtx, precedence) ? 1 : n;
+                decisionState, tokenTypes, startPos, callerCtx, precedence,
+                precedenceRuleIndex) ? 1 : n;
         else
             def = 1;
         if (AllStarParser.Trace)
@@ -356,7 +360,9 @@ public sealed class AllStarSimulator
                         break;
 
                     case MyPrecedencePredicateTransition pt:
-                        next = config.WithState(pt.target);
+                        if (config.State.ruleIndex != precedenceRuleIndex ||
+                            pt.precedence >= precedence)
+                            next = config.WithState(pt.target);
                         break;
 
                     case MyRuleTransition rt:
@@ -388,7 +394,7 @@ public sealed class AllStarSimulator
     // loop semantics: continue the loop iff the body can fire on the next token.
     private bool LoopBodyCanMatchToken(MyATNState decisionState, int[] tokenTypes,
                                        int startPos, PredictionContext callerCtx,
-                                       int precedence)
+                                       int precedence, int precedenceRuleIndex)
     {
         if (startPos >= tokenTypes.Length) return false;
         int tok = tokenTypes[startPos];
@@ -399,8 +405,7 @@ public sealed class AllStarSimulator
         {
             var target = decisionState.transitions[i].target;
             Closure(new ATNConfig(target, i + 1, callerCtx), initial,
-                    fullCtx: true, precedence,
-                    precedenceRuleIndex: decisionState.ruleIndex);
+                    fullCtx: true, precedence, precedenceRuleIndex);
         }
 
         foreach (var c in initial.Configs)

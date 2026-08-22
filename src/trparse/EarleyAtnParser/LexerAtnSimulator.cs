@@ -20,6 +20,8 @@ public class LexerAtnSimulator
         int pos = 0;
         int line = 1, col = 0;
         int tokenIndex = 0;
+        int mode = 0;
+        var modeStack = new Stack<int>();
 
         while (pos <= input.Length)
         {
@@ -34,7 +36,7 @@ public class LexerAtnSimulator
                 break;
             }
 
-            var (matchedRule, matchEnd, actions) = MatchNextToken(input, pos, 0);
+            var (matchedRule, matchEnd, actions) = MatchNextToken(input, pos, mode);
 
             if (matchedRule < 0)
                 throw new InvalidOperationException(
@@ -51,6 +53,17 @@ public class LexerAtnSimulator
                     case MyLexerActionType.Skip:    skip = true; break;
                     case MyLexerActionType.Channel: channel = action.Arg1; break;
                     case MyLexerActionType.Type:    tokenType = action.Arg1; break;
+                    case MyLexerActionType.Mode:    mode = action.Arg1; break;
+                    case MyLexerActionType.PushMode:
+                        modeStack.Push(mode);
+                        mode = action.Arg1;
+                        break;
+                    case MyLexerActionType.PopMode:
+                        if (modeStack.Count == 0)
+                            throw new InvalidOperationException(
+                                "Cannot pop the lexer mode because the mode stack is empty.");
+                        mode = modeStack.Pop();
+                        break;
                     default:
                         throw new NotSupportedException(
                             $"Lexer action '{action.ActionType}' is not supported by the Earley ATN lexer.");
@@ -204,7 +217,10 @@ public class LexerAtnSimulator
 
                     case MyActionTransition at:
                         int acts = c.Actions;
-                        if (at.actionIndex >= 0 && at.actionIndex < 32)
+                        // ANTLR executes actions only in the outermost token rule.
+                        // Actions reached inside a referenced lexer rule/fragment
+                        // must not affect the token being assembled by its caller.
+                        if (c.Stack.IsEmpty && at.actionIndex >= 0 && at.actionIndex < 32)
                             acts |= 1 << at.actionIndex;
                         next = new LexerConfig(tr.target, c.Stack, acts);
                         if (configs.Add(next)) work.Push(next);

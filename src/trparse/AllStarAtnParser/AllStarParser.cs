@@ -104,7 +104,8 @@ public static class AllStarParser
                     if (AllStarParser.Trace)
                         Console.Error.WriteLine(
                             $"[ALLSTAR] dec={decision} state={state.stateNumber} pos={Pos} " +
-                            $"tok={(_onIdx.Count > Pos ? _allTokens[_onIdx[Pos]].Type : -1)} → alt={alt}");
+                            $"tok={(_onIdx.Count > Pos ? _allTokens[_onIdx[Pos]].Type : -1)} " +
+                            $"prec={precedence} → alt={alt}");
                     if (alt <= 0 || alt > state.transitions.Count)
                     {
                         if (AllStarParser.Trace)
@@ -132,6 +133,10 @@ public static class AllStarParser
                             break;
 
                         case MyRuleTransition rt:
+                            if (AllStarParser.Trace && rt.precedence != 0)
+                                Console.Error.WriteLine(
+                                    $"[ALLSTAR] call rule={rt.ruleIndex} from={state.stateNumber} " +
+                                    $"prec={rt.precedence} pos={Pos}");
                             // Push follow state onto context for LL prediction inside the sub-rule.
                             var childCtx = new SingletonPredictionContext(callerCtx, rt.target.stateNumber);
                             if (!ParseRule(rt.ruleIndex, events, childCtx, rt.precedence))
@@ -148,7 +153,8 @@ public static class AllStarParser
                                     int tokType = _onIdx.Count > Pos ? _allTokens[_onIdx[Pos]].Type : -999;
                                     Console.Error.WriteLine(
                                         $"[ALLSTAR] FAIL: ConsumeToken at state={state.stateNumber} " +
-                                        $"pos={Pos} tok={tokType} tr={tr.GetType().Name}");
+                                        $"rule={state.ruleIndex} pos={Pos} tok={tokType} " +
+                                        $"tr={DescribeTransition(tr)}");
                                 }
                                 return false;
                             }
@@ -180,6 +186,16 @@ public static class AllStarParser
             Pos++;
             return true;
         }
+
+        private static string DescribeTransition(MyTransition transition) => transition switch
+        {
+            MyAtomTransition atom => $"atom({atom.label})",
+            MyRangeTransition range => $"range({range.from}..{range.to})",
+            MySetTransition set => $"set({set.set})",
+            MyNotSetTransition set => $"not-set({set.set})",
+            MyWildcardTransition => "wildcard",
+            _ => transition.GetType().Name
+        };
     }
 
     // =========================================================================
