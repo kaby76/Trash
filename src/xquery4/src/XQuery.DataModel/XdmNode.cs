@@ -30,6 +30,8 @@ public abstract class XdmNode : XdmItem
 {
     private static long _nextNodeId = 0;
     private readonly long _nodeId;
+    private long _structuralVersion;
+    private DocumentOrderIndex? _documentOrderIndex;
 
     protected XdmNode()
     {
@@ -134,6 +136,44 @@ public abstract class XdmNode : XdmItem
     public long NodeId => _nodeId;
 
     /// <summary>
+    /// Gets the structural version of the tree containing this node.
+    /// </summary>
+    public long StructuralVersion => Root._structuralVersion;
+
+    /// <summary>
+    /// Gets the lazily-built document-order index for this node's tree.
+    /// </summary>
+    public DocumentOrderIndex DocumentOrder
+    {
+        get
+        {
+            var root = Root;
+            if (root._documentOrderIndex == null ||
+                root._documentOrderIndex.StructuralVersion != root._structuralVersion)
+            {
+                root._documentOrderIndex = new DocumentOrderIndex(root, root._structuralVersion);
+            }
+            return root._documentOrderIndex;
+        }
+    }
+
+    /// <summary>
+    /// Invalidates cached structural indexes after a child or attribute change.
+    /// </summary>
+    protected internal void StructureChanged()
+    {
+        var root = Root;
+        unchecked { root._structuralVersion++; }
+        root._documentOrderIndex = null;
+    }
+
+    internal void RootChanged()
+    {
+        unchecked { _structuralVersion++; }
+        _documentOrderIndex = null;
+    }
+
+    /// <summary>
     /// Compares this node to another in document order.
     /// Returns negative if this precedes other, positive if other precedes this, zero if same.
     /// </summary>
@@ -142,62 +182,13 @@ public abstract class XdmNode : XdmItem
         if (ReferenceEquals(this, other))
             return 0;
 
-        // Get the paths from root to each node
-        var path1 = GetPathFromRoot(this);
-        var path2 = GetPathFromRoot(other);
+        var thisRoot = Root;
+        var otherRoot = other.Root;
+        if (!ReferenceEquals(thisRoot, otherRoot))
+            return thisRoot.NodeId.CompareTo(otherRoot.NodeId);
 
-        // Compare paths
-        int minLen = Math.Min(path1.Count, path2.Count);
-        for (int i = 0; i < minLen; i++)
-        {
-            if (!ReferenceEquals(path1[i], path2[i]))
-            {
-                // Find positions among siblings
-                var parent = i > 0 ? path1[i - 1] : null;
-                if (parent == null)
-                    return path1[i].NodeId.CompareTo(path2[i].NodeId);
-
-                return GetSiblingPosition(parent, path1[i]).CompareTo(
-                    GetSiblingPosition(parent, path2[i]));
-            }
-        }
-
-        // One is ancestor of the other
-        return path1.Count.CompareTo(path2.Count);
-    }
-
-    private static List<XdmNode> GetPathFromRoot(XdmNode node)
-    {
-        var path = new List<XdmNode>();
-        while (node != null)
-        {
-            path.Insert(0, node);
-            node = node.Parent!;
-        }
-        return path;
-    }
-
-    private static int GetSiblingPosition(XdmNode parent, XdmNode child)
-    {
-        // Attributes come before children
-        if (child is XdmAttribute attr)
-        {
-            var attrs = parent.Attributes;
-            for (int i = 0; i < attrs.Count; i++)
-            {
-                if (ReferenceEquals(attrs[i], child))
-                    return i;
-            }
-            return -1;
-        }
-
-        var children = parent.Children;
-        for (int i = 0; i < children.Count; i++)
-        {
-            if (ReferenceEquals(children[i], child))
-                return parent.Attributes.Count + i;
-        }
-        return -1;
+        return thisRoot.DocumentOrder.GetPosition(this).CompareTo(
+            thisRoot.DocumentOrder.GetPosition(other));
     }
 
     /// <summary>

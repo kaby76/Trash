@@ -113,8 +113,10 @@ public class XdmElement : XdmNode
         else
         {
             var attr = new XdmAttribute(name, value);
+            attr.RootChanged();
             attr.Parent = this;
             _attributes.Add(attr);
+            StructureChanged();
         }
     }
 
@@ -161,7 +163,9 @@ public class XdmElement : XdmNode
         var attr = _attributes.FirstOrDefault(a => a.NodeName == name);
         if (attr != null)
         {
+            StructureChanged();
             attr.Parent = null;
+            attr.RootChanged();
             return _attributes.Remove(attr);
         }
         return false;
@@ -177,7 +181,9 @@ public class XdmElement : XdmNode
             (string.IsNullOrEmpty(namespaceUri) ? string.IsNullOrEmpty(a.NamespaceUri) : a.NamespaceUri == namespaceUri));
         if (attr != null)
         {
+            StructureChanged();
             attr.Parent = null;
+            attr.RootChanged();
             return _attributes.Remove(attr);
         }
         return false;
@@ -196,8 +202,10 @@ public class XdmElement : XdmNode
         if (_attributes.Any(a => a.NodeName == attribute.NodeName))
             throw new InvalidOperationException($"Attribute {attribute.NodeName} already exists");
 
+        attribute.RootChanged();
         attribute.Parent = this;
         _attributes.Add(attribute);
+        StructureChanged();
     }
 
     /// <summary>
@@ -220,8 +228,10 @@ public class XdmElement : XdmNode
             return;
         }
 
+        child.RootChanged();
         child.Parent = this;
         _children.Add(child);
+        StructureChanged();
     }
 
     /// <summary>
@@ -240,8 +250,10 @@ public class XdmElement : XdmNode
         if (index < 0 || index > _children.Count)
             throw new ArgumentOutOfRangeException(nameof(index));
 
+        child.RootChanged();
         child.Parent = this;
         _children.Insert(index, child);
+        StructureChanged();
     }
 
     /// <summary>
@@ -275,8 +287,10 @@ public class XdmElement : XdmNode
         if (newChild.Parent != null)
             throw new InvalidOperationException("Node already has a parent");
 
+        newChild.RootChanged();
         newChild.Parent = this;
         _children.Insert(index, newChild);
+        StructureChanged();
     }
 
     /// <summary>
@@ -287,7 +301,11 @@ public class XdmElement : XdmNode
         if (child == null) throw new ArgumentNullException(nameof(child));
 
         if (_children.Remove(child))
+        {
+            StructureChanged();
             child.Parent = null;
+            child.RootChanged();
+        }
     }
 
     /// <summary>
@@ -309,8 +327,11 @@ public class XdmElement : XdmNode
             throw new InvalidOperationException("Node already has a parent");
 
         oldChild.Parent = null;
+        oldChild.RootChanged();
+        newChild.RootChanged();
         newChild.Parent = this;
         _children[index] = newChild;
+        StructureChanged();
     }
 
     /// <summary>
@@ -318,8 +339,15 @@ public class XdmElement : XdmNode
     /// </summary>
     public void ClearChildren()
     {
+        if (_children.Count == 0)
+            return;
+
+        StructureChanged();
         foreach (var child in _children)
+        {
             child.Parent = null;
+            child.RootChanged();
+        }
         _children.Clear();
     }
 

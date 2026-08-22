@@ -59,8 +59,10 @@ public class XdmDocument : XdmNode
         if (child.Parent != null)
             throw new InvalidOperationException("Node already has a parent");
 
+        child.RootChanged();
         child.Parent = this;
         _children.Add(child);
+        StructureChanged();
     }
 
     /// <summary>
@@ -86,8 +88,10 @@ public class XdmDocument : XdmNode
         if (newChild.Parent != null)
             throw new InvalidOperationException("Node already has a parent");
 
+        newChild.RootChanged();
         newChild.Parent = this;
         _children.Insert(index, newChild);
+        StructureChanged();
     }
 
     /// <summary>
@@ -111,8 +115,10 @@ public class XdmDocument : XdmNode
         if (index < 0 || index > _children.Count)
             throw new ArgumentOutOfRangeException(nameof(index));
 
+        child.RootChanged();
         child.Parent = this;
         _children.Insert(index, child);
+        StructureChanged();
     }
 
     /// <summary>
@@ -123,7 +129,11 @@ public class XdmDocument : XdmNode
         if (child == null) throw new ArgumentNullException(nameof(child));
 
         if (_children.Remove(child))
+        {
+            StructureChanged();
             child.Parent = null;
+            child.RootChanged();
+        }
     }
 
     /// <summary>
@@ -145,8 +155,11 @@ public class XdmDocument : XdmNode
             throw new InvalidOperationException("Node already has a parent");
 
         oldChild.Parent = null;
+        oldChild.RootChanged();
+        newChild.RootChanged();
         newChild.Parent = this;
         _children[index] = newChild;
+        StructureChanged();
     }
 
     public override XdmNode DeepCopy()
