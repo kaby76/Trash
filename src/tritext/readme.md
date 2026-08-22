@@ -18,7 +18,7 @@ Get strings from a PDF file using IText.
 
 ## Current version
 
-Release 2.6.0.
+Release 2.7.0.
 
 ## License
 
