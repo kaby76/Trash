@@ -76,6 +76,22 @@ public class LexerCommandTests
         AssertToken(tokens[0], 1, 0, "z");
     }
 
+    [Fact]
+    public void NonGreedyLexerLoopStopsAtFirstAccept()
+    {
+        var interp = InterpFileReader.Read(File.ReadAllText(
+            NativeTreeTestSupport.SysML.LexerInterp));
+        var atn = AtnDeserializer.Deserialize(interp.AtnData);
+
+        var comments = new LexerAtnSimulator(atn)
+            .Tokenize("/* first */ /* second */")
+            .Where(token => token.Type == 223)
+            .Select(token => token.Text)
+            .ToArray();
+
+        Assert.Equal(["/* first */", "/* second */"], comments);
+    }
+
     private static MyATN BuildCommandAtn() => BuildAtn(
         modeCount: 3,
         new RuleSpec(0, '<', 1, new(MyLexerActionType.PushMode, 1, 0)),
