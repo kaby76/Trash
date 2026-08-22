@@ -625,6 +625,36 @@ public class EvaluatorTests
     }
 
     [Fact]
+    public void Eval_XPath_DescendantsRemainInDocumentOrder()
+    {
+        var doc = XmlDocumentReader.Parse("<root><group><item n='1'/><item n='2'/></group><item n='3'/></root>");
+        var result = Eval("//item/@n", doc);
+
+        Assert.Equal(new[] { "1", "2", "3" }, result.Select(item => item.StringValue));
+    }
+
+    [Fact]
+    public void Eval_XPath_DescendantPredicateIsAppliedPerParent()
+    {
+        var doc = XmlDocumentReader.Parse("<root><group><item n='1'/><item n='2'/></group><group><item n='3'/><item n='4'/></group></root>");
+        var result = Eval("//item[1]/@n", doc);
+
+        // //item[1] abbreviates /descendant-or-self::node()/child::item[1],
+        // so [1] selects the first item child of each parent, not just the first
+        // item in the document.
+        Assert.Equal(new[] { "1", "3" }, result.Select(item => item.StringValue));
+    }
+
+    [Fact]
+    public void Eval_XPath_OverlappingContextsAreDeduplicated()
+    {
+        var doc = XmlDocumentReader.Parse("<root><a><a><b/></a></a></root>");
+        var result = Eval("//a/descendant::b", doc);
+
+        Assert.Single(result);
+    }
+
+    [Fact]
     public void Eval_XPath_Attribute()
     {
         var doc = XmlDocumentReader.Parse("<root id='123'/>");

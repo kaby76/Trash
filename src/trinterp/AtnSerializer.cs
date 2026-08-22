@@ -71,6 +71,9 @@ public static class AtnSerializer
             if (s is DecisionState ds && ds.nonGreedy)
                 nonGreedyStates.Add(IdxS(s));
 
+            if (s is RuleStartState rss && rss.isLeftRecursiveRule)
+                precedenceStates.Add(IdxS(s));
+
             // Extra words for states that reference another state.
             // Note: endState/loopBackState are only emitted when set (null → no word emitted),
             // matching antlr-ng's serialization where TokensStartState has no endState word.

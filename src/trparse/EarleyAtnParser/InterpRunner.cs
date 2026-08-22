@@ -1,20 +1,25 @@
-namespace Trash.EarleyAtn;
+namespace EarleyAtnParser;
 
-using Antlr4.Runtime;
-using Antlr4.Runtime.Tree;
+// Antlr4 runtime used temporarily until we can have all tools not use
+// it. Unfortunately, right now, ParsingResultSet uses it.
+
 using ParseTreeEditing.UnvParseTreeDOM;
 using EditableAntlrTree;
 using AntlrJson;
+using Atn;
 
 /// <summary>
 /// Orchestrates interp-file-based parsing:
 ///   1. Read .interp files and deserialize ATNs.
 ///   2. Lex the input text using the lexer ATN (character-level NFA simulation).
-///   3. Parse on-channel tokens with the Earley parser.
-///   4. Convert the resulting ParserRuleContext tree to a ParsingResultSet.
+///   3. Parse with the Earley parser → ParseEvent list.
+///   4. Build a DOM tree directly via DomBuilder → ParsingResultSet.
 /// </summary>
 public static class InterpRunner
 {
+    public static bool show_tokens = false;
+    public static bool numeric_token_types = false;
+
     public static (ParsingResultSet Result, int TokenCount) Run(
         string parserInterpPath,
         string lexerInterpPath,
@@ -22,49 +27,40 @@ public static class InterpRunner
         string fileName,
         bool lineNumbers)
     {
-        // Read and deserialize .interp files
+        // Get options to lexer from process args.
+        var args = Environment.GetCommandLineArgs().ToList();
+
+        // Determine which preprocessor to run: gcc or cl.exe or clang.
+        show_tokens = args?.Where(a => a.IndexOf("--tokens", StringComparison.OrdinalIgnoreCase) >= 0).Any() ?? false;
+        numeric_token_types = args?.Where(a => a.IndexOf("--numeric-token-types", StringComparison.OrdinalIgnoreCase) >= 0).Any() ?? false;
+
         var parserInterp = InterpFileReader.Read(File.ReadAllText(parserInterpPath));
         var lexerInterp  = InterpFileReader.Read(File.ReadAllText(lexerInterpPath));
 
         var parserAtn = AtnDeserializer.Deserialize(parserInterp.AtnData);
         var lexerAtn  = AtnDeserializer.Deserialize(lexerInterp.AtnData);
 
-        // Build Antlr4 Vocabulary objects (used by ConvertToDOM / serializer)
-        var lexerVocab  = new Vocabulary(lexerInterp.LiteralNames,  lexerInterp.SymbolicNames);
-        var parserVocab = new Vocabulary(parserInterp.LiteralNames, parserInterp.SymbolicNames);
+        var lexerVocab  = new Antlr4.Runtime.Vocabulary(lexerInterp.LiteralNames,  lexerInterp.SymbolicNames);
+        var parserVocab = new Antlr4.Runtime.Vocabulary(parserInterp.LiteralNames, parserInterp.SymbolicNames);
 
-        // Lex the input → full token list (all channels)
         var sim = new LexerAtnSimulator(lexerAtn);
         var rawTokens = sim.Tokenize(inputText);
-
-        // Convert to Antlr4 IToken objects (CommonToken is IWritableToken)
-        var antlrTokens = new List<IToken>(rawTokens.Count);
-        foreach (var lt in rawTokens)
+        if (show_tokens)
         {
-            var ct = new CommonToken(lt.Type)
+            var symNames = lexerInterp.SymbolicNames;
+            foreach (var tok in rawTokens)
             {
-                Channel    = lt.Channel,
-                Text       = lt.Text,
-                StartIndex = lt.StartIndex,
-                StopIndex  = lt.StopIndex,
-                Line       = lt.Line,
-                Column     = lt.Column,
-                TokenIndex = lt.TokenIndex
-            };
-            antlrTokens.Add(ct);
+                string typeName = (!numeric_token_types && tok.Type >= 0 && tok.Type < symNames.Length && symNames[tok.Type] != null)
+                    ? symNames[tok.Type] : tok.Type.ToString();
+                string text = tok.Text
+                    .Replace("\n", "\\n")
+                    .Replace("\r", "\\r")
+                    .Replace("\t", "\\t");
+                string channel = tok.Channel != 0 ? $",channel={tok.Channel}" : "";
+                System.Console.Error.WriteLine(
+                    $"[@{tok.TokenIndex},{tok.StartIndex}:{tok.StopIndex}='{text}',<{typeName}>{channel},{tok.Line}:{tok.Column}]");
+            }
         }
-
-        // Build CommonTokenStream (all tokens buffered; CommonTokenStream filters on-channel when consuming)
-        var charStream   = new AntlrInputStream(inputText);
-        var tokenSource  = new ListTokenSource(antlrTokens);
-        var tokenStream  = new CommonTokenStream(tokenSource);
-        tokenStream.Fill(); // buffer all tokens (Fill also rewrites TokenIndex)
-
-        // Extract on-channel tokens for the Earley parser (DEFAULT_CHANNEL + EOF)
-        var onChannel = antlrTokens
-            .Where(t => t.Channel == TokenConstants.DefaultChannel || t.Type == TokenConstants.EOF)
-            .ToList();
-
         // Determine the start rule from the 'start-rule:' section in the parser interp file.
         int startRule = 0;
         if (parserInterp.StartStateNumber >= 0)
@@ -84,29 +80,38 @@ public static class InterpRunner
                     $"Start state {parserInterp.StartStateNumber} not found in deserialized parser ATN.");
         }
 
-        var parseTree = EarleyParser.Parse(parserAtn, antlrTokens, startRule);
-        if (parseTree == null)
+        var events = EarleyParser.Parse(parserAtn, rawTokens, startRule);
+        if (events == null)
             throw new InvalidOperationException($"Earley parse failed for '{fileName}': input rejected by grammar.");
 
-        // Build stub lexer/parser objects used by ConvertToDOM and the JSON serializer
+        var domTree = DomBuilder.Build(
+            events, rawTokens,
+            parserInterp.RuleNames,
+            parserInterp.SymbolicNames,
+            parserInterp.LiteralNames,
+            lexerInterp.RuleNames,
+            lineNumbers);
+
+        // Stub lexer/parser objects required by ParsingResultSet and the JSON serializer.
+        var charStream = new Antlr4.Runtime.AntlrInputStream(inputText);
         var myLexer = new MyLexer(charStream);
-        myLexer._ruleNames   = lexerInterp.RuleNames;
-        myLexer._modeNames   = lexerInterp.ModeNames.Length > 0 ? lexerInterp.ModeNames : new[] { "DEFAULT_MODE" };
-        myLexer._channelNames = lexerInterp.ChannelNames.Length > 0
-            ? lexerInterp.ChannelNames
-            : new[] { "DEFAULT_TOKEN_CHANNEL", "HIDDEN" };
-        myLexer._vocabulary  = lexerVocab;
-        myLexer._tokenTypeMap = BuildTokenTypeMap(lexerInterp.SymbolicNames);
+        myLexer._ruleNames       = lexerInterp.RuleNames;
+        myLexer._modeNames       = lexerInterp.ModeNames.Length > 0
+            ? lexerInterp.ModeNames : new[] { "DEFAULT_MODE" };
+        myLexer._channelNames    = lexerInterp.ChannelNames.Length > 0
+            ? lexerInterp.ChannelNames : new[] { "DEFAULT_TOKEN_CHANNEL", "HIDDEN" };
+        myLexer._vocabulary      = lexerVocab;
+        myLexer._tokenTypeMap    = BuildTokenTypeMap(lexerInterp.SymbolicNames);
         myLexer._grammarFileName = Path.GetFileNameWithoutExtension(lexerInterpPath);
 
-        var myParser = new MyParser();
-        myParser._ruleNames      = parserInterp.RuleNames;
-        myParser._vocabulary     = parserVocab;
+        var myParser = new EditableAntlrTree.MyParser();
+        myParser._ruleNames       = parserInterp.RuleNames;
+        myParser._vocabulary      = parserVocab;
         myParser._grammarFileName = Path.GetFileNameWithoutExtension(parserInterpPath);
 
-        // Convert parse tree to UnvParseTreeNode (the DOM used by the Trash toolkit)
-        var converter = new ConvertToDOM(lineNumbers);
-        var domTree = converter.BottomUpConvert(parseTree, null, myParser, myLexer, tokenStream);
+        int tokenCount = 0;
+        foreach (var t in rawTokens)
+            if (t.Channel == 0 || t.Type == -1) tokenCount++;
 
         return (new ParsingResultSet
         {
@@ -114,7 +119,7 @@ public static class InterpRunner
             Nodes    = new[] { (UnvParseTreeNode)domTree },
             Parser   = myParser,
             Lexer    = myLexer
-        }, onChannel.Count);
+        }, tokenCount);
     }
 
     private static IDictionary<string, int> BuildTokenTypeMap(string[] symbolicNames)

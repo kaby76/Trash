@@ -46,7 +46,6 @@ TOOLS=(
     trtree
     trunfold
     trunfoldlit
-    trungroup
     trwdog
     trxml
     trxml2

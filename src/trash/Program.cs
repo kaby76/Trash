@@ -8,7 +8,7 @@ namespace Trash;
 
 public class Program
 {
-    public static string version = "2.4.0";
+    public static string version = "2.7.0";
 
     // Maps both full names (e.g. "trgen") and short aliases (e.g. "gen") to the
     // sub-tool directory name that lives next to trash.dll in the package.
@@ -22,9 +22,7 @@ public class Program
         { "trcombine",    "trcombine"    },
         { "trconvert",    "trconvert"    },
         { "trcover",      "trcover"      },
-//      { "trdistill",    "trdistill"    },
         { "trdot",        "trdot"        },
-//      { "trenum",       "trenum"       },
         { "trextract",    "trextract"    },
         { "trff",         "trff"         },
 //      { "trfold",       "trfold"       },
@@ -56,7 +54,6 @@ public class Program
 //      { "trull",        "trull"        },
         { "trunfold",     "trunfold"     },
         { "trunfoldlit",  "trunfoldlit"  },
-        { "trungroup",    "trungroup"    },
         { "trwdog",       "trwdog"       },
         { "trxpath",      "trxpath"      },
         { "trxquery",     "trxquery"     },
@@ -69,9 +66,7 @@ public class Program
         { "combine",      "trcombine"    },
         { "convert",      "trconvert"    },
         { "cover",        "trcover"      },
-//      { "distill",      "trdistill"    },
         { "dot",          "trdot"        },
-//      { "enum",         "trenum"       },
         { "extract",      "trextract"    },
         { "ff",           "trff"         },
 //      { "fold",         "trfold"       },
@@ -103,7 +98,6 @@ public class Program
 //      { "ull",          "trull"        },
         { "unfold",       "trunfold"     },
         { "unfoldlit",    "trunfoldlit"  },
-        { "ungroup",      "trungroup"    },
         { "wdog",         "trwdog"       },
         { "xpath",        "trxpath"      },
         { "xquery",       "trxquery"     },

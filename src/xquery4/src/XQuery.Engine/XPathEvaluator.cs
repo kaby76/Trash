@@ -184,10 +184,25 @@ public class XPathEvaluator : IAstVisitor<XdmSequence>
         if (node.IsRootOnly)
             return result;
 
-        // Apply each step
-        foreach (var step in node.Steps)
+        // Apply each step.  XPath's // abbreviation is represented by the parser as
+        // descendant-or-self::node()/child::X.  Evaluate that pair as one operation
+        // so that the (usually enormous) intermediate node sequence is never
+        // materialized, de-duplicated, and sorted.
+        for (int stepIndex = 0; stepIndex < node.Steps.Count; stepIndex++)
         {
+            var step = node.Steps[stepIndex];
+
+            if (IsDescendantOrSelfNodeStep(step) &&
+                stepIndex + 1 < node.Steps.Count &&
+                node.Steps[stepIndex + 1] is AxisStepExpr { Axis: Axis.Child } childStep)
+            {
+                result = ApplyDescendantChildPair(result, childStep);
+                stepIndex++;
+                continue;
+            }
+
             var newResult = new List<XdmItem>();
+            var seen = new HashSet<XdmItem>();
             var items = result.ToList();
 
             for (int i = 0; i < items.Count; i++)
@@ -202,7 +217,7 @@ public class XPathEvaluator : IAstVisitor<XdmSequence>
                     var stepResult = Evaluate(step);
                     foreach (var r in stepResult)
                     {
-                        if (!newResult.Contains(r))
+                        if (seen.Add(r))
                             newResult.Add(r);
                     }
                 }
@@ -219,15 +234,118 @@ public class XPathEvaluator : IAstVisitor<XdmSequence>
         return result;
     }
 
+    private static bool IsDescendantOrSelfNodeStep(ExprNode step)
+    {
+        // The parser currently represents node() by this predicate-free kind test.
+        return step is AxisStepExpr
+        {
+            Axis: Axis.DescendantOrSelf,
+            NodeTest: KindTestExpr { Kind: XdmNodeKind.Element, Name: null, TypeName: null },
+            Predicates.Count: 0
+        };
+    }
+
+    private XdmSequence ApplyDescendantChildPair(XdmSequence input, AxisStepExpr childStep)
+    {
+        var newResult = new List<XdmItem>();
+        var seen = new HashSet<XdmItem>();
+
+        foreach (var item in input)
+        {
+            if (item is not XdmNode contextNode)
+                throw new XdmException("XPTY0020", "Context item is not a node");
+
+            foreach (var descendantOrSelf in contextNode.DescendantsAndSelf())
+            {
+                var oldContext = _context;
+                _context = _context.WithContextItem(descendantOrSelf);
+                try
+                {
+                    foreach (var resultItem in Evaluate(childStep))
+                    {
+                        if (seen.Add(resultItem))
+                            newResult.Add(resultItem);
+                    }
+                }
+                finally
+                {
+                    _context = oldContext;
+                }
+            }
+        }
+
+        return SortByDocumentOrder(newResult);
+    }
+
     private XdmSequence SortByDocumentOrder(List<XdmItem> items)
     {
         var nodes = items.OfType<XdmNode>().ToList();
         if (nodes.Count == items.Count && nodes.Count > 1)
         {
-            nodes.Sort((a, b) => a.CompareDocumentOrder(b));
-            return new XdmSequence(nodes.Cast<XdmItem>().Distinct());
+            // Build document positions once.  XdmNode.CompareDocumentOrder walks
+            // both ancestor chains and scans siblings on every comparison, which
+            // makes sorting a large descendant result prohibitively expensive.
+            var positions = BuildDocumentOrderPositions(nodes);
+            int Compare(XdmNode a, XdmNode b)
+            {
+                var pa = positions[a];
+                var pb = positions[b];
+                var rootComparison = pa.RootId.CompareTo(pb.RootId);
+                return rootComparison != 0 ? rootComparison : pa.Position.CompareTo(pb.Position);
+            }
+
+            // Forward-axis evaluation normally produced an ordered sequence
+            // already. Avoid even the integer sort in that common case.
+            var ordered = true;
+            for (var i = 1; i < nodes.Count; i++)
+            {
+                if (Compare(nodes[i - 1], nodes[i]) <= 0)
+                    continue;
+                ordered = false;
+                break;
+            }
+
+            if (!ordered)
+                nodes.Sort(Compare);
+
+            return new XdmSequence(nodes.Cast<XdmItem>());
         }
         return new XdmSequence(items);
+    }
+
+    private static Dictionary<XdmNode, (long RootId, int Position)> BuildDocumentOrderPositions(
+        IEnumerable<XdmNode> nodes)
+    {
+        var positions = new Dictionary<XdmNode, (long RootId, int Position)>();
+        var roots = new HashSet<XdmNode>();
+
+        foreach (var node in nodes)
+            roots.Add(node.Root);
+
+        foreach (var root in roots)
+        {
+            var position = 0;
+            AddSubtree(root, root.NodeId, ref position, positions);
+        }
+
+        return positions;
+    }
+
+    private static void AddSubtree(
+        XdmNode node,
+        long rootId,
+        ref int position,
+        Dictionary<XdmNode, (long RootId, int Position)> positions)
+    {
+        positions[node] = (rootId, position++);
+
+        // XPath document order places namespace and attribute nodes before the
+        // element's children. Namespace axes are not represented in this model.
+        foreach (var attribute in node.Attributes)
+            positions[attribute] = (rootId, position++);
+
+        foreach (var child in node.Children)
+            AddSubtree(child, rootId, ref position, positions);
     }
 
     public XdmSequence VisitAxisStep(AxisStepExpr node)

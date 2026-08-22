@@ -33,7 +33,7 @@ The outputed files are:
 
 ## Current version
 
-Release 2.4.0.
+Release 2.7.0.
 
 ## License
 

@@ -9,7 +9,7 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "2.4.0";
+    public string Version { get; set; } = "2.7.0";
 
     [Value(0)] public IEnumerable<string> Files { get; set; }
 }

@@ -42,7 +42,7 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "2.4.0";
+    public string Version { get; set; } = "2.7.0";
 
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }
@@ -50,12 +50,15 @@ public class Config
     [Option("xf", Required = false, HelpText = "Read input file names from file provided on command line.")]
     public string ReadFileNameFile { get; set; }
 
-    [Option("pinterp", Required = false, HelpText = "Path to parser .interp file for Earley ATN-based parsing.")]
+    [Option("pinterp", Required = false, HelpText = "Path to parser .interp file for ATN-based parsing.")]
     public string PInterp { get; set; }
 
-    [Option("linterp", Required = false, HelpText = "Path to lexer .interp file for Earley ATN-based parsing.")]
+    [Option("linterp", Required = false, HelpText = "Path to lexer .interp file for ATN-based parsing.")]
     public string LInterp { get; set; }
 
     [Option('L', "lib", Required = false, HelpText = "Directory to search for .interp files (resolves relative --pinterp / --linterp paths).")]
     public string Lib { get; set; }
+
+    [Option("allstar", Required = false, HelpText = "Use ALL(*) parser instead of Earley when --pinterp / --linterp are specified.")]
+    public bool AllStar { get; set; }
 }

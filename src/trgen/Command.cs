@@ -158,7 +158,7 @@ namespace Trash
                         evaluator.Evaluate(new XPathParser("/grammarSpec/grammarDecl/identifier/(TOKEN_REF | RULE_REF)/text()").Parse(), adapterDoc)
                             .OfType<AdapterText>().Select(at => at.Source.Data).ToList();
                     List<string> ss =
-                        evaluator.Evaluate(new XPathParser("//parserRuleSpec[ruleBlock//TOKEN_REF/text()='EOF']/RULE_REF/text()").Parse(), adapterDoc)
+                        evaluator.Evaluate(new XPathParser("/grammarSpec/rules/ruleSpec/parserRuleSpec[ruleBlock//TOKEN_REF/text()='EOF']/RULE_REF/text()").Parse(), adapterDoc)
                             .OfType<AdapterText>().Select(at => at.Source.Data).ToList();
 
                     var is_parser_grammar = is_par.Count() != 0;
@@ -569,7 +569,7 @@ namespace Trash
             }
         }
 
-        public static string version = "2.4.0";
+        public static string version = "2.7.0";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
