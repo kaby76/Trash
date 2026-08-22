@@ -9,7 +9,7 @@ using Atn;
 /// Orchestrates interp-file-based parsing using the ALL(*) parser.
 /// Drop-in parallel to InterpRunner; uses AllStarParser instead of EarleyParser.
 /// </summary>
-public static class AllStarRunner
+public static class InterpRunner
 {
     public static bool show_tokens = false;
     public static bool numeric_token_types = false;

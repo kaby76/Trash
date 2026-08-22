@@ -130,5 +130,8 @@ jobs:
         npm run build
     - name: Test
       run: |
+        cd src/xquery4
+        dotnet test
+        cd ../..
         cd tests
         bash all-tests.sh
