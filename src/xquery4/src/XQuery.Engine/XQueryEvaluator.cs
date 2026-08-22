@@ -661,6 +661,12 @@ public class PendingUpdateList
         var replaceNodes = _updates.OfType<ReplaceNodePrimitive>().ToList();
         var deletes = _updates.OfType<DeletePrimitive>().ToList();
 
+        // Capture update order before applying any structural mutation. All
+        // comparisons use the versioned document-order index.
+        inserts.Sort((left, right) => right.Target.CompareDocumentOrder(left.Target));
+        replaceNodes.Sort((left, right) => right.Target.CompareDocumentOrder(left.Target));
+        deletes.Sort((left, right) => right.Target.CompareDocumentOrder(left.Target));
+
         // Apply renames
         foreach (var rename in renames)
         {

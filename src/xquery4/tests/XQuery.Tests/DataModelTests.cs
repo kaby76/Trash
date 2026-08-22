@@ -318,6 +318,115 @@ public class DataModelTests
         Assert.NotSame(elem, copy);
     }
 
+    [Fact]
+    public void DocumentOrderIndex_IsReusedUntilStructureChanges()
+    {
+        var doc = new XdmDocument();
+        var root = new XdmElement("root");
+        var first = new XdmElement("first");
+        doc.AppendChild(root);
+        root.AppendChild(first);
+
+        var original = doc.DocumentOrder;
+        Assert.Same(original, first.DocumentOrder);
+        Assert.True(root.CompareDocumentOrder(first) < 0);
+        Assert.Same(original, doc.DocumentOrder);
+
+        var inserted = new XdmElement("inserted");
+        root.InsertChildAt(0, inserted);
+
+        var updated = doc.DocumentOrder;
+        Assert.NotSame(original, updated);
+        Assert.True(inserted.CompareDocumentOrder(first) < 0);
+        Assert.Equal(doc.StructuralVersion, updated.StructuralVersion);
+    }
+
+    [Fact]
+    public void DocumentOrderIndex_OrdersAttributesBeforeChildren()
+    {
+        var doc = new XdmDocument();
+        var root = new XdmElement("root");
+        var child = new XdmElement("child");
+        root.SetAttribute("id", "1");
+        root.AppendChild(child);
+        doc.AppendChild(root);
+
+        var attribute = root.Attributes.Single();
+        Assert.True(root.CompareDocumentOrder(attribute) < 0);
+        Assert.True(attribute.CompareDocumentOrder(child) < 0);
+    }
+
+    [Fact]
+    public void DocumentOrderIndex_InvalidatesForEveryStructuralMutation()
+    {
+        var doc = new XdmDocument();
+        var root = new XdmElement("root");
+        doc.AppendChild(root);
+
+        var index = doc.DocumentOrder;
+        var first = new XdmElement("first");
+        root.AppendChild(first);
+        Assert.NotSame(index, index = doc.DocumentOrder);
+
+        var before = new XdmElement("before");
+        root.InsertBefore(before, first);
+        Assert.NotSame(index, index = doc.DocumentOrder);
+
+        var replacement = new XdmElement("replacement");
+        root.ReplaceChild(replacement, first);
+        Assert.NotSame(index, index = doc.DocumentOrder);
+
+        root.RemoveChild(before);
+        Assert.NotSame(index, index = doc.DocumentOrder);
+
+        root.SetAttribute("id", "1");
+        Assert.NotSame(index, index = doc.DocumentOrder);
+
+        root.AddAttribute(new XdmAttribute("name", "value"));
+        Assert.NotSame(index, index = doc.DocumentOrder);
+
+        root.RemoveAttribute("id");
+        Assert.NotSame(index, index = doc.DocumentOrder);
+
+        root.ClearChildren();
+        Assert.NotSame(index, doc.DocumentOrder);
+    }
+
+    [Fact]
+    public void DocumentOrderIndex_SurvivesAttachAndDetachCycles()
+    {
+        var subtree = new XdmElement("subtree");
+        subtree.AppendChild(new XdmElement("original"));
+        var detachedIndex = subtree.DocumentOrder;
+
+        var doc = new XdmDocument();
+        var root = new XdmElement("root");
+        doc.AppendChild(root);
+        root.AppendChild(subtree);
+        subtree.AppendChild(new XdmElement("added-while-attached"));
+        root.RemoveChild(subtree);
+
+        var reindexed = subtree.DocumentOrder;
+        Assert.NotSame(detachedIndex, reindexed);
+        Assert.Equal(3, reindexed.Count);
+    }
+
+    [Fact]
+    public void DocumentOrderIndex_IgnoresNonStructuralChanges()
+    {
+        var root = new XdmElement("root");
+        var text = new XdmText("old");
+        root.SetAttribute("id", "1");
+        root.AppendChild(text);
+        var index = root.DocumentOrder;
+
+        root.Rename(new XdmQName("renamed"));
+        root.Attributes.Single().Value = "2";
+        text.Value = "new";
+
+        Assert.Same(index, root.DocumentOrder);
+    }
+
     #endregion
 
     #region Map Tests

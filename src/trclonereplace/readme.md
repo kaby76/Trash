@@ -19,7 +19,7 @@ Clone, rename, and replace symbols in a grammar to optimize full stack fallbacks
 
 ## Current version
 
-Release 2.6.0.
+Release 2.7.0.
 
 ## License
 

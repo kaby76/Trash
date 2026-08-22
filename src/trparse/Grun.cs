@@ -277,7 +277,7 @@ public class Grun
             if (config.AllStar)
             {
                 AllStarAtnParser.AllStarParser.Trace = config.Verbose;
-                (rs, interpTokenCount) = AllStarAtnParser.AllStarRunner.Run(
+                (rs, interpTokenCount) = AllStarAtnParser.InterpRunner.Run(
                     resolvedPInterp, resolvedLInterp, txt, input_name, config.LineNumbers);
                 interpLabel = "ALL(*)";
             }

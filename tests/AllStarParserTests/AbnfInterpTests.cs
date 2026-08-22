@@ -38,7 +38,7 @@ public class AbnfInterpTests
     public void AllStarParsesSuccessfully(string filePath)
     {
         var text = File.ReadAllText(filePath);
-        var (result, tokenCount) = AllStarRunner.Run(
+        var (result, tokenCount) = AllStarAtnParser.InterpRunner.Run(
             ParserInterp, LexerInterp, text, Path.GetFileName(filePath), lineNumbers: false);
 
         Assert.NotNull(result);
@@ -59,9 +59,9 @@ public class AbnfInterpTests
         var text = File.ReadAllText(filePath);
         var fileName = Path.GetFileName(filePath);
 
-        var (earleyResult, _) = InterpRunner.Run(
+        var (earleyResult, _) = EarleyAtnParser.InterpRunner.Run(
             ParserInterp, LexerInterp, text, fileName, lineNumbers: false);
-        var (allStarResult, _) = AllStarRunner.Run(
+        var (allStarResult, _) = AllStarAtnParser.InterpRunner.Run(
             ParserInterp, LexerInterp, text, fileName, lineNumbers: false);
 
         var earleyTree = RenderAntlrStyle(earleyResult);

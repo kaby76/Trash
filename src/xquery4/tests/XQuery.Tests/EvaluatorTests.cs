@@ -655,6 +655,57 @@ public class EvaluatorTests
     }
 
     [Fact]
+    public void Eval_Union_DeduplicatesAndSortsInDocumentOrder()
+    {
+        var doc = XmlDocumentReader.Parse("<root><a/><b/><c/></root>");
+        var result = Eval("(/root/c | /root/a | /root/c | /root/b)", doc);
+
+        Assert.Equal(new[] { "a", "b", "c" },
+            result.Cast<XdmElement>().Select(element => element.LocalName));
+    }
+
+    [Fact]
+    public void Eval_IntersectAndExceptUseNodeIdentity()
+    {
+        var doc = XmlDocumentReader.Parse("<root><a/><b/><c/></root>");
+
+        var intersect = Eval("/root/* intersect (/root/b | /root/c)", doc);
+        var except = Eval("/root/* except /root/b", doc);
+
+        Assert.Equal(new[] { "b", "c" },
+            intersect.Cast<XdmElement>().Select(element => element.LocalName));
+        Assert.Equal(new[] { "a", "c" },
+            except.Cast<XdmElement>().Select(element => element.LocalName));
+    }
+
+    [Fact]
+    public void Eval_UnionHasStableOrderAcrossDocuments()
+    {
+        var firstDoc = XmlDocumentReader.Parse("<first/>");
+        var secondDoc = XmlDocumentReader.Parse("<second/>");
+        var first = firstDoc.DocumentElement!;
+        var second = secondDoc.DocumentElement!;
+        var vars = new Dictionary<string, XdmSequence>
+        {
+            ["later"] = new XdmSequence(second),
+            ["earlier"] = new XdmSequence(first)
+        };
+
+        var result = EvalWithVars("$later union $earlier", vars);
+
+        Assert.Equal(new[] { "first", "second" },
+            result.Cast<XdmElement>().Select(element => element.LocalName));
+    }
+
+    [Fact]
+    public void Eval_NodeSetOperatorsRejectAtomicValues()
+    {
+        Assert.Throws<XdmException>(() => Eval("(1 union 2)"));
+        Assert.Throws<XdmException>(() => Eval("(1 intersect 2)"));
+        Assert.Throws<XdmException>(() => Eval("(1 except 2)"));
+    }
+
+    [Fact]
     public void Eval_XPath_Attribute()
     {
         var doc = XmlDocumentReader.Parse("<root id='123'/>");

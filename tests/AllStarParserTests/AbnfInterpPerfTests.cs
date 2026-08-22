@@ -44,8 +44,8 @@ public class AbnfInterpPerfTests(ITestOutputHelper output)
         var fileName = Path.GetFileName(filePath);
         var text     = File.ReadAllText(filePath);
 
-        double earleyMs  = MeasureMs(() => InterpRunner.Run(ParserInterp, LexerInterp, text, fileName, false));
-        double allStarMs = MeasureMs(() => AllStarRunner.Run(ParserInterp, LexerInterp, text, fileName, false));
+        double earleyMs  = MeasureMs(() => EarleyAtnParser.InterpRunner.Run(ParserInterp, LexerInterp, text, fileName, false));
+        double allStarMs = MeasureMs(() => AllStarAtnParser.InterpRunner.Run(ParserInterp, LexerInterp, text, fileName, false));
 
         double ratio = allStarMs > 0 ? earleyMs / allStarMs : double.PositiveInfinity;
 
@@ -72,8 +72,8 @@ public class AbnfInterpPerfTests(ITestOutputHelper output)
             var fileName = Path.GetFileName(filePath);
             var text     = File.ReadAllText(filePath);
 
-            double earleyMs  = MeasureMs(() => InterpRunner.Run(ParserInterp, LexerInterp, text, fileName, false));
-            double allStarMs = MeasureMs(() => AllStarRunner.Run(ParserInterp, LexerInterp, text, fileName, false));
+            double earleyMs  = MeasureMs(() => EarleyAtnParser.InterpRunner.Run(ParserInterp, LexerInterp, text, fileName, false));
+            double allStarMs = MeasureMs(() => AllStarAtnParser.InterpRunner.Run(ParserInterp, LexerInterp, text, fileName, false));
 
             totalEarleyMs  += earleyMs;
             totalAllStarMs += allStarMs;
