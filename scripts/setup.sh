@@ -8,15 +8,17 @@ case "${unameOut}" in
     MSYS_NT*)   machine=Msys;;
     *)          machine="UNKNOWN:${unameOut}"
 esac
+CONFIG=Release
 if [[ "$machine" == "MinGw" || "$machine" == "Msys" ]]
 then
-    cwd=`pwd | sed 's%/c%c:%' | sed 's%/%\\\\%g'`
+    where=`pwd`/src/trash/bin/$CONFIG/
+    where=`cygpath -d $where`
 else
-    cwd=`pwd`
+    where=`pwd`/src/trash/bin/$CONFIG/
 fi
-CONFIG=Release
 echo "$machine"
-echo "$cwd"
-echo dotnet nuget add source $cwd/src/trash/bin/$CONFIG/ --name trtool-trash
-dotnet nuget add source $cwd/src/trash/bin/$CONFIG/ --name trtool-trash > /dev/null 2>&1
+echo "$where"
+echo dotnet nuget add source $where --name trtool-trash
+set -e
+dotnet nuget add source $where --name trtool-trash
 dotnet nuget list source
