@@ -9,7 +9,7 @@ using Atn;
 /// Orchestrates interp-file-based parsing using the ALL(*) parser.
 /// Drop-in parallel to InterpRunner; uses AllStarParser instead of EarleyParser.
 /// </summary>
-public static class AllStarRunner
+public static class InterpRunner
 {
     public static bool show_tokens = false;
     public static bool numeric_token_types = false;
@@ -39,6 +39,8 @@ public static class AllStarRunner
 
         var sim = new EarleyAtnParser.LexerAtnSimulator(lexerAtn);
         var rawTokens = sim.Tokenize(inputText);
+        ReconcileLiteralTokenTypes(rawTokens, lexerInterp.SymbolicNames,
+            lexerInterp.LiteralNames, parserInterp.LiteralNames);
         if (show_tokens)
         {
             var symNames = lexerInterp.SymbolicNames;
@@ -125,5 +127,44 @@ public static class AllStarRunner
             if (symbolicNames[i] != null)
                 map[symbolicNames[i]] = i;
         return map;
+    }
+
+    // A lexer rule with a command may have no literal-name entry even though its
+    // symbolic name spells the keyword (for example TABLE -> 'table'). If a parser
+    // interp was generated from such a token vocabulary, ANTLR can assign a separate
+    // implicit token type to the literal used by the parser rule. Reconcile that
+    // duplicate so the independently interpreted lexer and parser share a vocabulary.
+    private static void ReconcileLiteralTokenTypes(
+        List<LexerToken> tokens, string[] lexerSymbolicNames,
+        string[] lexerLiteralNames, string[] parserLiteralNames)
+    {
+        var remap = new Dictionary<int, int>();
+        for (int lexerType = 0; lexerType < lexerSymbolicNames.Length; lexerType++)
+        {
+            var symbolicName = lexerSymbolicNames[lexerType];
+            if (symbolicName == null ||
+                (lexerType < lexerLiteralNames.Length && lexerLiteralNames[lexerType] != null))
+                continue;
+
+            var expectedLiteral = $"'{symbolicName.ToLowerInvariant()}'";
+            for (int parserType = 0; parserType < parserLiteralNames.Length; parserType++)
+            {
+                if (parserType != lexerType &&
+                    string.Equals(parserLiteralNames[parserType], expectedLiteral,
+                        StringComparison.Ordinal))
+                {
+                    remap[lexerType] = parserType;
+                    break;
+                }
+            }
+        }
+
+        for (int i = 0; i < tokens.Count; i++)
+        {
+            var token = tokens[i];
+            if (!remap.TryGetValue(token.Type, out int parserType)) continue;
+            token.Type = parserType;
+            tokens[i] = token;
+        }
     }
 }

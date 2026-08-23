@@ -201,8 +201,7 @@ public class XPathEvaluator : IAstVisitor<XdmSequence>
                 continue;
             }
 
-            var newResult = new List<XdmItem>();
-            var seen = new HashSet<XdmItem>();
+            var newResult = new NodeSet();
             var items = result.ToList();
 
             for (int i = 0; i < items.Count; i++)
@@ -217,8 +216,9 @@ public class XPathEvaluator : IAstVisitor<XdmSequence>
                     var stepResult = Evaluate(step);
                     foreach (var r in stepResult)
                     {
-                        if (seen.Add(r))
-                            newResult.Add(r);
+                        if (r is not XdmNode resultNode)
+                            throw XdmException.TypeError("Path steps must return nodes");
+                        newResult.Add(resultNode);
                     }
                 }
                 finally
@@ -228,7 +228,7 @@ public class XPathEvaluator : IAstVisitor<XdmSequence>
             }
 
             // Sort by document order and remove duplicates
-            result = SortByDocumentOrder(newResult);
+            result = newResult.ToXdmSequence();
         }
 
         return result;
@@ -247,8 +247,7 @@ public class XPathEvaluator : IAstVisitor<XdmSequence>
 
     private XdmSequence ApplyDescendantChildPair(XdmSequence input, AxisStepExpr childStep)
     {
-        var newResult = new List<XdmItem>();
-        var seen = new HashSet<XdmItem>();
+        var newResult = new NodeSet();
 
         foreach (var item in input)
         {
@@ -263,8 +262,9 @@ public class XPathEvaluator : IAstVisitor<XdmSequence>
                 {
                     foreach (var resultItem in Evaluate(childStep))
                     {
-                        if (seen.Add(resultItem))
-                            newResult.Add(resultItem);
+                        if (resultItem is not XdmNode resultNode)
+                            throw XdmException.TypeError("Path steps must return nodes");
+                        newResult.Add(resultNode);
                     }
                 }
                 finally
@@ -274,78 +274,7 @@ public class XPathEvaluator : IAstVisitor<XdmSequence>
             }
         }
 
-        return SortByDocumentOrder(newResult);
-    }
-
-    private XdmSequence SortByDocumentOrder(List<XdmItem> items)
-    {
-        var nodes = items.OfType<XdmNode>().ToList();
-        if (nodes.Count == items.Count && nodes.Count > 1)
-        {
-            // Build document positions once.  XdmNode.CompareDocumentOrder walks
-            // both ancestor chains and scans siblings on every comparison, which
-            // makes sorting a large descendant result prohibitively expensive.
-            var positions = BuildDocumentOrderPositions(nodes);
-            int Compare(XdmNode a, XdmNode b)
-            {
-                var pa = positions[a];
-                var pb = positions[b];
-                var rootComparison = pa.RootId.CompareTo(pb.RootId);
-                return rootComparison != 0 ? rootComparison : pa.Position.CompareTo(pb.Position);
-            }
-
-            // Forward-axis evaluation normally produced an ordered sequence
-            // already. Avoid even the integer sort in that common case.
-            var ordered = true;
-            for (var i = 1; i < nodes.Count; i++)
-            {
-                if (Compare(nodes[i - 1], nodes[i]) <= 0)
-                    continue;
-                ordered = false;
-                break;
-            }
-
-            if (!ordered)
-                nodes.Sort(Compare);
-
-            return new XdmSequence(nodes.Cast<XdmItem>());
-        }
-        return new XdmSequence(items);
-    }
-
-    private static Dictionary<XdmNode, (long RootId, int Position)> BuildDocumentOrderPositions(
-        IEnumerable<XdmNode> nodes)
-    {
-        var positions = new Dictionary<XdmNode, (long RootId, int Position)>();
-        var roots = new HashSet<XdmNode>();
-
-        foreach (var node in nodes)
-            roots.Add(node.Root);
-
-        foreach (var root in roots)
-        {
-            var position = 0;
-            AddSubtree(root, root.NodeId, ref position, positions);
-        }
-
-        return positions;
-    }
-
-    private static void AddSubtree(
-        XdmNode node,
-        long rootId,
-        ref int position,
-        Dictionary<XdmNode, (long RootId, int Position)> positions)
-    {
-        positions[node] = (rootId, position++);
-
-        // XPath document order places namespace and attribute nodes before the
-        // element's children. Namespace axes are not represented in this model.
-        foreach (var attribute in node.Attributes)
-            positions[attribute] = (rootId, position++);
-
-        foreach (var child in node.Children)
-            AddSubtree(child, rootId, ref position, positions);
+        return newResult.ToXdmSequence();
     }
 
     public XdmSequence VisitAxisStep(AxisStepExpr node)
@@ -785,7 +714,7 @@ public class XPathEvaluator : IAstVisitor<XdmSequence>
 
     public XdmSequence VisitUnionExpr(UnionExpr node)
     {
-        var nodes = new List<XdmNode>();
+        var nodes = new NodeSet();
 
         foreach (var operand in node.Operands)
         {
@@ -794,14 +723,11 @@ public class XPathEvaluator : IAstVisitor<XdmSequence>
             {
                 if (item is not XdmNode nodeItem)
                     throw XdmException.TypeError("Union requires node sequences");
-                if (!nodes.Any(n => ReferenceEquals(n, nodeItem)))
-                    nodes.Add(nodeItem);
+                nodes.Add(nodeItem);
             }
         }
 
-        // Sort by document order
-        nodes.Sort((a, b) => a.CompareDocumentOrder(b));
-        return new XdmSequence(nodes.Cast<XdmItem>());
+        return nodes.ToXdmSequence();
     }
 
     public XdmSequence VisitIntersectExceptExpr(IntersectExceptExpr node)
@@ -809,15 +735,17 @@ public class XPathEvaluator : IAstVisitor<XdmSequence>
         var left = Evaluate(node.Left);
         var right = Evaluate(node.Right);
 
-        var leftNodes = left.ItemsAs<XdmNode>().ToList();
-        var rightNodes = right.ItemsAs<XdmNode>().ToHashSet();
+        var leftNodes = NodeSet.FromSequence(left, node.IsIntersect ? "Intersect" : "Except");
+        var rightNodes = NodeSet.FromSequence(right, node.IsIntersect ? "Intersect" : "Except");
+        var result = new NodeSet();
 
-        var result = node.IsIntersect
-            ? leftNodes.Where(n => rightNodes.Any(r => ReferenceEquals(r, n))).ToList()
-            : leftNodes.Where(n => !rightNodes.Any(r => ReferenceEquals(r, n))).ToList();
+        foreach (var leftNode in leftNodes)
+        {
+            if (rightNodes.Contains(leftNode) == node.IsIntersect)
+                result.Add(leftNode);
+        }
 
-        result.Sort((a, b) => a.CompareDocumentOrder(b));
-        return new XdmSequence(result.Cast<XdmItem>());
+        return result.ToXdmSequence();
     }
 
     #endregion

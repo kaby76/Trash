@@ -9,6 +9,8 @@ public class MyATNState
 
     // For RuleStart states of left-recursive rules
     public bool isPrecedenceRule;
+    // For lexer decisions created from non-greedy operators such as .*?
+    public bool nonGreedy;
     // For StarLoopEntry states that are the top-level suffix loop of a left-recursive rule
     public bool isPrecedenceDecision;
 

@@ -15,6 +15,27 @@ public class XQueryTests
         return parser.Parse();
     }
 
+    [Fact]
+    public void PendingUpdates_PreserveInsertionOrderForSameTarget()
+    {
+        var document = new XdmDocument();
+        var target = new XdmElement("target");
+        document.AppendChild(target);
+        var updates = new PendingUpdateList();
+
+        var expectedNames = Enumerable.Range(0, 10)
+            .Select(index => $"child-{index}")
+            .ToArray();
+        foreach (var name in expectedNames)
+            updates.AddInsert(new XdmElement(name), target, InsertPosition.AsLast);
+
+        updates.Apply();
+
+        Assert.Equal(
+            expectedNames,
+            target.Children.Cast<XdmElement>().Select(child => child.LocalName));
+    }
+
     #region Node Constructor Tests
 
     [Fact]
@@ -173,9 +194,11 @@ public class XQueryTests
         };
 
         var evaluator = new XQueryEvaluator(context);
+        var orderBeforeUpdate = doc.DocumentOrder;
         evaluator.Evaluate(insertExpr);
 
         Assert.Equal(2, doc.DocumentElement!.Children.Count);
+        Assert.NotSame(orderBeforeUpdate, doc.DocumentOrder);
     }
 
     [Fact]
@@ -219,10 +242,12 @@ public class XQueryTests
         };
 
         var evaluator = new XQueryEvaluator(context);
+        var orderBeforeUpdate = doc.DocumentOrder;
         evaluator.Evaluate(deleteExpr);
 
         Assert.Single(doc.DocumentElement!.Children);
         Assert.Equal("2", (doc.DocumentElement.Children[0] as XdmElement)?.GetAttribute("id"));
+        Assert.NotSame(orderBeforeUpdate, doc.DocumentOrder);
     }
 
     [Fact]
@@ -241,9 +266,11 @@ public class XQueryTests
         };
 
         var evaluator = new XQueryEvaluator(context);
+        var orderBeforeUpdate = doc.DocumentOrder;
         evaluator.Evaluate(replaceExpr);
 
         Assert.Equal("new value", doc.DocumentElement!.Children[0].StringValue);
+        Assert.NotSame(orderBeforeUpdate, doc.DocumentOrder);
     }
 
     [Fact]
@@ -268,10 +295,12 @@ public class XQueryTests
         };
 
         var evaluator = new XQueryEvaluator(context);
+        var orderBeforeUpdate = doc.DocumentOrder;
         evaluator.Evaluate(replaceExpr);
 
         Assert.Single(doc.DocumentElement!.Children);
         Assert.Equal("newitem", (doc.DocumentElement.Children[0] as XdmElement)?.LocalName);
+        Assert.NotSame(orderBeforeUpdate, doc.DocumentOrder);
     }
 
     [Fact]
@@ -289,9 +318,11 @@ public class XQueryTests
         };
 
         var evaluator = new XQueryEvaluator(context);
+        var orderBeforeUpdate = doc.DocumentOrder;
         evaluator.Evaluate(renameExpr);
 
         Assert.Equal("newname", (doc.DocumentElement!.Children[0] as XdmElement)?.LocalName);
+        Assert.Same(orderBeforeUpdate, doc.DocumentOrder);
     }
 
     [Fact]

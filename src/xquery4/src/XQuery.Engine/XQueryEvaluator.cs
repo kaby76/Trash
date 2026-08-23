@@ -657,9 +657,21 @@ public class PendingUpdateList
 
         var renames = _updates.OfType<RenamePrimitive>().ToList();
         var replaceValues = _updates.OfType<ReplaceValuePrimitive>().ToList();
-        var inserts = _updates.OfType<InsertPrimitive>().ToList();
-        var replaceNodes = _updates.OfType<ReplaceNodePrimitive>().ToList();
-        var deletes = _updates.OfType<DeletePrimitive>().ToList();
+        var documentOrder = Comparer<XdmNode>.Create(
+            static (left, right) => left.CompareDocumentOrder(right));
+
+        // Capture update order before applying any structural mutation. LINQ
+        // ordering is stable, so updates with the same target retain the order
+        // in which they were added to the pending update list.
+        var inserts = _updates.OfType<InsertPrimitive>()
+            .OrderByDescending(update => update.Target, documentOrder)
+            .ToList();
+        var replaceNodes = _updates.OfType<ReplaceNodePrimitive>()
+            .OrderByDescending(update => update.Target, documentOrder)
+            .ToList();
+        var deletes = _updates.OfType<DeletePrimitive>()
+            .OrderByDescending(update => update.Target, documentOrder)
+            .ToList();
 
         // Apply renames
         foreach (var rename in renames)

@@ -67,9 +67,10 @@ public static class AtnDeserializer
 
         atn.allStates = states;
 
-        // --- Non-greedy states (skip) ---
+        // --- Non-greedy lexer decision states ---
         int nonGreedyCount = data[p++];
-        p += nonGreedyCount;
+        for (int i = 0; i < nonGreedyCount; i++)
+            states[data[p++]].nonGreedy = true;
 
         // --- Precedence (left-recursive) rule start states ---
         int precedenceCount = data[p++];
