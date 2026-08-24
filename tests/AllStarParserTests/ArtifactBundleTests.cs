@@ -81,4 +81,15 @@ public class ArtifactBundleTests
         };
         Assert.Throws<InvalidDataException>(() => ArtifactBundle.Write(archive, entries));
     }
+
+    [Fact]
+    public void CollidingInputStemsRetainTheirSourceExtensions()
+    {
+        var names = ArtifactBundle.ArtifactBaseNames(
+            ["examples/pkg1.adb", "examples/pkg1.ads", "examples/other.adb"]);
+
+        Assert.Equal("examples/pkg1.adb", names["examples/pkg1.adb"]);
+        Assert.Equal("examples/pkg1.ads", names["examples/pkg1.ads"]);
+        Assert.Equal("examples/other", names["examples/other.adb"]);
+    }
 }

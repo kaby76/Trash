@@ -111,6 +111,41 @@ public static class ArtifactBundle
         return memberName[..dot] + extension;
     }
 
+    public static IReadOnlyDictionary<string, string> ArtifactBaseNames(
+        IEnumerable<string> memberNames)
+    {
+        var names = memberNames.Select(ValidateMemberName)
+            .Distinct(StringComparer.Ordinal)
+            .ToArray();
+        var result = names.ToDictionary(
+            name => name,
+            name => ChangeExtension(name, ""),
+            StringComparer.Ordinal);
+
+        // Prefer the traditional extension-free artifact name. If two inputs
+        // share that name (pkg.adb and pkg.ads), retain their source extensions.
+        // Repeat because a retained name can itself collide with another stem.
+        while (true)
+        {
+            var collisions = result.GroupBy(pair => pair.Value, StringComparer.Ordinal)
+                .Where(group => group.Count() > 1)
+                .SelectMany(group => group.Select(pair => pair.Key))
+                .ToArray();
+            if (collisions.Length == 0)
+                return result;
+
+            var changed = false;
+            foreach (var name in collisions)
+            {
+                if (result[name] == name) continue;
+                result[name] = name;
+                changed = true;
+            }
+            if (!changed)
+                throw new InvalidDataException("Unable to create unique artifact base names.");
+        }
+    }
+
     public static byte[] SerializeParsingResult(ParsingResultSet result, bool indented = false)
     {
         var options = ParsingResultOptions(indented);

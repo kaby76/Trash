@@ -251,10 +251,11 @@ public class Grun
     {
         var paths = AntlrJson.ArtifactBundle.RelativeInputNames(
             _bundleParses.Select(parse => parse.InputName), config.BaseDirectory);
+        var baseNames = AntlrJson.ArtifactBundle.ArtifactBaseNames(paths.Values);
         var artifacts = new List<AntlrJson.Artifact>();
         foreach (var parse in _bundleParses)
         {
-            var baseName = AntlrJson.ArtifactBundle.ChangeExtension(paths[parse.InputName], "");
+            var baseName = baseNames[paths[parse.InputName]];
             for (var index = 0; index < parse.Results.Count; index++)
             {
                 var suffix = parse.Results.Count == 1 ? "" : $".{index + 1}";
