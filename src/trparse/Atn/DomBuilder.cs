@@ -1,6 +1,7 @@
 namespace Atn;
 
 using ParseTreeEditing.UnvParseTreeDOM;
+using System.Text;
 
 // Converts a ParseEvent sequence + raw LexerToken list into an UnvParseTreeElement tree.
 // Replicates the structure that ConvertToDOM.BottomUpConvert produces, with no
@@ -146,9 +147,43 @@ public static class DomBuilder
         for (int j = prevAllIdx + 1; j < currentAllIdx; j++)
         {
             var ht = allTokens[j];
-            string attrName = ht.Channel == LexerToken.SKIP_CHANNEL
-                ? "Skip"
-                : GetTokenName(ht.Type, symbolicNames, lexerRuleNames);
+            if (ht.Channel == LexerToken.SKIP_CHANNEL)
+            {
+                // ANTLR does not put tokens matched with -> skip in its token
+                // stream. ConvertToDOM therefore represents a contiguous run of
+                // skipped input (for example, whitespace followed by comments)
+                // as one source-gap attribute. Preserve that representation even
+                // though the interpreted lexer retains each skipped match so it
+                // can advance through the input accurately.
+                var text = new StringBuilder(ht.Text ?? "");
+                while (j + 1 < currentAllIdx &&
+                       allTokens[j + 1].Channel == LexerToken.SKIP_CHANNEL &&
+                       allTokens[j + 1].StartIndex == allTokens[j].StopIndex + 1)
+                {
+                    j++;
+                    text.Append(allTokens[j].Text ?? "");
+                }
+
+                var skipped = new UnvParseTreeAttr
+                {
+                    Name = "Skip",
+                    StringValue = text.ToString(),
+                    TokenType = -1,
+                    Channel = -1,
+                    ParentNode = parent,
+                    OwnerElement = parent
+                };
+                parent.ChildNodes.Add(skipped);
+
+                if (lineNumbers)
+                {
+                    AddAttr(skipped, "Line", ht.Line.ToString());
+                    AddAttr(skipped, "Column", ht.Column.ToString());
+                }
+                continue;
+            }
+
+            string attrName = GetTokenName(ht.Type, symbolicNames, lexerRuleNames);
             var attr = new UnvParseTreeAttr
             {
                 Name        = attrName,
