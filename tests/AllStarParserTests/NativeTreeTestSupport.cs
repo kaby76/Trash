@@ -7,6 +7,12 @@ using Xunit.Abstractions;
 
 namespace AllStarParserTests;
 
+internal enum NativeTreeStyle
+{
+    Antlr,
+    Block
+}
+
 internal sealed record NativeTreeGrammar(
     string Name,
     string DirectoryName,
@@ -14,7 +20,9 @@ internal sealed record NativeTreeGrammar(
     string LexerInterpName,
     string InputPattern,
     int MinimumSuccessfulFiles,
-    double MinimumTokensPerSecond)
+    double MinimumTokensPerSecond,
+    string? NativeTreeDirectoryName = null,
+    NativeTreeStyle TreeStyle = NativeTreeStyle.Antlr)
 {
     public string RootDirectory =>
         Path.Combine(AppContext.BaseDirectory, "TestData", DirectoryName);
@@ -22,6 +30,11 @@ internal sealed record NativeTreeGrammar(
     public string ExamplesDirectory => Path.Combine(RootDirectory, "examples");
     public string ParserInterp => Path.Combine(InterpDirectory, ParserInterpName);
     public string LexerInterp => Path.Combine(InterpDirectory, LexerInterpName);
+
+    public string NativeTreePath(string inputPath) => NativeTreeDirectoryName == null
+        ? inputPath + ".tree"
+        : Path.Combine(RootDirectory, NativeTreeDirectoryName,
+            Path.GetFileNameWithoutExtension(inputPath) + ".tree");
 
     public IEnumerable<string> InputFiles() =>
         Directory.EnumerateFiles(ExamplesDirectory, InputPattern, SearchOption.AllDirectories)
@@ -38,6 +51,11 @@ internal static class NativeTreeTestSupport
         "SystemVerilog", "systemverilog", "SystemVerilogParser.interp",
         "SystemVerilogLexer.interp", "*.sv",
         MinimumSuccessfulFiles: 120, MinimumTokensPerSecond: 250);
+
+    public static readonly NativeTreeGrammar Acme = new(
+        "ACME", "acme", "acme.interp", "acmeLexer.interp", "*.acmetest",
+        MinimumSuccessfulFiles: 12, MinimumTokensPerSecond: 50,
+        NativeTreeDirectoryName: "native", TreeStyle: NativeTreeStyle.Block);
 
     public static IEnumerable<object[]> Cases(NativeTreeGrammar grammar) =>
         grammar.InputFiles().Select(path => new object[] { path });
@@ -119,12 +137,23 @@ internal static class NativeTreeTestSupport
 
         Assert.True(tokenCount > 0, $"Expected tokens in {Path.GetFileName(inputPath)}.");
 
-        var expectedPath = inputPath + ".tree";
+        var expectedPath = grammar.NativeTreePath(inputPath);
         Assert.True(File.Exists(expectedPath), $"Native tree is missing: {expectedPath}");
 
         var expected = NormalizeTree(File.ReadAllText(expectedPath));
-        var actual = NormalizeTree(RenderAntlrStyle(result));
+        var actual = NormalizeTree(grammar.TreeStyle == NativeTreeStyle.Block
+            ? RenderBlockStyle(result)
+            : RenderAntlrStyle(result));
         AssertEqualWithContext(expected, actual, Path.GetFileName(inputPath));
+    }
+
+    private static string RenderBlockStyle(ParsingResultSet result)
+    {
+        var output = new StringBuilder();
+        foreach (var node in result.Nodes)
+            output.AppendLine(new TreeOutput(result.Lexer, result.Parser)
+                .OutputTreeBlockStyle(node).ToString());
+        return output.ToString();
     }
 
     private static string RenderAntlrStyle(ParsingResultSet result)

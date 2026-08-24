@@ -77,6 +77,20 @@
     <Content Include="../grammars-v4/systemverilog/examples/*.sv.tree"
              CopyToOutputDirectory="PreserveNewest"
              Link="TestData/systemverilog/examples/%(Filename)%(Extension)" />
+
+    <!-- ACME interp files, inputs, and native CSharp parse trees -->
+    <Content Include="../grammars-v4/acme/interp/acme.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/acme/interp/acme.interp" />
+    <Content Include="../grammars-v4/acme/interp/acmeLexer.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/acme/interp/acmeLexer.interp" />
+    <Content Include="../grammars-v4/acme/examples/**/*.acmetest"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/acme/examples/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Content Include="../grammars-v4/acme/native/*.tree"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/acme/native/%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>
