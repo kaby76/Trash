@@ -46,3 +46,8 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
 ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# Artifact bundles
+
+Use `--bundle` to read an ordinary POSIX PAX/tar stream. Every `.pt` member is
+rendered with the selected tree style and replaced by a `.tree` member. Error
+artifacts and unknown regular-file artifact types pass through unchanged.

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System;
 
 namespace Trash;
 
@@ -21,6 +22,12 @@ class Command
 
     public void Execute(Config config)
     {
+        if (config.Bundle)
+        {
+            ExtractBundle(config);
+            return;
+        }
+
         string lines = null;
         if (!(config.File != null && config.File != ""))
         {
@@ -71,6 +78,48 @@ class Command
             }
 
             File.WriteAllText(fn, sb.ToString());
+        }
+    }
+
+    private static void ExtractBundle(Config config)
+    {
+        if (string.IsNullOrWhiteSpace(config.OutputDirectory))
+            throw new ArgumentException("--output-directory is required with --bundle.");
+
+        using var input = string.IsNullOrEmpty(config.File)
+            ? System.Console.OpenStandardInput()
+            : File.OpenRead(config.File);
+        var artifacts = AntlrJson.ArtifactBundle.Read(input);
+        var root = Path.GetFullPath(config.OutputDirectory);
+        var rootPrefix = root.EndsWith(Path.DirectorySeparatorChar)
+            ? root
+            : root + Path.DirectorySeparatorChar;
+        var comparer = OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+        var destinations = new Dictionary<string, AntlrJson.Artifact>(comparer);
+
+        foreach (var artifact in artifacts)
+        {
+            var relative = artifact.Name.Replace('/', Path.DirectorySeparatorChar);
+            var destination = Path.GetFullPath(Path.Combine(root, relative));
+            if (!destination.StartsWith(rootPrefix, OperatingSystem.IsWindows()
+                    ? StringComparison.OrdinalIgnoreCase
+                    : StringComparison.Ordinal))
+                throw new InvalidDataException($"Bundle member '{artifact.Name}' escapes output directory.");
+            if (!destinations.TryAdd(destination, artifact))
+                throw new InvalidDataException($"Multiple bundle members map to '{destination}'.");
+            if (File.Exists(destination) && !config.Clobber)
+                throw new IOException($"Attempting to overwrite '{destination}'. Use -c/--clobber if intended.");
+        }
+
+        Directory.CreateDirectory(root);
+        foreach (var pair in destinations)
+        {
+            var directory = Path.GetDirectoryName(pair.Key);
+            if (!string.IsNullOrEmpty(directory))
+                Directory.CreateDirectory(directory);
+            if (config.Verbose)
+                System.Console.Error.WriteLine("Writing to " + pair.Key);
+            File.WriteAllBytes(pair.Key, pair.Value.Data);
         }
     }
 

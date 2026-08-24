@@ -47,3 +47,9 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
 ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# Artifact bundles
+
+Use `--bundle -o DIR` to extract an ordinary POSIX PAX/tar artifact stream.
+Relative member paths are preserved. Absolute paths, drive-qualified paths,
+traversal, links, duplicate destinations, and output-root escapes are rejected.
+Existing files require `-c`/`--clobber`.

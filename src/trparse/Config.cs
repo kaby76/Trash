@@ -61,4 +61,10 @@ public class Config
 
     [Option("allstar", Required = false, HelpText = "Use ALL(*) parser instead of Earley when --pinterp / --linterp are specified.")]
     public bool AllStar { get; set; }
+
+    [Option("bundle", Required = false, HelpText = "Write an ordinary POSIX PAX artifact bundle to stdout.")]
+    public bool Bundle { get; set; }
+
+    [Option("base-directory", Required = false, HelpText = "Base directory removed from input paths in bundle member names.")]
+    public string BaseDirectory { get; set; }
 }

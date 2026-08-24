@@ -125,3 +125,11 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
 ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# Artifact bundles
+
+Use `--bundle` to write an ordinary POSIX PAX/tar stream instead of the legacy
+JSON array. Each parsed input produces one `.pt` member containing a single
+`ParsingResultSet` JSON object and one UTF-8 `.errors` member. Successful inputs
+have an empty `.errors` member. Relative hierarchy below the inputs' common
+directory is preserved. Use `--base-directory DIR` to select the stripped root
+explicitly; inputs outside it are rejected.

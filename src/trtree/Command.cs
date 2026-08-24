@@ -20,6 +20,12 @@ class Command
 
     public void Execute(Config config)
     {
+        if (config.Bundle)
+        {
+            ExecuteBundle(config);
+            return;
+        }
+
         string lines = null;
         if (!(config.File != null && config.File != ""))
         {
@@ -65,28 +71,51 @@ class Command
             var parser = in_tuple.Parser;
             var fn = in_tuple.FileName;
             var prefix = more_than_one_fn ? fn + ": " : "";
-            StringBuilder sb = new StringBuilder();
-            foreach (var node in nodes)
-            {
-                if (config.AntlrStyle)
-                {
-                    sb.AppendLine(new TreeOutput(lexer, parser, prefix).OutputTreeAntlrStyle(node).ToString());
-                }
-                else if (config.ParenIndentStyle)
-                {
-                    sb.AppendLine(new TreeOutput(lexer, parser, prefix).OutputTree(node).ToString());
-                }
-                else if (config.IndentStyle)
-                {
-                    sb.AppendLine(new TreeOutput(lexer, parser, prefix).OutputTreeIndentStyle(node).ToString());
-                }
-                else if (config.BlockTreeStyle)
-                {
-                    sb.AppendLine(new TreeOutput(lexer, parser, prefix).OutputTreeBlockStyle(node).ToString());
-                }
-            }
-            System.Console.Write(sb.ToString());
+            System.Console.Write(Render(in_tuple, config, prefix));
         }
         System.Console.WriteLine();
+    }
+
+    private static void ExecuteBundle(Config config)
+    {
+        using var input = string.IsNullOrEmpty(config.File)
+            ? Console.OpenStandardInput()
+            : File.OpenRead(config.File);
+        var inputArtifacts = AntlrJson.ArtifactBundle.Read(input);
+        var outputArtifacts = new System.Collections.Generic.List<AntlrJson.Artifact>();
+        foreach (var artifact in inputArtifacts)
+        {
+            if (!artifact.Name.EndsWith(".pt", StringComparison.OrdinalIgnoreCase))
+            {
+                outputArtifacts.Add(artifact);
+                continue;
+            }
+
+            var result = AntlrJson.ArtifactBundle.DeserializeParsingResult(artifact.Data);
+            var tree = Render(result, config, "");
+            outputArtifacts.Add(new AntlrJson.Artifact(
+                AntlrJson.ArtifactBundle.ChangeExtension(artifact.Name, ".tree"),
+                new UTF8Encoding(false).GetBytes(tree)));
+        }
+
+        using var output = Console.OpenStandardOutput();
+        AntlrJson.ArtifactBundle.Write(output, outputArtifacts);
+    }
+
+    private static string Render(AntlrJson.ParsingResultSet result, Config config, string prefix)
+    {
+        var sb = new StringBuilder();
+        foreach (var node in result.Nodes)
+        {
+            if (config.AntlrStyle)
+                sb.AppendLine(new TreeOutput(result.Lexer, result.Parser, prefix).OutputTreeAntlrStyle(node).ToString());
+            else if (config.ParenIndentStyle)
+                sb.AppendLine(new TreeOutput(result.Lexer, result.Parser, prefix).OutputTree(node).ToString());
+            else if (config.IndentStyle)
+                sb.AppendLine(new TreeOutput(result.Lexer, result.Parser, prefix).OutputTreeIndentStyle(node).ToString());
+            else if (config.BlockTreeStyle)
+                sb.AppendLine(new TreeOutput(result.Lexer, result.Parser, prefix).OutputTreeBlockStyle(node).ToString());
+        }
+        return sb.ToString();
     }
 }
