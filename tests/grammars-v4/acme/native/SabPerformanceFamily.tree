@@ -1,0 +1,166 @@
+acmeCompUnit
+├── acmeFamilyDeclaration
+│   ├── FAMILY
+│   │   └── "Family"
+│   ├── identifier
+│   │   ├── Attribute Skip Value ' '
+│   │   └── IDENTIFIER
+│   │       └── "PerformanceFamily"
+│   ├── Attribute Skip Value ' '
+│   ├── ASSIGN
+│   │   └── "="
+│   └── acmeFamilyBody
+│       ├── Attribute Skip Value ' '
+│       ├── LBRACE
+│       │   └── "{"
+│       ├── acmePropertyTypeDeclaration
+│       │   ├── Attribute Skip Value '&#10;&#9;&#9;'
+│       │   ├── PROPERTY
+│       │   │   └── "Property"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── TYPE
+│       │   │   └── "Type"
+│       │   ├── identifier
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   └── IDENTIFIER
+│       │   │       └── "NormalDistribution"
+│       │   ├── Attribute Skip Value '  '
+│       │   ├── ASSIGN
+│       │   │   └── "="
+│       │   ├── acmePropertyTypeRecord
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   ├── RECORD
+│       │   │   │   └── "Record"
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   ├── LBRACKET
+│       │   │   │   └── "["
+│       │   │   ├── acmePropertyRecordFieldDescription
+│       │   │   │   ├── identifier
+│       │   │   │   │   ├── Attribute Skip Value ' &#10;&#9;&#9;&#9;'
+│       │   │   │   │   └── IDENTIFIER
+│       │   │   │   │       └── "mean"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   ├── COLON
+│       │   │   │   │   └── ":"
+│       │   │   │   ├── acmePropertyTypeRef
+│       │   │   │   │   └── acmePropertyTypeStructure
+│       │   │   │   │       └── acmePropertyTypeFloat
+│       │   │   │   │           ├── Attribute Skip Value ' '
+│       │   │   │   │           └── FLOAT
+│       │   │   │   │               └── "float"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   └── SEMICOLON
+│       │   │   │       └── ";"
+│       │   │   ├── acmePropertyRecordFieldDescription
+│       │   │   │   ├── identifier
+│       │   │   │   │   ├── Attribute Skip Value '&#10;&#9;&#9;&#9;'
+│       │   │   │   │   └── IDENTIFIER
+│       │   │   │   │       └── "stddev"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   ├── COLON
+│       │   │   │   │   └── ":"
+│       │   │   │   ├── acmePropertyTypeRef
+│       │   │   │   │   └── acmePropertyTypeStructure
+│       │   │   │   │       └── acmePropertyTypeFloat
+│       │   │   │   │           ├── Attribute Skip Value ' '
+│       │   │   │   │           └── FLOAT
+│       │   │   │   │               └── "float"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   └── SEMICOLON
+│       │   │   │       └── ";"
+│       │   │   ├── Attribute Skip Value ' &#10;&#9;&#9;'
+│       │   │   └── RBRACKET
+│       │   │       └── "]"
+│       │   └── SEMICOLON
+│       │       └── ";"
+│       ├── acmePropertyTypeDeclaration
+│       │   ├── Attribute Skip Value '&#10;&#9;&#9;'
+│       │   ├── PROPERTY
+│       │   │   └── "Property"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── TYPE
+│       │   │   └── "Type"
+│       │   ├── identifier
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   └── IDENTIFIER
+│       │   │       └── "Performance"
+│       │   ├── Attribute Skip Value '  '
+│       │   ├── ASSIGN
+│       │   │   └── "="
+│       │   ├── acmePropertyTypeRecord
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   ├── RECORD
+│       │   │   │   └── "Record"
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   ├── LBRACKET
+│       │   │   │   └── "["
+│       │   │   ├── acmePropertyRecordFieldDescription
+│       │   │   │   ├── identifier
+│       │   │   │   │   ├── Attribute Skip Value ' &#10;&#9;&#9;&#9;'
+│       │   │   │   │   └── IDENTIFIER
+│       │   │   │   │       └── "normalPerformance"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   ├── COLON
+│       │   │   │   │   └── ":"
+│       │   │   │   ├── acmePropertyTypeRef
+│       │   │   │   │   └── acmePropertyTypeDeclarationRef
+│       │   │   │   │       └── identifier
+│       │   │   │   │           ├── Attribute Skip Value ' '
+│       │   │   │   │           └── IDENTIFIER
+│       │   │   │   │               └── "NormalDistribution"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   └── SEMICOLON
+│       │   │   │       └── ";"
+│       │   │   ├── Attribute Skip Value '&#10;&#9;&#9;'
+│       │   │   └── RBRACKET
+│       │   │       └── "]"
+│       │   └── SEMICOLON
+│       │       └── ";"
+│       ├── acmeComponentTypeDeclaration
+│       │   ├── Attribute Skip Value '&#10;&#9;&#9;'
+│       │   ├── COMPONENT
+│       │   │   └── "Component"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── TYPE
+│       │   │   └── "Type"
+│       │   ├── identifier
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   └── IDENTIFIER
+│       │   │       └── "PerformingComponent"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── ASSIGN
+│       │   │   └── "="
+│       │   └── acmeComponentBody
+│       │       ├── Attribute Skip Value ' '
+│       │       ├── LBRACE
+│       │       │   └── "{"
+│       │       ├── acmePropertyDeclaration
+│       │       │   ├── Attribute Skip Value ' &#10;&#9;&#9;&#9;'
+│       │       │   ├── PROPERTY
+│       │       │   │   └── "Property"
+│       │       │   ├── identifier
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   └── IDENTIFIER
+│       │       │   │       └── "latency"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── COLON
+│       │       │   │   └── ":"
+│       │       │   ├── acmePropertyTypeRef
+│       │       │   │   └── acmePropertyTypeDeclarationRef
+│       │       │   │       └── identifier
+│       │       │   │           ├── Attribute Skip Value ' '
+│       │       │   │           └── IDENTIFIER
+│       │       │   │               └── "Performance"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── Attribute Skip Value '&#10;&#9;&#9;'
+│       │       └── RBRACE
+│       │           └── "}"
+│       ├── Attribute Skip Value '&#10;&#10;'
+│       └── RBRACE
+│           └── "}"
+├── Attribute Skip Value '&#10;'
+└── EOF
+    └── ""
+
