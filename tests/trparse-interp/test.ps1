@@ -20,6 +20,12 @@ if ($LASTEXITCODE -ne 0) { Write-Error "trinterp failed"; exit 1 }
 dotnet trash parse --lib interp/ -i "1 + 2 + 3" | Out-File parse-result.json -Encoding utf8NoBOM
 if ($LASTEXITCODE -ne 0) { Write-Error "trparse --lib failed"; exit 1 }
 
+# A caret at the start of an ANTLR character set is a literal character, not
+# regex-style set negation. Exercise the ALL(*) path because miscompiling [^]
+# makes the lexer consume whitespace and reject otherwise valid input.
+dotnet trash parse --lib interp/ --allstar --no-prs -i "^"
+if ($LASTEXITCODE -ne 0) { Write-Error "trparse --allstar caret-set test failed"; exit 1 }
+
 # Step 3: render the parse tree (-f avoids a stdin pipe).
 dotnet trash tree -f parse-result.json | Out-File trparse-interp.tree -Encoding utf8NoBOM
 if ($LASTEXITCODE -ne 0) { Write-Error "trtree failed"; exit 1 }

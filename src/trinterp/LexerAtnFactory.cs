@@ -617,21 +617,16 @@ public class LexerAtnFactory : ParserAtnFactory
 
     private IntervalSet ParseCharSet(string charSetText)
     {
-        // charSetText looks like "[a-zA-Z_]" or "[^\n]"
+        // ANTLR lexer character sets use '~' outside the brackets for
+        // negation. A leading '^' inside the brackets is an ordinary member
+        // of the set (for example [^v<>] matches the four arrow characters).
         var s = charSetText;
         // Strip surrounding brackets.
         if (s.Length >= 2 && s[0] == '[') s = s[1..];
         if (s.Length >= 1 && s[^1] == ']') s = s[..^1];
 
         var set = new IntervalSet();
-        bool negate = false;
         int idx = 0;
-
-        if (idx < s.Length && s[idx] == '^')
-        {
-            negate = true;
-            idx++;
-        }
 
         while (idx < s.Length)
         {
@@ -659,11 +654,6 @@ public class LexerAtnFactory : ParserAtnFactory
         }
 
         if (CurrentCaseInsensitive) set = CaseExpandSet(set);
-        if (negate)
-        {
-            var complement = set.Complement(IntervalSet.Of(0, 0xFFFF));
-            return complement;
-        }
         return set;
     }
 
