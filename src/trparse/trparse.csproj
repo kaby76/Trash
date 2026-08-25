@@ -28,6 +28,9 @@ This program is part of the Trash toolkit.]]>
 		<PackageReference Include="CommandLineParser" Version="2.9.1" />
 	</ItemGroup>
 	<ItemGroup>
+		<InternalsVisibleTo Include="AllStarParserTests" />
+	</ItemGroup>
+	<ItemGroup>
 		<ProjectReference Include="../Globbing/TrashGlobbing.csproj" />
 		<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
 		<ProjectReference Include="../ParseTreeEditing/ParseTreeEditing.csproj" />
