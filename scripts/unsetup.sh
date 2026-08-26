@@ -1,4 +1,5 @@
 #!/usr/bin/bash
+dotnet build-server shutdown
 cd src
 tools=`dotnet nuget list source | grep nuget-tr | awk '{print $2}'`
 echo $tools
