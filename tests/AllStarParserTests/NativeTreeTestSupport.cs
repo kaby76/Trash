@@ -57,6 +57,11 @@ internal static class NativeTreeTestSupport
         MinimumSuccessfulFiles: 12, MinimumTokensPerSecond: 50,
         NativeTreeDirectoryName: "native", TreeStyle: NativeTreeStyle.Block);
 
+    public static readonly NativeTreeGrammar Aql = new(
+        "AQL", "aql", "ArangoDbParser.interp", "ArangoDbLexer.interp", "*.aql",
+        MinimumSuccessfulFiles: 6, MinimumTokensPerSecond: 50,
+        NativeTreeDirectoryName: "native", TreeStyle: NativeTreeStyle.Block);
+
     public static IEnumerable<object[]> Cases(NativeTreeGrammar grammar) =>
         grammar.InputFiles().Select(path => new object[] { path });
 

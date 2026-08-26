@@ -91,6 +91,20 @@
     <Content Include="../grammars-v4/acme/native/*.tree"
              CopyToOutputDirectory="PreserveNewest"
              Link="TestData/acme/native/%(Filename)%(Extension)" />
+
+    <!-- AQL interp files, precedence-sensitive inputs, and native CSharp trees -->
+    <Content Include="../grammars-v4/aql/interp/ArangoDbParser.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/aql/interp/ArangoDbParser.interp" />
+    <Content Include="../grammars-v4/aql/interp/ArangoDbLexer.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/aql/interp/ArangoDbLexer.interp" />
+    <Content Include="../grammars-v4/aql/examples/*.aql"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/aql/examples/%(Filename)%(Extension)" />
+    <Content Include="../grammars-v4/aql/native/*.tree"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/aql/native/%(Filename)%(Extension)" />
   </ItemGroup>
 
 </Project>
