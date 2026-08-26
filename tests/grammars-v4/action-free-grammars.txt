@@ -29,7 +29,6 @@ asm/pdp7
 asm/ptx/ptx-isa-1.0
 asn/asn
 aterm
-awk
 b
 basic
 bdf
