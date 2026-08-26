@@ -62,6 +62,11 @@ internal static class NativeTreeTestSupport
         MinimumSuccessfulFiles: 6, MinimumTokensPerSecond: 50,
         NativeTreeDirectoryName: "native", TreeStyle: NativeTreeStyle.Block);
 
+    public static readonly NativeTreeGrammar Asl = new(
+        "ASL", "asl", "ASL.interp", "ASLLexer.interp", "loop*",
+        MinimumSuccessfulFiles: 2, MinimumTokensPerSecond: 50,
+        NativeTreeDirectoryName: "native", TreeStyle: NativeTreeStyle.Block);
+
     public static IEnumerable<object[]> Cases(NativeTreeGrammar grammar) =>
         grammar.InputFiles().Select(path => new object[] { path });
 

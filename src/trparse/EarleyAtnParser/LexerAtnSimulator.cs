@@ -261,7 +261,9 @@ public class LexerAtnSimulator
     {
         if (config.State.transitions.Count <= 1)
             return config.NonGreedyDecision;
-        return config.State.nonGreedy ? config.State.stateNumber : -1;
+        return config.State.nonGreedy
+            ? config.State.stateNumber
+            : config.NonGreedyDecision;
     }
 
     private static void UpdateLineCol(string input, int from, int to, ref int line, ref int col)
