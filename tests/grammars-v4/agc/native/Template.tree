@@ -1,0 +1,100 @@
+prog
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "### FILE="Main.annotation""
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Copyright:&#9;Public domain."
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Filename:&#9;???.agc"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Purpose:&#9;Part of the source code for Solarium build 55. This"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "#&#9;&#9;is for the Command Module's (CM) Apollo Guidance"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "#&#9;&#9;Computer (AGC), for Apollo 4."
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Assembler:&#9;yaYUL --block1"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Contact:&#9;??? <???@???.???>"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Website:&#9;www.ibiblio.org/apollo/index.html"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Page scans:&#9;www.ibiblio.org/apollo/ScansForConversion/Solarium055/"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Mod history:&#9;2009-??-?? ???&#9;Adapted from corresponding Colossus 249 file."
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "## Page ???"
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;&#10;"
+└── EOF
+    └── ""
+

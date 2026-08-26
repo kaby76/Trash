@@ -1,0 +1,1378 @@
+prog
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "### FILE="Main.annotation""
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Copyright:&#9;Public domain."
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Filename:&#9;SUM-CHECK_END_OF_RECORD_MARKS.agc"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Purpose:&#9;Part of the source code for Solarium build 55. This"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "#&#9;&#9;is for the Command Module's (CM) Apollo Guidance"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "#&#9;&#9;Computer (AGC), for Apollo 4."
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Assembler:&#9;yaYUL --block1"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Contact:&#9;Jim Lawton <jim DOT lawton AT gmail DOT com>"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Website:&#9;www.ibiblio.org/apollo/index.html"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Page scans:&#9;www.ibiblio.org/apollo/ScansForConversion/Solarium055/"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Mod history:&#9;2009-09-15 JL&#9;Created."
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "## Page 759"
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# EACH VALID BANK MUST HAVE AN EOR CONSISTING OF TWO TC SELF WORDS TO"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# SIGNIFY THE END OF GOOD PARITY DATA. "
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── instruction_line
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── pseudo_opcode
+│       │           └── BANK
+│       │               └── "BANK"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "1"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "2"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "3"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "4"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "5"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "6"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "7"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "10"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "11"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "12"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "## Page 760"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── instruction_line
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── standard_opcode
+│       │           └── TC
+│       │               └── "TC"
+│       ├── argument
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "13"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "14"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "21"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "22"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "23"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "24"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "25"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "26"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "27"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "30"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "## Page 761"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── instruction_line
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── standard_opcode
+│       │           └── TC
+│       │               └── "TC"
+│       ├── argument
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "31"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "32"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "33"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── pseudo_opcode
+│       │   │                   └── BANK
+│       │   │                       └── "BANK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "34"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── TC
+│       │                           └── "TC"
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# END OF REVISION 0 OF PROGRAM SOLRUM55 BY NASA 1021108-021&#9;&#9;&#9;LAST ASSEMBLED ON NOV 26, 1966"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+└── EOF
+    └── ""
+

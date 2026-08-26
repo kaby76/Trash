@@ -1,0 +1,345 @@
+acmeCompUnit
+├── acmeFamilyDeclaration
+│   ├── FAMILY
+│   │   └── "family"
+│   ├── identifier
+│   │   ├── Attribute Skip Value ' '
+│   │   └── IDENTIFIER
+│   │       └── "propTestFam"
+│   ├── Attribute Skip Value ' '
+│   ├── ASSIGN
+│   │   └── "="
+│   └── acmeFamilyBody
+│       ├── Attribute Skip Value ' '
+│       ├── LBRACE
+│       │   └── "{"
+│       ├── acmeComponentTypeDeclaration
+│       │   ├── Attribute Skip Value '&#10;&#9;'
+│       │   ├── COMPONENT
+│       │   │   └── "component"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── TYPE
+│       │   │   └── "type"
+│       │   ├── identifier
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   └── IDENTIFIER
+│       │   │       └── "CT1"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── ASSIGN
+│       │   │   └── "="
+│       │   └── acmeComponentBody
+│       │       ├── Attribute Skip Value ' '
+│       │       ├── LBRACE
+│       │       │   └── "{"
+│       │       ├── acmePropertyDeclaration
+│       │       │   ├── Attribute Skip Value '&#10;&#9;   '
+│       │       │   ├── PROPERTY
+│       │       │   │   └── "property"
+│       │       │   ├── identifier
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   └── IDENTIFIER
+│       │       │   │       └── "p"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── Attribute Skip Value '&#10;&#9;'
+│       │       └── RBRACE
+│       │           └── "}"
+│       ├── acmeComponentTypeDeclaration
+│       │   ├── Attribute Skip Value '&#10;&#9;&#10;&#9;'
+│       │   ├── COMPONENT
+│       │   │   └── "component"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── TYPE
+│       │   │   └── "type"
+│       │   ├── identifier
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   └── IDENTIFIER
+│       │   │       └── "CT2"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── EXTENDS
+│       │   │   └── "extends"
+│       │   ├── acmeComponentTypeRef
+│       │   │   └── identifier
+│       │   │       ├── Attribute Skip Value ' '
+│       │   │       └── IDENTIFIER
+│       │   │           └── "CT1"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── WITH
+│       │   │   └── "with"
+│       │   └── acmeComponentBody
+│       │       ├── Attribute Skip Value ' '
+│       │       ├── LBRACE
+│       │       │   └── "{"
+│       │       ├── acmePropertyDeclaration
+│       │       │   ├── Attribute Skip Value '&#10;&#9;   '
+│       │       │   ├── PROPERTY
+│       │       │   │   └── "property"
+│       │       │   ├── identifier
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   └── IDENTIFIER
+│       │       │   │       └── "p"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── COLON
+│       │       │   │   └── ":"
+│       │       │   ├── acmePropertyTypeRef
+│       │       │   │   └── acmePropertyTypeStructure
+│       │       │   │       └── acmePropertyTypeInt
+│       │       │   │           ├── Attribute Skip Value ' '
+│       │       │   │           └── INT
+│       │       │   │               └── "int"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── Attribute Skip Value '&#10;&#9;'
+│       │       └── RBRACE
+│       │           └── "}"
+│       ├── acmeComponentTypeDeclaration
+│       │   ├── Attribute Skip Value '&#10;&#9;&#10;&#9;'
+│       │   ├── COMPONENT
+│       │   │   └── "component"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── TYPE
+│       │   │   └── "type"
+│       │   ├── identifier
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   └── IDENTIFIER
+│       │   │       └── "CT3"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── EXTENDS
+│       │   │   └── "extends"
+│       │   ├── acmeComponentTypeRef
+│       │   │   └── identifier
+│       │   │       ├── Attribute Skip Value ' '
+│       │   │       └── IDENTIFIER
+│       │   │           └── "CT1"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── WITH
+│       │   │   └── "with"
+│       │   └── acmeComponentBody
+│       │       ├── Attribute Skip Value ' '
+│       │       ├── LBRACE
+│       │       │   └── "{"
+│       │       ├── acmePropertyDeclaration
+│       │       │   ├── Attribute Skip Value '&#10;&#9;   '
+│       │       │   ├── PROPERTY
+│       │       │   │   └── "property"
+│       │       │   ├── identifier
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   └── IDENTIFIER
+│       │       │   │       └── "p"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── COLON
+│       │       │   │   └── ":"
+│       │       │   ├── acmePropertyTypeRef
+│       │       │   │   └── acmePropertyTypeStructure
+│       │       │   │       └── acmePropertyTypeFloat
+│       │       │   │           ├── Attribute Skip Value ' '
+│       │       │   │           └── FLOAT
+│       │       │   │               └── "float"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── Attribute Skip Value '&#10;&#9;'
+│       │       └── RBRACE
+│       │           └── "}"
+│       ├── Attribute Skip Value '&#10;'
+│       └── RBRACE
+│           └── "}"
+├── acmeSystemDeclaration
+│   ├── Attribute Skip Value '&#10;&#10;'
+│   ├── SYSTEM
+│   │   └── "system"
+│   ├── identifier
+│   │   ├── Attribute Skip Value ' '
+│   │   └── IDENTIFIER
+│   │       └── "propTestSys"
+│   ├── Attribute Skip Value ' '
+│   ├── COLON
+│   │   └── ":"
+│   ├── acmeFamilyRef
+│   │   └── identifier
+│   │       ├── Attribute Skip Value ' '
+│   │       └── IDENTIFIER
+│   │           └── "propTestFam"
+│   ├── Attribute Skip Value ' '
+│   ├── ASSIGN
+│   │   └── "="
+│   └── acmeSystemBody
+│       ├── Attribute Skip Value ' '
+│       ├── LBRACE
+│       │   └── "{"
+│       ├── acmeComponentDeclaration
+│       │   ├── Attribute Skip Value '&#10;&#9;'
+│       │   ├── COMPONENT
+│       │   │   └── "component"
+│       │   ├── identifier
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   └── IDENTIFIER
+│       │   │       └── "c1"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── COLON
+│       │   │   └── ":"
+│       │   ├── acmeComponentTypeRef
+│       │   │   └── identifier
+│       │   │       ├── Attribute Skip Value ' '
+│       │   │       └── IDENTIFIER
+│       │   │           └── "CT1"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── ASSIGN
+│       │   │   └── "="
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── NEW
+│       │   │   └── "new"
+│       │   ├── acmeComponentInstantiatedTypeRef
+│       │   │   └── identifier
+│       │   │       ├── Attribute Skip Value ' '
+│       │   │       └── IDENTIFIER
+│       │   │           └── "CT1"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── EXTENDED
+│       │   │   └── "extended"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── WITH
+│       │   │   └── "with"
+│       │   └── acmeComponentBody
+│       │       ├── Attribute Skip Value ' '
+│       │       ├── LBRACE
+│       │       │   └── "{"
+│       │       ├── acmePropertyDeclaration
+│       │       │   ├── Attribute Skip Value '&#10;&#9;&#9;'
+│       │       │   ├── PROPERTY
+│       │       │   │   └── "property"
+│       │       │   ├── identifier
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   └── IDENTIFIER
+│       │       │   │       └── "p"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── COLON
+│       │       │   │   └── ":"
+│       │       │   ├── acmePropertyTypeRef
+│       │       │   │   └── acmePropertyTypeStructure
+│       │       │   │       └── acmePropertyTypeString
+│       │       │   │           ├── Attribute Skip Value ' '
+│       │       │   │           └── STRING
+│       │       │   │               └── "string"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── ASSIGN
+│       │       │   │   └── "="
+│       │       │   ├── acmePropertyValueDeclaration
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   └── STRING_LITERAL
+│       │       │   │       └── ""Hi""
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── Attribute Skip Value '&#10;&#9;'
+│       │       └── RBRACE
+│       │           └── "}"
+│       ├── acmeComponentDeclaration
+│       │   ├── Attribute Skip Value '&#10;&#9;&#10;&#9;'
+│       │   ├── COMPONENT
+│       │   │   └── "component"
+│       │   ├── identifier
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   └── IDENTIFIER
+│       │   │       └── "c2"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── COLON
+│       │   │   └── ":"
+│       │   ├── acmeComponentTypeRef
+│       │   │   └── identifier
+│       │   │       ├── Attribute Skip Value ' '
+│       │   │       └── IDENTIFIER
+│       │   │           └── "CT2"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── ASSIGN
+│       │   │   └── "="
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── NEW
+│       │   │   └── "new"
+│       │   ├── acmeComponentInstantiatedTypeRef
+│       │   │   └── identifier
+│       │   │       ├── Attribute Skip Value ' '
+│       │   │       └── IDENTIFIER
+│       │   │           └── "CT2"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── EXTENDED
+│       │   │   └── "extended"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── WITH
+│       │   │   └── "with"
+│       │   └── acmeComponentBody
+│       │       ├── Attribute Skip Value ' '
+│       │       ├── LBRACE
+│       │       │   └── "{"
+│       │       ├── acmePropertyDeclaration
+│       │       │   ├── Attribute Skip Value '&#10;&#9;   '
+│       │       │   ├── PROPERTY
+│       │       │   │   └── "property"
+│       │       │   ├── identifier
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   └── IDENTIFIER
+│       │       │   │       └── "p"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── COLON
+│       │       │   │   └── ":"
+│       │       │   ├── acmePropertyTypeRef
+│       │       │   │   └── acmePropertyTypeStructure
+│       │       │   │       └── acmePropertyTypeInt
+│       │       │   │           ├── Attribute Skip Value ' '
+│       │       │   │           └── INT
+│       │       │   │               └── "int"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── ASSIGN
+│       │       │   │   └── "="
+│       │       │   ├── acmePropertyValueDeclaration
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   └── INTEGER_LITERAL
+│       │       │   │       └── "1"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── Attribute Skip Value '&#10;&#9;'
+│       │       └── RBRACE
+│       │           └── "}"
+│       ├── acmeComponentDeclaration
+│       │   ├── Attribute Skip Value '&#10;&#9;&#10;&#9;'
+│       │   ├── COMPONENT
+│       │   │   └── "component"
+│       │   ├── identifier
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   └── IDENTIFIER
+│       │   │       └── "c3"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── COLON
+│       │   │   └── ":"
+│       │   ├── acmeComponentTypeRef
+│       │   │   └── identifier
+│       │   │       ├── Attribute Skip Value ' '
+│       │   │       └── IDENTIFIER
+│       │   │           └── "CT1"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── ASSIGN
+│       │   │   └── "="
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── NEW
+│       │   │   └── "new"
+│       │   ├── acmeComponentInstantiatedTypeRef
+│       │   │   └── identifier
+│       │   │       ├── Attribute Skip Value ' '
+│       │   │       └── IDENTIFIER
+│       │   │           └── "CT1"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── EXTENDED
+│       │   │   └── "extended"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── WITH
+│       │   │   └── "with"
+│       │   └── acmeComponentBody
+│       │       ├── Attribute Skip Value ' '
+│       │       ├── LBRACE
+│       │       │   └── "{"
+│       │       └── RBRACE
+│       │           └── "}"
+│       ├── Attribute Skip Value '&#10;&#10;'
+│       └── RBRACE
+│           └── "}"
+└── EOF
+    └── ""
+

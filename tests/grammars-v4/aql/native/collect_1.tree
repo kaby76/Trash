@@ -1,0 +1,217 @@
+arangodb_query
+├── data_query
+│   └── data_access_query
+│       ├── for_op
+│       │   ├── for_in
+│       │   │   ├── FOR
+│       │   │   │   └── "FOR"
+│       │   │   ├── id_
+│       │   │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │   │   │   └── ID
+│       │   │   │       └── "u"
+│       │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │   │   ├── IN
+│       │   │   │   └── "IN"
+│       │   │   └── expr
+│       │   │       └── literal
+│       │   │           └── id_
+│       │   │               ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │   │               └── ID
+│       │   │                   └── "users"
+│       │   └── collect
+│       │       ├── Attribute WHITE_SPACE Value '&#10;  ' chnl:HIDDEN
+│       │       ├── COLLECT
+│       │       │   └── "COLLECT"
+│       │       ├── expr
+│       │       │   ├── expr
+│       │       │   │   ├── expr
+│       │       │   │   │   └── literal
+│       │       │   │   │       └── id_
+│       │       │   │   │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │   │   │           └── ID
+│       │       │   │   │               └── "country"
+│       │       │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │   │   ├── ASSIGN
+│       │       │   │   │   └── "="
+│       │       │   │   └── expr
+│       │       │   │       ├── expr
+│       │       │   │       │   └── literal
+│       │       │   │       │       └── id_
+│       │       │   │       │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │   │       │           └── ID
+│       │       │   │       │               └── "u"
+│       │       │   │       ├── ACCESS
+│       │       │   │       │   └── "."
+│       │       │   │       └── expr
+│       │       │   │           └── literal
+│       │       │   │               └── id_
+│       │       │   │                   └── ID
+│       │       │   │                       └── "country"
+│       │       │   ├── COMMA
+│       │       │   │   └── ","
+│       │       │   └── expr
+│       │       │       ├── expr
+│       │       │       │   └── literal
+│       │       │       │       └── id_
+│       │       │       │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │       │           └── ID
+│       │       │       │               └── "city"
+│       │       │       ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │       ├── ASSIGN
+│       │       │       │   └── "="
+│       │       │       └── expr
+│       │       │           ├── expr
+│       │       │           │   └── literal
+│       │       │           │       └── id_
+│       │       │           │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │           └── ID
+│       │       │           │               └── "u"
+│       │       │           ├── ACCESS
+│       │       │           │   └── "."
+│       │       │           └── expr
+│       │       │               └── literal
+│       │       │                   └── id_
+│       │       │                       └── ID
+│       │       │                           └── "city"
+│       │       ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       ├── INTO
+│       │       │   └── "INTO"
+│       │       └── expr
+│       │           ├── expr
+│       │           │   └── literal
+│       │           │       └── id_
+│       │           │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │           │           └── ID
+│       │           │               └── "groups"
+│       │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │           ├── ASSIGN
+│       │           │   └── "="
+│       │           └── expr
+│       │               └── literal
+│       │                   └── object_literal
+│       │                       ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │                       ├── LCB
+│       │                       │   └── "{"
+│       │                       ├── pair_list
+│       │                       │   ├── pair
+│       │                       │   │   ├── string
+│       │                       │   │   │   ├── Attribute WHITE_SPACE Value '&#10;    ' chnl:HIDDEN
+│       │                       │   │   │   └── DOUBLE_QUOTED_STRING_LITERAL
+│       │                       │   │   │       └── ""name""
+│       │                       │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │                       │   │   ├── COLON
+│       │                       │   │   │   └── ":"
+│       │                       │   │   └── expr
+│       │                       │   │       ├── expr
+│       │                       │   │       │   └── literal
+│       │                       │   │       │       └── id_
+│       │                       │   │       │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │                       │   │       │           └── ID
+│       │                       │   │       │               └── "u"
+│       │                       │   │       ├── ACCESS
+│       │                       │   │       │   └── "."
+│       │                       │   │       └── expr
+│       │                       │   │           └── literal
+│       │                       │   │               └── id_
+│       │                       │   │                   └── ID
+│       │                       │   │                       └── "name"
+│       │                       │   ├── COMMA
+│       │                       │   │   └── ","
+│       │                       │   └── pair
+│       │                       │       ├── string
+│       │                       │       │   ├── Attribute WHITE_SPACE Value '&#10;    ' chnl:HIDDEN
+│       │                       │       │   └── DOUBLE_QUOTED_STRING_LITERAL
+│       │                       │       │       └── ""isActive""
+│       │                       │       ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │                       │       ├── COLON
+│       │                       │       │   └── ":"
+│       │                       │       └── expr
+│       │                       │           ├── expr
+│       │                       │           │   ├── expr
+│       │                       │           │   │   └── literal
+│       │                       │           │   │       └── id_
+│       │                       │           │   │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │                       │           │   │           └── ID
+│       │                       │           │   │               └── "u"
+│       │                       │           │   ├── ACCESS
+│       │                       │           │   │   └── "."
+│       │                       │           │   └── expr
+│       │                       │           │       └── literal
+│       │                       │           │           └── id_
+│       │                       │           │               └── ID
+│       │                       │           │                   └── "status"
+│       │                       │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │                       │           ├── EQ
+│       │                       │           │   └── "=="
+│       │                       │           └── expr
+│       │                       │               └── literal
+│       │                       │                   └── string
+│       │                       │                       ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │                       │                       └── DOUBLE_QUOTED_STRING_LITERAL
+│       │                       │                           └── ""active""
+│       │                       ├── Attribute WHITE_SPACE Value '&#10;  ' chnl:HIDDEN
+│       │                       └── RCB
+│       │                           └── "}"
+│       └── return_expr
+│           ├── Attribute WHITE_SPACE Value '&#10;  ' chnl:HIDDEN
+│           ├── RETURN
+│           │   └── "RETURN"
+│           └── expr
+│               └── literal
+│                   └── object_literal
+│                       ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│                       ├── LCB
+│                       │   └── "{"
+│                       ├── pair_list
+│                       │   ├── pair
+│                       │   │   ├── string
+│                       │   │   │   ├── Attribute WHITE_SPACE Value '&#10;    ' chnl:HIDDEN
+│                       │   │   │   └── DOUBLE_QUOTED_STRING_LITERAL
+│                       │   │   │       └── ""country""
+│                       │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│                       │   │   ├── COLON
+│                       │   │   │   └── ":"
+│                       │   │   └── expr
+│                       │   │       └── literal
+│                       │   │           └── id_
+│                       │   │               ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│                       │   │               └── ID
+│                       │   │                   └── "country"
+│                       │   ├── COMMA
+│                       │   │   └── ","
+│                       │   ├── pair
+│                       │   │   ├── string
+│                       │   │   │   ├── Attribute WHITE_SPACE Value '&#10;    ' chnl:HIDDEN
+│                       │   │   │   └── DOUBLE_QUOTED_STRING_LITERAL
+│                       │   │   │       └── ""city""
+│                       │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│                       │   │   ├── COLON
+│                       │   │   │   └── ":"
+│                       │   │   └── expr
+│                       │   │       └── literal
+│                       │   │           └── id_
+│                       │   │               ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│                       │   │               └── ID
+│                       │   │                   └── "city"
+│                       │   ├── COMMA
+│                       │   │   └── ","
+│                       │   └── pair
+│                       │       ├── string
+│                       │       │   ├── Attribute WHITE_SPACE Value '&#10;    ' chnl:HIDDEN
+│                       │       │   └── DOUBLE_QUOTED_STRING_LITERAL
+│                       │       │       └── ""usersInCity""
+│                       │       ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│                       │       ├── COLON
+│                       │       │   └── ":"
+│                       │       └── expr
+│                       │           └── literal
+│                       │               └── id_
+│                       │                   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│                       │                   └── ID
+│                       │                       └── "groups"
+│                       ├── Attribute WHITE_SPACE Value '&#10;  ' chnl:HIDDEN
+│                       └── RCB
+│                           └── "}"
+└── EOF
+    └── ""
+

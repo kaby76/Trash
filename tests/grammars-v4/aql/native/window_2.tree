@@ -1,0 +1,446 @@
+arangodb_query
+├── data_query
+│   └── data_access_query
+│       ├── for_op
+│       │   ├── for_in
+│       │   │   ├── FOR
+│       │   │   │   └── "FOR"
+│       │   │   ├── id_
+│       │   │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │   │   │   └── ID
+│       │   │   │       └── "t"
+│       │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │   │   ├── IN
+│       │   │   │   └── "IN"
+│       │   │   └── expr
+│       │   │       └── literal
+│       │   │           └── id_
+│       │   │               ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │   │               └── ID
+│       │   │                   └── "observations"
+│       │   └── collect
+│       │       ├── Attribute WHITE_SPACE Value '&#10;    ' chnl:HIDDEN
+│       │       ├── COLLECT
+│       │       │   └── "COLLECT"
+│       │       ├── expr
+│       │       │   ├── expr
+│       │       │   │   └── literal
+│       │       │   │       └── id_
+│       │       │   │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │   │           └── ID
+│       │       │   │               └── "subject"
+│       │       │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │   ├── ASSIGN
+│       │       │   │   └── "="
+│       │       │   └── expr
+│       │       │       ├── expr
+│       │       │       │   └── literal
+│       │       │       │       └── id_
+│       │       │       │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │       │           └── ID
+│       │       │       │               └── "t"
+│       │       │       ├── ACCESS
+│       │       │       │   └── "."
+│       │       │       └── expr
+│       │       │           └── literal
+│       │       │               └── id_
+│       │       │                   └── ID
+│       │       │                       └── "subject"
+│       │       ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       ├── INTO
+│       │       │   └── "INTO"
+│       │       └── expr
+│       │           ├── expr
+│       │           │   └── literal
+│       │           │       └── id_
+│       │           │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │           │           └── ID
+│       │           │               └── "group"
+│       │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │           ├── ASSIGN
+│       │           │   └── "="
+│       │           └── expr
+│       │               └── literal
+│       │                   └── id_
+│       │                       ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │                       └── ID
+│       │                           └── "t"
+│       ├── for_op
+│       │   └── for_in
+│       │       ├── let_list
+│       │       │   ├── Attribute WHITE_SPACE Value '&#10;    ' chnl:HIDDEN
+│       │       │   ├── LET
+│       │       │   │   └── "LET"
+│       │       │   └── expr
+│       │       │       ├── expr
+│       │       │       │   └── literal
+│       │       │       │       └── id_
+│       │       │       │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │       │           └── ID
+│       │       │       │               └── "subquery"
+│       │       │       ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │       ├── ASSIGN
+│       │       │       │   └── "="
+│       │       │       └── expr
+│       │       │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           ├── LRB
+│       │       │           │   └── "("
+│       │       │           ├── data_access_query
+│       │       │           │   ├── for_op
+│       │       │           │   │   ├── for_in
+│       │       │           │   │   │   ├── FOR
+│       │       │           │   │   │   │   └── "FOR"
+│       │       │           │   │   │   ├── id_
+│       │       │           │   │   │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │   │   │   └── ID
+│       │       │           │   │   │   │       └── "t2"
+│       │       │           │   │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │   │   ├── IN
+│       │       │           │   │   │   │   └── "IN"
+│       │       │           │   │   │   └── expr
+│       │       │           │   │   │       └── literal
+│       │       │           │   │   │           └── id_
+│       │       │           │   │   │               ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │   │               └── ID
+│       │       │           │   │   │                   └── "group"
+│       │       │           │   │   ├── sort
+│       │       │           │   │   │   ├── Attribute WHITE_SPACE Value '&#10;      ' chnl:HIDDEN
+│       │       │           │   │   │   ├── SORT
+│       │       │           │   │   │   │   └── "SORT"
+│       │       │           │   │   │   └── expr
+│       │       │           │   │   │       ├── expr
+│       │       │           │   │   │       │   └── literal
+│       │       │           │   │   │       │       └── id_
+│       │       │           │   │   │       │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │   │       │           └── ID
+│       │       │           │   │   │       │               └── "t2"
+│       │       │           │   │   │       ├── ACCESS
+│       │       │           │   │   │       │   └── "."
+│       │       │           │   │   │       └── expr
+│       │       │           │   │   │           └── literal
+│       │       │           │   │   │               └── id_
+│       │       │           │   │   │                   └── ID
+│       │       │           │   │   │                       └── "time"
+│       │       │           │   │   ├── window
+│       │       │           │   │   │   ├── Attribute WHITE_SPACE Value '&#10;      ' chnl:HIDDEN
+│       │       │           │   │   │   ├── WINDOW
+│       │       │           │   │   │   │   └── "WINDOW"
+│       │       │           │   │   │   ├── object_literal
+│       │       │           │   │   │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │   │   │   ├── LCB
+│       │       │           │   │   │   │   │   └── "{"
+│       │       │           │   │   │   │   ├── pair_list
+│       │       │           │   │   │   │   │   ├── pair
+│       │       │           │   │   │   │   │   │   ├── id_
+│       │       │           │   │   │   │   │   │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │   │   │   │   │   │   └── ID
+│       │       │           │   │   │   │   │   │   │       └── "preceding"
+│       │       │           │   │   │   │   │   │   ├── COLON
+│       │       │           │   │   │   │   │   │   │   └── ":"
+│       │       │           │   │   │   │   │   │   └── expr
+│       │       │           │   │   │   │   │   │       └── literal
+│       │       │           │   │   │   │   │   │           └── numeric_literal
+│       │       │           │   │   │   │   │   │               ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │   │   │   │   │               └── DECIMAL_LITERAL
+│       │       │           │   │   │   │   │   │                   └── "1"
+│       │       │           │   │   │   │   │   ├── COMMA
+│       │       │           │   │   │   │   │   │   └── ","
+│       │       │           │   │   │   │   │   └── pair
+│       │       │           │   │   │   │   │       ├── id_
+│       │       │           │   │   │   │   │       │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │   │   │   │       │   └── ID
+│       │       │           │   │   │   │   │       │       └── "following"
+│       │       │           │   │   │   │   │       ├── COLON
+│       │       │           │   │   │   │   │       │   └── ":"
+│       │       │           │   │   │   │   │       └── expr
+│       │       │           │   │   │   │   │           └── literal
+│       │       │           │   │   │   │   │               └── numeric_literal
+│       │       │           │   │   │   │   │                   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │   │   │   │                   └── DECIMAL_LITERAL
+│       │       │           │   │   │   │   │                       └── "1"
+│       │       │           │   │   │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │   │   │   └── RCB
+│       │       │           │   │   │   │       └── "}"
+│       │       │           │   │   │   └── aggregate_assign
+│       │       │           │   │   │       ├── Attribute WHITE_SPACE Value '&#10;      ' chnl:HIDDEN
+│       │       │           │   │   │       ├── AGGREGATE
+│       │       │           │   │   │       │   └── "AGGREGATE"
+│       │       │           │   │   │       ├── id_
+│       │       │           │   │   │       │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │   │       │   └── ID
+│       │       │           │   │   │       │       └── "rollingAverage"
+│       │       │           │   │   │       ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │   │       ├── ASSIGN
+│       │       │           │   │   │       │   └── "="
+│       │       │           │   │   │       └── expr
+│       │       │           │   │   │           ├── expr
+│       │       │           │   │   │           │   ├── id_
+│       │       │           │   │   │           │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │   │           │   │   └── ID
+│       │       │           │   │   │           │   │       └── "AVG"
+│       │       │           │   │   │           │   ├── LRB
+│       │       │           │   │   │           │   │   └── "("
+│       │       │           │   │   │           │   ├── expr
+│       │       │           │   │   │           │   │   ├── expr
+│       │       │           │   │   │           │   │   │   └── literal
+│       │       │           │   │   │           │   │   │       └── id_
+│       │       │           │   │   │           │   │   │           └── ID
+│       │       │           │   │   │           │   │   │               └── "t2"
+│       │       │           │   │   │           │   │   ├── ACCESS
+│       │       │           │   │   │           │   │   │   └── "."
+│       │       │           │   │   │           │   │   └── expr
+│       │       │           │   │   │           │   │       └── literal
+│       │       │           │   │   │           │   │           └── id_
+│       │       │           │   │   │           │   │               └── ID
+│       │       │           │   │   │           │   │                   └── "val"
+│       │       │           │   │   │           │   └── RRB
+│       │       │           │   │   │           │       └── ")"
+│       │       │           │   │   │           ├── COMMA
+│       │       │           │   │   │           │   └── ","
+│       │       │           │   │   │           └── expr
+│       │       │           │   │   │               ├── expr
+│       │       │           │   │   │               │   └── literal
+│       │       │           │   │   │               │       └── id_
+│       │       │           │   │   │               │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │   │               │           └── ID
+│       │       │           │   │   │               │               └── "rollingSum"
+│       │       │           │   │   │               ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │   │               ├── ASSIGN
+│       │       │           │   │   │               │   └── "="
+│       │       │           │   │   │               └── expr
+│       │       │           │   │   │                   ├── id_
+│       │       │           │   │   │                   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │   │                   │   └── ID
+│       │       │           │   │   │                   │       └── "SUM"
+│       │       │           │   │   │                   ├── LRB
+│       │       │           │   │   │                   │   └── "("
+│       │       │           │   │   │                   ├── expr
+│       │       │           │   │   │                   │   ├── expr
+│       │       │           │   │   │                   │   │   └── literal
+│       │       │           │   │   │                   │   │       └── id_
+│       │       │           │   │   │                   │   │           └── ID
+│       │       │           │   │   │                   │   │               └── "t2"
+│       │       │           │   │   │                   │   ├── ACCESS
+│       │       │           │   │   │                   │   │   └── "."
+│       │       │           │   │   │                   │   └── expr
+│       │       │           │   │   │                   │       └── literal
+│       │       │           │   │   │                   │           └── id_
+│       │       │           │   │   │                   │               └── ID
+│       │       │           │   │   │                   │                   └── "val"
+│       │       │           │   │   │                   └── RRB
+│       │       │           │   │   │                       └── ")"
+│       │       │           │   │   └── window
+│       │       │           │   │       ├── Attribute WHITE_SPACE Value '&#10;      ' chnl:HIDDEN
+│       │       │           │   │       ├── WINDOW
+│       │       │           │   │       │   └── "WINDOW"
+│       │       │           │   │       ├── object_literal
+│       │       │           │   │       │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │       │   ├── LCB
+│       │       │           │   │       │   │   └── "{"
+│       │       │           │   │       │   ├── pair_list
+│       │       │           │   │       │   │   ├── pair
+│       │       │           │   │       │   │   │   ├── id_
+│       │       │           │   │       │   │   │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │       │   │   │   │   └── ID
+│       │       │           │   │       │   │   │   │       └── "preceding"
+│       │       │           │   │       │   │   │   ├── COLON
+│       │       │           │   │       │   │   │   │   └── ":"
+│       │       │           │   │       │   │   │   └── expr
+│       │       │           │   │       │   │   │       └── literal
+│       │       │           │   │       │   │   │           └── string
+│       │       │           │   │       │   │   │               ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │       │   │   │               └── DOUBLE_QUOTED_STRING_LITERAL
+│       │       │           │   │       │   │   │                   └── ""unbounded""
+│       │       │           │   │       │   │   ├── COMMA
+│       │       │           │   │       │   │   │   └── ","
+│       │       │           │   │       │   │   └── pair
+│       │       │           │   │       │   │       ├── id_
+│       │       │           │   │       │   │       │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │       │   │       │   └── ID
+│       │       │           │   │       │   │       │       └── "following"
+│       │       │           │   │       │   │       ├── COLON
+│       │       │           │   │       │   │       │   └── ":"
+│       │       │           │   │       │   │       └── expr
+│       │       │           │   │       │   │           └── literal
+│       │       │           │   │       │   │               └── numeric_literal
+│       │       │           │   │       │   │                   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │       │   │                   └── DECIMAL_LITERAL
+│       │       │           │   │       │   │                       └── "0"
+│       │       │           │   │       │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │       │   └── RCB
+│       │       │           │   │       │       └── "}"
+│       │       │           │   │       └── aggregate_assign
+│       │       │           │   │           ├── Attribute WHITE_SPACE Value '&#10;      ' chnl:HIDDEN
+│       │       │           │   │           ├── AGGREGATE
+│       │       │           │   │           │   └── "AGGREGATE"
+│       │       │           │   │           ├── id_
+│       │       │           │   │           │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │           │   └── ID
+│       │       │           │   │           │       └── "cumulativeSum"
+│       │       │           │   │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │           ├── ASSIGN
+│       │       │           │   │           │   └── "="
+│       │       │           │   │           └── expr
+│       │       │           │   │               ├── id_
+│       │       │           │   │               │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │   │               │   └── ID
+│       │       │           │   │               │       └── "SUM"
+│       │       │           │   │               ├── LRB
+│       │       │           │   │               │   └── "("
+│       │       │           │   │               ├── expr
+│       │       │           │   │               │   ├── expr
+│       │       │           │   │               │   │   └── literal
+│       │       │           │   │               │   │       └── id_
+│       │       │           │   │               │   │           └── ID
+│       │       │           │   │               │   │               └── "t2"
+│       │       │           │   │               │   ├── ACCESS
+│       │       │           │   │               │   │   └── "."
+│       │       │           │   │               │   └── expr
+│       │       │           │   │               │       └── literal
+│       │       │           │   │               │           └── id_
+│       │       │           │   │               │               └── ID
+│       │       │           │   │               │                   └── "val"
+│       │       │           │   │               └── RRB
+│       │       │           │   │                   └── ")"
+│       │       │           │   └── return_expr
+│       │       │           │       ├── Attribute WHITE_SPACE Value '&#10;      ' chnl:HIDDEN
+│       │       │           │       ├── RETURN
+│       │       │           │       │   └── "RETURN"
+│       │       │           │       └── expr
+│       │       │           │           └── literal
+│       │       │           │               └── object_literal
+│       │       │           │                   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │                   ├── LCB
+│       │       │           │                   │   └── "{"
+│       │       │           │                   ├── pair_list
+│       │       │           │                   │   ├── pair
+│       │       │           │                   │   │   ├── id_
+│       │       │           │                   │   │   │   ├── Attribute WHITE_SPACE Value '&#10;        ' chnl:HIDDEN
+│       │       │           │                   │   │   │   └── ID
+│       │       │           │                   │   │   │       └── "time"
+│       │       │           │                   │   │   ├── COLON
+│       │       │           │                   │   │   │   └── ":"
+│       │       │           │                   │   │   └── expr
+│       │       │           │                   │   │       ├── expr
+│       │       │           │                   │   │       │   └── literal
+│       │       │           │                   │   │       │       └── id_
+│       │       │           │                   │   │       │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │                   │   │       │           └── ID
+│       │       │           │                   │   │       │               └── "t2"
+│       │       │           │                   │   │       ├── ACCESS
+│       │       │           │                   │   │       │   └── "."
+│       │       │           │                   │   │       └── expr
+│       │       │           │                   │   │           └── literal
+│       │       │           │                   │   │               └── id_
+│       │       │           │                   │   │                   └── ID
+│       │       │           │                   │   │                       └── "time"
+│       │       │           │                   │   ├── COMMA
+│       │       │           │                   │   │   └── ","
+│       │       │           │                   │   ├── pair
+│       │       │           │                   │   │   ├── id_
+│       │       │           │                   │   │   │   ├── Attribute WHITE_SPACE Value '&#10;        ' chnl:HIDDEN
+│       │       │           │                   │   │   │   └── ID
+│       │       │           │                   │   │   │       └── "subject"
+│       │       │           │                   │   │   ├── COLON
+│       │       │           │                   │   │   │   └── ":"
+│       │       │           │                   │   │   └── expr
+│       │       │           │                   │   │       ├── expr
+│       │       │           │                   │   │       │   └── literal
+│       │       │           │                   │   │       │       └── id_
+│       │       │           │                   │   │       │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │                   │   │       │           └── ID
+│       │       │           │                   │   │       │               └── "t2"
+│       │       │           │                   │   │       ├── ACCESS
+│       │       │           │                   │   │       │   └── "."
+│       │       │           │                   │   │       └── expr
+│       │       │           │                   │   │           └── literal
+│       │       │           │                   │   │               └── id_
+│       │       │           │                   │   │                   └── ID
+│       │       │           │                   │   │                       └── "subject"
+│       │       │           │                   │   ├── COMMA
+│       │       │           │                   │   │   └── ","
+│       │       │           │                   │   └── pair
+│       │       │           │                   │       ├── id_
+│       │       │           │                   │       │   ├── Attribute WHITE_SPACE Value '&#10;        ' chnl:HIDDEN
+│       │       │           │                   │       │   └── ID
+│       │       │           │                   │       │       └── "val"
+│       │       │           │                   │       ├── COLON
+│       │       │           │                   │       │   └── ":"
+│       │       │           │                   │       └── expr
+│       │       │           │                   │           ├── expr
+│       │       │           │                   │           │   ├── expr
+│       │       │           │                   │           │   │   └── literal
+│       │       │           │                   │           │   │       └── id_
+│       │       │           │                   │           │   │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │           │                   │           │   │           └── ID
+│       │       │           │                   │           │   │               └── "t2"
+│       │       │           │                   │           │   ├── ACCESS
+│       │       │           │                   │           │   │   └── "."
+│       │       │           │                   │           │   └── expr
+│       │       │           │                   │           │       └── literal
+│       │       │           │                   │           │           └── id_
+│       │       │           │                   │           │               └── ID
+│       │       │           │                   │           │                   └── "val"
+│       │       │           │                   │           ├── COMMA
+│       │       │           │                   │           │   └── ","
+│       │       │           │                   │           └── expr
+│       │       │           │                   │               ├── expr
+│       │       │           │                   │               │   └── literal
+│       │       │           │                   │               │       └── id_
+│       │       │           │                   │               │           ├── Attribute WHITE_SPACE Value '&#10;        ' chnl:HIDDEN
+│       │       │           │                   │               │           └── ID
+│       │       │           │                   │               │               └── "rollingAverage"
+│       │       │           │                   │               ├── COMMA
+│       │       │           │                   │               │   └── ","
+│       │       │           │                   │               └── expr
+│       │       │           │                   │                   ├── expr
+│       │       │           │                   │                   │   └── literal
+│       │       │           │                   │                   │       └── id_
+│       │       │           │                   │                   │           ├── Attribute WHITE_SPACE Value '&#10;        ' chnl:HIDDEN
+│       │       │           │                   │                   │           └── ID
+│       │       │           │                   │                   │               └── "rollingSum"
+│       │       │           │                   │                   ├── COMMA
+│       │       │           │                   │                   │   └── ","
+│       │       │           │                   │                   └── expr
+│       │       │           │                   │                       └── literal
+│       │       │           │                   │                           └── id_
+│       │       │           │                   │                               ├── Attribute WHITE_SPACE Value '&#10;        ' chnl:HIDDEN
+│       │       │           │                   │                               └── ID
+│       │       │           │                   │                                   └── "cumulativeSum"
+│       │       │           │                   ├── Attribute WHITE_SPACE Value '&#10;      ' chnl:HIDDEN
+│       │       │           │                   └── RCB
+│       │       │           │                       └── "}"
+│       │       │           ├── Attribute WHITE_SPACE Value '&#10;    ' chnl:HIDDEN
+│       │       │           └── RRB
+│       │       │               └── ")"
+│       │       ├── Attribute WHITE_SPACE Value '&#10;    ' chnl:HIDDEN
+│       │       ├── Attribute LINE_COMMENT Value '// flatten subquery result' chnl:HIDDEN
+│       │       ├── Attribute WHITE_SPACE Value '&#10;    ' chnl:HIDDEN
+│       │       ├── FOR
+│       │       │   └── "FOR"
+│       │       ├── id_
+│       │       │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │   └── ID
+│       │       │       └── "t2"
+│       │       ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       ├── IN
+│       │       │   └── "IN"
+│       │       └── expr
+│       │           └── literal
+│       │               └── id_
+│       │                   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │                   └── ID
+│       │                       └── "subquery"
+│       └── return_expr
+│           ├── Attribute WHITE_SPACE Value '&#10;      ' chnl:HIDDEN
+│           ├── RETURN
+│           │   └── "RETURN"
+│           └── expr
+│               └── literal
+│                   └── id_
+│                       ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│                       └── ID
+│                           └── "t2"
+└── EOF
+    └── ""
+

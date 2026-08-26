@@ -1,0 +1,2637 @@
+prog
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "### FILE="Main.annotation""
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Copyright:&#9;Public domain."
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Filename:&#9;KEYRUPT_UPRUPT_FRESH_START.agc"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Purpose:&#9;Part of the source code for Solarium build 55. This"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "#&#9;&#9;is for the Command Module's (CM) Apollo Guidance"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "#&#9;&#9;Computer (AGC), for Apollo 4."
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Assembler:&#9;yaYUL --block1"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Contact:&#9;Jim Lawton <jim DOT lawton AT gmail DOT com>"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Website:&#9;www.ibiblio.org/apollo/index.html"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Page scans:&#9;www.ibiblio.org/apollo/ScansForConversion/Solarium055/"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# Mod history:&#9;2009-09-15 JL&#9;Created."
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "## Page 477"
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── instruction_line
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── pseudo_opcode
+│       │           └── BANK
+│       │               └── "BANK"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "4"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "KEYRUPT1"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── standard_opcode
+│       │           └── MASK
+│       │               └── "MASK"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "LOW5"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# C(IN0) IN A"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TS
+│       │   │                       └── "TS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "RUPTREG4"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "LODSAMPT"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# TIME IS SNATCHED IN RUPT FOR NOUN 65"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CAF
+│       │   │                       └── "CAF"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "PRIO33"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "NOVAC"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CADR
+│       │   │                       └── "CADR"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "CHARIN"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "NOKEYBUF"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── standard_opcode
+│       │           └── XCH
+│       │               └── "XCH"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "RUPTREG4"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── INDEX
+│       │   │                       └── "INDEX"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "LOCCTR"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TS
+│       │   │                       └── "TS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "MPAC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# LEAVE 5 BIT KEY CODE IN MPAC FOR CHARIN"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── RESUME
+│       │                           └── "RESUME"
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "## Page 478"
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "UPRUPTB"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── standard_opcode
+│       │           └── TS
+│       │               └── "TS"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "BANKRUPT"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "READTIME"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── " "
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "+1"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# TIME IS SNATCHED IN RUPT FOR NOUN 65"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CAF
+│       │   │                       └── "CAF"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "ZERO"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── XCH
+│       │   │                       └── "XCH"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "UPLINK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# ZERO UPLINK"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TS
+│       │   │                       └── "TS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "KEYTEMP1"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CCS
+│       │   │                       └── "CCS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "DSPTAB"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── " "
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "+7"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# TURN ON UPACT LIGHT"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "+2"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# UPACT = BIT 11 OF DSPTAB +7"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CAF
+│       │   │                       └── "CAF"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "B12-1"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# SAFETY PLAY"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── AD
+│       │   │                       └── "AD"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "ONE"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TS
+│       │   │                       └── "TS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "KEYTEMP2"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# MAG OF DSPTAB +7 INTO KEYTEMP2"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── MASK
+│       │   │                       └── "MASK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "BIT11"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CCS
+│       │   │                       └── "CCS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── register_
+│       │                       └── A
+│       │                           └── "A"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "UPRPT1"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# BIT 11 ALREADY DONE"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── XCH
+│       │   │                       └── "XCH"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "KEYTEMP2"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# BIT 11 = 0"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── AD
+│       │   │                       └── "AD"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "BIT11"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CS
+│       │   │                       └── "CS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── register_
+│       │   │                   └── A
+│       │   │                       └── "A"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# STORE NEGATIVELY"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── XCH
+│       │   │                       └── "XCH"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "DSPTAB"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── " "
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "+7"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CCS
+│       │   │                       └── "CCS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── register_
+│       │                       └── A
+│       │                           └── "A"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "INCNOUTU"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# PREVIOUS CONTENTS WAS +"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── NOOP
+│       │   │                       └── "NOOP"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# SAFETY PLAY"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "UPRPT1"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── standard_opcode
+│       │           └── CAF
+│       │               └── "CAF"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "LOW5"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# TEST FOR TRIPLE CHAR REDUNDANCY"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── MASK
+│       │   │                       └── "MASK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "KEYTEMP1"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# LOW5 OF WORD"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── XCH
+│       │   │                       └── "XCH"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "KEYTEMP1"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# LOW5 INTO KEYTEMP1"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── XCH
+│       │   │                       └── "XCH"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── register_
+│       │   │                   └── SR
+│       │   │                       └── "SR"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# WHOLE WORD INTO SR"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TS
+│       │   │                       └── "TS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "KEYTEMP2"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# ORIGINAL SR INTO KEYTEMP2"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "SRGHT5"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── MASK
+│       │   │                       └── "MASK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "LOW5"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# MID 5"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── AD
+│       │   │                       └── "AD"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "HI10"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "UPTEST"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "SRGHT5"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── MASK
+│       │   │                       └── "MASK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "LOW5"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# HIGH 5"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── COM
+│       │                           └── "COM"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "UPTEST"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "UPOK"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── standard_opcode
+│       │           └── TC
+│       │               └── "TC"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "RESTORSR"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# CODE IS GOOD"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CS
+│       │   │                       └── "CS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "ELRCODE"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# IF CODE = ERROR LIGHT RESET, PUT +0"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── AD
+│       │   │                       └── "AD"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "KEYTEMP1"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# INTO UPLOCK (BIT2 OF STATE)"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CCS
+│       │   │                       └── "CCS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── register_
+│       │   │                   └── A
+│       │   │                       └── "A"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# IF CODE NOT= ELR, PASS CODE ONLY IF"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "TSTUPLOK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# UPLOCK=0 (BIT 2 OF STATE)"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "ELRCODE"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── pseudo_opcode
+│       │           └── OCT
+│       │               └── "OCT"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "22"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "TSTUPLOK"
+│       ├── eol
+│       │   ├── WS
+│       │   │   └── "&#9;&#9;"
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CS
+│       │   │                       └── "CS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "BIT2"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# 0 INTO UPLOCK (BIT 2 OF STATE)"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── MASK
+│       │   │                       └── "MASK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "UPLOCK"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TS
+│       │   │                       └── "TS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "UPLOCK"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "ACCEPTUP"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "TSTUPLOK"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── standard_opcode
+│       │           └── CAF
+│       │               └── "CAF"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "BIT2"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── MASK
+│       │   │                       └── "MASK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "UPLOCK"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CCS
+│       │   │                       └── "CCS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── register_
+│       │                       └── A
+│       │                           └── "A"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── RESUME
+│       │   │                       └── "RESUME"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# UPLOCK = 1 (BIT2 OF STATE)"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "ACCEPTUP"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── standard_opcode
+│       │           └── XCH
+│       │               └── "XCH"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "KEYTEMP1"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# UPLOCK = 0 (BIT2 OF STATE)"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "KEYRUPT1"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── " "
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "+1"
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "## Page 479"
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "TMFAIL2"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── standard_opcode
+│       │           └── TC
+│       │               └── "TC"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "RESTORSR"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# CODE IS BAD"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CS
+│       │   │                       └── "CS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "BIT2"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# LOCK OUT FURTHER UPLINK ACTIVITY (BY"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── MASK
+│       │   │                       └── "MASK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "UPLOCK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# PUTTING 1 INTO UPLOCK, BIT 2 OF STATE)"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── AD
+│       │   │                       └── "AD"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "BIT2"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# UNTIL ERROR LIGHT RESET IS SENT UP"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TS
+│       │   │                       └── "TS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── LABEL
+│       │   │                   └── "UPLOCK"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# UPLINK."
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "TMFAIL2"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── standard_opcode
+│       │           └── TC
+│       │               └── "TC"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "TMALM"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── RESUME
+│       │                           └── "RESUME"
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "RESTORSR"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── standard_opcode
+│       │           └── XCH
+│       │               └── "XCH"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "KEYTEMP2"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── standard_opcode
+│       │                       └── DOUBLE
+│       │                           └── "DOUBLE"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TS
+│       │   │                       └── "TS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── register_
+│       │                       └── SR
+│       │                           └── "SR"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── register_
+│       │                       └── Q
+│       │                           └── "Q"
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── assignment_line
+│       ├── variable
+│       │   └── LABEL
+│       │       └── "TMALM"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── EQUALS
+│       │   └── "EQUALS"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;"
+│       ├── expression
+│       │   └── multiplyingExpression
+│       │       └── atom
+│       │           └── variable
+│       │               └── LABEL
+│       │                   └── "TMFAIL"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# TM FAIL LIGHT ON (IN DOWNRUPT)."
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "SRGHT5"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── standard_opcode
+│       │           └── CS
+│       │               └── "CS"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── register_
+│       │                       └── SR
+│       │                           └── "SR"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CS
+│       │   │                       └── "CS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── register_
+│       │                       └── SR
+│       │                           └── "SR"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CS
+│       │   │                       └── "CS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── register_
+│       │                       └── SR
+│       │                           └── "SR"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CS
+│       │   │                       └── "CS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── register_
+│       │                       └── SR
+│       │                           └── "SR"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CS
+│       │   │                       └── "CS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── register_
+│       │                       └── SR
+│       │                           └── "SR"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CS
+│       │   │                       └── "CS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── register_
+│       │                       └── A
+│       │                           └── "A"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── register_
+│       │   │                   └── Q
+│       │   │                       └── "Q"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   └── comment
+│       │       └── COMMENT
+│       │           └── "# DELIVERS WORD UNCOMPLEMENTED"
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "UPTEST"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── standard_opcode
+│       │           └── AD
+│       │               └── "AD"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "KEYTEMP1"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── CCS
+│       │   │                       └── "CCS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── register_
+│       │                       └── A
+│       │                           └── "A"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "TMFAIL2"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "CCSHOLE"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "TMFAIL2"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TC
+│       │   │                       └── "TC"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── register_
+│       │                       └── Q
+│       │                           └── "Q"
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "HI10"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── pseudo_opcode
+│       │           └── OCT
+│       │               └── "OCT"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "77740"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── assignment_line
+│       ├── variable
+│       │   └── LABEL
+│       │       └── "UPBANK"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── EQUALS
+│       │   └── "EQUALS"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;"
+│       ├── expression
+│       │   └── multiplyingExpression
+│       │       └── atom
+│       │           └── variable
+│       │               └── LABEL
+│       │                   └── "EXECBANK"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;"
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# IN SAME BANK AS EXEC."
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "B12-1"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── pseudo_opcode
+│       │           └── OCT
+│       │               └── "OCT"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "3777"
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "INCNOUTU"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── standard_opcode
+│       │           └── XCH
+│       │               └── "XCH"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "NOUT"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── AD
+│       │   │                       └── "AD"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "ONE"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── TS
+│       │   │                       └── "TS"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "NOUT"
+│       ├── eol
+│       │   └── EOL
+│       │       └── "&#10;"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;&#9;"
+│       │   ├── expression
+│       │   │   └── multiplyingExpression
+│       │   │       └── atom
+│       │   │           └── variable
+│       │   │               └── standard_opcode
+│       │   │                   └── INDEX
+│       │   │                       └── "INDEX"
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── register_
+│       │                       └── Q
+│       │                           └── "Q"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── instruction_line
+│       ├── label
+│       │   └── LABEL
+│       │       └── "UPLAST"
+│       ├── ws
+│       │   └── WS
+│       │       └── "&#9;&#9;"
+│       ├── opcodes
+│       │   └── opcode
+│       │       └── standard_opcode
+│       │           └── TC
+│       │               └── "TC"
+│       ├── argument
+│       │   ├── ws
+│       │   │   └── WS
+│       │   │       └── "&#9;"
+│       │   └── expression
+│       │       └── multiplyingExpression
+│       │           └── atom
+│       │               └── variable
+│       │                   └── LABEL
+│       │                       └── "1"
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# UPACT IS TURNED OFF BY VBRELDSP, ALSO BY ERROR LIGHT RESET."
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "## Page 480"
+│       └── eol
+│           └── EOL
+│               └── "&#10;&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# THE RECEPTION OF A BAD CODE BY UPLINK LOCKS OUT FURTHER UPLINK ACTIVITY "
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# BY PLACING A 1 INTO UPLOCK (BIT2 OF STATE). BIT9 (AND BIT11) OF TMKEYBUF"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# IS SET TO 1 TO SEND AN INDICATION OF THIS SITUATION DOWN THE DOWNLINK."
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# THE UPLINK INTERLOCK IS ALLOWED WHEN AN ERROR LIGHT RESET CODE IS SENT"
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+├── line
+│   └── comment_line
+│       ├── comment
+│       │   └── COMMENT
+│       │       └── "# UP THE UPLINK, OR WHEN A FRESH START IS PERFORMED."
+│       └── eol
+│           └── EOL
+│               └── "&#10;"
+└── EOF
+    └── ""
+

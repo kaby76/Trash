@@ -1,0 +1,1884 @@
+acmeCompUnit
+├── acmeFamilyDeclaration
+│   ├── Attribute Skip Value '// &#10; &#10;// ClientAndServerFam style to represent systems that have &#10; &#10;// a client component accessing a server component. &#10; &#10;// &#10; &#10;'
+│   ├── FAMILY
+│   │   └── "Family"
+│   ├── identifier
+│   │   ├── Attribute Skip Value ' '
+│   │   └── IDENTIFIER
+│   │       └── "ClientAndServerFam"
+│   ├── Attribute Skip Value ' '
+│   ├── ASSIGN
+│   │   └── "="
+│   └── acmeFamilyBody
+│       ├── Attribute Skip Value ' '
+│       ├── LBRACE
+│       │   └── "{"
+│       ├── acmePortTypeDeclaration
+│       │   ├── Attribute Skip Value '&#10;    '
+│       │   ├── PORT
+│       │   │   └── "Port"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── TYPE
+│       │   │   └── "Type"
+│       │   ├── identifier
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   └── IDENTIFIER
+│       │   │       └── "ClientPortT"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── ASSIGN
+│       │   │   └── "="
+│       │   └── acmePortBody
+│       │       ├── Attribute Skip Value ' '
+│       │       ├── LBRACE
+│       │       │   └── "{"
+│       │       ├── designRule
+│       │       │   ├── Attribute Skip Value '&#10;        // this port isn't dangling&#10;        '
+│       │       │   ├── HEURISTIC
+│       │       │   │   └── "heuristic"
+│       │       │   ├── designRuleExpression
+│       │       │   │   └── aSTDRImpliesExpression
+│       │       │   │       └── dRIffExpression
+│       │       │   │           └── dRAndExpression
+│       │       │   │               └── dRNegateExpression
+│       │       │   │                   └── dREqualityExpression
+│       │       │   │                       └── dRRelationalExpression
+│       │       │   │                           ├── dRAdditiveExpression
+│       │       │   │                           │   └── dRMultiplicativeExpression
+│       │       │   │                           │       └── dRNegativeExpression
+│       │       │   │                           │           └── primitiveExpression
+│       │       │   │                           │               └── reference
+│       │       │   │                           │                   ├── identifier
+│       │       │   │                           │                   │   ├── Attribute Skip Value ' '
+│       │       │   │                           │                   │   └── IDENTIFIER
+│       │       │   │                           │                   │       └── "size"
+│       │       │   │                           │                   └── actualParams
+│       │       │   │                           │                       ├── LPAREN
+│       │       │   │                           │                       │   └── "("
+│       │       │   │                           │                       ├── designRuleExpression
+│       │       │   │                           │                       │   └── aSTDRImpliesExpression
+│       │       │   │                           │                       │       └── dRIffExpression
+│       │       │   │                           │                       │           └── dRAndExpression
+│       │       │   │                           │                       │               └── dRNegateExpression
+│       │       │   │                           │                       │                   └── dREqualityExpression
+│       │       │   │                           │                       │                       └── dRRelationalExpression
+│       │       │   │                           │                       │                           └── dRAdditiveExpression
+│       │       │   │                           │                       │                               └── dRMultiplicativeExpression
+│       │       │   │                           │                       │                                   └── dRNegativeExpression
+│       │       │   │                           │                       │                                       └── primitiveExpression
+│       │       │   │                           │                       │                                           └── reference
+│       │       │   │                           │                       │                                               ├── identifier
+│       │       │   │                           │                       │                                               │   └── IDENTIFIER
+│       │       │   │                           │                       │                                               │       └── "self"
+│       │       │   │                           │                       │                                               ├── DOT
+│       │       │   │                           │                       │                                               │   └── "."
+│       │       │   │                           │                       │                                               └── setReference
+│       │       │   │                           │                       │                                                   └── ATTACHEDROLES
+│       │       │   │                           │                       │                                                       └── "attachedRoles"
+│       │       │   │                           │                       └── RPAREN
+│       │       │   │                           │                           └── ")"
+│       │       │   │                           ├── Attribute Skip Value ' '
+│       │       │   │                           ├── GE
+│       │       │   │                           │   └── ">="
+│       │       │   │                           └── dRAdditiveExpression
+│       │       │   │                               └── dRMultiplicativeExpression
+│       │       │   │                                   └── dRNegativeExpression
+│       │       │   │                                       └── primitiveExpression
+│       │       │   │                                           └── literalConstant
+│       │       │   │                                               ├── Attribute Skip Value ' '
+│       │       │   │                                               └── INTEGER_LITERAL
+│       │       │   │                                                   └── "1"
+│       │       │   ├── acmePropertyBlock
+│       │       │   │   ├── PROPBEGIN
+│       │       │   │   │   └── "<<"
+│       │       │   │   ├── acmePropertyBlockEntry
+│       │       │   │   │   ├── identifier
+│       │       │   │   │   │   └── IDENTIFIER
+│       │       │   │   │   │       └── "label"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── COLON
+│       │       │   │   │   │   └── ":"
+│       │       │   │   │   ├── acmePropertyTypeRef
+│       │       │   │   │   │   └── acmePropertyTypeStructure
+│       │       │   │   │   │       └── acmePropertyTypeString
+│       │       │   │   │   │           ├── Attribute Skip Value ' '
+│       │       │   │   │   │           └── STRING
+│       │       │   │   │   │               └── "string"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── ASSIGN
+│       │       │   │   │   │   └── "="
+│       │       │   │   │   ├── acmePropertyValueDeclaration
+│       │       │   │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   │   └── STRING_LITERAL
+│       │       │   │   │   │       └── ""This port has attachment(s).""
+│       │       │   │   │   └── SEMICOLON
+│       │       │   │   │       └── ";"
+│       │       │   │   ├── acmePropertyBlockEntry
+│       │       │   │   │   ├── identifier
+│       │       │   │   │   │   └── IDENTIFIER
+│       │       │   │   │   │       └── "errMsg"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── COLON
+│       │       │   │   │   │   └── ":"
+│       │       │   │   │   ├── acmePropertyTypeRef
+│       │       │   │   │   │   └── acmePropertyTypeStructure
+│       │       │   │   │   │       └── acmePropertyTypeString
+│       │       │   │   │   │           ├── Attribute Skip Value ' '
+│       │       │   │   │   │           └── STRING
+│       │       │   │   │   │               └── "string"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── ASSIGN
+│       │       │   │   │   │   └── "="
+│       │       │   │   │   ├── acmePropertyValueDeclaration
+│       │       │   │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   │   └── STRING_LITERAL
+│       │       │   │   │   │       └── ""This port dangles!""
+│       │       │   │   │   └── SEMICOLON
+│       │       │   │   │       └── ";"
+│       │       │   │   └── PROPEND
+│       │       │   │       └── ">>"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── Attribute Skip Value '&#10;        &#10;    '
+│       │       └── RBRACE
+│       │           └── "}"
+│       ├── acmePortTypeDeclaration
+│       │   ├── Attribute Skip Value '&#10;    &#10;    &#10;    '
+│       │   ├── PORT
+│       │   │   └── "Port"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── TYPE
+│       │   │   └── "Type"
+│       │   ├── identifier
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   └── IDENTIFIER
+│       │   │       └── "ServerPortT"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── ASSIGN
+│       │   │   └── "="
+│       │   └── acmePortBody
+│       │       ├── Attribute Skip Value ' '
+│       │       ├── LBRACE
+│       │       │   └── "{"
+│       │       ├── designRule
+│       │       │   ├── Attribute Skip Value '&#10;        // this port isn't dangling&#10;        '
+│       │       │   ├── HEURISTIC
+│       │       │   │   └── "heuristic"
+│       │       │   ├── designRuleExpression
+│       │       │   │   └── aSTDRImpliesExpression
+│       │       │   │       └── dRIffExpression
+│       │       │   │           └── dRAndExpression
+│       │       │   │               └── dRNegateExpression
+│       │       │   │                   └── dREqualityExpression
+│       │       │   │                       └── dRRelationalExpression
+│       │       │   │                           ├── dRAdditiveExpression
+│       │       │   │                           │   └── dRMultiplicativeExpression
+│       │       │   │                           │       └── dRNegativeExpression
+│       │       │   │                           │           └── primitiveExpression
+│       │       │   │                           │               └── reference
+│       │       │   │                           │                   ├── identifier
+│       │       │   │                           │                   │   ├── Attribute Skip Value ' '
+│       │       │   │                           │                   │   └── IDENTIFIER
+│       │       │   │                           │                   │       └── "size"
+│       │       │   │                           │                   └── actualParams
+│       │       │   │                           │                       ├── LPAREN
+│       │       │   │                           │                       │   └── "("
+│       │       │   │                           │                       ├── designRuleExpression
+│       │       │   │                           │                       │   └── aSTDRImpliesExpression
+│       │       │   │                           │                       │       └── dRIffExpression
+│       │       │   │                           │                       │           └── dRAndExpression
+│       │       │   │                           │                       │               └── dRNegateExpression
+│       │       │   │                           │                       │                   └── dREqualityExpression
+│       │       │   │                           │                       │                       └── dRRelationalExpression
+│       │       │   │                           │                       │                           └── dRAdditiveExpression
+│       │       │   │                           │                       │                               └── dRMultiplicativeExpression
+│       │       │   │                           │                       │                                   └── dRNegativeExpression
+│       │       │   │                           │                       │                                       └── primitiveExpression
+│       │       │   │                           │                       │                                           └── reference
+│       │       │   │                           │                       │                                               ├── identifier
+│       │       │   │                           │                       │                                               │   └── IDENTIFIER
+│       │       │   │                           │                       │                                               │       └── "self"
+│       │       │   │                           │                       │                                               ├── DOT
+│       │       │   │                           │                       │                                               │   └── "."
+│       │       │   │                           │                       │                                               └── setReference
+│       │       │   │                           │                       │                                                   └── ATTACHEDROLES
+│       │       │   │                           │                       │                                                       └── "attachedRoles"
+│       │       │   │                           │                       └── RPAREN
+│       │       │   │                           │                           └── ")"
+│       │       │   │                           ├── Attribute Skip Value ' '
+│       │       │   │                           ├── GE
+│       │       │   │                           │   └── ">="
+│       │       │   │                           └── dRAdditiveExpression
+│       │       │   │                               └── dRMultiplicativeExpression
+│       │       │   │                                   └── dRNegativeExpression
+│       │       │   │                                       └── primitiveExpression
+│       │       │   │                                           └── literalConstant
+│       │       │   │                                               ├── Attribute Skip Value ' '
+│       │       │   │                                               └── INTEGER_LITERAL
+│       │       │   │                                                   └── "1"
+│       │       │   ├── acmePropertyBlock
+│       │       │   │   ├── PROPBEGIN
+│       │       │   │   │   └── "<<"
+│       │       │   │   ├── acmePropertyBlockEntry
+│       │       │   │   │   ├── identifier
+│       │       │   │   │   │   └── IDENTIFIER
+│       │       │   │   │   │       └── "label"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── COLON
+│       │       │   │   │   │   └── ":"
+│       │       │   │   │   ├── acmePropertyTypeRef
+│       │       │   │   │   │   └── acmePropertyTypeStructure
+│       │       │   │   │   │       └── acmePropertyTypeString
+│       │       │   │   │   │           ├── Attribute Skip Value ' '
+│       │       │   │   │   │           └── STRING
+│       │       │   │   │   │               └── "string"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── ASSIGN
+│       │       │   │   │   │   └── "="
+│       │       │   │   │   ├── acmePropertyValueDeclaration
+│       │       │   │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   │   └── STRING_LITERAL
+│       │       │   │   │   │       └── ""This port has attachment(s).""
+│       │       │   │   │   └── SEMICOLON
+│       │       │   │   │       └── ";"
+│       │       │   │   ├── acmePropertyBlockEntry
+│       │       │   │   │   ├── identifier
+│       │       │   │   │   │   └── IDENTIFIER
+│       │       │   │   │   │       └── "errMsg"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── COLON
+│       │       │   │   │   │   └── ":"
+│       │       │   │   │   ├── acmePropertyTypeRef
+│       │       │   │   │   │   └── acmePropertyTypeStructure
+│       │       │   │   │   │       └── acmePropertyTypeString
+│       │       │   │   │   │           ├── Attribute Skip Value ' '
+│       │       │   │   │   │           └── STRING
+│       │       │   │   │   │               └── "string"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── ASSIGN
+│       │       │   │   │   │   └── "="
+│       │       │   │   │   ├── acmePropertyValueDeclaration
+│       │       │   │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   │   └── STRING_LITERAL
+│       │       │   │   │   │       └── ""This port dangles!""
+│       │       │   │   │   └── SEMICOLON
+│       │       │   │   │       └── ";"
+│       │       │   │   └── PROPEND
+│       │       │   │       └── ">>"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── Attribute Skip Value '&#10;        &#10;    '
+│       │       └── RBRACE
+│       │           └── "}"
+│       ├── acmeRoleTypeDeclaration
+│       │   ├── Attribute Skip Value '&#10;    &#10;    &#10;    '
+│       │   ├── ROLE
+│       │   │   └── "Role"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── TYPE
+│       │   │   └── "Type"
+│       │   ├── identifier
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   └── IDENTIFIER
+│       │   │       └── "clientSideRoleT"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── ASSIGN
+│       │   │   └── "="
+│       │   └── acmeRoleBody
+│       │       ├── Attribute Skip Value ' '
+│       │       ├── LBRACE
+│       │       │   └── "{"
+│       │       ├── designRule
+│       │       │   ├── Attribute Skip Value '&#10;        // this role is not dangling&#10;        '
+│       │       │   ├── INVARIANT
+│       │       │   │   └── "invariant"
+│       │       │   ├── designRuleExpression
+│       │       │   │   └── aSTDRImpliesExpression
+│       │       │   │       └── dRIffExpression
+│       │       │   │           └── dRAndExpression
+│       │       │   │               └── dRNegateExpression
+│       │       │   │                   └── dREqualityExpression
+│       │       │   │                       └── dRRelationalExpression
+│       │       │   │                           ├── dRAdditiveExpression
+│       │       │   │                           │   └── dRMultiplicativeExpression
+│       │       │   │                           │       └── dRNegativeExpression
+│       │       │   │                           │           └── primitiveExpression
+│       │       │   │                           │               └── reference
+│       │       │   │                           │                   ├── identifier
+│       │       │   │                           │                   │   ├── Attribute Skip Value ' '
+│       │       │   │                           │                   │   └── IDENTIFIER
+│       │       │   │                           │                   │       └── "size"
+│       │       │   │                           │                   └── actualParams
+│       │       │   │                           │                       ├── LPAREN
+│       │       │   │                           │                       │   └── "("
+│       │       │   │                           │                       ├── designRuleExpression
+│       │       │   │                           │                       │   └── aSTDRImpliesExpression
+│       │       │   │                           │                       │       └── dRIffExpression
+│       │       │   │                           │                       │           └── dRAndExpression
+│       │       │   │                           │                       │               └── dRNegateExpression
+│       │       │   │                           │                       │                   └── dREqualityExpression
+│       │       │   │                           │                       │                       └── dRRelationalExpression
+│       │       │   │                           │                       │                           └── dRAdditiveExpression
+│       │       │   │                           │                       │                               └── dRMultiplicativeExpression
+│       │       │   │                           │                       │                                   └── dRNegativeExpression
+│       │       │   │                           │                       │                                       └── primitiveExpression
+│       │       │   │                           │                       │                                           └── reference
+│       │       │   │                           │                       │                                               ├── identifier
+│       │       │   │                           │                       │                                               │   └── IDENTIFIER
+│       │       │   │                           │                       │                                               │       └── "self"
+│       │       │   │                           │                       │                                               ├── DOT
+│       │       │   │                           │                       │                                               │   └── "."
+│       │       │   │                           │                       │                                               └── setReference
+│       │       │   │                           │                       │                                                   └── ATTACHEDPORTS
+│       │       │   │                           │                       │                                                       └── "attachedPorts"
+│       │       │   │                           │                       └── RPAREN
+│       │       │   │                           │                           └── ")"
+│       │       │   │                           ├── Attribute Skip Value ' '
+│       │       │   │                           ├── GE
+│       │       │   │                           │   └── ">="
+│       │       │   │                           └── dRAdditiveExpression
+│       │       │   │                               └── dRMultiplicativeExpression
+│       │       │   │                                   └── dRNegativeExpression
+│       │       │   │                                       └── primitiveExpression
+│       │       │   │                                           └── literalConstant
+│       │       │   │                                               ├── Attribute Skip Value ' '
+│       │       │   │                                               └── INTEGER_LITERAL
+│       │       │   │                                                   └── "1"
+│       │       │   ├── acmePropertyBlock
+│       │       │   │   ├── PROPBEGIN
+│       │       │   │   │   └── "<<"
+│       │       │   │   ├── acmePropertyBlockEntry
+│       │       │   │   │   ├── identifier
+│       │       │   │   │   │   └── IDENTIFIER
+│       │       │   │   │   │       └── "label"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── COLON
+│       │       │   │   │   │   └── ":"
+│       │       │   │   │   ├── acmePropertyTypeRef
+│       │       │   │   │   │   └── acmePropertyTypeStructure
+│       │       │   │   │   │       └── acmePropertyTypeString
+│       │       │   │   │   │           ├── Attribute Skip Value ' '
+│       │       │   │   │   │           └── STRING
+│       │       │   │   │   │               └── "string"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── ASSIGN
+│       │       │   │   │   │   └── "="
+│       │       │   │   │   ├── acmePropertyValueDeclaration
+│       │       │   │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   │   └── STRING_LITERAL
+│       │       │   │   │   │       └── ""This role has an attachment.""
+│       │       │   │   │   └── SEMICOLON
+│       │       │   │   │       └── ";"
+│       │       │   │   ├── acmePropertyBlockEntry
+│       │       │   │   │   ├── identifier
+│       │       │   │   │   │   └── IDENTIFIER
+│       │       │   │   │   │       └── "errMsg"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── COLON
+│       │       │   │   │   │   └── ":"
+│       │       │   │   │   ├── acmePropertyTypeRef
+│       │       │   │   │   │   └── acmePropertyTypeStructure
+│       │       │   │   │   │       └── acmePropertyTypeString
+│       │       │   │   │   │           ├── Attribute Skip Value ' '
+│       │       │   │   │   │           └── STRING
+│       │       │   │   │   │               └── "string"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── ASSIGN
+│       │       │   │   │   │   └── "="
+│       │       │   │   │   ├── acmePropertyValueDeclaration
+│       │       │   │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   │   └── STRING_LITERAL
+│       │       │   │   │   │       └── ""The role dangles!""
+│       │       │   │   │   └── SEMICOLON
+│       │       │   │   │       └── ";"
+│       │       │   │   └── PROPEND
+│       │       │   │       └── ">>"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── Attribute Skip Value '&#10;        &#10;    '
+│       │       └── RBRACE
+│       │           └── "}"
+│       ├── acmeRoleTypeDeclaration
+│       │   ├── Attribute Skip Value '&#10;    &#10;    &#10;    '
+│       │   ├── ROLE
+│       │   │   └── "Role"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── TYPE
+│       │   │   └── "Type"
+│       │   ├── identifier
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   └── IDENTIFIER
+│       │   │       └── "serverSideRoleT"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── ASSIGN
+│       │   │   └── "="
+│       │   └── acmeRoleBody
+│       │       ├── Attribute Skip Value ' '
+│       │       ├── LBRACE
+│       │       │   └── "{"
+│       │       ├── designRule
+│       │       │   ├── Attribute Skip Value '&#10;        // this role is not dangling&#10;        '
+│       │       │   ├── INVARIANT
+│       │       │   │   └── "invariant"
+│       │       │   ├── designRuleExpression
+│       │       │   │   └── aSTDRImpliesExpression
+│       │       │   │       └── dRIffExpression
+│       │       │   │           └── dRAndExpression
+│       │       │   │               └── dRNegateExpression
+│       │       │   │                   └── dREqualityExpression
+│       │       │   │                       └── dRRelationalExpression
+│       │       │   │                           ├── dRAdditiveExpression
+│       │       │   │                           │   └── dRMultiplicativeExpression
+│       │       │   │                           │       └── dRNegativeExpression
+│       │       │   │                           │           └── primitiveExpression
+│       │       │   │                           │               └── reference
+│       │       │   │                           │                   ├── identifier
+│       │       │   │                           │                   │   ├── Attribute Skip Value ' '
+│       │       │   │                           │                   │   └── IDENTIFIER
+│       │       │   │                           │                   │       └── "size"
+│       │       │   │                           │                   └── actualParams
+│       │       │   │                           │                       ├── LPAREN
+│       │       │   │                           │                       │   └── "("
+│       │       │   │                           │                       ├── designRuleExpression
+│       │       │   │                           │                       │   └── aSTDRImpliesExpression
+│       │       │   │                           │                       │       └── dRIffExpression
+│       │       │   │                           │                       │           └── dRAndExpression
+│       │       │   │                           │                       │               └── dRNegateExpression
+│       │       │   │                           │                       │                   └── dREqualityExpression
+│       │       │   │                           │                       │                       └── dRRelationalExpression
+│       │       │   │                           │                       │                           └── dRAdditiveExpression
+│       │       │   │                           │                       │                               └── dRMultiplicativeExpression
+│       │       │   │                           │                       │                                   └── dRNegativeExpression
+│       │       │   │                           │                       │                                       └── primitiveExpression
+│       │       │   │                           │                       │                                           └── reference
+│       │       │   │                           │                       │                                               ├── identifier
+│       │       │   │                           │                       │                                               │   └── IDENTIFIER
+│       │       │   │                           │                       │                                               │       └── "self"
+│       │       │   │                           │                       │                                               ├── DOT
+│       │       │   │                           │                       │                                               │   └── "."
+│       │       │   │                           │                       │                                               └── setReference
+│       │       │   │                           │                       │                                                   └── ATTACHEDPORTS
+│       │       │   │                           │                       │                                                       └── "attachedPorts"
+│       │       │   │                           │                       └── RPAREN
+│       │       │   │                           │                           └── ")"
+│       │       │   │                           ├── Attribute Skip Value ' '
+│       │       │   │                           ├── GE
+│       │       │   │                           │   └── ">="
+│       │       │   │                           └── dRAdditiveExpression
+│       │       │   │                               └── dRMultiplicativeExpression
+│       │       │   │                                   └── dRNegativeExpression
+│       │       │   │                                       └── primitiveExpression
+│       │       │   │                                           └── literalConstant
+│       │       │   │                                               ├── Attribute Skip Value ' '
+│       │       │   │                                               └── INTEGER_LITERAL
+│       │       │   │                                                   └── "1"
+│       │       │   ├── acmePropertyBlock
+│       │       │   │   ├── PROPBEGIN
+│       │       │   │   │   └── "<<"
+│       │       │   │   ├── acmePropertyBlockEntry
+│       │       │   │   │   ├── identifier
+│       │       │   │   │   │   └── IDENTIFIER
+│       │       │   │   │   │       └── "label"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── COLON
+│       │       │   │   │   │   └── ":"
+│       │       │   │   │   ├── acmePropertyTypeRef
+│       │       │   │   │   │   └── acmePropertyTypeStructure
+│       │       │   │   │   │       └── acmePropertyTypeString
+│       │       │   │   │   │           ├── Attribute Skip Value ' '
+│       │       │   │   │   │           └── STRING
+│       │       │   │   │   │               └── "string"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── ASSIGN
+│       │       │   │   │   │   └── "="
+│       │       │   │   │   ├── acmePropertyValueDeclaration
+│       │       │   │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   │   └── STRING_LITERAL
+│       │       │   │   │   │       └── ""This role has an attachment.""
+│       │       │   │   │   └── SEMICOLON
+│       │       │   │   │       └── ";"
+│       │       │   │   ├── acmePropertyBlockEntry
+│       │       │   │   │   ├── identifier
+│       │       │   │   │   │   └── IDENTIFIER
+│       │       │   │   │   │       └── "errMsg"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── COLON
+│       │       │   │   │   │   └── ":"
+│       │       │   │   │   ├── acmePropertyTypeRef
+│       │       │   │   │   │   └── acmePropertyTypeStructure
+│       │       │   │   │   │       └── acmePropertyTypeString
+│       │       │   │   │   │           ├── Attribute Skip Value ' '
+│       │       │   │   │   │           └── STRING
+│       │       │   │   │   │               └── "string"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── ASSIGN
+│       │       │   │   │   │   └── "="
+│       │       │   │   │   ├── acmePropertyValueDeclaration
+│       │       │   │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   │   └── STRING_LITERAL
+│       │       │   │   │   │       └── ""The role dangles!""
+│       │       │   │   │   └── SEMICOLON
+│       │       │   │   │       └── ";"
+│       │       │   │   └── PROPEND
+│       │       │   │       └── ">>"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── Attribute Skip Value '&#10;        &#10;    '
+│       │       └── RBRACE
+│       │           └── "}"
+│       ├── acmeComponentTypeDeclaration
+│       │   ├── Attribute Skip Value '&#10;    &#10;    &#10;    '
+│       │   ├── COMPONENT
+│       │   │   └── "Component"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── TYPE
+│       │   │   └── "Type"
+│       │   ├── identifier
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   └── IDENTIFIER
+│       │   │       └── "ClientT"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── ASSIGN
+│       │   │   └── "="
+│       │   └── acmeComponentBody
+│       │       ├── Attribute Skip Value ' '
+│       │       ├── LBRACE
+│       │       │   └── "{"
+│       │       ├── acmePortDeclaration
+│       │       │   ├── Attribute Skip Value '&#10;        '
+│       │       │   ├── PORT
+│       │       │   │   └── "Port"
+│       │       │   ├── identifier
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   └── IDENTIFIER
+│       │       │   │       └── "sendRequest"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── COLON
+│       │       │   │   └── ":"
+│       │       │   ├── acmePortTypeRef
+│       │       │   │   └── identifier
+│       │       │   │       ├── Attribute Skip Value ' '
+│       │       │   │       └── IDENTIFIER
+│       │       │   │           └── "ClientPortT"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── ASSIGN
+│       │       │   │   └── "="
+│       │       │   ├── Attribute Skip Value '  '
+│       │       │   ├── NEW
+│       │       │   │   └── "new"
+│       │       │   ├── acmePortInstantiatedTypeRef
+│       │       │   │   └── identifier
+│       │       │   │       ├── Attribute Skip Value ' '
+│       │       │   │       └── IDENTIFIER
+│       │       │   │           └── "ClientPortT"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── Attribute Skip Value '&#10;        &#10;        &#10;    '
+│       │       └── RBRACE
+│       │           └── "}"
+│       ├── acmeComponentTypeDeclaration
+│       │   ├── Attribute Skip Value '&#10;    &#10;    &#10;    '
+│       │   ├── COMPONENT
+│       │   │   └── "Component"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── TYPE
+│       │   │   └── "Type"
+│       │   ├── identifier
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   └── IDENTIFIER
+│       │   │       └── "ServerT"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── ASSIGN
+│       │   │   └── "="
+│       │   └── acmeComponentBody
+│       │       ├── Attribute Skip Value ' '
+│       │       ├── LBRACE
+│       │       │   └── "{"
+│       │       ├── acmePortDeclaration
+│       │       │   ├── Attribute Skip Value '&#10;        '
+│       │       │   ├── PORT
+│       │       │   │   └── "Port"
+│       │       │   ├── identifier
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   └── IDENTIFIER
+│       │       │   │       └── "receiveRequest"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── COLON
+│       │       │   │   └── ":"
+│       │       │   ├── acmePortTypeRef
+│       │       │   │   └── identifier
+│       │       │   │       ├── Attribute Skip Value ' '
+│       │       │   │       └── IDENTIFIER
+│       │       │   │           └── "ServerPortT"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── ASSIGN
+│       │       │   │   └── "="
+│       │       │   ├── Attribute Skip Value '  '
+│       │       │   ├── NEW
+│       │       │   │   └── "new"
+│       │       │   ├── acmePortInstantiatedTypeRef
+│       │       │   │   └── identifier
+│       │       │   │       ├── Attribute Skip Value ' '
+│       │       │   │       └── IDENTIFIER
+│       │       │   │           └── "ServerPortT"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── acmePropertyDeclaration
+│       │       │   ├── Attribute Skip Value '&#10;        &#10;        &#10;        '
+│       │       │   ├── PROPERTY
+│       │       │   │   └── "Property"
+│       │       │   ├── identifier
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   └── IDENTIFIER
+│       │       │   │       └── "multiThreaded"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── COLON
+│       │       │   │   └── ":"
+│       │       │   ├── acmePropertyTypeRef
+│       │       │   │   └── acmePropertyTypeDeclarationRef
+│       │       │   │       └── identifier
+│       │       │   │           ├── Attribute Skip Value ' '
+│       │       │   │           └── IDENTIFIER
+│       │       │   │               └── "boolean"
+│       │       │   ├── acmePropertyBlock
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   ├── PROPBEGIN
+│       │       │   │   │   └── "<<"
+│       │       │   │   ├── acmePropertyBlockEntry
+│       │       │   │   │   ├── identifier
+│       │       │   │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   │   └── IDENTIFIER
+│       │       │   │   │   │       └── "default"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── COLON
+│       │       │   │   │   │   └── ":"
+│       │       │   │   │   ├── acmePropertyTypeRef
+│       │       │   │   │   │   └── acmePropertyTypeDeclarationRef
+│       │       │   │   │   │       └── identifier
+│       │       │   │   │   │           ├── Attribute Skip Value ' '
+│       │       │   │   │   │           └── IDENTIFIER
+│       │       │   │   │   │               └── "boolean"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── ASSIGN
+│       │       │   │   │   │   └── "="
+│       │       │   │   │   ├── acmePropertyValueDeclaration
+│       │       │   │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   │   └── FALSE
+│       │       │   │   │   │       └── "false"
+│       │       │   │   │   └── SEMICOLON
+│       │       │   │   │       └── ";"
+│       │       │   │   ├── Attribute Skip Value '  '
+│       │       │   │   └── PROPEND
+│       │       │   │       └── ">>"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── acmePropertyDeclaration
+│       │       │   ├── Attribute Skip Value '&#10;        &#10;        '
+│       │       │   ├── PROPERTY
+│       │       │   │   └── "Property"
+│       │       │   ├── identifier
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   └── IDENTIFIER
+│       │       │   │       └── "max-concurrent-requests"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── COLON
+│       │       │   │   └── ":"
+│       │       │   ├── acmePropertyTypeRef
+│       │       │   │   └── acmePropertyTypeStructure
+│       │       │   │       └── acmePropertyTypeInt
+│       │       │   │           ├── Attribute Skip Value ' '
+│       │       │   │           └── INT
+│       │       │   │               └── "int"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── Attribute Skip Value '&#10;        &#10;    '
+│       │       └── RBRACE
+│       │           └── "}"
+│       ├── acmeConnectorTypeDeclaration
+│       │   ├── Attribute Skip Value '&#10;    &#10;    &#10;    '
+│       │   ├── CONNECTOR
+│       │   │   └── "Connector"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── TYPE
+│       │   │   └── "Type"
+│       │   ├── identifier
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   └── IDENTIFIER
+│       │   │       └── "CSConnT"
+│       │   ├── Attribute Skip Value ' '
+│       │   ├── ASSIGN
+│       │   │   └── "="
+│       │   └── acmeConnectorBody
+│       │       ├── Attribute Skip Value ' '
+│       │       ├── LBRACE
+│       │       │   └── "{"
+│       │       ├── acmeRoleDeclaration
+│       │       │   ├── Attribute Skip Value '&#10;        '
+│       │       │   ├── ROLE
+│       │       │   │   └── "Role"
+│       │       │   ├── identifier
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   └── IDENTIFIER
+│       │       │   │       └── "clientSide"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── COLON
+│       │       │   │   └── ":"
+│       │       │   ├── acmeRoleTypeRef
+│       │       │   │   └── identifier
+│       │       │   │       ├── Attribute Skip Value ' '
+│       │       │   │       └── IDENTIFIER
+│       │       │   │           └── "clientSideRoleT"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── ASSIGN
+│       │       │   │   └── "="
+│       │       │   ├── Attribute Skip Value '  '
+│       │       │   ├── NEW
+│       │       │   │   └── "new"
+│       │       │   ├── acmeRoleInstantiatedTypeRef
+│       │       │   │   └── identifier
+│       │       │   │       ├── Attribute Skip Value ' '
+│       │       │   │       └── IDENTIFIER
+│       │       │   │           └── "clientSideRoleT"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── acmeRoleDeclaration
+│       │       │   ├── Attribute Skip Value '&#10;        &#10;        &#10;        '
+│       │       │   ├── ROLE
+│       │       │   │   └── "Role"
+│       │       │   ├── identifier
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   └── IDENTIFIER
+│       │       │   │       └── "serverSide"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── COLON
+│       │       │   │   └── ":"
+│       │       │   ├── acmeRoleTypeRef
+│       │       │   │   └── identifier
+│       │       │   │       ├── Attribute Skip Value ' '
+│       │       │   │       └── IDENTIFIER
+│       │       │   │           └── "serverSideRoleT"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── ASSIGN
+│       │       │   │   └── "="
+│       │       │   ├── Attribute Skip Value '  '
+│       │       │   ├── NEW
+│       │       │   │   └── "new"
+│       │       │   ├── acmeRoleInstantiatedTypeRef
+│       │       │   │   └── identifier
+│       │       │   │       ├── Attribute Skip Value ' '
+│       │       │   │       └── IDENTIFIER
+│       │       │   │           └── "serverSideRoleT"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── acmePropertyDeclaration
+│       │       │   ├── Attribute Skip Value '&#10;        &#10;        &#10;        '
+│       │       │   ├── PROPERTY
+│       │       │   │   └── "Property"
+│       │       │   ├── identifier
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   └── IDENTIFIER
+│       │       │   │       └── "blocking"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── COLON
+│       │       │   │   └── ":"
+│       │       │   ├── acmePropertyTypeRef
+│       │       │   │   └── acmePropertyTypeDeclarationRef
+│       │       │   │       └── identifier
+│       │       │   │           ├── Attribute Skip Value ' '
+│       │       │   │           └── IDENTIFIER
+│       │       │   │               └── "boolean"
+│       │       │   ├── acmePropertyBlock
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   ├── PROPBEGIN
+│       │       │   │   │   └── "<<"
+│       │       │   │   ├── acmePropertyBlockEntry
+│       │       │   │   │   ├── identifier
+│       │       │   │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   │   └── IDENTIFIER
+│       │       │   │   │   │       └── "default"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── COLON
+│       │       │   │   │   │   └── ":"
+│       │       │   │   │   ├── acmePropertyTypeRef
+│       │       │   │   │   │   └── acmePropertyTypeDeclarationRef
+│       │       │   │   │   │       └── identifier
+│       │       │   │   │   │           ├── Attribute Skip Value ' '
+│       │       │   │   │   │           └── IDENTIFIER
+│       │       │   │   │   │               └── "boolean"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── ASSIGN
+│       │       │   │   │   │   └── "="
+│       │       │   │   │   ├── acmePropertyValueDeclaration
+│       │       │   │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   │   └── TRUE
+│       │       │   │   │   │       └── "true"
+│       │       │   │   │   └── SEMICOLON
+│       │       │   │   │       └── ";"
+│       │       │   │   ├── Attribute Skip Value '  '
+│       │       │   │   └── PROPEND
+│       │       │   │       └── ">>"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── acmePropertyDeclaration
+│       │       │   ├── Attribute Skip Value '&#10;        &#10;        '
+│       │       │   ├── PROPERTY
+│       │       │   │   └── "Property"
+│       │       │   ├── identifier
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   └── IDENTIFIER
+│       │       │   │       └── "protocol"
+│       │       │   ├── Attribute Skip Value ' '
+│       │       │   ├── COLON
+│       │       │   │   └── ":"
+│       │       │   ├── acmePropertyTypeRef
+│       │       │   │   └── acmePropertyTypeStructure
+│       │       │   │       └── acmePropertyTypeString
+│       │       │   │           ├── Attribute Skip Value ' '
+│       │       │   │           └── STRING
+│       │       │   │               └── "string"
+│       │       │   ├── acmePropertyBlock
+│       │       │   │   ├── Attribute Skip Value ' '
+│       │       │   │   ├── PROPBEGIN
+│       │       │   │   │   └── "<<"
+│       │       │   │   ├── acmePropertyBlockEntry
+│       │       │   │   │   ├── identifier
+│       │       │   │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   │   └── IDENTIFIER
+│       │       │   │   │   │       └── "default"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── COLON
+│       │       │   │   │   │   └── ":"
+│       │       │   │   │   ├── acmePropertyTypeRef
+│       │       │   │   │   │   └── acmePropertyTypeStructure
+│       │       │   │   │   │       └── acmePropertyTypeString
+│       │       │   │   │   │           ├── Attribute Skip Value ' '
+│       │       │   │   │   │           └── STRING
+│       │       │   │   │   │               └── "string"
+│       │       │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   ├── ASSIGN
+│       │       │   │   │   │   └── "="
+│       │       │   │   │   ├── acmePropertyValueDeclaration
+│       │       │   │   │   │   ├── Attribute Skip Value ' '
+│       │       │   │   │   │   └── STRING_LITERAL
+│       │       │   │   │   │       └── """"
+│       │       │   │   │   └── SEMICOLON
+│       │       │   │   │       └── ";"
+│       │       │   │   ├── Attribute Skip Value '  '
+│       │       │   │   └── PROPEND
+│       │       │   │       └── ">>"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── designRule
+│       │       │   ├── Attribute Skip Value '&#10;        &#10;        '
+│       │       │   ├── INVARIANT
+│       │       │   │   └── "invariant"
+│       │       │   ├── designRuleExpression
+│       │       │   │   └── aSTDRImpliesExpression
+│       │       │   │       └── dRIffExpression
+│       │       │   │           └── dRAndExpression
+│       │       │   │               └── dRNegateExpression
+│       │       │   │                   └── dREqualityExpression
+│       │       │   │                       ├── dRRelationalExpression
+│       │       │   │                       │   └── dRAdditiveExpression
+│       │       │   │                       │       └── dRMultiplicativeExpression
+│       │       │   │                       │           └── dRNegativeExpression
+│       │       │   │                       │               └── primitiveExpression
+│       │       │   │                       │                   └── reference
+│       │       │   │                       │                       ├── identifier
+│       │       │   │                       │                       │   ├── Attribute Skip Value ' '
+│       │       │   │                       │                       │   └── IDENTIFIER
+│       │       │   │                       │                       │       └── "size"
+│       │       │   │                       │                       └── actualParams
+│       │       │   │                       │                           ├── LPAREN
+│       │       │   │                       │                           │   └── "("
+│       │       │   │                       │                           ├── designRuleExpression
+│       │       │   │                       │                           │   └── aSTDRImpliesExpression
+│       │       │   │                       │                           │       └── dRIffExpression
+│       │       │   │                       │                           │           └── dRAndExpression
+│       │       │   │                       │                           │               └── dRNegateExpression
+│       │       │   │                       │                           │                   └── dREqualityExpression
+│       │       │   │                       │                           │                       └── dRRelationalExpression
+│       │       │   │                       │                           │                           └── dRAdditiveExpression
+│       │       │   │                       │                           │                               └── dRMultiplicativeExpression
+│       │       │   │                       │                           │                                   └── dRNegativeExpression
+│       │       │   │                       │                           │                                       └── primitiveExpression
+│       │       │   │                       │                           │                                           └── reference
+│       │       │   │                       │                           │                                               ├── identifier
+│       │       │   │                       │                           │                                               │   └── IDENTIFIER
+│       │       │   │                       │                           │                                               │       └── "self"
+│       │       │   │                       │                           │                                               ├── DOT
+│       │       │   │                       │                           │                                               │   └── "."
+│       │       │   │                       │                           │                                               └── setReference
+│       │       │   │                       │                           │                                                   └── ROLES
+│       │       │   │                       │                           │                                                       └── "roles"
+│       │       │   │                       │                           └── RPAREN
+│       │       │   │                       │                               └── ")"
+│       │       │   │                       ├── Attribute Skip Value ' '
+│       │       │   │                       ├── EQ
+│       │       │   │                       │   └── "=="
+│       │       │   │                       └── dRRelationalExpression
+│       │       │   │                           └── dRAdditiveExpression
+│       │       │   │                               └── dRMultiplicativeExpression
+│       │       │   │                                   └── dRNegativeExpression
+│       │       │   │                                       └── primitiveExpression
+│       │       │   │                                           └── literalConstant
+│       │       │   │                                               ├── Attribute Skip Value ' '
+│       │       │   │                                               └── INTEGER_LITERAL
+│       │       │   │                                                   └── "2"
+│       │       │   └── SEMICOLON
+│       │       │       └── ";"
+│       │       ├── Attribute Skip Value '&#10;        &#10;    '
+│       │       └── RBRACE
+│       │           └── "}"
+│       ├── designRule
+│       │   ├── Attribute Skip Value '&#10;    &#10;    &#10;    // If two components are connected, one must be a ClientT and the other ServerT &#10;    // &#10; &#10;    // &#10; &#10;    // &#10; &#10;    '
+│       │   ├── INVARIANT
+│       │   │   └── "invariant"
+│       │   ├── designRuleExpression
+│       │   │   └── aSTDRImpliesExpression
+│       │   │       └── dRIffExpression
+│       │   │           └── dRAndExpression
+│       │   │               └── dRNegateExpression
+│       │   │                   └── dREqualityExpression
+│       │   │                       └── dRRelationalExpression
+│       │   │                           └── dRAdditiveExpression
+│       │   │                               └── dRMultiplicativeExpression
+│       │   │                                   └── dRNegativeExpression
+│       │   │                                       └── primitiveExpression
+│       │   │                                           └── quantifiedExpression
+│       │   │                                               ├── Attribute Skip Value ' '
+│       │   │                                               ├── FORALL
+│       │   │                                               │   └── "Forall"
+│       │   │                                               ├── variableSetDeclaration
+│       │   │                                               │   ├── identifier
+│       │   │                                               │   │   ├── Attribute Skip Value ' '
+│       │   │                                               │   │   └── IDENTIFIER
+│       │   │                                               │   │       └── "c1"
+│       │   │                                               │   ├── Attribute Skip Value ' '
+│       │   │                                               │   ├── COLON
+│       │   │                                               │   │   └── ":"
+│       │   │                                               │   ├── acmeTypeRef
+│       │   │                                               │   │   ├── Attribute Skip Value ' '
+│       │   │                                               │   │   └── COMPONENT
+│       │   │                                               │   │       └── "component"
+│       │   │                                               │   ├── Attribute Skip Value ' '
+│       │   │                                               │   ├── IN
+│       │   │                                               │   │   └── "in"
+│       │   │                                               │   └── reference
+│       │   │                                               │       ├── identifier
+│       │   │                                               │       │   ├── Attribute Skip Value ' '
+│       │   │                                               │       │   └── IDENTIFIER
+│       │   │                                               │       │       └── "self"
+│       │   │                                               │       ├── DOT
+│       │   │                                               │       │   └── "."
+│       │   │                                               │       └── setReference
+│       │   │                                               │           └── COMPONENTS
+│       │   │                                               │               └── "components"
+│       │   │                                               ├── Attribute Skip Value ' '
+│       │   │                                               ├── BIT_OR
+│       │   │                                               │   └── "|"
+│       │   │                                               └── designRuleExpression
+│       │   │                                                   └── aSTDRImpliesExpression
+│       │   │                                                       └── dRIffExpression
+│       │   │                                                           └── dRAndExpression
+│       │   │                                                               └── dRNegateExpression
+│       │   │                                                                   └── dREqualityExpression
+│       │   │                                                                       └── dRRelationalExpression
+│       │   │                                                                           └── dRAdditiveExpression
+│       │   │                                                                               └── dRMultiplicativeExpression
+│       │   │                                                                                   └── dRNegativeExpression
+│       │   │                                                                                       └── primitiveExpression
+│       │   │                                                                                           └── quantifiedExpression
+│       │   │                                                                                               ├── Attribute Skip Value ' &#10;        '
+│       │   │                                                                                               ├── FORALL
+│       │   │                                                                                               │   └── "Forall"
+│       │   │                                                                                               ├── variableSetDeclaration
+│       │   │                                                                                               │   ├── identifier
+│       │   │                                                                                               │   │   ├── Attribute Skip Value ' '
+│       │   │                                                                                               │   │   └── IDENTIFIER
+│       │   │                                                                                               │   │       └── "c2"
+│       │   │                                                                                               │   ├── Attribute Skip Value ' '
+│       │   │                                                                                               │   ├── COLON
+│       │   │                                                                                               │   │   └── ":"
+│       │   │                                                                                               │   ├── acmeTypeRef
+│       │   │                                                                                               │   │   ├── Attribute Skip Value ' '
+│       │   │                                                                                               │   │   └── COMPONENT
+│       │   │                                                                                               │   │       └── "component"
+│       │   │                                                                                               │   ├── Attribute Skip Value ' '
+│       │   │                                                                                               │   ├── IN
+│       │   │                                                                                               │   │   └── "in"
+│       │   │                                                                                               │   └── reference
+│       │   │                                                                                               │       ├── identifier
+│       │   │                                                                                               │       │   ├── Attribute Skip Value ' '
+│       │   │                                                                                               │       │   └── IDENTIFIER
+│       │   │                                                                                               │       │       └── "self"
+│       │   │                                                                                               │       ├── DOT
+│       │   │                                                                                               │       │   └── "."
+│       │   │                                                                                               │       └── setReference
+│       │   │                                                                                               │           └── COMPONENTS
+│       │   │                                                                                               │               └── "components"
+│       │   │                                                                                               ├── Attribute Skip Value ' '
+│       │   │                                                                                               ├── BIT_OR
+│       │   │                                                                                               │   └── "|"
+│       │   │                                                                                               └── designRuleExpression
+│       │   │                                                                                                   ├── aSTDRImpliesExpression
+│       │   │                                                                                                   │   ├── dRIffExpression
+│       │   │                                                                                                   │   │   └── dRAndExpression
+│       │   │                                                                                                   │   │       └── dRNegateExpression
+│       │   │                                                                                                   │   │           └── dREqualityExpression
+│       │   │                                                                                                   │   │               └── dRRelationalExpression
+│       │   │                                                                                                   │   │                   └── dRAdditiveExpression
+│       │   │                                                                                                   │   │                       └── dRMultiplicativeExpression
+│       │   │                                                                                                   │   │                           └── dRNegativeExpression
+│       │   │                                                                                                   │   │                               └── primitiveExpression
+│       │   │                                                                                                   │   │                                   └── reference
+│       │   │                                                                                                   │   │                                       ├── identifier
+│       │   │                                                                                                   │   │                                       │   ├── Attribute Skip Value ' &#10;            '
+│       │   │                                                                                                   │   │                                       │   └── IDENTIFIER
+│       │   │                                                                                                   │   │                                       │       └── "connected"
+│       │   │                                                                                                   │   │                                       └── actualParams
+│       │   │                                                                                                   │   │                                           ├── LPAREN
+│       │   │                                                                                                   │   │                                           │   └── "("
+│       │   │                                                                                                   │   │                                           ├── designRuleExpression
+│       │   │                                                                                                   │   │                                           │   └── aSTDRImpliesExpression
+│       │   │                                                                                                   │   │                                           │       └── dRIffExpression
+│       │   │                                                                                                   │   │                                           │           └── dRAndExpression
+│       │   │                                                                                                   │   │                                           │               └── dRNegateExpression
+│       │   │                                                                                                   │   │                                           │                   └── dREqualityExpression
+│       │   │                                                                                                   │   │                                           │                       └── dRRelationalExpression
+│       │   │                                                                                                   │   │                                           │                           └── dRAdditiveExpression
+│       │   │                                                                                                   │   │                                           │                               └── dRMultiplicativeExpression
+│       │   │                                                                                                   │   │                                           │                                   └── dRNegativeExpression
+│       │   │                                                                                                   │   │                                           │                                       └── primitiveExpression
+│       │   │                                                                                                   │   │                                           │                                           └── reference
+│       │   │                                                                                                   │   │                                           │                                               └── identifier
+│       │   │                                                                                                   │   │                                           │                                                   └── IDENTIFIER
+│       │   │                                                                                                   │   │                                           │                                                       └── "c1"
+│       │   │                                                                                                   │   │                                           ├── COMMA
+│       │   │                                                                                                   │   │                                           │   └── ","
+│       │   │                                                                                                   │   │                                           ├── designRuleExpression
+│       │   │                                                                                                   │   │                                           │   └── aSTDRImpliesExpression
+│       │   │                                                                                                   │   │                                           │       └── dRIffExpression
+│       │   │                                                                                                   │   │                                           │           └── dRAndExpression
+│       │   │                                                                                                   │   │                                           │               └── dRNegateExpression
+│       │   │                                                                                                   │   │                                           │                   └── dREqualityExpression
+│       │   │                                                                                                   │   │                                           │                       └── dRRelationalExpression
+│       │   │                                                                                                   │   │                                           │                           └── dRAdditiveExpression
+│       │   │                                                                                                   │   │                                           │                               └── dRMultiplicativeExpression
+│       │   │                                                                                                   │   │                                           │                                   └── dRNegativeExpression
+│       │   │                                                                                                   │   │                                           │                                       └── primitiveExpression
+│       │   │                                                                                                   │   │                                           │                                           └── reference
+│       │   │                                                                                                   │   │                                           │                                               └── identifier
+│       │   │                                                                                                   │   │                                           │                                                   ├── Attribute Skip Value ' '
+│       │   │                                                                                                   │   │                                           │                                                   └── IDENTIFIER
+│       │   │                                                                                                   │   │                                           │                                                       └── "c2"
+│       │   │                                                                                                   │   │                                           └── RPAREN
+│       │   │                                                                                                   │   │                                               └── ")"
+│       │   │                                                                                                   │   ├── Attribute Skip Value ' '
+│       │   │                                                                                                   │   ├── IMPLIES
+│       │   │                                                                                                   │   │   └── "->"
+│       │   │                                                                                                   │   └── dRIffExpression
+│       │   │                                                                                                   │       └── dRAndExpression
+│       │   │                                                                                                   │           └── dRNegateExpression
+│       │   │                                                                                                   │               └── dREqualityExpression
+│       │   │                                                                                                   │                   └── dRRelationalExpression
+│       │   │                                                                                                   │                       └── dRAdditiveExpression
+│       │   │                                                                                                   │                           └── dRMultiplicativeExpression
+│       │   │                                                                                                   │                               └── dRNegativeExpression
+│       │   │                                                                                                   │                                   └── primitiveExpression
+│       │   │                                                                                                   │                                       └── parentheticalExpression
+│       │   │                                                                                                   │                                           ├── Attribute Skip Value ' '
+│       │   │                                                                                                   │                                           ├── LPAREN
+│       │   │                                                                                                   │                                           │   └── "("
+│       │   │                                                                                                   │                                           ├── designRuleExpression
+│       │   │                                                                                                   │                                           │   └── aSTDRImpliesExpression
+│       │   │                                                                                                   │                                           │       └── dRIffExpression
+│       │   │                                                                                                   │                                           │           └── dRAndExpression
+│       │   │                                                                                                   │                                           │               ├── dRNegateExpression
+│       │   │                                                                                                   │                                           │               │   └── dREqualityExpression
+│       │   │                                                                                                   │                                           │               │       └── dRRelationalExpression
+│       │   │                                                                                                   │                                           │               │           └── dRAdditiveExpression
+│       │   │                                                                                                   │                                           │               │               └── dRMultiplicativeExpression
+│       │   │                                                                                                   │                                           │               │                   └── dRNegativeExpression
+│       │   │                                                                                                   │                                           │               │                       └── primitiveExpression
+│       │   │                                                                                                   │                                           │               │                           └── reference
+│       │   │                                                                                                   │                                           │               │                               ├── identifier
+│       │   │                                                                                                   │                                           │               │                               │   └── IDENTIFIER
+│       │   │                                                                                                   │                                           │               │                               │       └── "declaresType"
+│       │   │                                                                                                   │                                           │               │                               └── actualParams
+│       │   │                                                                                                   │                                           │               │                                   ├── LPAREN
+│       │   │                                                                                                   │                                           │               │                                   │   └── "("
+│       │   │                                                                                                   │                                           │               │                                   ├── designRuleExpression
+│       │   │                                                                                                   │                                           │               │                                   │   └── aSTDRImpliesExpression
+│       │   │                                                                                                   │                                           │               │                                   │       └── dRIffExpression
+│       │   │                                                                                                   │                                           │               │                                   │           └── dRAndExpression
+│       │   │                                                                                                   │                                           │               │                                   │               └── dRNegateExpression
+│       │   │                                                                                                   │                                           │               │                                   │                   └── dREqualityExpression
+│       │   │                                                                                                   │                                           │               │                                   │                       └── dRRelationalExpression
+│       │   │                                                                                                   │                                           │               │                                   │                           └── dRAdditiveExpression
+│       │   │                                                                                                   │                                           │               │                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                                                                   │                                           │               │                                   │                                   └── dRNegativeExpression
+│       │   │                                                                                                   │                                           │               │                                   │                                       └── primitiveExpression
+│       │   │                                                                                                   │                                           │               │                                   │                                           └── reference
+│       │   │                                                                                                   │                                           │               │                                   │                                               └── identifier
+│       │   │                                                                                                   │                                           │               │                                   │                                                   └── IDENTIFIER
+│       │   │                                                                                                   │                                           │               │                                   │                                                       └── "c1"
+│       │   │                                                                                                   │                                           │               │                                   ├── COMMA
+│       │   │                                                                                                   │                                           │               │                                   │   └── ","
+│       │   │                                                                                                   │                                           │               │                                   ├── designRuleExpression
+│       │   │                                                                                                   │                                           │               │                                   │   └── aSTDRImpliesExpression
+│       │   │                                                                                                   │                                           │               │                                   │       └── dRIffExpression
+│       │   │                                                                                                   │                                           │               │                                   │           └── dRAndExpression
+│       │   │                                                                                                   │                                           │               │                                   │               └── dRNegateExpression
+│       │   │                                                                                                   │                                           │               │                                   │                   └── dREqualityExpression
+│       │   │                                                                                                   │                                           │               │                                   │                       └── dRRelationalExpression
+│       │   │                                                                                                   │                                           │               │                                   │                           └── dRAdditiveExpression
+│       │   │                                                                                                   │                                           │               │                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                                                                   │                                           │               │                                   │                                   └── dRNegativeExpression
+│       │   │                                                                                                   │                                           │               │                                   │                                       └── primitiveExpression
+│       │   │                                                                                                   │                                           │               │                                   │                                           └── reference
+│       │   │                                                                                                   │                                           │               │                                   │                                               └── identifier
+│       │   │                                                                                                   │                                           │               │                                   │                                                   ├── Attribute Skip Value ' '
+│       │   │                                                                                                   │                                           │               │                                   │                                                   └── IDENTIFIER
+│       │   │                                                                                                   │                                           │               │                                   │                                                       └── "ClientT"
+│       │   │                                                                                                   │                                           │               │                                   └── RPAREN
+│       │   │                                                                                                   │                                           │               │                                       └── ")"
+│       │   │                                                                                                   │                                           │               ├── Attribute Skip Value ' '
+│       │   │                                                                                                   │                                           │               ├── AND
+│       │   │                                                                                                   │                                           │               │   └── "AND"
+│       │   │                                                                                                   │                                           │               └── dRNegateExpression
+│       │   │                                                                                                   │                                           │                   └── dREqualityExpression
+│       │   │                                                                                                   │                                           │                       └── dRRelationalExpression
+│       │   │                                                                                                   │                                           │                           └── dRAdditiveExpression
+│       │   │                                                                                                   │                                           │                               └── dRMultiplicativeExpression
+│       │   │                                                                                                   │                                           │                                   └── dRNegativeExpression
+│       │   │                                                                                                   │                                           │                                       └── primitiveExpression
+│       │   │                                                                                                   │                                           │                                           └── reference
+│       │   │                                                                                                   │                                           │                                               ├── identifier
+│       │   │                                                                                                   │                                           │                                               │   ├── Attribute Skip Value ' '
+│       │   │                                                                                                   │                                           │                                               │   └── IDENTIFIER
+│       │   │                                                                                                   │                                           │                                               │       └── "declaresType"
+│       │   │                                                                                                   │                                           │                                               └── actualParams
+│       │   │                                                                                                   │                                           │                                                   ├── LPAREN
+│       │   │                                                                                                   │                                           │                                                   │   └── "("
+│       │   │                                                                                                   │                                           │                                                   ├── designRuleExpression
+│       │   │                                                                                                   │                                           │                                                   │   └── aSTDRImpliesExpression
+│       │   │                                                                                                   │                                           │                                                   │       └── dRIffExpression
+│       │   │                                                                                                   │                                           │                                                   │           └── dRAndExpression
+│       │   │                                                                                                   │                                           │                                                   │               └── dRNegateExpression
+│       │   │                                                                                                   │                                           │                                                   │                   └── dREqualityExpression
+│       │   │                                                                                                   │                                           │                                                   │                       └── dRRelationalExpression
+│       │   │                                                                                                   │                                           │                                                   │                           └── dRAdditiveExpression
+│       │   │                                                                                                   │                                           │                                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                                                                   │                                           │                                                   │                                   └── dRNegativeExpression
+│       │   │                                                                                                   │                                           │                                                   │                                       └── primitiveExpression
+│       │   │                                                                                                   │                                           │                                                   │                                           └── reference
+│       │   │                                                                                                   │                                           │                                                   │                                               └── identifier
+│       │   │                                                                                                   │                                           │                                                   │                                                   └── IDENTIFIER
+│       │   │                                                                                                   │                                           │                                                   │                                                       └── "c2"
+│       │   │                                                                                                   │                                           │                                                   ├── COMMA
+│       │   │                                                                                                   │                                           │                                                   │   └── ","
+│       │   │                                                                                                   │                                           │                                                   ├── designRuleExpression
+│       │   │                                                                                                   │                                           │                                                   │   └── aSTDRImpliesExpression
+│       │   │                                                                                                   │                                           │                                                   │       └── dRIffExpression
+│       │   │                                                                                                   │                                           │                                                   │           └── dRAndExpression
+│       │   │                                                                                                   │                                           │                                                   │               └── dRNegateExpression
+│       │   │                                                                                                   │                                           │                                                   │                   └── dREqualityExpression
+│       │   │                                                                                                   │                                           │                                                   │                       └── dRRelationalExpression
+│       │   │                                                                                                   │                                           │                                                   │                           └── dRAdditiveExpression
+│       │   │                                                                                                   │                                           │                                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                                                                   │                                           │                                                   │                                   └── dRNegativeExpression
+│       │   │                                                                                                   │                                           │                                                   │                                       └── primitiveExpression
+│       │   │                                                                                                   │                                           │                                                   │                                           └── reference
+│       │   │                                                                                                   │                                           │                                                   │                                               └── identifier
+│       │   │                                                                                                   │                                           │                                                   │                                                   ├── Attribute Skip Value ' '
+│       │   │                                                                                                   │                                           │                                                   │                                                   └── IDENTIFIER
+│       │   │                                                                                                   │                                           │                                                   │                                                       └── "ServerT"
+│       │   │                                                                                                   │                                           │                                                   └── RPAREN
+│       │   │                                                                                                   │                                           │                                                       └── ")"
+│       │   │                                                                                                   │                                           └── RPAREN
+│       │   │                                                                                                   │                                               └── ")"
+│       │   │                                                                                                   ├── Attribute Skip Value ' '
+│       │   │                                                                                                   ├── OR
+│       │   │                                                                                                   │   └── "OR"
+│       │   │                                                                                                   └── aSTDRImpliesExpression
+│       │   │                                                                                                       └── dRIffExpression
+│       │   │                                                                                                           └── dRAndExpression
+│       │   │                                                                                                               └── dRNegateExpression
+│       │   │                                                                                                                   └── dREqualityExpression
+│       │   │                                                                                                                       └── dRRelationalExpression
+│       │   │                                                                                                                           └── dRAdditiveExpression
+│       │   │                                                                                                                               └── dRMultiplicativeExpression
+│       │   │                                                                                                                                   └── dRNegativeExpression
+│       │   │                                                                                                                                       └── primitiveExpression
+│       │   │                                                                                                                                           └── parentheticalExpression
+│       │   │                                                                                                                                               ├── Attribute Skip Value ' '
+│       │   │                                                                                                                                               ├── LPAREN
+│       │   │                                                                                                                                               │   └── "("
+│       │   │                                                                                                                                               ├── designRuleExpression
+│       │   │                                                                                                                                               │   └── aSTDRImpliesExpression
+│       │   │                                                                                                                                               │       └── dRIffExpression
+│       │   │                                                                                                                                               │           └── dRAndExpression
+│       │   │                                                                                                                                               │               ├── dRNegateExpression
+│       │   │                                                                                                                                               │               │   └── dREqualityExpression
+│       │   │                                                                                                                                               │               │       └── dRRelationalExpression
+│       │   │                                                                                                                                               │               │           └── dRAdditiveExpression
+│       │   │                                                                                                                                               │               │               └── dRMultiplicativeExpression
+│       │   │                                                                                                                                               │               │                   └── dRNegativeExpression
+│       │   │                                                                                                                                               │               │                       └── primitiveExpression
+│       │   │                                                                                                                                               │               │                           └── reference
+│       │   │                                                                                                                                               │               │                               ├── identifier
+│       │   │                                                                                                                                               │               │                               │   └── IDENTIFIER
+│       │   │                                                                                                                                               │               │                               │       └── "declaresType"
+│       │   │                                                                                                                                               │               │                               └── actualParams
+│       │   │                                                                                                                                               │               │                                   ├── LPAREN
+│       │   │                                                                                                                                               │               │                                   │   └── "("
+│       │   │                                                                                                                                               │               │                                   ├── designRuleExpression
+│       │   │                                                                                                                                               │               │                                   │   └── aSTDRImpliesExpression
+│       │   │                                                                                                                                               │               │                                   │       └── dRIffExpression
+│       │   │                                                                                                                                               │               │                                   │           └── dRAndExpression
+│       │   │                                                                                                                                               │               │                                   │               └── dRNegateExpression
+│       │   │                                                                                                                                               │               │                                   │                   └── dREqualityExpression
+│       │   │                                                                                                                                               │               │                                   │                       └── dRRelationalExpression
+│       │   │                                                                                                                                               │               │                                   │                           └── dRAdditiveExpression
+│       │   │                                                                                                                                               │               │                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                                                                                                               │               │                                   │                                   └── dRNegativeExpression
+│       │   │                                                                                                                                               │               │                                   │                                       └── primitiveExpression
+│       │   │                                                                                                                                               │               │                                   │                                           └── reference
+│       │   │                                                                                                                                               │               │                                   │                                               └── identifier
+│       │   │                                                                                                                                               │               │                                   │                                                   └── IDENTIFIER
+│       │   │                                                                                                                                               │               │                                   │                                                       └── "c1"
+│       │   │                                                                                                                                               │               │                                   ├── COMMA
+│       │   │                                                                                                                                               │               │                                   │   └── ","
+│       │   │                                                                                                                                               │               │                                   ├── designRuleExpression
+│       │   │                                                                                                                                               │               │                                   │   └── aSTDRImpliesExpression
+│       │   │                                                                                                                                               │               │                                   │       └── dRIffExpression
+│       │   │                                                                                                                                               │               │                                   │           └── dRAndExpression
+│       │   │                                                                                                                                               │               │                                   │               └── dRNegateExpression
+│       │   │                                                                                                                                               │               │                                   │                   └── dREqualityExpression
+│       │   │                                                                                                                                               │               │                                   │                       └── dRRelationalExpression
+│       │   │                                                                                                                                               │               │                                   │                           └── dRAdditiveExpression
+│       │   │                                                                                                                                               │               │                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                                                                                                               │               │                                   │                                   └── dRNegativeExpression
+│       │   │                                                                                                                                               │               │                                   │                                       └── primitiveExpression
+│       │   │                                                                                                                                               │               │                                   │                                           └── reference
+│       │   │                                                                                                                                               │               │                                   │                                               └── identifier
+│       │   │                                                                                                                                               │               │                                   │                                                   ├── Attribute Skip Value ' '
+│       │   │                                                                                                                                               │               │                                   │                                                   └── IDENTIFIER
+│       │   │                                                                                                                                               │               │                                   │                                                       └── "ServerT"
+│       │   │                                                                                                                                               │               │                                   └── RPAREN
+│       │   │                                                                                                                                               │               │                                       └── ")"
+│       │   │                                                                                                                                               │               ├── Attribute Skip Value ' '
+│       │   │                                                                                                                                               │               ├── AND
+│       │   │                                                                                                                                               │               │   └── "AND"
+│       │   │                                                                                                                                               │               └── dRNegateExpression
+│       │   │                                                                                                                                               │                   └── dREqualityExpression
+│       │   │                                                                                                                                               │                       └── dRRelationalExpression
+│       │   │                                                                                                                                               │                           └── dRAdditiveExpression
+│       │   │                                                                                                                                               │                               └── dRMultiplicativeExpression
+│       │   │                                                                                                                                               │                                   └── dRNegativeExpression
+│       │   │                                                                                                                                               │                                       └── primitiveExpression
+│       │   │                                                                                                                                               │                                           └── reference
+│       │   │                                                                                                                                               │                                               ├── identifier
+│       │   │                                                                                                                                               │                                               │   ├── Attribute Skip Value ' '
+│       │   │                                                                                                                                               │                                               │   └── IDENTIFIER
+│       │   │                                                                                                                                               │                                               │       └── "declaresType"
+│       │   │                                                                                                                                               │                                               └── actualParams
+│       │   │                                                                                                                                               │                                                   ├── LPAREN
+│       │   │                                                                                                                                               │                                                   │   └── "("
+│       │   │                                                                                                                                               │                                                   ├── designRuleExpression
+│       │   │                                                                                                                                               │                                                   │   └── aSTDRImpliesExpression
+│       │   │                                                                                                                                               │                                                   │       └── dRIffExpression
+│       │   │                                                                                                                                               │                                                   │           └── dRAndExpression
+│       │   │                                                                                                                                               │                                                   │               └── dRNegateExpression
+│       │   │                                                                                                                                               │                                                   │                   └── dREqualityExpression
+│       │   │                                                                                                                                               │                                                   │                       └── dRRelationalExpression
+│       │   │                                                                                                                                               │                                                   │                           └── dRAdditiveExpression
+│       │   │                                                                                                                                               │                                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                                                                                                               │                                                   │                                   └── dRNegativeExpression
+│       │   │                                                                                                                                               │                                                   │                                       └── primitiveExpression
+│       │   │                                                                                                                                               │                                                   │                                           └── reference
+│       │   │                                                                                                                                               │                                                   │                                               └── identifier
+│       │   │                                                                                                                                               │                                                   │                                                   └── IDENTIFIER
+│       │   │                                                                                                                                               │                                                   │                                                       └── "c2"
+│       │   │                                                                                                                                               │                                                   ├── COMMA
+│       │   │                                                                                                                                               │                                                   │   └── ","
+│       │   │                                                                                                                                               │                                                   ├── designRuleExpression
+│       │   │                                                                                                                                               │                                                   │   └── aSTDRImpliesExpression
+│       │   │                                                                                                                                               │                                                   │       └── dRIffExpression
+│       │   │                                                                                                                                               │                                                   │           └── dRAndExpression
+│       │   │                                                                                                                                               │                                                   │               └── dRNegateExpression
+│       │   │                                                                                                                                               │                                                   │                   └── dREqualityExpression
+│       │   │                                                                                                                                               │                                                   │                       └── dRRelationalExpression
+│       │   │                                                                                                                                               │                                                   │                           └── dRAdditiveExpression
+│       │   │                                                                                                                                               │                                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                                                                                                               │                                                   │                                   └── dRNegativeExpression
+│       │   │                                                                                                                                               │                                                   │                                       └── primitiveExpression
+│       │   │                                                                                                                                               │                                                   │                                           └── reference
+│       │   │                                                                                                                                               │                                                   │                                               └── identifier
+│       │   │                                                                                                                                               │                                                   │                                                   ├── Attribute Skip Value ' '
+│       │   │                                                                                                                                               │                                                   │                                                   └── IDENTIFIER
+│       │   │                                                                                                                                               │                                                   │                                                       └── "ClientT"
+│       │   │                                                                                                                                               │                                                   └── RPAREN
+│       │   │                                                                                                                                               │                                                       └── ")"
+│       │   │                                                                                                                                               └── RPAREN
+│       │   │                                                                                                                                                   └── ")"
+│       │   ├── acmePropertyBlock
+│       │   │   ├── Attribute Skip Value '  '
+│       │   │   ├── PROPBEGIN
+│       │   │   │   └── "<<"
+│       │   │   ├── acmePropertyBlockEntry
+│       │   │   │   ├── identifier
+│       │   │   │   │   └── IDENTIFIER
+│       │   │   │   │       └── "label"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   ├── COLON
+│       │   │   │   │   └── ":"
+│       │   │   │   ├── acmePropertyTypeRef
+│       │   │   │   │   └── acmePropertyTypeStructure
+│       │   │   │   │       └── acmePropertyTypeString
+│       │   │   │   │           ├── Attribute Skip Value ' '
+│       │   │   │   │           └── STRING
+│       │   │   │   │               └── "string"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   ├── ASSIGN
+│       │   │   │   │   └── "="
+│       │   │   │   ├── acmePropertyValueDeclaration
+│       │   │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   │   └── STRING_LITERAL
+│       │   │   │   │       └── ""All pairs of connected components are ClientTwith ServerT.""
+│       │   │   │   └── SEMICOLON
+│       │   │   │       └── ";"
+│       │   │   ├── acmePropertyBlockEntry
+│       │   │   │   ├── identifier
+│       │   │   │   │   └── IDENTIFIER
+│       │   │   │   │       └── "errMsg"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   ├── COLON
+│       │   │   │   │   └── ":"
+│       │   │   │   ├── acmePropertyTypeRef
+│       │   │   │   │   └── acmePropertyTypeStructure
+│       │   │   │   │       └── acmePropertyTypeString
+│       │   │   │   │           ├── Attribute Skip Value ' '
+│       │   │   │   │           └── STRING
+│       │   │   │   │               └── "string"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   ├── ASSIGN
+│       │   │   │   │   └── "="
+│       │   │   │   ├── acmePropertyValueDeclaration
+│       │   │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   │   └── STRING_LITERAL
+│       │   │   │   │       └── ""Detected pair(s) of components that falis the ClientT with ServerT constraint!""
+│       │   │   │   └── SEMICOLON
+│       │   │   │       └── ";"
+│       │   │   └── PROPEND
+│       │   │       └── ">>"
+│       │   └── SEMICOLON
+│       │       └── ";"
+│       ├── designRule
+│       │   ├── Attribute Skip Value '&#10;    &#10;    // All components must be either a ClientT or a ServerT&#10;    '
+│       │   ├── INVARIANT
+│       │   │   └── "invariant"
+│       │   ├── designRuleExpression
+│       │   │   └── aSTDRImpliesExpression
+│       │   │       └── dRIffExpression
+│       │   │           └── dRAndExpression
+│       │   │               └── dRNegateExpression
+│       │   │                   └── dREqualityExpression
+│       │   │                       └── dRRelationalExpression
+│       │   │                           └── dRAdditiveExpression
+│       │   │                               └── dRMultiplicativeExpression
+│       │   │                                   └── dRNegativeExpression
+│       │   │                                       └── primitiveExpression
+│       │   │                                           └── quantifiedExpression
+│       │   │                                               ├── Attribute Skip Value ' '
+│       │   │                                               ├── FORALL
+│       │   │                                               │   └── "Forall"
+│       │   │                                               ├── variableSetDeclaration
+│       │   │                                               │   ├── identifier
+│       │   │                                               │   │   ├── Attribute Skip Value ' '
+│       │   │                                               │   │   └── IDENTIFIER
+│       │   │                                               │   │       └── "comp"
+│       │   │                                               │   ├── Attribute Skip Value ' '
+│       │   │                                               │   ├── COLON
+│       │   │                                               │   │   └── ":"
+│       │   │                                               │   ├── acmeTypeRef
+│       │   │                                               │   │   ├── Attribute Skip Value ' '
+│       │   │                                               │   │   └── COMPONENT
+│       │   │                                               │   │       └── "component"
+│       │   │                                               │   ├── Attribute Skip Value ' '
+│       │   │                                               │   ├── IN
+│       │   │                                               │   │   └── "in"
+│       │   │                                               │   └── reference
+│       │   │                                               │       ├── identifier
+│       │   │                                               │       │   ├── Attribute Skip Value ' '
+│       │   │                                               │       │   └── IDENTIFIER
+│       │   │                                               │       │       └── "self"
+│       │   │                                               │       ├── DOT
+│       │   │                                               │       │   └── "."
+│       │   │                                               │       └── setReference
+│       │   │                                               │           └── COMPONENTS
+│       │   │                                               │               └── "components"
+│       │   │                                               ├── Attribute Skip Value ' '
+│       │   │                                               ├── BIT_OR
+│       │   │                                               │   └── "|"
+│       │   │                                               └── designRuleExpression
+│       │   │                                                   ├── aSTDRImpliesExpression
+│       │   │                                                   │   └── dRIffExpression
+│       │   │                                                   │       └── dRAndExpression
+│       │   │                                                   │           └── dRNegateExpression
+│       │   │                                                   │               └── dREqualityExpression
+│       │   │                                                   │                   └── dRRelationalExpression
+│       │   │                                                   │                       └── dRAdditiveExpression
+│       │   │                                                   │                           └── dRMultiplicativeExpression
+│       │   │                                                   │                               └── dRNegativeExpression
+│       │   │                                                   │                                   └── primitiveExpression
+│       │   │                                                   │                                       └── parentheticalExpression
+│       │   │                                                   │                                           ├── Attribute Skip Value ' &#10;        '
+│       │   │                                                   │                                           ├── LPAREN
+│       │   │                                                   │                                           │   └── "("
+│       │   │                                                   │                                           ├── designRuleExpression
+│       │   │                                                   │                                           │   └── aSTDRImpliesExpression
+│       │   │                                                   │                                           │       └── dRIffExpression
+│       │   │                                                   │                                           │           └── dRAndExpression
+│       │   │                                                   │                                           │               ├── dRNegateExpression
+│       │   │                                                   │                                           │               │   └── dREqualityExpression
+│       │   │                                                   │                                           │               │       └── dRRelationalExpression
+│       │   │                                                   │                                           │               │           └── dRAdditiveExpression
+│       │   │                                                   │                                           │               │               └── dRMultiplicativeExpression
+│       │   │                                                   │                                           │               │                   └── dRNegativeExpression
+│       │   │                                                   │                                           │               │                       └── primitiveExpression
+│       │   │                                                   │                                           │               │                           └── reference
+│       │   │                                                   │                                           │               │                               ├── identifier
+│       │   │                                                   │                                           │               │                               │   └── IDENTIFIER
+│       │   │                                                   │                                           │               │                               │       └── "declaresType"
+│       │   │                                                   │                                           │               │                               └── actualParams
+│       │   │                                                   │                                           │               │                                   ├── LPAREN
+│       │   │                                                   │                                           │               │                                   │   └── "("
+│       │   │                                                   │                                           │               │                                   ├── designRuleExpression
+│       │   │                                                   │                                           │               │                                   │   └── aSTDRImpliesExpression
+│       │   │                                                   │                                           │               │                                   │       └── dRIffExpression
+│       │   │                                                   │                                           │               │                                   │           └── dRAndExpression
+│       │   │                                                   │                                           │               │                                   │               └── dRNegateExpression
+│       │   │                                                   │                                           │               │                                   │                   └── dREqualityExpression
+│       │   │                                                   │                                           │               │                                   │                       └── dRRelationalExpression
+│       │   │                                                   │                                           │               │                                   │                           └── dRAdditiveExpression
+│       │   │                                                   │                                           │               │                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                   │                                           │               │                                   │                                   └── dRNegativeExpression
+│       │   │                                                   │                                           │               │                                   │                                       └── primitiveExpression
+│       │   │                                                   │                                           │               │                                   │                                           └── reference
+│       │   │                                                   │                                           │               │                                   │                                               └── identifier
+│       │   │                                                   │                                           │               │                                   │                                                   └── IDENTIFIER
+│       │   │                                                   │                                           │               │                                   │                                                       └── "comp"
+│       │   │                                                   │                                           │               │                                   ├── COMMA
+│       │   │                                                   │                                           │               │                                   │   └── ","
+│       │   │                                                   │                                           │               │                                   ├── designRuleExpression
+│       │   │                                                   │                                           │               │                                   │   └── aSTDRImpliesExpression
+│       │   │                                                   │                                           │               │                                   │       └── dRIffExpression
+│       │   │                                                   │                                           │               │                                   │           └── dRAndExpression
+│       │   │                                                   │                                           │               │                                   │               └── dRNegateExpression
+│       │   │                                                   │                                           │               │                                   │                   └── dREqualityExpression
+│       │   │                                                   │                                           │               │                                   │                       └── dRRelationalExpression
+│       │   │                                                   │                                           │               │                                   │                           └── dRAdditiveExpression
+│       │   │                                                   │                                           │               │                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                   │                                           │               │                                   │                                   └── dRNegativeExpression
+│       │   │                                                   │                                           │               │                                   │                                       └── primitiveExpression
+│       │   │                                                   │                                           │               │                                   │                                           └── reference
+│       │   │                                                   │                                           │               │                                   │                                               └── identifier
+│       │   │                                                   │                                           │               │                                   │                                                   ├── Attribute Skip Value ' '
+│       │   │                                                   │                                           │               │                                   │                                                   └── IDENTIFIER
+│       │   │                                                   │                                           │               │                                   │                                                       └── "ClientT"
+│       │   │                                                   │                                           │               │                                   └── RPAREN
+│       │   │                                                   │                                           │               │                                       └── ")"
+│       │   │                                                   │                                           │               ├── Attribute Skip Value ' '
+│       │   │                                                   │                                           │               ├── AND
+│       │   │                                                   │                                           │               │   └── "AND"
+│       │   │                                                   │                                           │               └── dRNegateExpression
+│       │   │                                                   │                                           │                   └── dREqualityExpression
+│       │   │                                                   │                                           │                       └── dRRelationalExpression
+│       │   │                                                   │                                           │                           └── dRAdditiveExpression
+│       │   │                                                   │                                           │                               └── dRMultiplicativeExpression
+│       │   │                                                   │                                           │                                   └── dRNegativeExpression
+│       │   │                                                   │                                           │                                       └── primitiveExpression
+│       │   │                                                   │                                           │                                           └── reference
+│       │   │                                                   │                                           │                                               ├── identifier
+│       │   │                                                   │                                           │                                               │   ├── Attribute Skip Value ' '
+│       │   │                                                   │                                           │                                               │   └── IDENTIFIER
+│       │   │                                                   │                                           │                                               │       └── "satisfiesType"
+│       │   │                                                   │                                           │                                               └── actualParams
+│       │   │                                                   │                                           │                                                   ├── LPAREN
+│       │   │                                                   │                                           │                                                   │   └── "("
+│       │   │                                                   │                                           │                                                   ├── designRuleExpression
+│       │   │                                                   │                                           │                                                   │   └── aSTDRImpliesExpression
+│       │   │                                                   │                                           │                                                   │       └── dRIffExpression
+│       │   │                                                   │                                           │                                                   │           └── dRAndExpression
+│       │   │                                                   │                                           │                                                   │               └── dRNegateExpression
+│       │   │                                                   │                                           │                                                   │                   └── dREqualityExpression
+│       │   │                                                   │                                           │                                                   │                       └── dRRelationalExpression
+│       │   │                                                   │                                           │                                                   │                           └── dRAdditiveExpression
+│       │   │                                                   │                                           │                                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                   │                                           │                                                   │                                   └── dRNegativeExpression
+│       │   │                                                   │                                           │                                                   │                                       └── primitiveExpression
+│       │   │                                                   │                                           │                                                   │                                           └── reference
+│       │   │                                                   │                                           │                                                   │                                               └── identifier
+│       │   │                                                   │                                           │                                                   │                                                   └── IDENTIFIER
+│       │   │                                                   │                                           │                                                   │                                                       └── "comp"
+│       │   │                                                   │                                           │                                                   ├── COMMA
+│       │   │                                                   │                                           │                                                   │   └── ","
+│       │   │                                                   │                                           │                                                   ├── designRuleExpression
+│       │   │                                                   │                                           │                                                   │   └── aSTDRImpliesExpression
+│       │   │                                                   │                                           │                                                   │       └── dRIffExpression
+│       │   │                                                   │                                           │                                                   │           └── dRAndExpression
+│       │   │                                                   │                                           │                                                   │               └── dRNegateExpression
+│       │   │                                                   │                                           │                                                   │                   └── dREqualityExpression
+│       │   │                                                   │                                           │                                                   │                       └── dRRelationalExpression
+│       │   │                                                   │                                           │                                                   │                           └── dRAdditiveExpression
+│       │   │                                                   │                                           │                                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                   │                                           │                                                   │                                   └── dRNegativeExpression
+│       │   │                                                   │                                           │                                                   │                                       └── primitiveExpression
+│       │   │                                                   │                                           │                                                   │                                           └── reference
+│       │   │                                                   │                                           │                                                   │                                               └── identifier
+│       │   │                                                   │                                           │                                                   │                                                   ├── Attribute Skip Value ' '
+│       │   │                                                   │                                           │                                                   │                                                   └── IDENTIFIER
+│       │   │                                                   │                                           │                                                   │                                                       └── "ClientT"
+│       │   │                                                   │                                           │                                                   └── RPAREN
+│       │   │                                                   │                                           │                                                       └── ")"
+│       │   │                                                   │                                           └── RPAREN
+│       │   │                                                   │                                               └── ")"
+│       │   │                                                   ├── Attribute Skip Value ' '
+│       │   │                                                   ├── OR
+│       │   │                                                   │   └── "OR"
+│       │   │                                                   └── aSTDRImpliesExpression
+│       │   │                                                       └── dRIffExpression
+│       │   │                                                           └── dRAndExpression
+│       │   │                                                               └── dRNegateExpression
+│       │   │                                                                   └── dREqualityExpression
+│       │   │                                                                       └── dRRelationalExpression
+│       │   │                                                                           └── dRAdditiveExpression
+│       │   │                                                                               └── dRMultiplicativeExpression
+│       │   │                                                                                   └── dRNegativeExpression
+│       │   │                                                                                       └── primitiveExpression
+│       │   │                                                                                           └── parentheticalExpression
+│       │   │                                                                                               ├── Attribute Skip Value ' '
+│       │   │                                                                                               ├── LPAREN
+│       │   │                                                                                               │   └── "("
+│       │   │                                                                                               ├── designRuleExpression
+│       │   │                                                                                               │   └── aSTDRImpliesExpression
+│       │   │                                                                                               │       └── dRIffExpression
+│       │   │                                                                                               │           └── dRAndExpression
+│       │   │                                                                                               │               ├── dRNegateExpression
+│       │   │                                                                                               │               │   └── dREqualityExpression
+│       │   │                                                                                               │               │       └── dRRelationalExpression
+│       │   │                                                                                               │               │           └── dRAdditiveExpression
+│       │   │                                                                                               │               │               └── dRMultiplicativeExpression
+│       │   │                                                                                               │               │                   └── dRNegativeExpression
+│       │   │                                                                                               │               │                       └── primitiveExpression
+│       │   │                                                                                               │               │                           └── reference
+│       │   │                                                                                               │               │                               ├── identifier
+│       │   │                                                                                               │               │                               │   └── IDENTIFIER
+│       │   │                                                                                               │               │                               │       └── "declaresType"
+│       │   │                                                                                               │               │                               └── actualParams
+│       │   │                                                                                               │               │                                   ├── LPAREN
+│       │   │                                                                                               │               │                                   │   └── "("
+│       │   │                                                                                               │               │                                   ├── designRuleExpression
+│       │   │                                                                                               │               │                                   │   └── aSTDRImpliesExpression
+│       │   │                                                                                               │               │                                   │       └── dRIffExpression
+│       │   │                                                                                               │               │                                   │           └── dRAndExpression
+│       │   │                                                                                               │               │                                   │               └── dRNegateExpression
+│       │   │                                                                                               │               │                                   │                   └── dREqualityExpression
+│       │   │                                                                                               │               │                                   │                       └── dRRelationalExpression
+│       │   │                                                                                               │               │                                   │                           └── dRAdditiveExpression
+│       │   │                                                                                               │               │                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                                                               │               │                                   │                                   └── dRNegativeExpression
+│       │   │                                                                                               │               │                                   │                                       └── primitiveExpression
+│       │   │                                                                                               │               │                                   │                                           └── reference
+│       │   │                                                                                               │               │                                   │                                               └── identifier
+│       │   │                                                                                               │               │                                   │                                                   └── IDENTIFIER
+│       │   │                                                                                               │               │                                   │                                                       └── "comp"
+│       │   │                                                                                               │               │                                   ├── COMMA
+│       │   │                                                                                               │               │                                   │   └── ","
+│       │   │                                                                                               │               │                                   ├── designRuleExpression
+│       │   │                                                                                               │               │                                   │   └── aSTDRImpliesExpression
+│       │   │                                                                                               │               │                                   │       └── dRIffExpression
+│       │   │                                                                                               │               │                                   │           └── dRAndExpression
+│       │   │                                                                                               │               │                                   │               └── dRNegateExpression
+│       │   │                                                                                               │               │                                   │                   └── dREqualityExpression
+│       │   │                                                                                               │               │                                   │                       └── dRRelationalExpression
+│       │   │                                                                                               │               │                                   │                           └── dRAdditiveExpression
+│       │   │                                                                                               │               │                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                                                               │               │                                   │                                   └── dRNegativeExpression
+│       │   │                                                                                               │               │                                   │                                       └── primitiveExpression
+│       │   │                                                                                               │               │                                   │                                           └── reference
+│       │   │                                                                                               │               │                                   │                                               └── identifier
+│       │   │                                                                                               │               │                                   │                                                   ├── Attribute Skip Value ' '
+│       │   │                                                                                               │               │                                   │                                                   └── IDENTIFIER
+│       │   │                                                                                               │               │                                   │                                                       └── "ServerT"
+│       │   │                                                                                               │               │                                   └── RPAREN
+│       │   │                                                                                               │               │                                       └── ")"
+│       │   │                                                                                               │               ├── Attribute Skip Value ' '
+│       │   │                                                                                               │               ├── AND
+│       │   │                                                                                               │               │   └── "AND"
+│       │   │                                                                                               │               └── dRNegateExpression
+│       │   │                                                                                               │                   └── dREqualityExpression
+│       │   │                                                                                               │                       └── dRRelationalExpression
+│       │   │                                                                                               │                           └── dRAdditiveExpression
+│       │   │                                                                                               │                               └── dRMultiplicativeExpression
+│       │   │                                                                                               │                                   └── dRNegativeExpression
+│       │   │                                                                                               │                                       └── primitiveExpression
+│       │   │                                                                                               │                                           └── reference
+│       │   │                                                                                               │                                               ├── identifier
+│       │   │                                                                                               │                                               │   ├── Attribute Skip Value ' '
+│       │   │                                                                                               │                                               │   └── IDENTIFIER
+│       │   │                                                                                               │                                               │       └── "satisfiesType"
+│       │   │                                                                                               │                                               └── actualParams
+│       │   │                                                                                               │                                                   ├── LPAREN
+│       │   │                                                                                               │                                                   │   └── "("
+│       │   │                                                                                               │                                                   ├── designRuleExpression
+│       │   │                                                                                               │                                                   │   └── aSTDRImpliesExpression
+│       │   │                                                                                               │                                                   │       └── dRIffExpression
+│       │   │                                                                                               │                                                   │           └── dRAndExpression
+│       │   │                                                                                               │                                                   │               └── dRNegateExpression
+│       │   │                                                                                               │                                                   │                   └── dREqualityExpression
+│       │   │                                                                                               │                                                   │                       └── dRRelationalExpression
+│       │   │                                                                                               │                                                   │                           └── dRAdditiveExpression
+│       │   │                                                                                               │                                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                                                               │                                                   │                                   └── dRNegativeExpression
+│       │   │                                                                                               │                                                   │                                       └── primitiveExpression
+│       │   │                                                                                               │                                                   │                                           └── reference
+│       │   │                                                                                               │                                                   │                                               └── identifier
+│       │   │                                                                                               │                                                   │                                                   └── IDENTIFIER
+│       │   │                                                                                               │                                                   │                                                       └── "comp"
+│       │   │                                                                                               │                                                   ├── COMMA
+│       │   │                                                                                               │                                                   │   └── ","
+│       │   │                                                                                               │                                                   ├── designRuleExpression
+│       │   │                                                                                               │                                                   │   └── aSTDRImpliesExpression
+│       │   │                                                                                               │                                                   │       └── dRIffExpression
+│       │   │                                                                                               │                                                   │           └── dRAndExpression
+│       │   │                                                                                               │                                                   │               └── dRNegateExpression
+│       │   │                                                                                               │                                                   │                   └── dREqualityExpression
+│       │   │                                                                                               │                                                   │                       └── dRRelationalExpression
+│       │   │                                                                                               │                                                   │                           └── dRAdditiveExpression
+│       │   │                                                                                               │                                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                                                               │                                                   │                                   └── dRNegativeExpression
+│       │   │                                                                                               │                                                   │                                       └── primitiveExpression
+│       │   │                                                                                               │                                                   │                                           └── reference
+│       │   │                                                                                               │                                                   │                                               └── identifier
+│       │   │                                                                                               │                                                   │                                                   ├── Attribute Skip Value ' '
+│       │   │                                                                                               │                                                   │                                                   └── IDENTIFIER
+│       │   │                                                                                               │                                                   │                                                       └── "ServerT"
+│       │   │                                                                                               │                                                   └── RPAREN
+│       │   │                                                                                               │                                                       └── ")"
+│       │   │                                                                                               └── RPAREN
+│       │   │                                                                                                   └── ")"
+│       │   ├── acmePropertyBlock
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   ├── PROPBEGIN
+│       │   │   │   └── "<<"
+│       │   │   ├── acmePropertyBlockEntry
+│       │   │   │   ├── identifier
+│       │   │   │   │   └── IDENTIFIER
+│       │   │   │   │       └── "label"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   ├── COLON
+│       │   │   │   │   └── ":"
+│       │   │   │   ├── acmePropertyTypeRef
+│       │   │   │   │   └── acmePropertyTypeStructure
+│       │   │   │   │       └── acmePropertyTypeString
+│       │   │   │   │           ├── Attribute Skip Value ' '
+│       │   │   │   │           └── STRING
+│       │   │   │   │               └── "string"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   ├── ASSIGN
+│       │   │   │   │   └── "="
+│       │   │   │   ├── acmePropertyValueDeclaration
+│       │   │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   │   └── STRING_LITERAL
+│       │   │   │   │       └── ""All components are either a ClientT or a ServerT.""
+│       │   │   │   └── SEMICOLON
+│       │   │   │       └── ";"
+│       │   │   ├── acmePropertyBlockEntry
+│       │   │   │   ├── identifier
+│       │   │   │   │   └── IDENTIFIER
+│       │   │   │   │       └── "errMsg"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   ├── COLON
+│       │   │   │   │   └── ":"
+│       │   │   │   ├── acmePropertyTypeRef
+│       │   │   │   │   └── acmePropertyTypeStructure
+│       │   │   │   │       └── acmePropertyTypeString
+│       │   │   │   │           ├── Attribute Skip Value ' '
+│       │   │   │   │           └── STRING
+│       │   │   │   │               └── "string"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   ├── ASSIGN
+│       │   │   │   │   └── "="
+│       │   │   │   ├── acmePropertyValueDeclaration
+│       │   │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   │   └── STRING_LITERAL
+│       │   │   │   │       └── ""Component(s) detected that is NEITHER a ClientT NOR a ServerT!""
+│       │   │   │   └── SEMICOLON
+│       │   │   │       └── ";"
+│       │   │   └── PROPEND
+│       │   │       └── ">>"
+│       │   └── SEMICOLON
+│       │       └── ";"
+│       ├── designRule
+│       │   ├── Attribute Skip Value '&#10;    &#10;    // All connectors must be CSConnT&#10;    '
+│       │   ├── INVARIANT
+│       │   │   └── "invariant"
+│       │   ├── designRuleExpression
+│       │   │   └── aSTDRImpliesExpression
+│       │   │       └── dRIffExpression
+│       │   │           └── dRAndExpression
+│       │   │               └── dRNegateExpression
+│       │   │                   └── dREqualityExpression
+│       │   │                       └── dRRelationalExpression
+│       │   │                           └── dRAdditiveExpression
+│       │   │                               └── dRMultiplicativeExpression
+│       │   │                                   └── dRNegativeExpression
+│       │   │                                       └── primitiveExpression
+│       │   │                                           └── quantifiedExpression
+│       │   │                                               ├── Attribute Skip Value ' '
+│       │   │                                               ├── FORALL
+│       │   │                                               │   └── "Forall"
+│       │   │                                               ├── variableSetDeclaration
+│       │   │                                               │   ├── identifier
+│       │   │                                               │   │   ├── Attribute Skip Value ' '
+│       │   │                                               │   │   └── IDENTIFIER
+│       │   │                                               │   │       └── "conn"
+│       │   │                                               │   ├── Attribute Skip Value ' '
+│       │   │                                               │   ├── COLON
+│       │   │                                               │   │   └── ":"
+│       │   │                                               │   ├── acmeTypeRef
+│       │   │                                               │   │   ├── Attribute Skip Value ' '
+│       │   │                                               │   │   └── CONNECTOR
+│       │   │                                               │   │       └── "connector"
+│       │   │                                               │   ├── Attribute Skip Value ' '
+│       │   │                                               │   ├── IN
+│       │   │                                               │   │   └── "in"
+│       │   │                                               │   └── reference
+│       │   │                                               │       ├── identifier
+│       │   │                                               │       │   ├── Attribute Skip Value ' '
+│       │   │                                               │       │   └── IDENTIFIER
+│       │   │                                               │       │       └── "self"
+│       │   │                                               │       ├── DOT
+│       │   │                                               │       │   └── "."
+│       │   │                                               │       └── setReference
+│       │   │                                               │           └── CONNECTORS
+│       │   │                                               │               └── "connectors"
+│       │   │                                               ├── Attribute Skip Value ' '
+│       │   │                                               ├── BIT_OR
+│       │   │                                               │   └── "|"
+│       │   │                                               └── designRuleExpression
+│       │   │                                                   └── aSTDRImpliesExpression
+│       │   │                                                       └── dRIffExpression
+│       │   │                                                           └── dRAndExpression
+│       │   │                                                               └── dRNegateExpression
+│       │   │                                                                   └── dREqualityExpression
+│       │   │                                                                       └── dRRelationalExpression
+│       │   │                                                                           └── dRAdditiveExpression
+│       │   │                                                                               └── dRMultiplicativeExpression
+│       │   │                                                                                   └── dRNegativeExpression
+│       │   │                                                                                       └── primitiveExpression
+│       │   │                                                                                           └── reference
+│       │   │                                                                                               ├── identifier
+│       │   │                                                                                               │   ├── Attribute Skip Value ' &#10;        '
+│       │   │                                                                                               │   └── IDENTIFIER
+│       │   │                                                                                               │       └── "satisfiesType"
+│       │   │                                                                                               └── actualParams
+│       │   │                                                                                                   ├── LPAREN
+│       │   │                                                                                                   │   └── "("
+│       │   │                                                                                                   ├── designRuleExpression
+│       │   │                                                                                                   │   └── aSTDRImpliesExpression
+│       │   │                                                                                                   │       └── dRIffExpression
+│       │   │                                                                                                   │           └── dRAndExpression
+│       │   │                                                                                                   │               └── dRNegateExpression
+│       │   │                                                                                                   │                   └── dREqualityExpression
+│       │   │                                                                                                   │                       └── dRRelationalExpression
+│       │   │                                                                                                   │                           └── dRAdditiveExpression
+│       │   │                                                                                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                                                                   │                                   └── dRNegativeExpression
+│       │   │                                                                                                   │                                       └── primitiveExpression
+│       │   │                                                                                                   │                                           └── reference
+│       │   │                                                                                                   │                                               └── identifier
+│       │   │                                                                                                   │                                                   └── IDENTIFIER
+│       │   │                                                                                                   │                                                       └── "conn"
+│       │   │                                                                                                   ├── COMMA
+│       │   │                                                                                                   │   └── ","
+│       │   │                                                                                                   ├── designRuleExpression
+│       │   │                                                                                                   │   └── aSTDRImpliesExpression
+│       │   │                                                                                                   │       └── dRIffExpression
+│       │   │                                                                                                   │           └── dRAndExpression
+│       │   │                                                                                                   │               └── dRNegateExpression
+│       │   │                                                                                                   │                   └── dREqualityExpression
+│       │   │                                                                                                   │                       └── dRRelationalExpression
+│       │   │                                                                                                   │                           └── dRAdditiveExpression
+│       │   │                                                                                                   │                               └── dRMultiplicativeExpression
+│       │   │                                                                                                   │                                   └── dRNegativeExpression
+│       │   │                                                                                                   │                                       └── primitiveExpression
+│       │   │                                                                                                   │                                           └── reference
+│       │   │                                                                                                   │                                               └── identifier
+│       │   │                                                                                                   │                                                   ├── Attribute Skip Value ' '
+│       │   │                                                                                                   │                                                   └── IDENTIFIER
+│       │   │                                                                                                   │                                                       └── "CSConnT"
+│       │   │                                                                                                   └── RPAREN
+│       │   │                                                                                                       └── ")"
+│       │   ├── acmePropertyBlock
+│       │   │   ├── Attribute Skip Value ' '
+│       │   │   ├── PROPBEGIN
+│       │   │   │   └── "<<"
+│       │   │   ├── acmePropertyBlockEntry
+│       │   │   │   ├── identifier
+│       │   │   │   │   └── IDENTIFIER
+│       │   │   │   │       └── "label"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   ├── COLON
+│       │   │   │   │   └── ":"
+│       │   │   │   ├── acmePropertyTypeRef
+│       │   │   │   │   └── acmePropertyTypeStructure
+│       │   │   │   │       └── acmePropertyTypeString
+│       │   │   │   │           ├── Attribute Skip Value ' '
+│       │   │   │   │           └── STRING
+│       │   │   │   │               └── "string"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   ├── ASSIGN
+│       │   │   │   │   └── "="
+│       │   │   │   ├── acmePropertyValueDeclaration
+│       │   │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   │   └── STRING_LITERAL
+│       │   │   │   │       └── ""All connectors are CSConnT.""
+│       │   │   │   └── SEMICOLON
+│       │   │   │       └── ";"
+│       │   │   ├── acmePropertyBlockEntry
+│       │   │   │   ├── identifier
+│       │   │   │   │   └── IDENTIFIER
+│       │   │   │   │       └── "errMsg"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   ├── COLON
+│       │   │   │   │   └── ":"
+│       │   │   │   ├── acmePropertyTypeRef
+│       │   │   │   │   └── acmePropertyTypeStructure
+│       │   │   │   │       └── acmePropertyTypeString
+│       │   │   │   │           ├── Attribute Skip Value ' '
+│       │   │   │   │           └── STRING
+│       │   │   │   │               └── "string"
+│       │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   ├── ASSIGN
+│       │   │   │   │   └── "="
+│       │   │   │   ├── acmePropertyValueDeclaration
+│       │   │   │   │   ├── Attribute Skip Value ' '
+│       │   │   │   │   └── STRING_LITERAL
+│       │   │   │   │       └── ""Connector(s) detected that is NOT a CSConnT!""
+│       │   │   │   └── SEMICOLON
+│       │   │   │       └── ";"
+│       │   │   └── PROPEND
+│       │   │       └── ">>"
+│       │   └── SEMICOLON
+│       │       └── ";"
+│       ├── Attribute Skip Value '&#10;    &#10;'
+│       └── RBRACE
+│           └── "}"
+├── Attribute Skip Value '&#10;&#10;'
+└── EOF
+    └── ""
+
