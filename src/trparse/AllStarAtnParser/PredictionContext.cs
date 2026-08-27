@@ -21,6 +21,7 @@ public abstract class PredictionContext
     public abstract int Size { get; }
     public abstract int GetReturnState(int index);
     public abstract PredictionContext GetParent(int index);
+    public abstract int GetPrecedence(int index);
 
     public abstract override bool Equals(object obj);
     public abstract override int GetHashCode();
@@ -40,6 +41,8 @@ public sealed class EmptyPredictionContext : PredictionContext
         ? EMPTY_RETURN_STATE : throw new ArgumentOutOfRangeException(nameof(index));
     public override PredictionContext GetParent(int index) => index == 0
         ? null : throw new ArgumentOutOfRangeException(nameof(index));
+    public override int GetPrecedence(int index) => index == 0
+        ? 0 : throw new ArgumentOutOfRangeException(nameof(index));
 
     public override bool Equals(object obj) => obj is EmptyPredictionContext;
     public override int GetHashCode() => 1;
@@ -52,15 +55,18 @@ public sealed class SingletonPredictionContext : PredictionContext
 
     public override PredictionContext Parent { get; }
     public override int ReturnState { get; }
+    public int Precedence { get; }
     public override bool IsEmpty => false;
     public override bool HasEmptyPath => false;
     public override int Size => 1;
 
-    public SingletonPredictionContext(PredictionContext parent, int returnState)
+    public SingletonPredictionContext(PredictionContext parent, int returnState,
+                                      int precedence = 0)
     {
         Parent = parent;
         ReturnState = returnState;
-        _hashCode = HashCode.Combine(returnState, parent.GetHashCode());
+        Precedence = precedence;
+        _hashCode = HashCode.Combine(returnState, precedence, parent.GetHashCode());
     }
 
     public override bool Equals(object obj)
@@ -70,6 +76,7 @@ public sealed class SingletonPredictionContext : PredictionContext
         if (obj is SingletonPredictionContext s)
             return _hashCode == s._hashCode &&
                    ReturnState == s.ReturnState &&
+                   Precedence == s.Precedence &&
                    Parent.Equals(s.Parent);
         return false;
     }
@@ -79,20 +86,26 @@ public sealed class SingletonPredictionContext : PredictionContext
         ? ReturnState : throw new ArgumentOutOfRangeException(nameof(index));
     public override PredictionContext GetParent(int index) => index == 0
         ? Parent : throw new ArgumentOutOfRangeException(nameof(index));
+    public override int GetPrecedence(int index) => index == 0
+        ? Precedence : throw new ArgumentOutOfRangeException(nameof(index));
 }
 
 public sealed class ArrayPredictionContext : PredictionContext
 {
     private readonly PredictionContext[] _parents;
     private readonly int[] _returnStates;
+    private readonly int[] _precedences;
     private readonly int _hashCode;
 
-    public ArrayPredictionContext(PredictionContext[] parents, int[] returnStates)
+    public ArrayPredictionContext(PredictionContext[] parents, int[] returnStates,
+                                  int[] precedences)
     {
         _parents = parents;
         _returnStates = returnStates;
+        _precedences = precedences;
         var hash = new HashCode();
         foreach (int state in returnStates) hash.Add(state);
+        foreach (int precedence in precedences) hash.Add(precedence);
         foreach (var parent in parents) hash.Add(parent);
         _hashCode = hash.ToHashCode();
     }
@@ -105,6 +118,7 @@ public sealed class ArrayPredictionContext : PredictionContext
     public override int Size => _returnStates.Length;
     public override int GetReturnState(int index) => _returnStates[index];
     public override PredictionContext GetParent(int index) => _parents[index];
+    public override int GetPrecedence(int index) => _precedences[index];
 
     public override bool Equals(object obj)
     {
@@ -112,6 +126,7 @@ public sealed class ArrayPredictionContext : PredictionContext
         return obj is ArrayPredictionContext other &&
                _hashCode == other._hashCode &&
                _returnStates.AsSpan().SequenceEqual(other._returnStates) &&
+               _precedences.AsSpan().SequenceEqual(other._precedences) &&
                _parents.AsSpan().SequenceEqual(other._parents);
     }
 
@@ -124,41 +139,47 @@ public static class PredictionContextMerger
     {
         if (left.Equals(right)) return left;
 
-        var entries = new SortedDictionary<int, PredictionContext>();
+        var entries = new SortedDictionary<(int state, int precedence), PredictionContext>();
         AddEntries(entries, left);
         AddEntries(entries, right);
         if (entries.Count == 1)
         {
             var only = entries.First();
-            return only.Key == PredictionContext.EMPTY_RETURN_STATE
+            return only.Key.state == PredictionContext.EMPTY_RETURN_STATE
                 ? PredictionContext.EMPTY
-                : new SingletonPredictionContext(only.Value, only.Key);
+                : new SingletonPredictionContext(only.Value, only.Key.state,
+                                                 only.Key.precedence);
         }
 
         var states = new int[entries.Count];
         var parents = new PredictionContext[entries.Count];
+        var precedences = new int[entries.Count];
         int i = 0;
         foreach (var entry in entries)
         {
-            states[i] = entry.Key;
+            states[i] = entry.Key.state;
+            precedences[i] = entry.Key.precedence;
             parents[i] = entry.Value;
             i++;
         }
-        return new ArrayPredictionContext(parents, states);
+        return new ArrayPredictionContext(parents, states, precedences);
     }
 
-    private static void AddEntries(SortedDictionary<int, PredictionContext> result,
+    private static void AddEntries(
+                                   SortedDictionary<(int state, int precedence), PredictionContext> result,
                                    PredictionContext context)
     {
         for (int i = 0; i < context.Size; i++)
         {
             int state = context.GetReturnState(i);
+            int precedence = context.GetPrecedence(i);
             PredictionContext parent = context.GetParent(i);
-            if (result.TryGetValue(state, out var existing) &&
+            var key = (state, precedence);
+            if (result.TryGetValue(key, out var existing) &&
                 state != PredictionContext.EMPTY_RETURN_STATE)
-                result[state] = Merge(existing, parent);
+                result[key] = Merge(existing, parent);
             else
-                result[state] = parent;
+                result[key] = parent;
         }
     }
 }

@@ -13,7 +13,7 @@ using EarleyAtnParser;
 
 public sealed class ATNConfigSet
 {
-    private readonly Dictionary<(int stateNum, int alt), int> _configIndex = new();
+    private readonly Dictionary<(int stateNum, int alt, int precedence), int> _configIndex = new();
     private readonly List<ATNConfig> _configs = new();
 
     public IReadOnlyList<ATNConfig> Configs => _configs;
@@ -22,7 +22,7 @@ public sealed class ATNConfigSet
     // Add a config. Returns true if it was actually added (not a duplicate).
     public bool Add(ATNConfig c)
     {
-        var key = (c.State.stateNumber, c.Alt);
+        var key = (c.State.stateNumber, c.Alt, c.Precedence);
         if (_configIndex.TryGetValue(key, out int index))
         {
             var existing = _configs[index];
@@ -75,10 +75,10 @@ public sealed class ATNConfigSet
     // identical, so additional lookahead cannot distinguish them.
     public int GetExactAmbiguityAlt()
     {
-        Dictionary<(int stateNum, PredictionContext context), HashSet<int>> groups = new();
+        Dictionary<(int stateNum, PredictionContext context, int precedence), HashSet<int>> groups = new();
         foreach (var c in _configs)
         {
-            var key = (c.State.stateNumber, c.Context);
+            var key = (c.State.stateNumber, c.Context, c.Precedence);
             if (!groups.TryGetValue(key, out var alts))
             {
                 alts = new HashSet<int>();
@@ -106,11 +106,11 @@ public sealed class ATNConfigSet
     // make one alternative uniquely viable with more lookahead.
     public int GetAllSubsetsConflictAlt()
     {
-        Dictionary<(int stateNum, PredictionContext context), HashSet<int>> groups = new();
+        Dictionary<(int stateNum, PredictionContext context, int precedence), HashSet<int>> groups = new();
         int minimum = int.MaxValue;
         foreach (var c in _configs)
         {
-            var key = (c.State.stateNumber, c.Context);
+            var key = (c.State.stateNumber, c.Context, c.Precedence);
             if (!groups.TryGetValue(key, out var alts))
             {
                 alts = new HashSet<int>();
