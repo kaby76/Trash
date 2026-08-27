@@ -119,6 +119,11 @@
     <Content Include="../grammars-v4/asl/native/*.tree"
              CopyToOutputDirectory="PreserveNewest"
              Link="TestData/asl/native/%(Filename)%(Extension)" />
+
+    <!-- Corundum lexer fixture for non-greedy escaped-string coverage -->
+    <Content Include="../grammars-v4/corundum/interp/CorundumLexer.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/corundum/interp/CorundumLexer.interp" />
   </ItemGroup>
 
 </Project>
