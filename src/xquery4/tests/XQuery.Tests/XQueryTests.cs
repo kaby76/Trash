@@ -489,6 +489,44 @@ public class XQueryTests
     }
 
     [Fact]
+    public void Module_RecursiveFunctionDeclaration()
+    {
+        const string query = """
+            declare function local:countdown($n) {
+                if ($n = 0) then 0
+                else 1 + local:countdown($n - 1)
+            };
+            local:countdown(5)
+            """;
+
+        var module = new XQueryParser(query).ParseModule();
+        var result = new XQueryEvaluator().EvaluateModule(module);
+
+        Assert.Equal(5, (result.First as XdmAtomicValue)?.AsInteger());
+    }
+
+    [Fact]
+    public void Module_MutuallyRecursiveFunctionDeclarations()
+    {
+        const string query = """
+            declare function local:is-even($n) {
+                if ($n = 0) then true()
+                else local:is-odd($n - 1)
+            };
+            declare function local:is-odd($n) {
+                if ($n = 0) then false()
+                else local:is-even($n - 1)
+            };
+            local:is-even(10)
+            """;
+
+        var module = new XQueryParser(query).ParseModule();
+        var result = new XQueryEvaluator().EvaluateModule(module);
+
+        Assert.True((result.First as XdmAtomicValue)?.AsBoolean());
+    }
+
+    [Fact]
     public void Module_NamespaceDeclaration()
     {
         var module = new ModuleNode

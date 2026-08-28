@@ -92,31 +92,43 @@ public class XQueryEvaluator : XPathEvaluator
             }
         }
 
-        // Process function declarations
+        // Build all declared functions against one shared lexical context, then
+        // register them as a group. Registering after each function has already
+        // captured a clone prevents its body from seeing itself or functions
+        // declared later in the prolog.
+        var functionContext = _context.Clone();
+        var declaredFunctions = new List<(XdmQName Name, XdmFunction Function)>();
         foreach (var funcDecl in prolog.FunctionDecls)
         {
             if (funcDecl.Body != null)
             {
+                var functionName = new XdmQName(funcDecl.Name);
                 var paramNames = funcDecl.Parameters.Select(p => p.Name).ToArray();
-                var capturedContext = _context.Clone();
+                var functionBody = funcDecl.Body;
 
                 var func = new XdmFunction(
-                    new XdmQName(funcDecl.Name),
+                    functionName,
                     funcDecl.Parameters.Count,
                     args =>
                     {
-                        var evalContext = capturedContext.Clone();
+                        var evalContext = functionContext.Clone();
                         for (int i = 0; i < paramNames.Length; i++)
                         {
                             evalContext.SetVariable(paramNames[i], args[i]);
                         }
 
                         var evaluator = new XQueryEvaluator(evalContext);
-                        return evaluator.Evaluate(funcDecl.Body);
+                        return evaluator.Evaluate(functionBody);
                     });
 
-                _context.RegisterFunction(new XdmQName(funcDecl.Name), func);
+                declaredFunctions.Add((functionName, func));
             }
+        }
+
+        foreach (var (name, function) in declaredFunctions)
+        {
+            functionContext.RegisterFunction(name, function);
+            _context.RegisterFunction(name, function);
         }
     }
 
