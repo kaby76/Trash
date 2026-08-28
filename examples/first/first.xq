@@ -471,4 +471,4 @@ let $lines :=
             string-join(($terminals, $epsilon), ", "),
             "}"
         )
-return string-join($lines, "; ")
+return string-join($lines, ";&#10;")

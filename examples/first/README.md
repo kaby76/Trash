@@ -40,5 +40,11 @@ include `ε`.
 The output is:
 
 ```text
-choice -> {'(', 'after', 'blue', 'maybe', 'red', ., ID, NUMBER, ~('x' | 'y')}; nullablePrefix -> {'maybe', ε}; prefix -> {'prefix'}; recursiveA -> {'(', ID, NUMBER}; recursiveB -> {'(', NUMBER}; start -> {'(', 'after', 'blue', 'maybe', 'prefix', 'red', ., ID, NUMBER, ~('x' | 'y')}; terminator -> {';'}
+choice -> {'(', 'after', 'blue', 'maybe', 'red', ., ID, NUMBER, ~('x' | 'y')};
+nullablePrefix -> {'maybe', ε};
+prefix -> {'prefix'};
+recursiveA -> {'(', ID, NUMBER};
+recursiveB -> {'(', NUMBER};
+start -> {'(', 'after', 'blue', 'maybe', 'prefix', 'red', ., ID, NUMBER, ~('x' | 'y')};
+terminator -> {';'}
 ```
