@@ -61,16 +61,22 @@ class Command
             using var output = System.Console.OpenStandardOutput();
             AntlrJson.ParsingResultIO.WriteFilteredBundle(
                 output, input, ".txt",
-                result => AntlrJson.ParsingResultIO.Utf8(Render(result, config, false)));
+                result => AntlrJson.ParsingResultIO.Utf8(Render(result, config, false, true)),
+                (artifactName, result) => AntlrJson.ParsingResultIO.SourceArtifactName(
+                    artifactName, result.FileName));
             return;
         }
 
         bool more_than_one_fn = input.Results.Length > 1;
         foreach (var result in input.Results)
-            System.Console.Write(Render(result, config, more_than_one_fn));
+            System.Console.Write(Render(result, config, more_than_one_fn, false));
     }
 
-    private string Render(AntlrJson.ParsingResultSet obj1, Config config, bool includeFileName)
+    private string Render(
+        AntlrJson.ParsingResultSet obj1,
+        Config config,
+        bool includeFileName,
+        bool exactSource)
     {
         var output = new StringBuilder();
         bool files_with_matches = config.FilesWithMatches;
@@ -96,7 +102,10 @@ class Command
             foreach (var node in nodes)
             {
                 if (includeFileName) output.Append(fn + ":");
-                output.AppendLine(Reconstruct(node));
+                if (exactSource)
+                    output.Append(Reconstruct(node));
+                else
+                    output.AppendLine(Reconstruct(node));
             }
         }
         return output.ToString();

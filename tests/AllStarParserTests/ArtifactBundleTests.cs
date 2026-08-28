@@ -47,6 +47,14 @@ public class ArtifactBundleTests
     }
 
     [Fact]
+    public void SourceFilterRestoresOriginalSourceExtension()
+    {
+        Assert.Equal(
+            "dir/Expression.g4",
+            ParsingResultIO.SourceArtifactName("dir/Expression.pt", "Expression.g4"));
+    }
+
+    [Fact]
     public void BundleIsOrdinaryPaxAndPreservesBinaryArtifacts()
     {
         var expected = new[]

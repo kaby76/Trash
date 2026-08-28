@@ -118,7 +118,8 @@ public static class ParsingResultIO
         Stream output,
         ParsingResultInput input,
         string extension,
-        Func<ParsingResultSet, byte[]> render)
+        Func<ParsingResultSet, byte[]> render,
+        Func<string, ParsingResultSet, string> outputName = null)
     {
         var outputArtifacts = new List<Artifact>();
         if (input.IsBundle)
@@ -128,9 +129,11 @@ public static class ParsingResultIO
             {
                 if (artifact.Name.EndsWith(".pt", StringComparison.OrdinalIgnoreCase))
                 {
-                    outputArtifacts.Add(new Artifact(
-                        ArtifactBundle.ChangeExtension(artifact.Name, extension),
-                        render(input.Results[resultIndex++])));
+                    var result = input.Results[resultIndex++];
+                    var name = outputName == null
+                        ? ArtifactBundle.ChangeExtension(artifact.Name, extension)
+                        : ArtifactBundle.ValidateMemberName(outputName(artifact.Name, result));
+                    outputArtifacts.Add(new Artifact(name, render(result)));
                 }
                 else
                 {
@@ -143,15 +146,27 @@ public static class ParsingResultIO
             var names = ResultNames(input.Results);
             for (var index = 0; index < input.Results.Length; index++)
             {
-                outputArtifacts.Add(new Artifact(
-                    ArtifactBundle.ChangeExtension(names[index], extension),
-                    render(input.Results[index])));
+                var result = input.Results[index];
+                var name = outputName == null
+                    ? ArtifactBundle.ChangeExtension(names[index], extension)
+                    : ArtifactBundle.ValidateMemberName(outputName(names[index], result));
+                outputArtifacts.Add(new Artifact(name, render(result)));
             }
         }
         ArtifactBundle.Write(output, outputArtifacts);
     }
 
     public static byte[] Utf8(string text) => new UTF8Encoding(false).GetBytes(text);
+
+    public static string SourceArtifactName(string parseArtifactName, string sourceFileName)
+    {
+        var slash = parseArtifactName.LastIndexOf('/');
+        var directory = slash < 0 ? "" : parseArtifactName[..(slash + 1)];
+        var sourceName = Path.GetFileName(sourceFileName);
+        if (string.IsNullOrWhiteSpace(sourceName))
+            sourceName = Path.GetFileName(ArtifactBundle.ChangeExtension(parseArtifactName, ".txt"));
+        return ArtifactBundle.ValidateMemberName(directory + sourceName);
+    }
 
     public static JsonSerializerOptions JsonOptions(bool indented = false)
     {
