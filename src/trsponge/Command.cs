@@ -22,38 +22,13 @@ class Command
 
     public void Execute(Config config)
     {
-        if (config.Bundle)
+        var input = AntlrJson.ParsingResultIO.Read(config.File);
+        if (input.IsBundle)
         {
-            ExtractBundle(config);
+            ExtractBundle(config, input.Artifacts);
             return;
         }
-
-        string lines = null;
-        if (!(config.File != null && config.File != ""))
-        {
-            if (config.Verbose)
-            {
-                System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
-            }
-
-            for (;;)
-            {
-                lines = System.Console.In.ReadToEnd();
-                if (lines != null && lines != "") break;
-            }
-
-            lines = lines.Trim();
-        }
-        else
-        {
-            lines = File.ReadAllText(config.File);
-        }
-
-        var serializeOptions = new JsonSerializerOptions();
-        serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-        serializeOptions.MaxDepth = 10000;
-        var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
-        foreach (var parse_info in data)
+        foreach (var parse_info in input.Results)
         {
             var nodes = parse_info.Nodes;
             var parser = parse_info.Parser;
@@ -81,15 +56,12 @@ class Command
         }
     }
 
-    private static void ExtractBundle(Config config)
+    private static void ExtractBundle(
+        Config config, IReadOnlyList<AntlrJson.Artifact> artifacts)
     {
         if (string.IsNullOrWhiteSpace(config.OutputDirectory))
             throw new ArgumentException("--output-directory is required with --bundle.");
 
-        using var input = string.IsNullOrEmpty(config.File)
-            ? System.Console.OpenStandardInput()
-            : File.OpenRead(config.File);
-        var artifacts = AntlrJson.ArtifactBundle.Read(input);
         var root = Path.GetFullPath(config.OutputDirectory);
         var rootPrefix = root.EndsWith(Path.DirectorySeparatorChar)
             ? root

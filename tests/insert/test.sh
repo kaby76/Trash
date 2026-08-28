@@ -14,7 +14,7 @@ rm -rf Generated
 mkdir Generated
 
 # Test.
-dotnet trash parse Expression.g4 | dotnet trash xquery 'insert node "fragment " before //lexerRuleSpec/TOKEN_REF[text()="INT"] ' | dotnet trash sponge -c -o Generated
+dotnet trash parse Expression.g4 | dotnet trash xquery 'insert node "fragment " before //lexerRuleSpec/TOKEN_REF[text()="INT"] ' | dotnet trash text --bundle | dotnet trash sponge -c -o Generated
 
 # Diff.
 for i in "$where/Generated/*"

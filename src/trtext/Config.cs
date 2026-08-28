@@ -23,6 +23,9 @@ public class Config
     [Option('c', "count", Required = false, HelpText = "print only a count of selected lines per FILE")]
     public bool Count { get; set; }
 
+    [Option("bundle", Required = false, HelpText = "Write a PAX bundle, replacing .pt members with .txt members.")]
+    public bool Bundle { get; set; }
+
     [Option("version", Required = false)]
     public string Version { get; set; } = "3.0.0";
 }

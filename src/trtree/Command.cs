@@ -26,41 +26,8 @@ class Command
             return;
         }
 
-        string lines = null;
-        if (!(config.File != null && config.File != ""))
-        {
-            if (config.Verbose)
-            {
-                System.Console.Error.WriteLine("reading from stdin");
-            }
-
-            for (;;)
-            {
-                lines = System.Console.In.ReadToEnd();
-                if (lines != null && lines != "")
-                {
-                    break;
-                }
-            }
-
-            lines = lines.Trim();
-        }
-        else
-        {
-            if (config.Verbose)
-            {
-                System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
-            }
-
-            lines = File.ReadAllText(config.File);
-        }
-
-        var serializeOptions = new JsonSerializerOptions();
-        serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-        serializeOptions.WriteIndented = false;
-        serializeOptions.MaxDepth = 10000;
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
-        var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+        var data = AntlrJson.ParsingResultIO.Read(config.File).Results;
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
         bool more_than_one_fn = data.Count() > 1 || config.DisplayName;
         Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -78,28 +45,11 @@ class Command
 
     private static void ExecuteBundle(Config config)
     {
-        using var input = string.IsNullOrEmpty(config.File)
-            ? Console.OpenStandardInput()
-            : File.OpenRead(config.File);
-        var inputArtifacts = AntlrJson.ArtifactBundle.Read(input);
-        var outputArtifacts = new System.Collections.Generic.List<AntlrJson.Artifact>();
-        foreach (var artifact in inputArtifacts)
-        {
-            if (!artifact.Name.EndsWith(".pt", StringComparison.OrdinalIgnoreCase))
-            {
-                outputArtifacts.Add(artifact);
-                continue;
-            }
-
-            var result = AntlrJson.ArtifactBundle.DeserializeParsingResult(artifact.Data);
-            var tree = Render(result, config, "");
-            outputArtifacts.Add(new AntlrJson.Artifact(
-                AntlrJson.ArtifactBundle.ChangeExtension(artifact.Name, ".tree"),
-                new UTF8Encoding(false).GetBytes(tree)));
-        }
-
+        var input = AntlrJson.ParsingResultIO.Read(config.File);
         using var output = Console.OpenStandardOutput();
-        AntlrJson.ArtifactBundle.Write(output, outputArtifacts);
+        AntlrJson.ParsingResultIO.WriteFilteredBundle(
+            output, input, ".tree",
+            result => AntlrJson.ParsingResultIO.Utf8(Render(result, config, "")));
     }
 
     private static string Render(AntlrJson.ParsingResultSet result, Config config, string prefix)

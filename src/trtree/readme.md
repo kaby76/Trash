@@ -48,6 +48,7 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # Artifact bundles
 
-Use `--bundle` to read an ordinary POSIX PAX/tar stream. Every `.pt` member is
-rendered with the selected tree style and replaced by a `.tree` member. Error
-artifacts and unknown regular-file artifact types pass through unchanged.
+PAX/tar and legacy JSON inputs are detected automatically. Normal output is
+text. With `--bundle`, every `.pt` member is rendered with the selected tree
+style and replaced by a `.tree` member; error and unknown regular-file
+artifacts pass through unchanged.

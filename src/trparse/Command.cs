@@ -17,9 +17,6 @@ class Command
 
     public void Execute(Config config)
     {
-        if (config.Bundle && config.NoParsingResultSets)
-            throw new ArgumentException("--bundle cannot be combined with --no-prs.");
-
         // There are two ways to do this. One is a
         // bootstrapped method using LanguageServer, the
         // other is by using the generated code, with the loading

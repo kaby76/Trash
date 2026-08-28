@@ -22,31 +22,7 @@ class Command
 
     public void Execute(Config config)
     {
-        string lines = null;
-        if (!(config.File != null && config.File != ""))
-        {
-            if (config.Verbose)
-            {
-                LoggerNs.TimedStderrOutput.WriteLine("reading from stdin");
-            }
-
-            for (;;)
-            {
-                lines = System.Console.In.ReadToEnd();
-                if (lines != null && lines != "") break;
-            }
-
-            lines = lines.Trim();
-        }
-        else
-        {
-            if (config.Verbose)
-            {
-                LoggerNs.TimedStderrOutput.WriteLine("reading from file >>>" + config.File + "<<<");
-            }
-
-            lines = File.ReadAllText(config.File);
-        }
+        var input = ParsingResultIO.Read(config.File);
 
         Dictionary<string, string> rename_map = new Dictionary<string, string>();
         if (config.RenameMap != null && config.RenameMap.Any())
@@ -81,12 +57,8 @@ class Command
             }
         }
 
-        var serializeOptions = new JsonSerializerOptions();
-        serializeOptions.Converters.Add(new ParsingResultSetSerializer());
-        serializeOptions.WriteIndented = config.Format;
-        serializeOptions.MaxDepth = 10000;
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
-        var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+        var data = input.Results;
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
         var results = new List<ParsingResultSet>();
         foreach (var parse_info in data)
@@ -151,8 +123,8 @@ class Command
         }
 
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
-        string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
+        using var output = System.Console.OpenStandardOutput();
+        ParsingResultIO.WriteBundle(output, input, results, config.Format);
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
-        System.Console.WriteLine(js1);
     }
 }

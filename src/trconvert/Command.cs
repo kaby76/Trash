@@ -20,33 +20,8 @@ namespace Trash
 
         public void Execute(Config config)
         {
-            string lines = null;
-            if (!(config.File != null && config.File != ""))
-            {
-                if (config.Verbose)
-                {
-                    System.Console.Error.WriteLine("reading from stdin");
-                }
-                for (; ; )
-                {
-                    lines = System.Console.In.ReadToEnd();
-                    if (lines != null && lines != "") break;
-                }
-                lines = lines.Trim();
-            }
-            else
-            {
-                if (config.Verbose)
-                {
-                    System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
-                }
-                lines = File.ReadAllText(config.File);
-            }
-            var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-            serializeOptions.WriteIndented = config.Format;
-            serializeOptions.MaxDepth = 10000;
-            AntlrJson.ParsingResultSet[] data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+            var input = ParsingResultIO.Read(config.File);
+            var data = input.Results;
             List<ParsingResultSet> results = new List<ParsingResultSet>();
             foreach (var parse_info in data)
             {
@@ -149,8 +124,8 @@ namespace Trash
                 }
             }
 
-            string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
-            System.Console.WriteLine(js1);
+            using var output = System.Console.OpenStandardOutput();
+            ParsingResultIO.WriteBundle(output, input, results, config.Format);
         }
     }
 }

@@ -10,6 +10,9 @@ public class Config
     [Option('v', "verbose", Required = false)]
     public bool Verbose { get; set; }
 
+    [Option("bundle", Required = false, HelpText = "Write a PAX bundle, replacing .pt members with .tokens members.")]
+    public bool Bundle { get; set; }
+
     [Option("version", Required = false)]
     public string Version { get; set; } = "3.0.0";
 }
