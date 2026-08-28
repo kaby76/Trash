@@ -99,7 +99,7 @@ public class LexerAtnSimulator
         var modeStart = _atn.modeToStartState[mode];
 
         var initConfigs = new HashSet<LexerConfig>(LexerConfigEq.Instance);
-        initConfigs.Add(new LexerConfig(modeStart, LexStack.Empty, 0, -1, -1));
+        initConfigs.Add(new LexerConfig(modeStart, LexStack.Empty, 0, -1, -1, false));
         EpsClosure(initConfigs);
 
         var current = initConfigs;
@@ -120,7 +120,8 @@ public class LexerAtnSimulator
                 current, pos, ref bestRule, ref bestEnd, ref bestActions);
             if (nonGreedyAccepts.Count != 0)
                 current.RemoveWhere(c =>
-                    nonGreedyAccepts.Contains((c.OuterRule, c.NonGreedyDecision)));
+                    nonGreedyAccepts.Contains((c.OuterRule, c.NonGreedyDecision)) &&
+                    !c.CompletedInnerRule);
         }
 
         // EOF is a real lexer-ATN symbol. It does not consume a character, but
@@ -180,7 +181,8 @@ public class LexerAtnSimulator
                 if (CharMatches(tr, ch))
                     next.Add(new LexerConfig(
                         tr.target, c.Stack, c.Actions, c.OuterRule,
-                        NextNonGreedyDecision(c)));
+                        NextNonGreedyDecision(c),
+                        false));
             }
         }
         return next;
@@ -210,7 +212,8 @@ public class LexerAtnSimulator
             {
                 var (ret, rest) = c.Stack.Pop();
                 var next = new LexerConfig(
-                    ret, rest, c.Actions, c.OuterRule, c.NonGreedyDecision);
+                    ret, rest, c.Actions, c.OuterRule, c.NonGreedyDecision,
+                    true);
                 if (configs.Add(next)) work.Push(next);
                 continue;
             }
@@ -226,7 +229,8 @@ public class LexerAtnSimulator
                         next = new LexerConfig(
                             tr.target, c.Stack, c.Actions,
                             c.OuterRule < 0 ? tr.target.ruleIndex : c.OuterRule,
-                            NextNonGreedyDecision(c));
+                            NextNonGreedyDecision(c),
+                            c.CompletedInnerRule);
                         if (configs.Add(next)) work.Push(next);
                         break;
 
@@ -239,7 +243,8 @@ public class LexerAtnSimulator
                             acts |= 1 << at.actionIndex;
                         next = new LexerConfig(
                             tr.target, c.Stack, acts, c.OuterRule,
-                            NextNonGreedyDecision(c));
+                            NextNonGreedyDecision(c),
+                            c.CompletedInnerRule);
                         if (configs.Add(next)) work.Push(next);
                         break;
 
@@ -249,7 +254,8 @@ public class LexerAtnSimulator
                         var ruleStart = _atn.start[rt.ruleIndex];
                         next = new LexerConfig(
                             ruleStart, pushed, c.Actions, c.OuterRule,
-                            NextNonGreedyDecision(c));
+                            NextNonGreedyDecision(c),
+                            false);
                         if (configs.Add(next)) work.Push(next);
                         break;
                 }
@@ -261,7 +267,9 @@ public class LexerAtnSimulator
     {
         if (config.State.transitions.Count <= 1)
             return config.NonGreedyDecision;
-        return config.State.nonGreedy ? config.State.stateNumber : -1;
+        return config.State.nonGreedy
+            ? config.State.stateNumber
+            : config.NonGreedyDecision;
     }
 
     private static void UpdateLineCol(string input, int from, int to, ref int line, ref int col)
@@ -281,15 +289,21 @@ public class LexerAtnSimulator
         public readonly int Actions; // bitfield indexing into atn.lexerActions
         public readonly int OuterRule;
         public readonly int NonGreedyDecision;
+        // True when the most recently consumed character completed a
+        // referenced lexer rule. Such a path has priority over a competing
+        // wildcard path which accepts the outer rule at the same position.
+        public readonly bool CompletedInnerRule;
 
         public LexerConfig(MyATNState state, LexStack stack, int actions,
-                           int outerRule, int nonGreedyDecision)
+                           int outerRule, int nonGreedyDecision,
+                           bool completedInnerRule)
         {
             State = state;
             Stack = stack;
             Actions = actions;
             OuterRule = outerRule;
             NonGreedyDecision = nonGreedyDecision;
+            CompletedInnerRule = completedInnerRule;
         }
     }
 
@@ -302,7 +316,8 @@ public class LexerAtnSimulator
             => ReferenceEquals(x.State, y.State) &&
                LexStack.Same(x.Stack, y.Stack) &&
                x.OuterRule == y.OuterRule &&
-               x.NonGreedyDecision == y.NonGreedyDecision;
+               x.NonGreedyDecision == y.NonGreedyDecision &&
+               x.CompletedInnerRule == y.CompletedInnerRule;
 
         public int GetHashCode(LexerConfig c)
         {
@@ -310,7 +325,8 @@ public class LexerAtnSimulator
             {
                 int hash = c.State.stateNumber * 31 + c.Stack.GetHashCode();
                 hash = hash * 31 + c.OuterRule;
-                return hash * 31 + c.NonGreedyDecision;
+                hash = hash * 31 + c.NonGreedyDecision;
+                return hash * 31 + (c.CompletedInnerRule ? 1 : 0);
             }
         }
     }

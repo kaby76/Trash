@@ -1,0 +1,176 @@
+arangodb_query
+├── data_query
+│   └── data_access_query
+│       ├── for_op
+│       │   ├── for_in
+│       │   │   ├── FOR
+│       │   │   │   └── "FOR"
+│       │   │   ├── id_
+│       │   │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │   │   │   └── ID
+│       │   │   │       └── "u"
+│       │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │   │   ├── IN
+│       │   │   │   └── "IN"
+│       │   │   └── expr
+│       │   │       └── literal
+│       │   │           └── id_
+│       │   │               ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │   │               └── ID
+│       │   │                   └── "users"
+│       │   └── collect
+│       │       ├── Attribute WHITE_SPACE Value '&#10;  ' chnl:HIDDEN
+│       │       ├── COLLECT
+│       │       │   └── "COLLECT"
+│       │       ├── expr
+│       │       │   ├── expr
+│       │       │   │   └── literal
+│       │       │   │       └── id_
+│       │       │   │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │   │           └── ID
+│       │       │   │               └── "ageGroup"
+│       │       │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │   ├── ASSIGN
+│       │       │   │   └── "="
+│       │       │   └── expr
+│       │       │       ├── expr
+│       │       │       │   ├── id_
+│       │       │       │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │       │   │   └── ID
+│       │       │       │   │       └── "FLOOR"
+│       │       │       │   ├── LRB
+│       │       │       │   │   └── "("
+│       │       │       │   ├── expr
+│       │       │       │   │   ├── expr
+│       │       │       │   │   │   ├── expr
+│       │       │       │   │   │   │   └── literal
+│       │       │       │   │   │   │       └── id_
+│       │       │       │   │   │   │           └── ID
+│       │       │       │   │   │   │               └── "u"
+│       │       │       │   │   │   ├── ACCESS
+│       │       │       │   │   │   │   └── "."
+│       │       │       │   │   │   └── expr
+│       │       │       │   │   │       └── literal
+│       │       │       │   │   │           └── id_
+│       │       │       │   │   │               └── ID
+│       │       │       │   │   │                   └── "age"
+│       │       │       │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │       │   │   ├── DIV
+│       │       │       │   │   │   └── "/"
+│       │       │       │   │   └── expr
+│       │       │       │   │       └── literal
+│       │       │       │   │           └── numeric_literal
+│       │       │       │   │               ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │       │   │               └── DECIMAL_LITERAL
+│       │       │       │   │                   └── "5"
+│       │       │       │   └── RRB
+│       │       │       │       └── ")"
+│       │       │       ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │       ├── STAR
+│       │       │       │   └── "*"
+│       │       │       └── expr
+│       │       │           └── literal
+│       │       │               └── numeric_literal
+│       │       │                   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │       │                   └── DECIMAL_LITERAL
+│       │       │                       └── "5"
+│       │       └── aggregate_assign
+│       │           ├── Attribute WHITE_SPACE Value '&#10;  ' chnl:HIDDEN
+│       │           ├── AGGREGATE
+│       │           │   └── "AGGREGATE"
+│       │           ├── id_
+│       │           │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │           │   └── ID
+│       │           │       └── "minAge"
+│       │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │           ├── ASSIGN
+│       │           │   └── "="
+│       │           └── expr
+│       │               ├── expr
+│       │               │   ├── id_
+│       │               │   │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │               │   │   └── ID
+│       │               │   │       └── "MIN"
+│       │               │   ├── LRB
+│       │               │   │   └── "("
+│       │               │   ├── expr
+│       │               │   │   ├── expr
+│       │               │   │   │   └── literal
+│       │               │   │   │       └── id_
+│       │               │   │   │           └── ID
+│       │               │   │   │               └── "u"
+│       │               │   │   ├── ACCESS
+│       │               │   │   │   └── "."
+│       │               │   │   └── expr
+│       │               │   │       └── literal
+│       │               │   │           └── id_
+│       │               │   │               └── ID
+│       │               │   │                   └── "age"
+│       │               │   └── RRB
+│       │               │       └── ")"
+│       │               ├── COMMA
+│       │               │   └── ","
+│       │               └── expr
+│       │                   ├── expr
+│       │                   │   └── literal
+│       │                   │       └── id_
+│       │                   │           ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │                   │           └── ID
+│       │                   │               └── "maxAge"
+│       │                   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │                   ├── ASSIGN
+│       │                   │   └── "="
+│       │                   └── expr
+│       │                       ├── id_
+│       │                       │   ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│       │                       │   └── ID
+│       │                       │       └── "MAX"
+│       │                       ├── LRB
+│       │                       │   └── "("
+│       │                       ├── expr
+│       │                       │   ├── expr
+│       │                       │   │   └── literal
+│       │                       │   │       └── id_
+│       │                       │   │           └── ID
+│       │                       │   │               └── "u"
+│       │                       │   ├── ACCESS
+│       │                       │   │   └── "."
+│       │                       │   └── expr
+│       │                       │       └── literal
+│       │                       │           └── id_
+│       │                       │               └── ID
+│       │                       │                   └── "age"
+│       │                       └── RRB
+│       │                           └── ")"
+│       └── return_expr
+│           ├── Attribute WHITE_SPACE Value '&#10;  ' chnl:HIDDEN
+│           ├── RETURN
+│           │   └── "RETURN"
+│           └── expr
+│               └── literal
+│                   └── object_literal
+│                       ├── Attribute WHITE_SPACE Value ' ' chnl:HIDDEN
+│                       ├── LCB
+│                       │   └── "{"
+│                       ├── id_
+│                       │   ├── Attribute WHITE_SPACE Value '&#10;    ' chnl:HIDDEN
+│                       │   └── ID
+│                       │       └── "ageGroup"
+│                       ├── COMMA
+│                       │   └── ","
+│                       ├── id_
+│                       │   ├── Attribute WHITE_SPACE Value '&#10;    ' chnl:HIDDEN
+│                       │   └── ID
+│                       │       └── "minAge"
+│                       ├── COMMA
+│                       │   └── ","
+│                       ├── id_
+│                       │   ├── Attribute WHITE_SPACE Value '&#10;    ' chnl:HIDDEN
+│                       │   └── ID
+│                       │       └── "maxAge"
+│                       ├── Attribute WHITE_SPACE Value '&#10;  ' chnl:HIDDEN
+│                       └── RCB
+│                           └── "}"
+└── EOF
+    └── ""
+

@@ -20,14 +20,16 @@ class Command
     {
         int INDENT = 4;
         int level = 0;
+        private readonly TextWriter output;
 
-        public XmlWalk()
+        public XmlWalk(TextWriter output)
         {
+            this.output = output;
         }
 
         public void EnterEveryRule(UnvParseTreeNode ctx)
         {
-            System.Console.WriteLine(
+            output.WriteLine(
                 indent()
                 + "<" + ctx.LocalName
                 + ">");
@@ -37,7 +39,7 @@ class Command
         public void ExitEveryRule(UnvParseTreeNode ctx)
         {
             --level;
-            System.Console.WriteLine(
+            output.WriteLine(
                 indent()
                 + "</" + ctx.LocalName
                 + ">");
@@ -57,7 +59,7 @@ class Command
         {
             string value = (node as UnvParseTreeText).Data;
             {
-                System.Console.WriteLine(
+                output.WriteLine(
                     indent()
                     + "<t>"
                     + value
@@ -74,47 +76,28 @@ class Command
 
     public void Execute(Config config)
     {
-        string lines = null;
-        if (!(config.File != null && config.File != ""))
+        var input = AntlrJson.ParsingResultIO.Read(config.File);
+        if (config.Bundle)
         {
-            if (config.Verbose)
-            {
-                System.Console.Error.WriteLine("reading from stdin");
-            }
-
-            for (;;)
-            {
-                lines = System.Console.In.ReadToEnd();
-                if (lines != null && lines != "") break;
-            }
-        }
-        else
-        {
-            if (config.Verbose)
-            {
-                System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
-            }
-
-            lines = File.ReadAllText(config.File);
+            using var output = System.Console.OpenStandardOutput();
+            AntlrJson.ParsingResultIO.WriteFilteredBundle(
+                output, input, ".xml",
+                result => AntlrJson.ParsingResultIO.Utf8(Render(result)));
+            return;
         }
 
-        var serializeOptions = new JsonSerializerOptions();
-        serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-        serializeOptions.WriteIndented = false;
-        serializeOptions.MaxDepth = 10000;
-        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
-        var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
-        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
-        foreach (var parse_info in data)
+        foreach (var parseInfo in input.Results)
+            System.Console.Write(Render(parseInfo));
+    }
+
+    private static string Render(AntlrJson.ParsingResultSet parseInfo)
+    {
+        using var output = new StringWriter();
+        foreach (var node in parseInfo.Nodes)
         {
-            var nodes = parse_info.Nodes;
-            var parser = parse_info.Parser;
-            var lexer = parse_info.Lexer;
-            var fn = parse_info.FileName;
-            foreach (var node in parse_info.Nodes)
-            {
-                if (node is UnvParseTreeElement e) MyParseTreeWalker.Default.Walk(new XmlWalk(), e);
-            }
+            if (node is UnvParseTreeElement element)
+                MyParseTreeWalker.Default.Walk(new XmlWalk(output), element);
         }
+        return output.ToString();
     }
 }

@@ -27,38 +27,9 @@ class Command
             System.Console.Error.WriteLine("Expr = >>>" + expr + "<<<");
         }
 
-        string lines = null;
-        if (!(config.File != null && config.File != ""))
-        {
-            if (config.Verbose)
-            {
-                System.Console.Error.WriteLine("reading from stdin");
-            }
-
-            for (;;)
-            {
-                lines = System.Console.In.ReadToEnd();
-                if (lines != null && lines != "") break;
-            }
-
-            lines = lines.Trim();
-        }
-        else
-        {
-            if (config.Verbose)
-            {
-                System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
-            }
-
-            lines = File.ReadAllText(config.File);
-        }
-
-        var serializeOptions = new JsonSerializerOptions();
-        serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-        serializeOptions.WriteIndented = config.Format;
-        serializeOptions.MaxDepth = 10000;
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
-        var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+        var input = ParsingResultIO.Read(config.File);
+        var data = input.Results;
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
         var results = new List<ParsingResultSet>();
         foreach (var parse_info in data)
@@ -120,8 +91,8 @@ class Command
         }
 
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
-        string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
+        using var output = System.Console.OpenStandardOutput();
+        ParsingResultIO.WriteBundle(output, input, results, config.Format);
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
-        System.Console.WriteLine(js1);
     }
 }

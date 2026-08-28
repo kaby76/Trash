@@ -1,0 +1,222 @@
+asl
+├── statement
+│   ├── simple_statement
+│   │   └── assignment_statement
+│   │       └── constant_assignment
+│   │           ├── variable
+│   │           │   └── LOWERCASE_ID
+│   │           │       └── "position"
+│   │           ├── Attribute Skip Value ' '
+│   │           ├── EQ
+│   │           │   └── "="
+│   │           └── constant
+│   │               ├── Attribute Skip Value ' '
+│   │               └── INTEGER_VALUE
+│   │                   └── "0"
+│   └── NEWLINE
+│       └── "&#10;"
+├── statement
+│   ├── sequential_logic_statement
+│   │   └── loop_statement
+│   │       ├── LOOP
+│   │       │   └── "loop"
+│   │       ├── NEWLINE
+│   │       │   └── "&#10;"
+│   │       ├── statement
+│   │       │   ├── simple_statement
+│   │       │   │   └── assignment_statement
+│   │       │   │       └── arithmetic_assignment
+│   │       │   │           ├── variable
+│   │       │   │           │   ├── Attribute Skip Value '  '
+│   │       │   │           │   └── LOWERCASE_ID
+│   │       │   │           │       └── "position"
+│   │       │   │           ├── Attribute Skip Value ' '
+│   │       │   │           ├── EQ
+│   │       │   │           │   └── "="
+│   │       │   │           └── arithmetic_expression
+│   │       │   │               ├── arithmetic_component
+│   │       │   │               │   └── variable
+│   │       │   │               │       ├── Attribute Skip Value ' '
+│   │       │   │               │       └── LOWERCASE_ID
+│   │       │   │               │           └── "position"
+│   │       │   │               ├── Attribute Skip Value ' '
+│   │       │   │               ├── ARITHMETIC_OPERATOR
+│   │       │   │               │   └── "+"
+│   │       │   │               └── arithmetic_component
+│   │       │   │                   └── constant
+│   │       │   │                       ├── Attribute Skip Value ' '
+│   │       │   │                       └── INTEGER_VALUE
+│   │       │   │                           └── "1"
+│   │       │   └── NEWLINE
+│   │       │       └── "&#10;"
+│   │       ├── statement
+│   │       │   ├── simple_statement
+│   │       │   │   └── assignment_statement
+│   │       │   │       └── arithmetic_assignment
+│   │       │   │           ├── variable
+│   │       │   │           │   ├── Attribute Skip Value '  '
+│   │       │   │           │   └── LOWERCASE_ID
+│   │       │   │           │       └── "next_char"
+│   │       │   │           ├── Attribute Skip Value ' '
+│   │       │   │           ├── EQ
+│   │       │   │           │   └── "="
+│   │       │   │           └── arithmetic_expression
+│   │       │   │               ├── arithmetic_component
+│   │       │   │               │   └── variable
+│   │       │   │               │       ├── Attribute Skip Value ' '
+│   │       │   │               │       └── LOWERCASE_ID
+│   │       │   │               │           └── "first_char"
+│   │       │   │               ├── Attribute Skip Value ' '
+│   │       │   │               ├── ARITHMETIC_OPERATOR
+│   │       │   │               │   └── "+"
+│   │       │   │               └── arithmetic_component
+│   │       │   │                   └── variable
+│   │       │   │                       ├── Attribute Skip Value ' '
+│   │       │   │                       └── LOWERCASE_ID
+│   │       │   │                           └── "position"
+│   │       │   └── NEWLINE
+│   │       │       └── "&#10;"
+│   │       ├── break_statement
+│   │       │   ├── Attribute Skip Value '  '
+│   │       │   ├── BREAKIF
+│   │       │   │   └── "breakif"
+│   │       │   ├── logical_condition
+│   │       │   │   └── compound_logical_condition
+│   │       │   │       └── simple_logical_condition
+│   │       │   │           ├── component
+│   │       │   │           │   └── variable
+│   │       │   │           │       ├── Attribute Skip Value ' '
+│   │       │   │           │       └── LOWERCASE_ID
+│   │       │   │           │           └── "next_char"
+│   │       │   │           ├── logical_operator
+│   │       │   │           │   └── equality_operator
+│   │       │   │           │       ├── Attribute Skip Value ' '
+│   │       │   │           │       └── EQ
+│   │       │   │           │           └── "="
+│   │       │   │           └── component
+│   │       │   │               └── constant
+│   │       │   │                   └── text_string
+│   │       │   │                       ├── Attribute Skip Value ' '
+│   │       │   │                       └── OTHER_TEXT
+│   │       │   │                           └── "" ""
+│   │       │   └── NEWLINE
+│   │       │       └── "&#10;"
+│   │       └── ENDLOOP
+│   │           └── "endloop"
+│   └── NEWLINE
+│       └── "&#10;&#10;"
+├── statement
+│   ├── simple_statement
+│   │   └── assignment_statement
+│   │       └── constant_assignment
+│   │           ├── variable
+│   │           │   └── LOWERCASE_ID
+│   │           │       └── "fault_no"
+│   │           ├── Attribute Skip Value ' '
+│   │           ├── EQ
+│   │           │   └── "="
+│   │           └── constant
+│   │               ├── Attribute Skip Value ' '
+│   │               └── INTEGER_VALUE
+│   │                   └── "1"
+│   └── NEWLINE
+│       └── "&#10;"
+├── statement
+│   ├── sequential_logic_statement
+│   │   └── loop_statement
+│   │       ├── LOOP
+│   │       │   └── "loop"
+│   │       ├── NEWLINE
+│   │       │   └── "&#10;"
+│   │       ├── statement
+│   │       │   ├── simple_statement
+│   │       │   │   └── find_statement
+│   │       │   │       └── find_instance_statement
+│   │       │   │           ├── variable
+│   │       │   │           │   ├── Attribute Skip Value '  '
+│   │       │   │           │   └── LOWERCASE_ID
+│   │       │   │           │       └── "fault"
+│   │       │   │           ├── Attribute Skip Value ' '
+│   │       │   │           ├── EQ
+│   │       │   │           │   └── "="
+│   │       │   │           ├── Attribute Skip Value ' '
+│   │       │   │           ├── FIND_ONE
+│   │       │   │           │   └── "find-one"
+│   │       │   │           ├── object_name
+│   │       │   │           │   ├── Attribute Skip Value ' '
+│   │       │   │           │   └── UPPERCASE_ID
+│   │       │   │           │       └── "LOGS_FAULT"
+│   │       │   │           ├── Attribute Skip Value ' '
+│   │       │   │           ├── WHERE
+│   │       │   │           │   └── "where"
+│   │       │   │           └── object_condition
+│   │       │   │               ├── attribute
+│   │       │   │               │   ├── Attribute Skip Value ' '
+│   │       │   │               │   └── LEADING_FIRST_UPPERCASE_ID
+│   │       │   │               │       └── "Fault_number"
+│   │       │   │               ├── logical_operator
+│   │       │   │               │   └── equality_operator
+│   │       │   │               │       ├── Attribute Skip Value ' '
+│   │       │   │               │       └── EQ
+│   │       │   │               │           └── "="
+│   │       │   │               └── variable
+│   │       │   │                   ├── Attribute Skip Value ' '
+│   │       │   │                   └── LOWERCASE_ID
+│   │       │   │                       └── "fault_no"
+│   │       │   └── NEWLINE
+│   │       │       └── "&#10;"
+│   │       ├── break_statement
+│   │       │   ├── Attribute Skip Value '  '
+│   │       │   ├── BREAKIF
+│   │       │   │   └── "breakif"
+│   │       │   ├── logical_condition
+│   │       │   │   └── compound_logical_condition
+│   │       │   │       └── simple_logical_condition
+│   │       │   │           ├── component
+│   │       │   │           │   └── variable
+│   │       │   │           │       ├── Attribute Skip Value ' '
+│   │       │   │           │       └── LOWERCASE_ID
+│   │       │   │           │           └── "fault"
+│   │       │   │           ├── equality_operator
+│   │       │   │           │   ├── Attribute Skip Value ' '
+│   │       │   │           │   └── EQ
+│   │       │   │           │       └── "="
+│   │       │   │           ├── Attribute Skip Value ' '
+│   │       │   │           └── UNDEFINED
+│   │       │   │               └── "UNDEFINED"
+│   │       │   └── NEWLINE
+│   │       │       └── "&#10;"
+│   │       ├── statement
+│   │       │   ├── simple_statement
+│   │       │   │   └── assignment_statement
+│   │       │   │       └── arithmetic_assignment
+│   │       │   │           ├── variable
+│   │       │   │           │   ├── Attribute Skip Value '  '
+│   │       │   │           │   └── LOWERCASE_ID
+│   │       │   │           │       └── "fault_no"
+│   │       │   │           ├── Attribute Skip Value ' '
+│   │       │   │           ├── EQ
+│   │       │   │           │   └── "="
+│   │       │   │           └── arithmetic_expression
+│   │       │   │               ├── arithmetic_component
+│   │       │   │               │   └── variable
+│   │       │   │               │       ├── Attribute Skip Value ' '
+│   │       │   │               │       └── LOWERCASE_ID
+│   │       │   │               │           └── "fault_no"
+│   │       │   │               ├── Attribute Skip Value ' '
+│   │       │   │               ├── ARITHMETIC_OPERATOR
+│   │       │   │               │   └── "+"
+│   │       │   │               └── arithmetic_component
+│   │       │   │                   └── constant
+│   │       │   │                       ├── Attribute Skip Value ' '
+│   │       │   │                       └── INTEGER_VALUE
+│   │       │   │                           └── "1"
+│   │       │   └── NEWLINE
+│   │       │       └── "&#10;"
+│   │       └── ENDLOOP
+│   │           └── "endloop"
+│   └── NEWLINE
+│       └── "&#10;"
+└── EOF
+    └── ""
+

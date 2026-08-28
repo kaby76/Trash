@@ -134,7 +134,7 @@ public static class InterpRunner
     // interp was generated from such a token vocabulary, ANTLR can assign a separate
     // implicit token type to the literal used by the parser rule. Reconcile that
     // duplicate so the independently interpreted lexer and parser share a vocabulary.
-    private static void ReconcileLiteralTokenTypes(
+    internal static void ReconcileLiteralTokenTypes(
         List<LexerToken> tokens, string[] lexerSymbolicNames,
         string[] lexerLiteralNames, string[] parserLiteralNames)
     {
@@ -163,6 +163,9 @@ public static class InterpRunner
         {
             var token = tokens[i];
             if (!remap.TryGetValue(token.Type, out int parserType)) continue;
+            var symbolicName = lexerSymbolicNames[token.Type];
+            if (!string.Equals(token.Text, symbolicName, StringComparison.OrdinalIgnoreCase))
+                continue;
             token.Type = parserType;
             tokens[i] = token;
         }

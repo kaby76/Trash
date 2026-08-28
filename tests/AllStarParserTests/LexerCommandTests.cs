@@ -92,6 +92,40 @@ public class LexerCommandTests
         Assert.Equal(["/* first */", "/* second */"], comments);
     }
 
+    [Fact]
+    public void NonGreedyLexerLoopRemainsNonGreedyAcrossGreedySuffix()
+    {
+        var interp = InterpFileReader.Read(File.ReadAllText(
+            NativeTreeTestSupport.Asl.LexerInterp));
+        var atn = AtnDeserializer.Deserialize(interp.AtnData);
+
+        var tokens = new LexerAtnSimulator(atn)
+            .Tokenize("# first\nvalue = TRUE\n# second\n")
+            .Where(token => token.Channel == 0 && token.Type != -1)
+            .Select(token => token.Text)
+            .ToArray();
+
+        Assert.Equal(["value", "=", "TRUE", "\n"], tokens);
+    }
+
+    [Fact]
+    public void NonGreedyLexerLoopPreservesHigherPriorityEscapedDelimiter()
+    {
+        var lexerInterp = Path.Combine(
+            AppContext.BaseDirectory, "TestData", "corundum", "interp",
+            "CorundumLexer.interp");
+        var interp = InterpFileReader.Read(File.ReadAllText(lexerInterp));
+        var atn = AtnDeserializer.Deserialize(interp.AtnData);
+
+        var literals = new LexerAtnSimulator(atn)
+            .Tokenize("\"first\" \"Hello, I'm CORUN\\\"DUM\"")
+            .Where(token => token.Channel == 0 && token.Type != -1)
+            .Select(token => token.Text)
+            .ToArray();
+
+        Assert.Equal(["\"first\"", "\"Hello, I'm CORUN\\\"DUM\""], literals);
+    }
+
     private static MyATN BuildCommandAtn() => BuildAtn(
         modeCount: 3,
         new RuleSpec(0, '<', 1, new(MyLexerActionType.PushMode, 1, 0)),

@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.Json;
+using System;
 
 namespace Trash;
 
@@ -21,32 +22,13 @@ class Command
 
     public void Execute(Config config)
     {
-        string lines = null;
-        if (!(config.File != null && config.File != ""))
+        var input = AntlrJson.ParsingResultIO.Read(config.File);
+        if (input.IsBundle)
         {
-            if (config.Verbose)
-            {
-                System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
-            }
-
-            for (;;)
-            {
-                lines = System.Console.In.ReadToEnd();
-                if (lines != null && lines != "") break;
-            }
-
-            lines = lines.Trim();
+            ExtractBundle(config, input.Artifacts);
+            return;
         }
-        else
-        {
-            lines = File.ReadAllText(config.File);
-        }
-
-        var serializeOptions = new JsonSerializerOptions();
-        serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-        serializeOptions.MaxDepth = 10000;
-        var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
-        foreach (var parse_info in data)
+        foreach (var parse_info in input.Results)
         {
             var nodes = parse_info.Nodes;
             var parser = parse_info.Parser;
@@ -71,6 +53,45 @@ class Command
             }
 
             File.WriteAllText(fn, sb.ToString());
+        }
+    }
+
+    private static void ExtractBundle(
+        Config config, IReadOnlyList<AntlrJson.Artifact> artifacts)
+    {
+        if (string.IsNullOrWhiteSpace(config.OutputDirectory))
+            throw new ArgumentException("--output-directory is required with --bundle.");
+
+        var root = Path.GetFullPath(config.OutputDirectory);
+        var rootPrefix = root.EndsWith(Path.DirectorySeparatorChar)
+            ? root
+            : root + Path.DirectorySeparatorChar;
+        var comparer = OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
+        var destinations = new Dictionary<string, AntlrJson.Artifact>(comparer);
+
+        foreach (var artifact in artifacts)
+        {
+            var relative = artifact.Name.Replace('/', Path.DirectorySeparatorChar);
+            var destination = Path.GetFullPath(Path.Combine(root, relative));
+            if (!destination.StartsWith(rootPrefix, OperatingSystem.IsWindows()
+                    ? StringComparison.OrdinalIgnoreCase
+                    : StringComparison.Ordinal))
+                throw new InvalidDataException($"Bundle member '{artifact.Name}' escapes output directory.");
+            if (!destinations.TryAdd(destination, artifact))
+                throw new InvalidDataException($"Multiple bundle members map to '{destination}'.");
+            if (File.Exists(destination) && !config.Clobber)
+                throw new IOException($"Attempting to overwrite '{destination}'. Use -c/--clobber if intended.");
+        }
+
+        Directory.CreateDirectory(root);
+        foreach (var pair in destinations)
+        {
+            var directory = Path.GetDirectoryName(pair.Key);
+            if (!string.IsNullOrEmpty(directory))
+                Directory.CreateDirectory(directory);
+            if (config.Verbose)
+                System.Console.Error.WriteLine("Writing to " + pair.Key);
+            File.WriteAllBytes(pair.Key, pair.Value.Data);
         }
     }
 

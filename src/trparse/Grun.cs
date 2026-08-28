@@ -22,6 +22,10 @@ public class Grun
     private long _firstFileTokens;
     private double _firstFileParseSeconds;
     private int _fileCount;
+    private readonly List<BundleParse> _bundleParses = new();
+
+    private sealed record BundleParse(string InputName,
+        List<AntlrJson.ParsingResultSet> Results, string Diagnostics);
 
     public Grun(Config co)
     {
@@ -96,7 +100,7 @@ public class Grun
                         txt = inputs[f];
                     }
 
-                    var (r, _, _) = DoParse(parser_type, txt, "", inputs[f], f, data);
+                    var (r, _, _) = ParseOne(parser_type, txt, inputs[f], f, data);
                     result = result == 0 ? r : result;
                 }
             }
@@ -115,7 +119,7 @@ public class Grun
                         txt = inputs[f];
                     }
 
-                    var (r, _, _) = DoParse(parser_type, txt, "", inputs[f], f, data);
+                    var (r, _, _) = ParseOne(parser_type, txt, inputs[f], f, data);
                     result = result == 0 ? r : result;
                 }
             }
@@ -129,12 +133,12 @@ public class Grun
                 }
 
                 txt = lines;
-                (result, _, _) = DoParse(parser_type, txt, "", "stdin", 0, data);
+                (result, _, _) = ParseOne(parser_type, txt, "stdin", 0, data);
             }
             else if (config.Input != null)
             {
                 txt = config.Input;
-                (result, _, _) = DoParse(parser_type, txt, "", "string", 0, data);
+                (result, _, _) = ParseOne(parser_type, txt, "string", 0, data);
             }
             else if (config.Files != null)
             {
@@ -150,7 +154,7 @@ public class Grun
                         txt = file;
                     }
 
-                    var (r, _, _) = DoParse(parser_type, txt, "", file, f, data);
+                    var (r, _, _) = ParseOne(parser_type, txt, file, f, data);
                     result = result == 0 ? r : result;
                     f++;
                 }
@@ -186,6 +190,11 @@ public class Grun
             PrintPerfSummary((overallAfter - overallBefore).TotalSeconds);
 
             if (config.NoParsingResultSets) return result;
+            if (config.Bundle)
+            {
+                WriteBundle();
+                return result;
+            }
             if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
             var serializeOptions = new JsonSerializerOptions();
             serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
@@ -203,6 +212,63 @@ public class Grun
         }
 
         return result;
+    }
+
+    private (int ExitCode, double ParseSeconds, long TokenCount) ParseOne(
+        string parserType, string text, string inputName, int rowNumber,
+        List<AntlrJson.ParsingResultSet> data)
+    {
+        if (!config.Bundle)
+            return DoParse(parserType, text, "", inputName, rowNumber, data);
+
+        int start = data.Count;
+        var originalError = Console.Error;
+        using var captured = new StringWriter();
+        (int ExitCode, double ParseSeconds, long TokenCount) outcome;
+        try
+        {
+            Console.SetError(captured);
+            outcome = DoParse(parserType, text, "", inputName, rowNumber, data);
+        }
+        catch (Exception exception)
+        {
+            captured.WriteLine(exception);
+            outcome = (1, 0, 0);
+        }
+        finally
+        {
+            Console.SetError(originalError);
+        }
+
+        var stderr = captured.ToString();
+        originalError.Write(stderr);
+        var diagnostics = outcome.ExitCode == 0 ? string.Empty : stderr;
+        _bundleParses.Add(new BundleParse(inputName, data.Skip(start).ToList(), diagnostics));
+        return outcome;
+    }
+
+    private void WriteBundle()
+    {
+        var paths = AntlrJson.ArtifactBundle.RelativeInputNames(
+            _bundleParses.Select(parse => parse.InputName), config.BaseDirectory);
+        var baseNames = AntlrJson.ArtifactBundle.ArtifactBaseNames(paths.Values);
+        var artifacts = new List<AntlrJson.Artifact>();
+        foreach (var parse in _bundleParses)
+        {
+            var baseName = baseNames[paths[parse.InputName]];
+            for (var index = 0; index < parse.Results.Count; index++)
+            {
+                var suffix = parse.Results.Count == 1 ? "" : $".{index + 1}";
+                artifacts.Add(new AntlrJson.Artifact(
+                    baseName + suffix + ".pt",
+                    AntlrJson.ArtifactBundle.SerializeParsingResult(parse.Results[index], config.Format)));
+            }
+            artifacts.Add(new AntlrJson.Artifact(
+                baseName + ".errors", new UTF8Encoding(false).GetBytes(parse.Diagnostics)));
+        }
+
+        using var output = Console.OpenStandardOutput();
+        AntlrJson.ArtifactBundle.Write(output, artifacts);
     }
 
     private void UpdateStats(double parseSeconds, long tokenCount)

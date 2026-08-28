@@ -55,32 +55,9 @@ class Command
         if (config.Verbose)
             Console.Error.WriteLine("Query = >>>" + query + "<<<");
 
-        string lines;
-        if (config.File != null && config.File != "")
-        {
-            if (config.Verbose)
-                Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
-            lines = File.ReadAllText(config.File);
-        }
-        else
-        {
-            if (config.Verbose)
-                Console.Error.WriteLine("reading from stdin");
-            for (;;)
-            {
-                lines = Console.In.ReadToEnd();
-                if (lines != null && lines != "") break;
-            }
-            lines = lines!.Trim();
-        }
-
-        var serializeOptions = new JsonSerializerOptions();
-        serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-        serializeOptions.WriteIndented = config.Format;
-        serializeOptions.MaxDepth = 10000;
-
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
-        var data = JsonSerializer.Deserialize<ParsingResultSet[]>(lines, serializeOptions)!;
+        var input = ParsingResultIO.Read(config.File);
+        var data = input.Results;
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
 
         // Parse the XQuery module.
@@ -108,8 +85,7 @@ class Command
         // parse tree files and navigate them with standard XPath axes.
         AdapterDocument LoadDocFile(string path)
         {
-            var json2  = File.ReadAllText(path);
-            var data2  = JsonSerializer.Deserialize<ParsingResultSet[]>(json2, serializeOptions)!;
+            var data2  = ParsingResultIO.Read(path).Results;
             return AdapterDocument.Build(data2.SelectMany(prs => prs.Nodes));
         }
 
@@ -169,6 +145,7 @@ class Command
         }
 
         var results = new List<ParsingResultSet>();
+        var do_rs = true;
 
         foreach (var parse_info in data)
         {
@@ -189,20 +166,34 @@ class Command
             var xdmResult = evaluator.EvaluateModule(moduleNode);
             if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("evaluation complete");
 
-            // If the expression returned a non-empty sequence of adapter nodes, treat it
-            // as a select and output only those nodes (like trxpath).
-            // If empty (update expression), output the whole (mutated) tree.
+            // If the expression returned a non-empty sequence of element nodes, treat it
+            // as a select and output only those nodes. Text, attribute, document, and
+            // scalar results are written directly and suppress parse-result serialization,
+            // matching trxpath. If empty (update expression), output the whole mutated tree.
             UnvParseTreeNode[] outNodes;
             var selected = new List<UnvParseTreeNode>();
             foreach (var item in xdmResult)
             {
                 if (item is AdapterElement ae) selected.Add(ae.Source);
-                else if (item is AdapterText at) selected.Add(at.Source);
-                else if (item is AdapterAttribute aa) selected.Add(aa.Source);
                 else if (item is XdmElement xe) selected.Add(XdmToUnv(xe));
+                else if (item is AdapterText at)
+                {
+                    do_rs = false;
+                    Console.WriteLine(at.Source.Data);
+                }
+                else if (item is AdapterAttribute aa)
+                {
+                    do_rs = false;
+                    Console.WriteLine(aa.Source.StringValue);
+                }
+                else if (item is AdapterDocument)
+                {
+                    do_rs = false;
+                    Console.WriteLine(item);
+                }
                 else
                 {
-                    // Scalar result — print to stdout and don't emit parse tree.
+                    do_rs = false;
                     Console.WriteLine(item.StringValue);
                 }
             }
@@ -218,10 +209,13 @@ class Command
             results.Add(parse_info_out);
         }
 
-        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
-        string js = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
-        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
-        Console.WriteLine(js);
+        if (do_rs)
+        {
+            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
+            using var output = Console.OpenStandardOutput();
+            ParsingResultIO.WriteBundle(output, input, results, config.Format);
+            if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
+        }
     }
 
     // Converts a constructed XdmElement tree (from an element constructor) back

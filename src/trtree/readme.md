@@ -18,7 +18,7 @@ Reads a tree from stdin and prints the tree as an indented node list.
 
 ## Current version
 
-Release 2.7.0.
+Release 3.0.0.
 
 ## License
 
@@ -46,3 +46,9 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
 ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# Artifact bundles
+
+PAX/tar and legacy JSON inputs are detected automatically. Normal output is
+text. With `--bundle`, every `.pt` member is rendered with the selected tree
+style and replaced by a `.tree` member; error and unknown regular-file
+artifacts pass through unchanged.

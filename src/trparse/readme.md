@@ -97,7 +97,7 @@ works without modification.
 
 ## Current version
 
-Release 2.7.0.
+Release 3.0.0.
 
 ## License
 
@@ -125,3 +125,11 @@ IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR
 ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, 
 TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE 
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+# Artifact bundles
+
+The default output is an ordinary POSIX PAX/tar stream. Each parsed input
+produces one `.pt` member containing a single
+`ParsingResultSet` JSON object and one UTF-8 `.errors` member. Successful inputs
+have an empty `.errors` member. Relative hierarchy below the inputs' common
+directory is preserved. Use `--base-directory DIR` to select the stripped root
+explicitly; inputs outside it are rejected.

@@ -21,101 +21,79 @@ namespace Trash
 
         public void Execute(Config config)
         {
-            string lines = null;
-            if (!(config.File != null && config.File != ""))
+            var input = ParsingResultIO.Read(config.File);
+            if (config.Bundle)
             {
-                if (config.Verbose)
-                {
-                    System.Console.Error.WriteLine("reading from stdin");
-                }
-
-                for (;;)
-                {
-                    lines = System.Console.In.ReadToEnd();
-                    if (lines != null && lines != "") break;
-                }
-
-                lines = lines.Trim();
-            }
-            else
-            {
-                if (config.Verbose)
-                {
-                    System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
-                }
-
-                lines = File.ReadAllText(config.File);
+                using var output = System.Console.OpenStandardOutput();
+                ParsingResultIO.WriteFilteredBundle(
+                    output, input, ".dot",
+                    result => ParsingResultIO.Utf8(Render(result)));
+                return;
             }
 
-            var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-            serializeOptions.WriteIndented = config.Format;
-            serializeOptions.MaxDepth = 10000;
-            AntlrJson.ParsingResultSet[] data =
-                JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
-            List<ParsingResultSet> results = new List<ParsingResultSet>();
-            foreach (var in_tuple in data)
+            foreach (var result in input.Results)
+                System.Console.Write(Render(result));
+        }
+
+        private static string Render(ParsingResultSet in_tuple)
+        {
+            var nodes = in_tuple.Nodes;
+            StringBuilder sb = new StringBuilder();
+            sb.AppendLine("digraph G {");
+            foreach (var node in nodes)
             {
-                var nodes = in_tuple.Nodes;
-                var lexer = in_tuple.Lexer;
-                var parser = in_tuple.Parser;
-                StringBuilder sb = new StringBuilder();
-                sb.AppendLine("digraph G {");
-                foreach (var node in nodes)
+                Stack<UnvParseTreeElement> stack = new Stack<UnvParseTreeElement>();
+                if (!(node is UnvParseTreeElement nn)) continue;
+                stack.Push(nn);
+                while (stack.Any())
                 {
-                    Stack<UnvParseTreeElement> stack = new Stack<UnvParseTreeElement>();
-                    if (!(node is UnvParseTreeElement nn)) continue;
-                    stack.Push(nn);
-                    while (stack.Any())
+                    var t = stack.Pop();
+                    if (t.IsTerminal())
                     {
-                        var t = stack.Pop();
-                        if (t.IsTerminal())
-                        {
-                            if (t.NodeType == Antlr4.Runtime.TokenConstants.EOF)
-                                sb.AppendLine("Node" + t.GetHashCode().ToString() + " [label=\"EOF\"];");
-                            else
-                                sb.AppendLine("Node" + t.GetHashCode().ToString()
-                                                     + " [label=\""
-                                                     + t.LocalName
-                                                     + " "
-                                                     + ParseTreeEditing.UnvParseTreeDOM.TokenOutput.PerformEscapes(t.GetText())
-                                                     + "\"];");
-                        }
+                        if (t.NodeType == Antlr4.Runtime.TokenConstants.EOF)
+                            sb.AppendLine("Node" + t.GetHashCode().ToString() + " [label=\"EOF\"];");
                         else
-                        {
                             sb.AppendLine("Node" + t.GetHashCode().ToString()
                                                  + " [label=\""
                                                  + t.LocalName
+                                                 + " "
+                                                 + TokenOutput.PerformEscapes(t.GetText())
                                                  + "\"];");
-                            for (int i = t.ChildNodes.Length - 1; i >= 0; --i)
-                            {
-                                var c = t.ChildNodes.item(i);
-                                if (!(c is UnvParseTreeElement cc)) continue;
-                                stack.Push(cc);
-                            }
-                        }
                     }
-
-                    stack.Push(nn);
-                    while (stack.Any())
+                    else
                     {
-                        var t = stack.Pop();
-                        for (int i = 0; i < t.ChildNodes.Length; ++i)
+                        sb.AppendLine("Node" + t.GetHashCode().ToString()
+                                             + " [label=\""
+                                             + t.LocalName
+                                             + "\"];");
+                        for (int i = t.ChildNodes.Length - 1; i >= 0; --i)
                         {
                             var c = t.ChildNodes.item(i);
                             if (!(c is UnvParseTreeElement cc)) continue;
-                            sb.AppendLine("Node" + t.GetHashCode().ToString()
-                                                 + " -> "
-                                                 + "Node" + c.GetHashCode().ToString()
-                                                 + ";");
                             stack.Push(cc);
                         }
                     }
                 }
 
-                sb.AppendLine("}");
-                System.Console.WriteLine(sb.ToString());
+                stack.Push(nn);
+                while (stack.Any())
+                {
+                    var t = stack.Pop();
+                    for (int i = 0; i < t.ChildNodes.Length; ++i)
+                    {
+                        var c = t.ChildNodes.item(i);
+                        if (!(c is UnvParseTreeElement cc)) continue;
+                        sb.AppendLine("Node" + t.GetHashCode().ToString()
+                                             + " -> "
+                                             + "Node" + c.GetHashCode().ToString()
+                                             + ";");
+                        stack.Push(cc);
+                    }
+                }
             }
+
+            sb.AppendLine("}");
+            return sb.ToString();
         }
     }
 }

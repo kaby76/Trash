@@ -55,94 +55,59 @@ class Command
 
     public void Execute(Config config)
     {
-        string lines = null;
-        if (!(config.File != null && config.File != ""))
+        var input = AntlrJson.ParsingResultIO.Read(config.File);
+        if (config.Bundle)
         {
-            if (config.Verbose)
-            {
-                System.Console.Error.WriteLine("reading from stdin");
-            }
+            using var output = System.Console.OpenStandardOutput();
+            AntlrJson.ParsingResultIO.WriteFilteredBundle(
+                output, input, ".txt",
+                result => AntlrJson.ParsingResultIO.Utf8(Render(result, config, false, true)),
+                (artifactName, result) => AntlrJson.ParsingResultIO.SourceArtifactName(
+                    artifactName, result.FileName));
+            return;
+        }
 
-            for (;;)
-            {
-                lines = System.Console.In.ReadToEnd();
-                if (lines != null && lines != "") break;
-            }
+        bool more_than_one_fn = input.Results.Length > 1;
+        foreach (var result in input.Results)
+            System.Console.Write(Render(result, config, more_than_one_fn, false));
+    }
 
-            lines = lines.Trim();
+    private string Render(
+        AntlrJson.ParsingResultSet obj1,
+        Config config,
+        bool includeFileName,
+        bool exactSource)
+    {
+        var output = new StringBuilder();
+        bool files_with_matches = config.FilesWithMatches;
+        bool files_without_match = config.FilesWithoutMatch;
+        bool count = config.Count;
+        var fn = obj1.FileName;
+        var nodes = obj1.Nodes;
+        if (files_with_matches)
+        {
+            if (nodes.Any()) output.AppendLine(fn);
+        }
+        else if (files_without_match)
+        {
+            if (!nodes.Any()) output.AppendLine(fn);
+        }
+        else if (count)
+        {
+            if (includeFileName) output.Append(fn + ":");
+            output.AppendLine(nodes.Count().ToString());
         }
         else
         {
-            if (config.Verbose)
+            foreach (var node in nodes)
             {
-                System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
-            }
-
-            lines = File.ReadAllText(config.File);
-        }
-
-        var serializeOptions = new JsonSerializerOptions();
-        serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-        serializeOptions.WriteIndented = false;
-        serializeOptions.MaxDepth = 10000;
-        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
-        var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
-        if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
-        bool more_than_one_fn = data.Count() > 1;
-        bool files_with_matches = config.FilesWithMatches;
-        bool files_without_match = config.FilesWithoutMatch;
-        bool line_number = config.LineNumber;
-        bool count = config.Count;
-        foreach (var obj1 in data)
-        {
-            var fn = obj1.FileName;
-            var nodes = obj1.Nodes;
-            var parser = obj1.Parser;
-            var lexer = obj1.Lexer;
-            if (files_with_matches)
-            {
-                if (nodes.Any()) System.Console.WriteLine(fn);
-                continue;
-            }
-
-            if (files_without_match)
-            {
-                if (!nodes.Any()) System.Console.WriteLine(fn);
-                continue;
-            }
-
-            if (count)
-            {
-                if (more_than_one_fn)
-                    System.Console.Write(fn + ":");
-                System.Console.WriteLine(nodes.Count());
-                continue;
-            }
-
-            {
-                foreach (var node in nodes)
-                {
-                    if (more_than_one_fn)
-                        System.Console.Write(fn + ":");
-                    //if (line_number)
-                    //{
-                    //    var source_interval = node.SourceInterval;
-                    //    int a = source_interval.a;
-                    //    int b = source_interval.b;
-                    //    IToken ta = parser.TokenStream.Get(a);
-                    //    IToken tb = parser.TokenStream.Get(b);
-                    //    var start = ta.StartIndex;
-                    //    var stop = tb.StopIndex + 1;
-                    //    var (line_a, col_a) = new LanguageServer.Module().GetLineColumn(start, doc);
-                    //    var (line_b, col_b) = new LanguageServer.Module().GetLineColumn(stop, doc);
-                    //    System.Console.Write(line_a + "," + col_a
-                    //            + "-" + line_b + "," + col_b + ":");
-                    //}
-
-                    // WriteLine, remove last newline if you need to.
-                    System.Console.WriteLine(this.Reconstruct(node));
-                }
+                if (includeFileName) output.Append(fn + ":");
+                if (exactSource)
+                    output.Append(Reconstruct(node));
+                else
+                    output.AppendLine(Reconstruct(node));
             }
         }
+        return output.ToString();
     }
 }

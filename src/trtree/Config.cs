@@ -25,6 +25,9 @@ public class Config
     [Option('b', "block-style", Required = false, HelpText = "Output tree as block style.")]
     public bool BlockTreeStyle { get; set; }
 
+    [Option("bundle", Required = false, HelpText = "Read and write an ordinary POSIX PAX artifact bundle.")]
+    public bool Bundle { get; set; }
+
     [Option("version", Required = false)]
-    public string Version { get; set; } = "2.7.0";
+    public string Version { get; set; } = "3.0.0";
 }

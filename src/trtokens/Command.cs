@@ -39,48 +39,27 @@ class Command
 
     public void Execute(Config config)
     {
-        string lines = null;
-        if (!(config.File != null && config.File != ""))
+        var input = AntlrJson.ParsingResultIO.Read(config.File);
+        if (config.Bundle)
         {
-            if (config.Verbose)
-            {
-                System.Console.Error.WriteLine("reading from stdin");
-            }
-
-            for (;;)
-            {
-                lines = System.Console.In.ReadToEnd();
-                if (lines != null && lines != "") break;
-            }
-
-            lines = lines.Trim();
-        }
-        else
-        {
-            if (config.Verbose)
-            {
-                System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
-            }
-
-            lines = File.ReadAllText(config.File);
+            using var output = System.Console.OpenStandardOutput();
+            AntlrJson.ParsingResultIO.WriteFilteredBundle(
+                output, input, ".tokens", Render);
+            return;
         }
 
-        var serializeOptions = new JsonSerializerOptions();
-        serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-        serializeOptions.WriteIndented = false;
-        serializeOptions.MaxDepth = 10000;
-        var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
-        foreach (var parse_info in data)
+        foreach (var parse_info in input.Results)
+            System.Console.Write(Encoding.UTF8.GetString(Render(parse_info)));
+    }
+
+    private static byte[] Render(AntlrJson.ParsingResultSet parseInfo)
+    {
+        var text = new StringBuilder();
+        foreach (var node in parseInfo.Nodes)
         {
-            var nodes = parse_info.Nodes;
-            var parser = parse_info.Parser;
-            var lexer = parse_info.Lexer;
-            var fn = parse_info.FileName;
-            foreach (var node in nodes)
-            {
-                var s = TokenOutput.OutputTokens(node, lexer, parser).ToString();
-                System.Console.WriteLine(s);
-            }
+            text.AppendLine(TokenOutput.OutputTokens(
+                node, parseInfo.Lexer, parseInfo.Parser).ToString());
         }
+        return AntlrJson.ParsingResultIO.Utf8(text.ToString());
     }
 }

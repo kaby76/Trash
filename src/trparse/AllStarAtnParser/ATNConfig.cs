@@ -15,17 +15,20 @@ public sealed class ATNConfig
     public readonly MyATNState State;
     public readonly int Alt;       // 1-indexed alternative being explored
     public readonly PredictionContext Context;
+    public readonly int Precedence;
 
-    public ATNConfig(MyATNState state, int alt, PredictionContext context)
+    public ATNConfig(MyATNState state, int alt, PredictionContext context,
+                     int precedence = 0)
     {
         State = state;
         Alt = alt;
         Context = context;
+        Precedence = precedence;
     }
 
     public ATNConfig WithState(MyATNState state) =>
-        new(state, Alt, Context);
+        new(state, Alt, Context, Precedence);
 
     public ATNConfig WithStateAndContext(MyATNState state, PredictionContext ctx) =>
-        new(state, Alt, ctx);
+        new(state, Alt, ctx, Precedence);
 }

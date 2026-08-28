@@ -42,7 +42,7 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "2.7.0";
+    public string Version { get; set; } = "3.0.0";
 
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }
@@ -61,4 +61,10 @@ public class Config
 
     [Option("allstar", Required = false, HelpText = "Use ALL(*) parser instead of Earley when --pinterp / --linterp are specified.")]
     public bool AllStar { get; set; }
+
+    [Option("bundle", Required = false, HelpText = "Write an ordinary POSIX PAX artifact bundle to stdout (the default).")]
+    public bool Bundle { get; set; } = true;
+
+    [Option("base-directory", Required = false, HelpText = "Base directory removed from input paths in bundle member names.")]
+    public string BaseDirectory { get; set; }
 }

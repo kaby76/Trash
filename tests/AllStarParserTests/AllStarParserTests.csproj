@@ -77,6 +77,56 @@
     <Content Include="../grammars-v4/systemverilog/examples/*.sv.tree"
              CopyToOutputDirectory="PreserveNewest"
              Link="TestData/systemverilog/examples/%(Filename)%(Extension)" />
+
+    <!-- ACME interp files, inputs, and native CSharp parse trees -->
+    <Content Include="../grammars-v4/acme/interp/acme.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/acme/interp/acme.interp" />
+    <Content Include="../grammars-v4/acme/interp/acmeLexer.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/acme/interp/acmeLexer.interp" />
+    <Content Include="../grammars-v4/acme/examples/**/*.acmetest"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/acme/examples/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Content Include="../grammars-v4/acme/native/*.tree"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/acme/native/%(Filename)%(Extension)" />
+
+    <!-- AQL interp files, precedence-sensitive inputs, and native CSharp trees -->
+    <Content Include="../grammars-v4/aql/interp/ArangoDbParser.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/aql/interp/ArangoDbParser.interp" />
+    <Content Include="../grammars-v4/aql/interp/ArangoDbLexer.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/aql/interp/ArangoDbLexer.interp" />
+    <Content Include="../grammars-v4/aql/examples/*.aql"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/aql/examples/%(Filename)%(Extension)" />
+    <Content Include="../grammars-v4/aql/native/*.tree"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/aql/native/%(Filename)%(Extension)" />
+
+    <!-- ASL interp files and lexer regression inputs -->
+    <Content Include="../grammars-v4/asl/interp/ASL.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/asl/interp/ASL.interp" />
+    <Content Include="../grammars-v4/asl/interp/ASLLexer.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/asl/interp/ASLLexer.interp" />
+    <Content Include="../grammars-v4/asl/examples/loop*"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/asl/examples/%(Filename)%(Extension)" />
+    <Content Include="../grammars-v4/asl/native/*.tree"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/asl/native/%(Filename)%(Extension)" />
+
+    <!-- Corundum fixtures for lexer and precedence-prediction coverage -->
+    <Content Include="../grammars-v4/corundum/interp/Corundum.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/corundum/interp/Corundum.interp" />
+    <Content Include="../grammars-v4/corundum/interp/CorundumLexer.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/corundum/interp/CorundumLexer.interp" />
   </ItemGroup>
 
 </Project>

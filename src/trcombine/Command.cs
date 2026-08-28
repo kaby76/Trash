@@ -24,33 +24,8 @@ namespace Trash
 
         public void Execute(Config config)
         {
-            string lines = null;
-            if (!(config.File != null && config.File != ""))
-            {
-                if (config.Verbose)
-                {
-                    System.Console.Error.WriteLine("reading from stdin");
-                }
-                for (; ; )
-                {
-                    lines = System.Console.In.ReadToEnd();
-                    if (lines != null && lines != "") break;
-                }
-                lines = lines.Trim();
-            }
-            else
-            {
-                if (config.Verbose)
-                {
-                    System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
-                }
-                lines = File.ReadAllText(config.File);
-            }
-            var serializeOptions = new JsonSerializerOptions();
-            serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-            serializeOptions.WriteIndented = config.Format;
-            serializeOptions.MaxDepth = 10000;
-            var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+            var input = ParsingResultIO.Read(config.File);
+            var data = input.Results;
             var results = new List<ParsingResultSet>();
             foreach (var parse_info in data)
             {
@@ -123,9 +98,9 @@ namespace Trash
                 results.Add(tuple2);
             }
             if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting serialization");
-            string js1 = JsonSerializer.Serialize(results.ToArray(), serializeOptions);
+            using var output = System.Console.OpenStandardOutput();
+            ParsingResultIO.WriteBundle(output, input, results, config.Format);
             if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("serialized");
-            System.Console.WriteLine(js1);
 
             //var results = LanguageServer.Transform.CombineGrammars(doc1, doc2);
         }

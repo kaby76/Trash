@@ -13,7 +13,7 @@ mkdir Generated
 
 # Test.
 dotnet trash parse Expression.g4 | dotnet trash xquery 'delete node //parserRuleSpec[RULE_REF/text()="a"]' > o.pt
-cat o.pt | dotnet trash sponge -c -o Generated
+cat o.pt | dotnet trash text --bundle | dotnet trash sponge -c -o Generated
 cat o.pt | dotnet trash tree > Generated/delete.tree
 rm o.pt
 

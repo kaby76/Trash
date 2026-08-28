@@ -1,0 +1,40 @@
+acmeCompUnit
+├── acmeFamilyDeclaration
+│   ├── FAMILY
+│   │   └── "Family"
+│   ├── identifier
+│   │   ├── Attribute Skip Value ' '
+│   │   └── IDENTIFIER
+│   │       └── "foo"
+│   ├── Attribute Skip Value ' '
+│   ├── ASSIGN
+│   │   └── "="
+│   └── acmeFamilyBody
+│       ├── Attribute Skip Value ' '
+│       ├── LBRACE
+│       │   └── "{"
+│       ├── Attribute Skip Value '&#10;&#10;'
+│       └── RBRACE
+│           └── "}"
+├── acmeSystemDeclaration
+│   ├── Attribute Skip Value '&#10;&#10;'
+│   ├── SYSTEM
+│   │   └── "System"
+│   ├── identifier
+│   │   ├── Attribute Skip Value ' '
+│   │   └── IDENTIFIER
+│   │       └── "soo"
+│   ├── Attribute Skip Value ' '
+│   ├── ASSIGN
+│   │   └── "="
+│   └── acmeSystemBody
+│       ├── Attribute Skip Value ' '
+│       ├── LBRACE
+│       │   └── "{"
+│       ├── Attribute Skip Value '&#10;&#10;'
+│       └── RBRACE
+│           └── "}"
+├── Attribute Skip Value '&#10;&#10;'
+└── EOF
+    └── ""
+

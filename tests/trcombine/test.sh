@@ -15,7 +15,7 @@ dotnet trash parse --version
 rm -rf Generated
 dotnet trash parse Arithmetic.g4 > o1.pt
 cat o1.pt | dotnet trash split > o2.pt
-cat o2.pt | dotnet trash sponge -c -o Generated
+cat o2.pt | dotnet trash text --bundle | dotnet trash sponge -c -o Generated
 dotnet trash parse Generated/* | dotnet trash combine > o3.pt
 cat o3.pt | dotnet trash text > Generated/Arithmetic.g4
 

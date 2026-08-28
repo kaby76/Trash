@@ -1,0 +1,33 @@
+#
+# set -x
+set -e
+for g in `cat action-free-grammars.txt`
+do
+	pushd ~/grammars-v4/$g
+	dotnet trash parse -t ANTLRv4 *.g4 | dotnet trash interp -o interp
+	dotnet trash gen -t CSharp
+	cd `ls -d Generated-CSharp* | head -n 1`
+	make
+        SAVEIFS=$IFS
+        IFS=$(echo -en "\n\b")
+        cmd=`grep '^files2' test.sh`
+        eval "$cmd"
+        files=()
+        for f in $files2
+        do
+            if [ -d "$f" ]; then continue; fi
+            files+=( $f )
+        done
+        IFS=$SAVEIFS
+        if [ ${#files[@]} -eq 0 ]
+        then
+            continue
+        fi
+        printf '%s\n' "${files[@]}" | dotnet trash parse -t gen -x --bundle | dotnet trash tree --bundle | dotnet trash sponge -o ../native -c --bundle
+	cd ..
+	cd interp
+        printf '%s\n' "${files[@]}" | dotnet trash parse -t gen -x --bundle -L . --allstar | dotnet trash tree --bundle | dotnet trash sponge -o ../allstar -c --bundle
+	cd ..
+	diff -r native allstar > /dev/null 2>&1
+	popd
+done

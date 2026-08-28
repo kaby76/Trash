@@ -17,8 +17,8 @@ public sealed class AllStarSimulator
     // behaviour is identical to allocating fresh collections, but without the
     // per-call allocation cost on hot prediction paths.
     private readonly Stack<ATNConfig> _closureStack = new();
-    private readonly HashSet<(int stateNum, int alt, PredictionContext context)> _closureBusy = new();
-    private readonly Dictionary<(PredictionContext parent, int returnState), SingletonPredictionContext> _contextCache = new();
+    private readonly HashSet<(int stateNum, int alt, PredictionContext context, int precedence)> _closureBusy = new();
+    private readonly Dictionary<(PredictionContext parent, int returnState, int precedence), SingletonPredictionContext> _contextCache = new();
     private readonly Dictionary<(int decision, int precedence), DecisionDfa> _decisionDfas = new();
 
     public AllStarSimulator(MyATN atn)
@@ -41,25 +41,6 @@ public sealed class AllStarSimulator
         int precedenceRuleIndex = decisionState.isPrecedenceDecision
             ? decisionState.ruleIndex
             : -1;
-
-        // Precedence belongs to the current rule invocation. Enforce it when
-        // the parser actually reaches the left-recursive suffix decision,
-        // rather than leaking it into speculative calls of the same rule in
-        // subqueries or parentheses.
-        if (decisionState.isPrecedenceDecision)
-        {
-            for (int i = 0; i < decisionState.transitions.Count; i++)
-            {
-                var target = decisionState.transitions[i].target;
-                if (target.stateType != MyStateType.LoopEnd &&
-                    !PrecedencePathAllowed(target, precedence))
-                {
-                    for (int exit = 0; exit < decisionState.transitions.Count; exit++)
-                        if (decisionState.transitions[exit].target.stateType == MyStateType.LoopEnd)
-                            return exit + 1;
-                }
-            }
-        }
 
         // SLL uses a local prediction-context stack rooted at EMPTY. Conflicts
         // are not resolved here; they signal full-context LL fallback below.
@@ -112,7 +93,7 @@ public sealed class AllStarSimulator
             var initial = new ATNConfigSet();
             for (int i = 0; i < decisionState.transitions.Count; i++)
                 Closure(new ATNConfig(decisionState.transitions[i].target, i + 1,
-                                      PredictionContext.EMPTY),
+                                      PredictionContext.EMPTY, precedence),
                         initial, fullCtx: false, precedence, precedenceRuleIndex);
             dfa.Start = InternDfaState(dfa, initial);
         }
@@ -174,7 +155,8 @@ public sealed class AllStarSimulator
 
         _closureBusy.Clear();
         var continuation = new ATNConfigSet();
-        Closure(new ATNConfig(_atn.allStates[returnState], alt, callerCtx.Parent),
+        Closure(new ATNConfig(_atn.allStates[returnState], alt, callerCtx.Parent,
+                              callerCtx.GetPrecedence(0)),
                 continuation, fullCtx: true, precedence,
                 precedenceRuleIndex);
         foreach (var config in continuation.Configs)
@@ -213,7 +195,7 @@ public sealed class AllStarSimulator
         for (int i = 0; i < decisionState.transitions.Count; i++)
         {
             var target = decisionState.transitions[i].target;
-            var cfg = new ATNConfig(target, i + 1, baseCtx);
+            var cfg = new ATNConfig(target, i + 1, baseCtx, precedence);
             Closure(cfg, initial, fullCtx, precedence, precedenceRuleIndex);
         }
 
@@ -326,7 +308,8 @@ public sealed class AllStarSimulator
         {
             var config = _closureStack.Pop();
 
-            var key = (config.State.stateNumber, config.Alt, config.Context);
+            var key = (config.State.stateNumber, config.Alt, config.Context,
+                       config.Precedence);
             if (!_closureBusy.Add(key)) continue;
 
             if (config.State.stateType == MyStateType.RuleStop)
@@ -342,7 +325,8 @@ public sealed class AllStarSimulator
                     if (returnStateNum == PredictionContext.EMPTY_RETURN_STATE) continue;
                     var returnState = _atn.allStates[returnStateNum];
                     _closureStack.Push(new ATNConfig(
-                        returnState, config.Alt, config.Context.GetParent(i)));
+                        returnState, config.Alt, config.Context.GetParent(i),
+                        config.Context.GetPrecedence(i)));
                 }
                 continue;
             }
@@ -361,7 +345,7 @@ public sealed class AllStarSimulator
 
                     case MyPrecedencePredicateTransition pt:
                         if (config.State.ruleIndex != precedenceRuleIndex ||
-                            pt.precedence >= precedence)
+                            pt.precedence >= config.Precedence)
                             next = config.WithState(pt.target);
                         break;
 
@@ -370,9 +354,11 @@ public sealed class AllStarSimulator
                         // rooted at EMPTY; LL is rooted in the caller context.
                         // Tail calls inherit the existing context.
                         PredictionContext newCtx = !rt.isTailCall
-                            ? GetChildContext(config.Context, rt.target.stateNumber)
+                            ? GetChildContext(config.Context, rt.target.stateNumber,
+                                              config.Precedence)
                             : config.Context;
-                        next = new ATNConfig(_atn.start[rt.ruleIndex], config.Alt, newCtx);
+                        next = new ATNConfig(_atn.start[rt.ruleIndex], config.Alt,
+                                             newCtx, rt.precedence);
                         break;
                     // Terminal transitions form the closure frontier and are
                     // followed later by ComputeReachSet.
@@ -404,7 +390,7 @@ public sealed class AllStarSimulator
         for (int i = 0; i < decisionState.transitions.Count; i++)
         {
             var target = decisionState.transitions[i].target;
-            Closure(new ATNConfig(target, i + 1, callerCtx), initial,
+            Closure(new ATNConfig(target, i + 1, callerCtx, precedence), initial,
                     fullCtx: true, precedence, precedenceRuleIndex);
         }
 
@@ -422,32 +408,14 @@ public sealed class AllStarSimulator
         t is MyAtomTransition || t is MySetTransition || t is MyNotSetTransition ||
         t is MyWildcardTransition || t is MyRangeTransition;
 
-    private static bool PrecedencePathAllowed(MyATNState start, int precedence)
+    private SingletonPredictionContext GetChildContext(PredictionContext parent,
+                                                        int returnState,
+                                                        int precedence)
     {
-        var work = new Stack<MyATNState>();
-        var seen = new HashSet<int>();
-        work.Push(start);
-        while (work.Count > 0)
-        {
-            var state = work.Pop();
-            if (!seen.Add(state.stateNumber)) continue;
-            foreach (var transition in state.transitions)
-            {
-                if (transition is MyPrecedencePredicateTransition predicate)
-                    return predicate.precedence >= precedence;
-                if (transition is MyEpsilonTransition or MyActionTransition or MyPredicateTransition)
-                    work.Push(transition.target);
-            }
-        }
-        return true;
-    }
-
-    private SingletonPredictionContext GetChildContext(PredictionContext parent, int returnState)
-    {
-        var key = (parent, returnState);
+        var key = (parent, returnState, precedence);
         if (!_contextCache.TryGetValue(key, out var context))
         {
-            context = new SingletonPredictionContext(parent, returnState);
+            context = new SingletonPredictionContext(parent, returnState, precedence);
             _contextCache.Add(key, context);
         }
         return context;
@@ -492,18 +460,19 @@ public sealed class AllStarSimulator
 
     private sealed class ConfigSetKey : IEquatable<ConfigSetKey>
     {
-        private readonly HashSet<(int state, int alt, PredictionContext context)> _items;
+        private readonly HashSet<(int state, int alt, PredictionContext context, int precedence)> _items;
         private readonly int _hash;
 
         public ConfigSetKey(ATNConfigSet configs)
         {
-            _items = new HashSet<(int, int, PredictionContext)>();
+            _items = new HashSet<(int, int, PredictionContext, int)>();
             int hash = 0;
             foreach (var c in configs.Configs)
             {
-                var item = (c.State.stateNumber, c.Alt, c.Context);
+                var item = (c.State.stateNumber, c.Alt, c.Context, c.Precedence);
                 _items.Add(item);
-                hash ^= HashCode.Combine(item.stateNumber, item.Alt, item.Context);
+                hash ^= HashCode.Combine(item.stateNumber, item.Alt, item.Context,
+                                         item.Precedence);
             }
             _hash = HashCode.Combine(hash, _items.Count);
         }

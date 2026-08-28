@@ -52,6 +52,10 @@ echo 'ALL(*) parse...'
 dotnet trash interp -o interp/ < grammar.json
 printf "1 + 2 + 3 + 4" | dotnet trash parse --lib interp/ --allstar | dotnet trash tree > trparse.tree
 
+# A leading caret inside an ANTLR character set is a literal member, not
+# regex-style negation. Verify that [^] produces only a caret token.
+dotnet trash parse --lib interp/ --allstar --no-prs -i '^'
+
 echo Diff of interp against the golden file.
 dos2unix trparse.tree
 dos2unix Gold/trparse.tree

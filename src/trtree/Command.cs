@@ -20,41 +20,14 @@ class Command
 
     public void Execute(Config config)
     {
-        string lines = null;
-        if (!(config.File != null && config.File != ""))
+        if (config.Bundle)
         {
-            if (config.Verbose)
-            {
-                System.Console.Error.WriteLine("reading from stdin");
-            }
-
-            for (;;)
-            {
-                lines = System.Console.In.ReadToEnd();
-                if (lines != null && lines != "")
-                {
-                    break;
-                }
-            }
-
-            lines = lines.Trim();
-        }
-        else
-        {
-            if (config.Verbose)
-            {
-                System.Console.Error.WriteLine("reading from file >>>" + config.File + "<<<");
-            }
-
-            lines = File.ReadAllText(config.File);
+            ExecuteBundle(config);
+            return;
         }
 
-        var serializeOptions = new JsonSerializerOptions();
-        serializeOptions.Converters.Add(new AntlrJson.ParsingResultSetSerializer());
-        serializeOptions.WriteIndented = false;
-        serializeOptions.MaxDepth = 10000;
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("starting deserialization");
-        var data = JsonSerializer.Deserialize<AntlrJson.ParsingResultSet[]>(lines, serializeOptions);
+        var data = AntlrJson.ParsingResultIO.Read(config.File).Results;
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
         bool more_than_one_fn = data.Count() > 1 || config.DisplayName;
         Console.OutputEncoding = System.Text.Encoding.UTF8;
@@ -65,28 +38,34 @@ class Command
             var parser = in_tuple.Parser;
             var fn = in_tuple.FileName;
             var prefix = more_than_one_fn ? fn + ": " : "";
-            StringBuilder sb = new StringBuilder();
-            foreach (var node in nodes)
-            {
-                if (config.AntlrStyle)
-                {
-                    sb.AppendLine(new TreeOutput(lexer, parser, prefix).OutputTreeAntlrStyle(node).ToString());
-                }
-                else if (config.ParenIndentStyle)
-                {
-                    sb.AppendLine(new TreeOutput(lexer, parser, prefix).OutputTree(node).ToString());
-                }
-                else if (config.IndentStyle)
-                {
-                    sb.AppendLine(new TreeOutput(lexer, parser, prefix).OutputTreeIndentStyle(node).ToString());
-                }
-                else if (config.BlockTreeStyle)
-                {
-                    sb.AppendLine(new TreeOutput(lexer, parser, prefix).OutputTreeBlockStyle(node).ToString());
-                }
-            }
-            System.Console.Write(sb.ToString());
+            System.Console.Write(Render(in_tuple, config, prefix));
         }
         System.Console.WriteLine();
+    }
+
+    private static void ExecuteBundle(Config config)
+    {
+        var input = AntlrJson.ParsingResultIO.Read(config.File);
+        using var output = Console.OpenStandardOutput();
+        AntlrJson.ParsingResultIO.WriteFilteredBundle(
+            output, input, ".tree",
+            result => AntlrJson.ParsingResultIO.Utf8(Render(result, config, "")));
+    }
+
+    private static string Render(AntlrJson.ParsingResultSet result, Config config, string prefix)
+    {
+        var sb = new StringBuilder();
+        foreach (var node in result.Nodes)
+        {
+            if (config.AntlrStyle)
+                sb.AppendLine(new TreeOutput(result.Lexer, result.Parser, prefix).OutputTreeAntlrStyle(node).ToString());
+            else if (config.ParenIndentStyle)
+                sb.AppendLine(new TreeOutput(result.Lexer, result.Parser, prefix).OutputTree(node).ToString());
+            else if (config.IndentStyle)
+                sb.AppendLine(new TreeOutput(result.Lexer, result.Parser, prefix).OutputTreeIndentStyle(node).ToString());
+            else if (config.BlockTreeStyle)
+                sb.AppendLine(new TreeOutput(result.Lexer, result.Parser, prefix).OutputTreeBlockStyle(node).ToString());
+        }
+        return sb.ToString();
     }
 }

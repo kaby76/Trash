@@ -13,7 +13,9 @@ public class Config
     [Option('v', "verbose", Required = false)]
     public bool Verbose { get; set; }
 
-    [Option("version", Required = false)]
-    public string Version { get; set; } = "2.7.0";
-}
+    [Option("bundle", Required = false, HelpText = "Write a PAX bundle, replacing .pt members with .dot members.")]
+    public bool Bundle { get; set; }
 
+    [Option("version", Required = false)]
+    public string Version { get; set; } = "3.0.0";
+}

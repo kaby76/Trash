@@ -22,18 +22,7 @@ public class Command
 
     public void Execute(Config config)
     {
-        // ---- Read input ----
-        string json;
-        if (!string.IsNullOrEmpty(config.File))
-            json = File.ReadAllText(config.File);
-        else
-            json = Console.In.ReadToEnd();
-
-        // ---- Deserialize ----
-        var serializeOptions = new JsonSerializerOptions();
-        serializeOptions.Converters.Add(new ParsingResultSetSerializer());
-        serializeOptions.MaxDepth = 10000;
-        var sets = JsonSerializer.Deserialize<ParsingResultSet[]>(json, serializeOptions);
+        var sets = ParsingResultIO.Read(config.File).Results;
 
         if (sets == null || sets.Length == 0) return;
 
