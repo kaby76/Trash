@@ -284,6 +284,10 @@ Comment: '(:' (Comment | CommentContents)*? ':)' -> skip;
 
 // Direct element constructor: '<' when followed by an NCNameStartChar starts an element.
 // IsNCNameStart() checks _input.LA(1) in XQuery4LexerBase.
+DIRECT_COMMENT : '<!--' .*? '-->' -> type(DirCommentContents);
+DIRECT_PI:
+    '<?' FragmentNCName ([\u0009\u000a\u000d\u0020] (~[?] | '?' ~[>])*)? '?>' -> type(DirPIContents)
+;
 OPEN_TAG : '<' { this.IsNCNameStart() }? -> pushMode(IN_ELEMENT_TAG);
 LT       : '<';
 
