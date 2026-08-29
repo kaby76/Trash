@@ -87,17 +87,63 @@ sortable reference table are in
 
 Runnable examples with step-by-step instructions are in the **[examples/](examples/)** directory.
 
-## Parsing Result Sets -- the data passed between commands
+## PAX/tar bundled data passing between commands
 
-A *parsing result set* is a JSON serialization of an array of:
+Trash commands pass an ordinary POSIX PAX/tar *artifact bundle* through
+standard input and standard output. Because it is a regular tar stream, a
+bundle can also be inspected with standard tools such as `tar -tf` and
+`tar -xvf`.
 
-* A set of parse tree nodes.
-* Parser information related to the parse tree nodes.
-* Lexer information related to the parse tree nodes.
-* The name of the input corresponding to the parse tree nodes.
-* The input text corresponding to the parse tree nodes.
+Each input parsed by `dotnet trash parse` normally contributes two regular-file
+members:
 
-Most commands in Trash read and/or write parsing result sets.
+* `<name>.pt` contains one JSON-serialized `ParsingResultSet` object. It holds
+  the parse-tree nodes, parser and lexer metadata, source name, and source text
+  for that input.
+* `<name>.errors` contains the parser diagnostics as UTF-8 text. It is empty
+  when the input parsed without errors.
+
+For example, parsing `examples/a.g4` and `examples/nested/b.g4` can produce:
+
+```text
+a.pt
+a.errors
+nested/b.pt
+nested/b.errors
+```
+
+Input hierarchy below the inputs' common directory is preserved. The
+`parse --base-directory DIR` option selects that root explicitly. Artifact
+names always use `/` separators and must be relative, traversal-free paths.
+When removing source extensions would make two names collide, Trash retains
+enough of the original names to keep every artifact distinct.
+
+Parse-tree commands such as `xpath`, `xquery`, `foldlit`, `rename`, `sort`,
+`unfold`, `unfoldlit`, and `combine` replace the contents of the corresponding
+`.pt` members and pass `.errors` and other bundle members through unchanged.
+Their output is another PAX/tar bundle, so commands remain composable with `|`.
+
+Commands whose normal output is human-readable text—such as `text`, `tree`,
+`xml`, `dot`, and `tokens`—still write text by default. Give one of these
+commands `--bundle` to use it as a bundle filter: every `.pt` member is replaced
+by its rendered artifact (for example, `.tree`), while unrelated members pass
+through unchanged.
+
+```sh
+find examples -type f \
+  | dotnet trash parse --allstar -L interp -x \
+  | dotnet trash tree --bundle \
+  | dotnet trash sponge -o pt-allstar -c
+```
+
+`sponge` detects the PAX/tar stream automatically and writes each member under
+the directory supplied with `-o`. It rejects absolute paths, `.` or `..` path
+components, links, duplicate destinations, and overwrites unless explicitly
+allowed.
+
+For backward compatibility, commands also auto-detect and read the former JSON
+array representation of parsing result sets. Newly produced pipeline output is
+PAX/tar by default.
 
 ## About
 
