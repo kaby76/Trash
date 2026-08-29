@@ -31,6 +31,13 @@ public class DirectConstructorTests
     }
 
     [Fact]
+    public void FlworVariables_AreVisibleInsideNestedConstructors()
+    {
+        const string query = "<root>{for $name in ('one', 'two') return <name>{string($name)}</name>}</root>";
+        Assert.Equal("<root><name>one</name><name>two</name></root>", Serialize(query));
+    }
+
+    [Fact]
     public void TextEntitiesCharacterReferencesCDataAndEscapedBraces_Evaluate()
     {
         const string query = "<root>&lt;&#65;<![CDATA[<raw>]]>{{literal}}</root>";
