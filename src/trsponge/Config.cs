@@ -16,7 +16,7 @@ public class Config
     [Option('v', "verbose", Required = false)]
     public bool Verbose { get; set; }
 
-    [Option("bundle", Required = false, HelpText = "Extract an ordinary POSIX PAX artifact bundle.")]
+    [Option("bundle", Required = false, HelpText = "Materialize an ordinary POSIX PAX artifact bundle (input is detected automatically).")]
     public bool Bundle { get; set; }
 
     [Option("version", Required = false)]

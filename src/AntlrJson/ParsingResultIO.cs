@@ -156,6 +156,37 @@ public static class ParsingResultIO
         ArtifactBundle.Write(output, outputArtifacts);
     }
 
+    public static IReadOnlyList<Artifact> MaterializeSources(
+        ParsingResultInput input,
+        Func<ParsingResultSet, string> reconstruct)
+    {
+        if (!input.IsBundle)
+            throw new ArgumentException("Source materialization requires bundle input.", nameof(input));
+
+        var outputArtifacts = new List<Artifact>();
+        var resultIndex = 0;
+        foreach (var artifact in input.Artifacts)
+        {
+            if (artifact.Name.EndsWith(".pt", StringComparison.OrdinalIgnoreCase))
+            {
+                if (resultIndex >= input.Results.Length)
+                    throw new InvalidDataException($"No parsing result is available for '{artifact.Name}'.");
+                var result = input.Results[resultIndex++];
+                outputArtifacts.Add(new Artifact(
+                    SourceArtifactName(artifact.Name, result.FileName),
+                    Utf8(reconstruct(result))));
+            }
+            else
+            {
+                outputArtifacts.Add(artifact);
+            }
+        }
+
+        if (resultIndex != input.Results.Length)
+            throw new InvalidDataException("The bundle contains parsing results without corresponding .pt artifacts.");
+        return outputArtifacts;
+    }
+
     public static byte[] Utf8(string text) => new UTF8Encoding(false).GetBytes(text);
 
     public static string SourceArtifactName(string parseArtifactName, string sourceFileName)

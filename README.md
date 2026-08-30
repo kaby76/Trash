@@ -136,10 +136,11 @@ find examples -type f \
   | dotnet trash sponge -o pt-allstar -c
 ```
 
-`sponge` detects the PAX/tar stream automatically and writes each member under
-the directory supplied with `-o`. It rejects absolute paths, `.` or `..` path
-components, links, duplicate destinations, and overwrites unless explicitly
-allowed.
+`sponge` detects the PAX/tar stream automatically. Under the directory supplied
+with `-o`, it reconstructs every `.pt` parse tree as source text using its
+recorded source filename and copies `.errors` and other artifacts unchanged. It
+rejects absolute paths, `.` or `..` path components, links, duplicate
+destinations, and overwrites unless explicitly allowed.
 
 For backward compatibility, commands also auto-detect and read the former JSON
 array representation of parsing result sets. Newly produced pipeline output is

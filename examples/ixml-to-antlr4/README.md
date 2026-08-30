@@ -16,7 +16,7 @@ the iXML 1.0 specification — into an Antlr4-flavoured grammar.
 bash run-example.sh
 ```
 
-The final grammar is written to `xxx/ixml.ixml`.
+The final grammar is written to `xxx/ixml.g4`.
 
 ## How it works
 
