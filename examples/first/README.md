@@ -48,3 +48,6 @@ recursiveB -> {'(', NUMBER};
 start -> {'(', 'after', 'blue', 'maybe', 'prefix', 'red', ., ID, NUMBER, ~('x' | 'y')};
 terminator -> {';'}
 ```
+
+The same output is stored in `expected.txt`. Run `bash test-example.sh` to run
+the example and compare its actual output with that golden file.

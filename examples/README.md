@@ -16,3 +16,16 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`xpath31-to-antlr4/`](xpath31-to-antlr4/) | Parse the XPath 3.1 EBNF grammar using generated `.interp` files built from the XPath 3.1 meta-grammar (work in progress) |
 
 Each example directory contains a `run-example.sh` and its own `README.md`.
+
+## Testing
+
+Run every example as an integration test with:
+
+```sh
+bash test.sh
+```
+
+The repository-wide `tests/all-tests.sh` driver also invokes this test. Every
+example must complete successfully. Examples with deterministic output can add
+a `test-example.sh` containing stronger assertions; `first/`, for example,
+compares its output with `expected.txt`.
