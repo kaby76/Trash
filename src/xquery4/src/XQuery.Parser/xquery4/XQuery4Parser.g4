@@ -87,6 +87,12 @@ anyXNodeType
     : 'node' '(' ')'
     ;
 
+aposAttrValueContent
+    : AposAttrContentChar
+    | EscapeApos
+    | commonContent
+    ;
+
 argument
     : exprSingle
     | argumentPlaceholder
@@ -208,6 +214,14 @@ choiceItemType
 
 commentNodeType
     : 'comment' '(' ')'
+    ;
+
+commonContent
+    : PredefinedEntityRef
+    | CharRef
+    | LCurlyBraceEscape
+    | RCurlyBraceEscape
+    | enclosedExpr
     ;
 
 comparisonExpr
@@ -335,15 +349,34 @@ dfPropertyName
     )
     ;
 
+dirAttributeList
+    : (QName EQ dirAttributeValue)*
+    ;
+
+dirAttributeValue
+    : ET_DQ_OPEN quotAttrValueContent* AV_QUOT_CLOSE
+    | ET_SQ_OPEN aposAttrValueContent* AV_APOS_CLOSE
+    ;
+
 dirCommentConstructor
     : DirCommentContents
     ;
 
 directConstructor
-//    : //dirElemConstructor
-//    | dirCommentConstructor
-    : dirCommentConstructor
+    : dirElemConstructor
+    | dirCommentConstructor
     | dirPIConstructor
+    ;
+
+dirElemConstructor
+    : OPEN_TAG QName dirAttributeList (ET_SLASH_GT | ET_GT dirElemContent* EC_CLOSE_TAG QName CT_GT)
+    ;
+
+dirElemContent
+    : directConstructor
+    | cDataSection
+    | commonContent
+    | ElementContentChar
     ;
 
 dirPIConstructor
@@ -1090,6 +1123,12 @@ quantifierBinding
 
 queryBody
     : expr
+    ;
+
+quotAttrValueContent
+    : QuotAttrContentChar
+    | EscapeQuot
+    | commonContent
     ;
 
 quotStringLiteral

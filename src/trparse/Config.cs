@@ -42,7 +42,7 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "3.0.0";
+    public string Version { get; set; } = "3.1.0";
 
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }
@@ -61,6 +61,18 @@ public class Config
 
     [Option("allstar", Required = false, HelpText = "Use ALL(*) parser instead of Earley when --pinterp / --linterp are specified.")]
     public bool AllStar { get; set; }
+
+    [Option("context-aware-lexing", Required = false,
+        HelpText = "For ALL(*) interp parsing, prefer lexer tokens valid in the current parser context; fall back to normal ANTLR lexing when none match.")]
+    public bool ContextAwareLexing { get; set; }
+
+    [Option("lexer-stats", Required = false,
+        HelpText = "Write observed interp lexer-overlap statistics to stderr.")]
+    public bool LexerStats { get; set; }
+
+    [Option("lexer-overlaps", Required = false,
+        HelpText = "Write details of observed interp lexer-rule overlaps to stderr (implies --lexer-stats).")]
+    public bool LexerOverlaps { get; set; }
 
     [Option("bundle", Required = false, HelpText = "Write an ordinary POSIX PAX artifact bundle to stdout (the default).")]
     public bool Bundle { get; set; } = true;

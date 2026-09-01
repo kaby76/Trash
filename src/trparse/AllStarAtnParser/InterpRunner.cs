@@ -4,6 +4,7 @@ using ParseTreeEditing.UnvParseTreeDOM;
 using EditableAntlrTree;
 using AntlrJson;
 using Atn;
+using EarleyAtnParser;
 
 /// <summary>
 /// Orchestrates interp-file-based parsing using the ALL(*) parser.
@@ -19,7 +20,10 @@ public static class InterpRunner
         string lexerInterpPath,
         string inputText,
         string fileName,
-        bool lineNumbers)
+        bool lineNumbers,
+        bool contextAwareLexing = false,
+        bool lexerStats = false,
+        bool lexerOverlaps = false)
     {
         // Get options to lexer from process args.
         var args = Environment.GetCommandLineArgs().ToList();
@@ -36,27 +40,9 @@ public static class InterpRunner
 
         var lexerVocab  = new Antlr4.Runtime.Vocabulary(lexerInterp.LiteralNames,  lexerInterp.SymbolicNames);
         var parserVocab = new Antlr4.Runtime.Vocabulary(parserInterp.LiteralNames, parserInterp.SymbolicNames);
-
-        var sim = new EarleyAtnParser.LexerAtnSimulator(lexerAtn);
-        var rawTokens = sim.Tokenize(inputText);
-        ReconcileLiteralTokenTypes(rawTokens, lexerInterp.SymbolicNames,
-            lexerInterp.LiteralNames, parserInterp.LiteralNames);
-        if (show_tokens)
-        {
-            var symNames = lexerInterp.SymbolicNames;
-            foreach (var tok in rawTokens)
-            {
-                string typeName = (!numeric_token_types && tok.Type >= 0 && tok.Type < symNames.Length && symNames[tok.Type] != null)
-                    ? symNames[tok.Type] : tok.Type.ToString();
-                string text = tok.Text
-                    .Replace("\n", "\\n")
-                    .Replace("\r", "\\r")
-                    .Replace("\t", "\\t");
-                string channel = tok.Channel != 0 ? $",channel={tok.Channel}" : "";
-                System.Console.Error.WriteLine(
-                    $"[@{tok.TokenIndex},{tok.StartIndex}:{tok.StopIndex}='{text}',<{typeName}>{channel},{tok.Line}:{tok.Column}]");
-            }
-        }
+        var statistics = lexerStats || lexerOverlaps
+            ? new LexerStatistics()
+            : null;
 
         // Determine the start rule from the 'start-rule:' section in the parser interp file.
         int startRule = 0;
@@ -77,10 +63,45 @@ public static class InterpRunner
                     $"Start state {parserInterp.StartStateNumber} not found in deserialized parser ATN.");
         }
 
-        var events = AllStarParser.Parse(parserAtn, rawTokens, startRule);
+        List<LexerToken> rawTokens;
+        List<ParseEvent> events;
+        if (contextAwareLexing)
+        {
+            events = AllStarParser.ParseContextAware(
+                parserAtn, lexerAtn, inputText, startRule, out rawTokens,
+                statistics);
+        }
+        else
+        {
+            var sim = new EarleyAtnParser.LexerAtnSimulator(lexerAtn, statistics);
+            rawTokens = sim.Tokenize(inputText);
+            ReconcileLiteralTokenTypes(rawTokens, lexerInterp.SymbolicNames,
+                lexerInterp.LiteralNames, parserInterp.LiteralNames);
+            events = AllStarParser.Parse(parserAtn, rawTokens, startRule);
+        }
+        PrintLexerStatistics(
+            statistics, lexerOverlaps, fileName,
+            lexerInterp.RuleNames, lexerInterp.SymbolicNames);
         if (events == null)
             throw new InvalidOperationException(
                 $"ALL(*) parse failed for '{fileName}': input rejected by grammar.");
+
+        if (show_tokens)
+        {
+            var symNames = lexerInterp.SymbolicNames;
+            foreach (var tok in rawTokens)
+            {
+                string typeName = (!numeric_token_types && tok.Type >= 0 && tok.Type < symNames.Length && symNames[tok.Type] != null)
+                    ? symNames[tok.Type] : tok.Type.ToString();
+                string text = tok.Text
+                    .Replace("\n", "\\n")
+                    .Replace("\r", "\\r")
+                    .Replace("\t", "\\t");
+                string channel = tok.Channel != 0 ? $",channel={tok.Channel}" : "";
+                System.Console.Error.WriteLine(
+                    $"[@{tok.TokenIndex},{tok.StartIndex}:{tok.StopIndex}='{text}',<{typeName}>{channel},{tok.Line}:{tok.Column}]");
+            }
+        }
 
         var domTree = DomBuilder.Build(
             events, rawTokens,
@@ -118,6 +139,17 @@ public static class InterpRunner
             Parser   = myParser,
             Lexer    = myLexer
         }, tokenCount);
+    }
+
+    internal static void PrintLexerStatistics(
+        LexerStatistics statistics, bool includeOverlaps, string fileName,
+        string[] ruleNames, string[] symbolicNames)
+    {
+        if (statistics == null) return;
+        if (includeOverlaps)
+            Console.Error.Write(statistics.FormatOverlaps(
+                fileName, ruleNames, symbolicNames));
+        Console.Error.Write(statistics.FormatSummary(ruleNames));
     }
 
     private static IDictionary<string, int> BuildTokenTypeMap(string[] symbolicNames)

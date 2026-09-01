@@ -19,7 +19,7 @@ results to file(s).
 
 ## Current version
 
-Release 3.0.0.
+Release 3.1.0.
 
 ## License
 
@@ -49,7 +49,11 @@ TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 # Artifact bundles
 
-PAX/tar input is detected automatically and extracted with `-o DIR`.
-Relative member paths are preserved. Absolute paths, drive-qualified paths,
-traversal, links, duplicate destinations, and output-root escapes are rejected.
-Existing files require `-c`/`--clobber`.
+PAX/tar input is detected automatically and materialized with `-o DIR`. Each
+`.pt` member is reconstructed as source text using the original filename and
+extension recorded in its `ParsingResultSet`; `.errors` and other regular-file
+members are copied unchanged. Relative member paths are preserved.
+
+Absolute paths, drive-qualified paths, traversal, links, duplicate
+destinations, and output-root escapes are rejected. Existing files require
+`-c`/`--clobber`.

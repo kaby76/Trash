@@ -55,6 +55,30 @@ public class ArtifactBundleTests
     }
 
     [Fact]
+    public void SourceMaterializationReconstructsPtAndPreservesSidecars()
+    {
+        var result = new ParsingResultSet { FileName = "Expression.g4", Nodes = [] };
+        using var archive = new MemoryStream();
+        ArtifactBundle.Write(archive, new[]
+        {
+            new Artifact("dir/Expression.pt", ArtifactBundle.SerializeParsingResult(result)),
+            new Artifact("dir/Expression.errors", Encoding.UTF8.GetBytes("diagnostic")),
+            new Artifact("dir/notes.txt", Encoding.UTF8.GetBytes("keep me"))
+        });
+        archive.Position = 0;
+        var input = ParsingResultIO.Read(archive);
+
+        var artifacts = ParsingResultIO.MaterializeSources(input, _ => "grammar Expression;");
+
+        Assert.Equal(
+            new[] { "dir/Expression.g4", "dir/Expression.errors", "dir/notes.txt" },
+            artifacts.Select(a => a.Name));
+        Assert.Equal("grammar Expression;", Encoding.UTF8.GetString(artifacts[0].Data));
+        Assert.Equal("diagnostic", Encoding.UTF8.GetString(artifacts[1].Data));
+        Assert.Equal("keep me", Encoding.UTF8.GetString(artifacts[2].Data));
+    }
+
+    [Fact]
     public void BundleIsOrdinaryPaxAndPreservesBinaryArtifacts()
     {
         var expected = new[]

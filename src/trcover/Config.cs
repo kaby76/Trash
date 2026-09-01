@@ -33,6 +33,6 @@ namespace Trash
         public bool ReadFileNameStdin { get; set; }
 
 	[Option("version", Required = false)]
-	public string Version { get; set; } = "3.0.0";
+	public string Version { get; set; } = "3.1.0";
     }
 }

@@ -103,7 +103,7 @@ The original grammars are left unchanged.
 
 ## Current version
 
-Release 3.0.0.
+Release 3.1.0.
 
 ## License
 

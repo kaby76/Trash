@@ -25,7 +25,10 @@ class Command
         var input = AntlrJson.ParsingResultIO.Read(config.File);
         if (input.IsBundle)
         {
-            ExtractBundle(config, input.Artifacts);
+            var artifacts = AntlrJson.ParsingResultIO.MaterializeSources(
+                input,
+                result => Reconstruct(result.Nodes));
+            ExtractBundle(config, artifacts);
             return;
         }
         foreach (var parse_info in input.Results)
@@ -46,13 +49,7 @@ class Command
                 throw new System.Exception("Attempting to overwrite '" + fn +
                                            "'. Use -c/--clobber option if it is intended.");
             System.Console.Error.WriteLine("Writing to " + fn);
-            StringBuilder sb = new StringBuilder();
-            foreach (var v in nodes)
-            {
-                sb.Append(this.Reconstruct(v));
-            }
-
-            File.WriteAllText(fn, sb.ToString());
+            File.WriteAllText(fn, Reconstruct(nodes));
         }
     }
 
@@ -60,7 +57,7 @@ class Command
         Config config, IReadOnlyList<AntlrJson.Artifact> artifacts)
     {
         if (string.IsNullOrWhiteSpace(config.OutputDirectory))
-            throw new ArgumentException("--output-directory is required with --bundle.");
+            throw new ArgumentException("--output-directory is required for bundle input.");
 
         var root = Path.GetFullPath(config.OutputDirectory);
         var rootPrefix = root.EndsWith(Path.DirectorySeparatorChar)
@@ -120,6 +117,14 @@ class Command
             }
         }
 
+        return sb.ToString();
+    }
+
+    private string Reconstruct(IEnumerable<UnvParseTreeNode> nodes)
+    {
+        var sb = new StringBuilder();
+        foreach (var node in nodes)
+            sb.Append(Reconstruct(node));
         return sb.ToString();
     }
 }

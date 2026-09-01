@@ -1,0 +1,32 @@
+program
+├── CLASS
+│   └── "class"
+├── Attribute Skip Value ' '
+├── ID
+│   └── "Program"
+├── Attribute Skip Value ' '
+├── LCURLY
+│   └── "{"
+├── field_decl
+│   ├── Attribute Skip Value '&#10;  '
+│   ├── INT
+│   │   └── "int"
+│   ├── Attribute Skip Value ' '
+│   ├── ID
+│   │   └── "i"
+│   ├── LSQUARE
+│   │   └── "["
+│   ├── INT_LITERAL
+│   │   └── "10"
+│   ├── RSQUARE
+│   │   └── "]"
+│   └── SEMI
+│       └── ";"
+├── Attribute Skip Value '&#10;'
+├── RCURLY
+│   └── "}"
+├── Attribute Skip Value '&#10;'
+└── EOF
+    └── ""
+
+

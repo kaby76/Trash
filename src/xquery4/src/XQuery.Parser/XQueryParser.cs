@@ -1009,8 +1009,135 @@ public class XQueryParser
         private ExprNode BuildNodeConstructor(XQuery4Parser.NodeConstructorContext ctx)
         {
             if (ctx.computedConstructor() is { } cc) return BuildComputedConstructor(cc);
-            // directConstructor: minimal support (comment, PI)
-            return new StringLiteralExpr { Value = ctx.GetText(), Line = ctx.Start.Line, Column = ctx.Start.Column };
+            return BuildDirectConstructor(ctx.directConstructor()!);
+        }
+
+        private ExprNode BuildDirectConstructor(XQuery4Parser.DirectConstructorContext ctx)
+        {
+            int ln = ctx.Start.Line, col = ctx.Start.Column;
+            if (ctx.dirElemConstructor() is { } elem)
+                return BuildDirectElementConstructor(elem);
+
+            if (ctx.dirCommentConstructor() is { } comment)
+            {
+                var text = comment.GetText();
+                var commentValue = text.Length >= 7 ? text[4..^3] : string.Empty;
+                return new CommentConstructorExpr
+                {
+                    Content = StringLiteral(commentValue, comment.Start.Line, comment.Start.Column),
+                    Line = ln,
+                    Column = col
+                };
+            }
+
+            var piText = ctx.dirPIConstructor()!.GetText();
+            var body = piText.Length >= 4 ? piText[2..^2] : string.Empty;
+            int separator = body.IndexOfAny([' ', '\t', '\r', '\n']);
+            string target = separator < 0 ? body : body[..separator];
+            string value = separator < 0 ? string.Empty : body[(separator + 1)..].TrimStart(' ', '\t', '\r', '\n');
+            return new PIConstructorExpr
+            {
+                Target = target,
+                Content = StringLiteral(value, ln, col),
+                Line = ln,
+                Column = col
+            };
+        }
+
+        private ExprNode BuildDirectElementConstructor(XQuery4Parser.DirElemConstructorContext ctx)
+        {
+            var names = ctx.QName();
+            string openName = names[0].GetText();
+            if (names.Length > 1 && names[^1].GetText() != openName)
+                throw new XPathParseException($"Direct element constructor start tag <{openName}> does not match end tag </{names[^1].GetText()}> (line {ctx.Start.Line})");
+
+            var element = new ElementConstructorExpr
+            {
+                Name = ResolveDirectQName(openName),
+                Line = ctx.Start.Line,
+                Column = ctx.Start.Column
+            };
+
+            var attributes = ctx.dirAttributeList();
+            var attributeNames = attributes.QName();
+            var attributeValues = attributes.dirAttributeValue();
+            for (int i = 0; i < attributeNames.Length; i++)
+            {
+                element.Content.Add(new AttributeConstructorExpr
+                {
+                    Name = ResolveDirectQName(attributeNames[i].GetText()),
+                    Value = BuildDirectAttributeValue(attributeValues[i]),
+                    Line = attributeNames[i].Symbol.Line,
+                    Column = attributeNames[i].Symbol.Column
+                });
+            }
+
+            foreach (var content in ctx.dirElemContent())
+                element.Content.Add(BuildDirectElementContent(content));
+
+            return element;
+        }
+
+        private ExprNode BuildDirectAttributeValue(XQuery4Parser.DirAttributeValueContext ctx)
+        {
+            var parts = new List<ExprNode>();
+            foreach (var part in ctx.quotAttrValueContent())
+                parts.Add(BuildDirectAttributePart(part.GetText(), part.commonContent(), part.Start.Line, part.Start.Column));
+            foreach (var part in ctx.aposAttrValueContent())
+                parts.Add(BuildDirectAttributePart(part.GetText(), part.commonContent(), part.Start.Line, part.Start.Column));
+            return ConcatParts(parts, ctx.Start.Line, ctx.Start.Column);
+        }
+
+        private ExprNode BuildDirectAttributePart(string text, XQuery4Parser.CommonContentContext common, int line, int column)
+        {
+            if (common?.enclosedExpr() is { } enclosed)
+                return BuildEnclosedExpr(enclosed) ?? StringLiteral(string.Empty, line, column);
+            if (text == "\"\"") text = "\"";
+            else if (text == "''") text = "'";
+            else if (text == "{{") text = "{";
+            else if (text == "}}") text = "}";
+            else text = ResolveXmlEscapes(text);
+            return StringLiteral(text, line, column);
+        }
+
+        private ExprNode BuildDirectElementContent(XQuery4Parser.DirElemContentContext ctx)
+        {
+            if (ctx.directConstructor() is { } direct)
+                return BuildDirectConstructor(direct);
+            if (ctx.commonContent()?.enclosedExpr() is { } enclosed)
+                return BuildEnclosedExpr(enclosed) ?? StringLiteral(string.Empty, ctx.Start.Line, ctx.Start.Column);
+
+            string text = ctx.GetText();
+            if (ctx.cDataSection() != null && text.Length >= 12)
+                text = text[9..^3];
+            else if (text == "{{") text = "{";
+            else if (text == "}}") text = "}";
+            else text = ResolveXmlEscapes(text);
+
+            return new TextConstructorExpr
+            {
+                Content = StringLiteral(text, ctx.Start.Line, ctx.Start.Column),
+                Line = ctx.Start.Line,
+                Column = ctx.Start.Column
+            };
+        }
+
+        private XdmQName ResolveDirectQName(string text)
+        {
+            var (local, prefix, ns) = SplitEqName(text);
+            return new XdmQName(ns ?? string.Empty, local, prefix ?? string.Empty);
+        }
+
+        private static ExprNode StringLiteral(string value, int line, int column)
+            => new StringLiteralExpr { Value = value, Line = line, Column = column };
+
+        private static ExprNode ConcatParts(List<ExprNode> parts, int line, int column)
+        {
+            if (parts.Count == 0) return StringLiteral(string.Empty, line, column);
+            ExprNode result = parts[0];
+            for (int i = 1; i < parts.Count; i++)
+                result = new ConcatExpr { Left = result, Right = parts[i], Line = line, Column = column };
+            return result;
         }
 
         private ExprNode BuildComputedConstructor(XQuery4Parser.ComputedConstructorContext ctx)

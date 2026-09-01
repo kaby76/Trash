@@ -36,7 +36,7 @@ pushd interp
 dotnet trash parse --lib . $files > earley.pt
 dotnet trash tree -f earley.pt > earley.tree
 dotnet trash parse --lib . --allstar $files > allstar.pt
-dotnet trash tree -f earley.pt > allstar.tree
+dotnet trash tree -f allstar.pt > allstar.tree
 popd
 
 echo "Done."

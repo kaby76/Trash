@@ -74,6 +74,31 @@ The output is the same `ParsingResultSet` JSON format as all other `trparse`
 modes, so every downstream Trash Toolkit tool (`trtree`, `trxgrep`, etc.)
 works without modification.
 
+### Context-aware lexing
+
+The ALL(*) interpreter can lex lazily using the parser's valid-lookahead set.
+Specifying `--context-aware-lexing` selects the ALL(*) interpreter, so the
+explicit `--allstar` below is optional:
+
+    dotnet trash parse --allstar --context-aware-lexing \
+        --pinterp MyParser.interp --linterp MyLexer.interp input.txt
+
+At each parser position, lexer rules producing an expected token type are
+considered before applying longest-match and rule-order priority. Skip and
+off-channel rules remain eligible. If none of the context-valid rules matches,
+the lexer falls back to ordinary ANTLR maximal-munch and rule-priority
+semantics. Existing lexer modes and `skip`, `type`, `channel`, `mode`,
+`pushMode`, and `popMode` commands are honored.
+
+Use `--lexer-stats` to write a summary of lexer-rule overlaps observed while
+processing the input. Use `--lexer-overlaps` for per-position candidate and
+winner details; it implies the summary. Speculative ALL(*) lookahead is not
+counted—only committed lexer decisions are recorded. These are runtime corpus
+statistics, not a static proof that two lexer-rule languages are disjoint.
+The summary distinguishes raw overlaps from effective overlaps in the actual
+selection pool after parser-context filtering (or after ordinary fallback),
+and reports how many raw overlaps context eliminated.
+
 ## Usage
 
     dotnet trash parse (<string> | <options>)*
@@ -82,6 +107,12 @@ works without modification.
     -p, --parser       Location of pre-built parser (aka the trgen Generated/ directory)
         --pinterp      Path to parser .interp file (Earley ATN-based parsing).
         --linterp      Path to lexer .interp file  (Earley ATN-based parsing).
+        --allstar      Use the ALL(*) interpreter instead of Earley.
+        --context-aware-lexing
+                       Prefer lexer tokens valid in the current ALL(*) parser context.
+        --lexer-stats  Write observed interp lexer-overlap statistics to stderr.
+        --lexer-overlaps
+                       Write detailed observed overlaps (implies --lexer-stats).
 
 ## Examples
 
@@ -97,7 +128,7 @@ works without modification.
 
 ## Current version
 
-Release 3.0.0.
+Release 3.1.0.
 
 ## License
 
