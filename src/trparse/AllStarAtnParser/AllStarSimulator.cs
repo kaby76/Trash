@@ -26,6 +26,37 @@ public sealed class AllStarSimulator
         _atn = atn;
     }
 
+    /// <summary>
+    /// Compute the parser terminals reachable from a state without consuming a
+    /// token. This is the valid-lookahead set supplied to context-aware lexing.
+    /// </summary>
+    public HashSet<int> GetExpectedTokenTypes(
+        MyATNState state, PredictionContext callerCtx, int precedence)
+    {
+        _closureBusy.Clear();
+        var configs = new ATNConfigSet();
+        int precedenceRuleIndex = state.isPrecedenceDecision
+            ? state.ruleIndex
+            : -1;
+        Closure(new ATNConfig(state, 1, callerCtx, precedence), configs,
+            fullCtx: true, precedence, precedenceRuleIndex);
+
+        var result = new HashSet<int>();
+        foreach (var config in configs.Configs)
+        {
+            foreach (var transition in config.State.transitions)
+            {
+                if (!IsTerminal(transition)) continue;
+                if (transition.Matches(-1, 0, _atn.maxTokenType))
+                    result.Add(-1);
+                for (int tokenType = 1; tokenType <= _atn.maxTokenType; tokenType++)
+                    if (transition.Matches(tokenType, 1, _atn.maxTokenType))
+                        result.Add(tokenType);
+            }
+        }
+        return result;
+    }
+
     // Returns the predicted alternative (1-indexed) for the given decision.
     // tokenTypes: on-channel token types starting at startPos.
     // callerCtx:  the PredictionContext of the rule that contains this decision (for LL fallback).

@@ -340,11 +340,12 @@ public class Grun
             AntlrJson.ParsingResultSet rs;
             long interpTokenCount;
             string interpLabel;
-            if (config.AllStar)
+            if (config.AllStar || config.ContextAwareLexing)
             {
                 AllStarAtnParser.AllStarParser.Trace = config.Verbose;
                 (rs, interpTokenCount) = AllStarAtnParser.InterpRunner.Run(
-                    resolvedPInterp, resolvedLInterp, txt, input_name, config.LineNumbers);
+                    resolvedPInterp, resolvedLInterp, txt, input_name,
+                    config.LineNumbers, config.ContextAwareLexing);
                 interpLabel = "ALL(*)";
             }
             else

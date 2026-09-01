@@ -56,6 +56,33 @@ public static class AllStarParser
         return events;
     }
 
+    /// <summary>
+    /// Parse while lexing lazily. The parser's valid-lookahead set is used to
+    /// prefer context-valid lexer matches, with ordinary ANTLR selection as the
+    /// fallback when no context-valid rule matches.
+    /// </summary>
+    public static List<ParseEvent> ParseContextAware(
+        MyATN parserAtn, MyATN lexerAtn, string input, int startRuleIndex,
+        out List<LexerToken> allTokens)
+    {
+        if (parserAtn == null) throw new ArgumentNullException(nameof(parserAtn));
+        if (lexerAtn == null) throw new ArgumentNullException(nameof(lexerAtn));
+        if (startRuleIndex < 0 || startRuleIndex >= parserAtn.start.Length)
+            throw new ArgumentOutOfRangeException(nameof(startRuleIndex));
+
+        var stateToDecision = new Dictionary<int, int>();
+        for (int i = 0; i < parserAtn.decisionToState.Length; i++)
+            stateToDecision[parserAtn.decisionToState[i].stateNumber] = i;
+
+        allTokens = new List<LexerToken>();
+        var events = new List<ParseEvent>();
+        var instance = new ParserInstance(
+            parserAtn, lexerAtn, input, allTokens, stateToDecision);
+        if (!instance.ParseRule(startRuleIndex, events, PredictionContext.EMPTY))
+            return null;
+        return events;
+    }
+
     // =========================================================================
     // Internal parser instance — carries mutable state (token position).
     // =========================================================================
@@ -63,11 +90,15 @@ public static class AllStarParser
     private sealed class ParserInstance
     {
         private readonly MyATN _atn;
-        private readonly IReadOnlyList<LexerToken> _allTokens;
-        private readonly IReadOnlyList<int> _onIdx;  // on-channel pos → all-token index
+        private readonly List<LexerToken> _allTokens;
+        private readonly List<int> _onIdx;  // on-channel pos → all-token index
         private readonly int[] _tokenTypes;
         private readonly Dictionary<int, int> _stateToDecision;
         private readonly AllStarSimulator _sim;
+        private readonly LexerAtnSimulator _lexer;
+        private readonly LexerAtnSimulator.Cursor _lexerCursor;
+        private readonly string _input;
+        private readonly bool _contextAware;
 
         public int Pos { get; private set; } // current on-channel token position
 
@@ -76,11 +107,27 @@ public static class AllStarParser
                               Dictionary<int, int> stateToDecision)
         {
             _atn = atn;
-            _allTokens = allTokens;
-            _onIdx = onIdx;
+            _allTokens = allTokens as List<LexerToken> ?? allTokens.ToList();
+            _onIdx = onIdx as List<int> ?? onIdx.ToList();
             _tokenTypes = tokenTypes;
             _stateToDecision = stateToDecision;
             _sim = new AllStarSimulator(atn);
+        }
+
+        public ParserInstance(MyATN parserAtn, MyATN lexerAtn, string input,
+                              List<LexerToken> allTokens,
+                              Dictionary<int, int> stateToDecision)
+        {
+            _atn = parserAtn;
+            _allTokens = allTokens;
+            _onIdx = new List<int>();
+            _tokenTypes = Array.Empty<int>();
+            _stateToDecision = stateToDecision;
+            _sim = new AllStarSimulator(parserAtn);
+            _lexer = new LexerAtnSimulator(lexerAtn);
+            _lexerCursor = new LexerAtnSimulator.Cursor();
+            _input = input;
+            _contextAware = true;
         }
 
         /// <summary>Parse one rule; emits Enter/Exit/Consume events. Returns false on error.</summary>
@@ -99,12 +146,27 @@ public static class AllStarParser
                 if (_stateToDecision.TryGetValue(state.stateNumber, out int decision))
                 {
                     // Decision point: use ALL(*) prediction to choose an alternative.
+                    int[] predictionTokens;
+                    int predictionStart;
+                    if (_contextAware)
+                    {
+                        var expected = _sim.GetExpectedTokenTypes(
+                            state, callerCtx, precedence);
+                        predictionTokens = BuildPredictionTokens(expected);
+                        predictionStart = 0;
+                    }
+                    else
+                    {
+                        predictionTokens = _tokenTypes;
+                        predictionStart = Pos;
+                    }
                     int alt = _sim.AdaptivePredict(
-                        decision, _tokenTypes, Pos, callerCtx, precedence);
+                        decision, predictionTokens, predictionStart,
+                        callerCtx, precedence);
                     if (AllStarParser.Trace)
                         Console.Error.WriteLine(
                             $"[ALLSTAR] dec={decision} state={state.stateNumber} pos={Pos} " +
-                            $"tok={(_onIdx.Count > Pos ? _allTokens[_onIdx[Pos]].Type : -1)} " +
+                            $"tok={(predictionTokens.Length > predictionStart ? predictionTokens[predictionStart] : -1)} " +
                             $"prec={precedence} → alt={alt}");
                     if (alt <= 0 || alt > state.transitions.Count)
                     {
@@ -177,6 +239,19 @@ public static class AllStarParser
 
         private bool ConsumeToken(MyTransition tr, List<ParseEvent> events)
         {
+            if (_contextAware)
+            {
+                var expected = TokenTypesForTransition(tr);
+                int contextualTokenIndex = ReadOnChannelToken(expected);
+                var contextualToken = _allTokens[contextualTokenIndex];
+                if (!TerminalMatches(tr, contextualToken.Type)) return false;
+                if (AllStarParser.Trace)
+                    Console.Error.WriteLine(
+                        $"[ALLSTAR] consume pos={Pos} tok={contextualToken.Type} '{contextualToken.Text}'");
+                events.Add(ParseEvent.Consume(contextualTokenIndex));
+                Pos++;
+                return true;
+            }
             if (Pos >= _onIdx.Count) return false;
             int allTokIdx = _onIdx[Pos];
             var tok = _allTokens[allTokIdx];
@@ -186,6 +261,52 @@ public static class AllStarParser
             events.Add(ParseEvent.Consume(allTokIdx));
             Pos++;
             return true;
+        }
+
+        private int[] BuildPredictionTokens(IReadOnlySet<int> expected)
+        {
+            var cursor = _lexerCursor.Clone();
+            var types = new List<int>();
+            bool firstOnChannel = true;
+            while (true)
+            {
+                var token = _lexer.NextToken(
+                    _input, cursor, firstOnChannel ? expected : null);
+                if (token.Channel == DEFAULT_CHANNEL || token.Type == EOF_TYPE)
+                {
+                    types.Add(token.Type);
+                    firstOnChannel = false;
+                }
+                if (token.Type == EOF_TYPE) break;
+            }
+            return types.ToArray();
+        }
+
+        private int ReadOnChannelToken(IReadOnlySet<int> expected)
+        {
+            while (true)
+            {
+                var token = _lexer.NextToken(_input, _lexerCursor, expected);
+                int index = _allTokens.Count;
+                token.TokenIndex = index;
+                _allTokens.Add(token);
+                if (token.Channel == DEFAULT_CHANNEL || token.Type == EOF_TYPE)
+                {
+                    _onIdx.Add(index);
+                    return index;
+                }
+            }
+        }
+
+        private HashSet<int> TokenTypesForTransition(MyTransition transition)
+        {
+            var result = new HashSet<int>();
+            if (transition.Matches(EOF_TYPE, 0, _atn.maxTokenType))
+                result.Add(EOF_TYPE);
+            for (int tokenType = 1; tokenType <= _atn.maxTokenType; tokenType++)
+                if (transition.Matches(tokenType, 1, _atn.maxTokenType))
+                    result.Add(tokenType);
+            return result;
         }
 
         private static string DescribeTransition(MyTransition transition) => transition switch

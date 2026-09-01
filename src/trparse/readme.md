@@ -74,6 +74,22 @@ The output is the same `ParsingResultSet` JSON format as all other `trparse`
 modes, so every downstream Trash Toolkit tool (`trtree`, `trxgrep`, etc.)
 works without modification.
 
+### Context-aware lexing
+
+The ALL(*) interpreter can lex lazily using the parser's valid-lookahead set.
+Specifying `--context-aware-lexing` selects the ALL(*) interpreter, so the
+explicit `--allstar` below is optional:
+
+    dotnet trash parse --allstar --context-aware-lexing \
+        --pinterp MyParser.interp --linterp MyLexer.interp input.txt
+
+At each parser position, lexer rules producing an expected token type are
+considered before applying longest-match and rule-order priority. Skip and
+off-channel rules remain eligible. If none of the context-valid rules matches,
+the lexer falls back to ordinary ANTLR maximal-munch and rule-priority
+semantics. Existing lexer modes and `skip`, `type`, `channel`, `mode`,
+`pushMode`, and `popMode` commands are honored.
+
 ## Usage
 
     dotnet trash parse (<string> | <options>)*
@@ -82,6 +98,9 @@ works without modification.
     -p, --parser       Location of pre-built parser (aka the trgen Generated/ directory)
         --pinterp      Path to parser .interp file (Earley ATN-based parsing).
         --linterp      Path to lexer .interp file  (Earley ATN-based parsing).
+        --allstar      Use the ALL(*) interpreter instead of Earley.
+        --context-aware-lexing
+                       Prefer lexer tokens valid in the current ALL(*) parser context.
 
 ## Examples
 
