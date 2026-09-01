@@ -21,6 +21,8 @@ public class ContextAwareLexingTests
         Assert.Equal("BDAY:2000-01-01", ordinary[0].Text);
         Assert.Equal(1, statistics.TokenDecisions);
         Assert.Equal(1, statistics.DecisionsWithOverlap);
+        Assert.Equal(1, statistics.EffectiveDecisionsWithOverlap);
+        Assert.Equal(0, statistics.OverlapsEliminatedByContext);
         Assert.Equal(1, statistics.MaximalMunchResolutions);
         Assert.Equal(0, statistics.EqualLengthPriorityResolutions);
 
@@ -44,6 +46,7 @@ public class ContextAwareLexingTests
         Assert.Equal(Value, token.Type);
         Assert.Equal("BDAY:2000-01-01", token.Text);
         Assert.Equal(1, statistics.ContextFallbacks);
+        Assert.Equal(1, statistics.EffectiveDecisionsWithOverlap);
     }
 
     [Fact]
@@ -58,6 +61,7 @@ public class ContextAwareLexingTests
         Assert.Equal(1, statistics.DecisionsWithOverlap);
         Assert.Equal(0, statistics.MaximalMunchResolutions);
         Assert.Equal(1, statistics.EqualLengthPriorityResolutions);
+        Assert.Equal(1, statistics.EffectiveDecisionsWithOverlap);
         Assert.Equal(1, statistics.RulePairOverlapCounts[(0, 1)]);
         var summary = statistics.FormatSummary(["DECIMAL_LITERAL", "INT_LITERAL"]);
         Assert.Contains("DECIMAL_LITERAL / INT_LITERAL: 1", summary);
@@ -89,6 +93,11 @@ public class ContextAwareLexingTests
         // scans must not increase this count.
         Assert.Equal(3, statistics.TokenDecisions);
         Assert.Equal(2, statistics.ContextOverrides);
+        Assert.Equal(2, statistics.DecisionsWithOverlap);
+        Assert.Equal(0, statistics.EffectiveDecisionsWithOverlap);
+        Assert.Equal(2, statistics.OverlapsEliminatedByContext);
+        Assert.Equal(2, statistics.MaximumCandidateCount);
+        Assert.Equal(1, statistics.MaximumEffectiveCandidateCount);
     }
 
     [Fact]

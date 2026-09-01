@@ -26,14 +26,18 @@ public sealed class LexerStatistics
 {
     public long TokenDecisions { get; internal set; }
     public long DecisionsWithOverlap { get; internal set; }
+    public long EffectiveDecisionsWithOverlap { get; internal set; }
+    public long OverlapsEliminatedByContext { get; internal set; }
     public long MaximalMunchResolutions { get; internal set; }
     public long EqualLengthPriorityResolutions { get; internal set; }
     public long ContextOverrides { get; internal set; }
     public long ContextFallbacks { get; internal set; }
     public int MaximumCandidateCount { get; internal set; }
+    public int MaximumEffectiveCandidateCount { get; internal set; }
 
     public Dictionary<int, long> RuleOverlapCounts { get; } = new();
     public Dictionary<(int Left, int Right), long> RulePairOverlapCounts { get; } = new();
+    public Dictionary<(int Left, int Right), long> EffectiveRulePairOverlapCounts { get; } = new();
     public List<LexerOverlapEvent> Overlaps { get; } = new();
 
     internal void Record(
@@ -51,9 +55,21 @@ public sealed class LexerStatistics
                 ContextOverrides++;
         }
 
+        var effectiveCandidates = EffectiveCandidates(
+            candidates, expectedTokenTypes, usedContextFallback);
+        MaximumEffectiveCandidateCount = Math.Max(
+            MaximumEffectiveCandidateCount, effectiveCandidates.Count);
+        if (effectiveCandidates.Count >= 2)
+        {
+            EffectiveDecisionsWithOverlap++;
+            RecordPairs(effectiveCandidates, EffectiveRulePairOverlapCounts);
+        }
+
         if (candidates.Count < 2) return;
 
         DecisionsWithOverlap++;
+        if (effectiveCandidates.Count < 2)
+            OverlapsEliminatedByContext++;
         MaximumCandidateCount = Math.Max(MaximumCandidateCount, candidates.Count);
         int ordinaryLength = ordinaryWinner.EndPosition - startPosition;
         if (candidates.Any(candidate =>
@@ -67,12 +83,7 @@ public sealed class LexerStatistics
         foreach (var candidate in ordered)
             RuleOverlapCounts[candidate.RuleIndex] =
                 RuleOverlapCounts.GetValueOrDefault(candidate.RuleIndex) + 1;
-        for (int i = 0; i < ordered.Length; i++)
-        for (int j = i + 1; j < ordered.Length; j++)
-        {
-            var pair = (ordered[i].RuleIndex, ordered[j].RuleIndex);
-            RulePairOverlapCounts[pair] = RulePairOverlapCounts.GetValueOrDefault(pair) + 1;
-        }
+        RecordPairs(ordered, RulePairOverlapCounts);
 
         Overlaps.Add(new LexerOverlapEvent(
             startPosition, line, column, mode, ordered,
@@ -81,27 +92,67 @@ public sealed class LexerStatistics
             usedContextFallback));
     }
 
+    private static IReadOnlyList<LexerCandidate> EffectiveCandidates(
+        IReadOnlyList<LexerCandidate> candidates,
+        IReadOnlySet<int> expectedTokenTypes,
+        bool usedContextFallback)
+    {
+        if (expectedTokenTypes == null || usedContextFallback)
+            return candidates;
+        return candidates.Where(candidate =>
+                candidate.Skip || candidate.Channel != 0 ||
+                expectedTokenTypes.Contains(candidate.TokenType))
+            .ToArray();
+    }
+
+    private static void RecordPairs(
+        IReadOnlyList<LexerCandidate> candidates,
+        Dictionary<(int Left, int Right), long> counts)
+    {
+        var ordered = candidates.OrderBy(candidate => candidate.RuleIndex).ToArray();
+        for (int i = 0; i < ordered.Length; i++)
+        for (int j = i + 1; j < ordered.Length; j++)
+        {
+            var pair = (ordered[i].RuleIndex, ordered[j].RuleIndex);
+            counts[pair] = counts.GetValueOrDefault(pair) + 1;
+        }
+    }
+
     public string FormatSummary(IReadOnlyList<string> ruleNames)
     {
         var writer = new StringWriter();
         writer.WriteLine("Lexer statistics:");
         writer.WriteLine($"  token decisions: {TokenDecisions}");
-        writer.WriteLine($"  decisions with overlapping rules: {DecisionsWithOverlap}");
+        writer.WriteLine($"  raw decisions with overlapping rules: {DecisionsWithOverlap}");
+        writer.WriteLine($"  effective decisions with overlapping rules: {EffectiveDecisionsWithOverlap}");
+        writer.WriteLine($"  overlaps eliminated by context: {OverlapsEliminatedByContext}");
         writer.WriteLine($"  maximal-munch resolutions: {MaximalMunchResolutions}");
         writer.WriteLine($"  equal-length priority resolutions: {EqualLengthPriorityResolutions}");
         writer.WriteLine($"  context overrides: {ContextOverrides}");
         writer.WriteLine($"  context fallbacks: {ContextFallbacks}");
-        writer.WriteLine($"  maximum candidate rules: {MaximumCandidateCount}");
-        writer.WriteLine("Overlapping rule pairs:");
-        if (RulePairOverlapCounts.Count == 0)
-            writer.WriteLine("  (none)");
-        else
-            foreach (var entry in RulePairOverlapCounts.OrderBy(entry => entry.Key.Left)
-                         .ThenBy(entry => entry.Key.Right))
-                writer.WriteLine(
-                    $"  {RuleName(ruleNames, entry.Key.Left)} / " +
-                    $"{RuleName(ruleNames, entry.Key.Right)}: {entry.Value}");
+        writer.WriteLine($"  maximum raw candidate rules: {MaximumCandidateCount}");
+        writer.WriteLine($"  maximum effective candidate rules: {MaximumEffectiveCandidateCount}");
+        WritePairs(writer, "Raw overlapping rule pairs:", RulePairOverlapCounts, ruleNames);
+        WritePairs(writer, "Effective overlapping rule pairs:", EffectiveRulePairOverlapCounts, ruleNames);
         return writer.ToString();
+    }
+
+    private static void WritePairs(
+        TextWriter writer, string heading,
+        Dictionary<(int Left, int Right), long> counts,
+        IReadOnlyList<string> ruleNames)
+    {
+        writer.WriteLine(heading);
+        if (counts.Count == 0)
+        {
+            writer.WriteLine("  (none)");
+            return;
+        }
+        foreach (var entry in counts.OrderBy(entry => entry.Key.Left)
+                     .ThenBy(entry => entry.Key.Right))
+            writer.WriteLine(
+                $"  {RuleName(ruleNames, entry.Key.Left)} / " +
+                $"{RuleName(ruleNames, entry.Key.Right)}: {entry.Value}");
     }
 
     public string FormatOverlaps(

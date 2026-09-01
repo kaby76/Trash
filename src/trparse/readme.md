@@ -95,6 +95,9 @@ processing the input. Use `--lexer-overlaps` for per-position candidate and
 winner details; it implies the summary. Speculative ALL(*) lookahead is not
 counted—only committed lexer decisions are recorded. These are runtime corpus
 statistics, not a static proof that two lexer-rule languages are disjoint.
+The summary distinguishes raw overlaps from effective overlaps in the actual
+selection pool after parser-context filtering (or after ordinary fallback),
+and reports how many raw overlaps context eliminated.
 
 ## Usage
 
