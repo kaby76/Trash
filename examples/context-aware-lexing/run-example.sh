@@ -4,7 +4,7 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-rm -rf interp result.pt result.tree ordinary.err
+rm -rf interp result.pt result.tree ordinary.err context.err
 
 # Generate parser and lexer .interp files without compiling a target parser.
 dotnet trash parse -l Decaf.g4 \
@@ -24,8 +24,10 @@ fi
 
 # Context-aware lexing sees that the parser expects INT_LITERAL and selects it
 # over the earlier, equally long DECIMAL_LITERAL rule.
-dotnet trash parse --context-aware-lexing -L interp input.decaf > result.pt
+dotnet trash parse --context-aware-lexing --lexer-overlaps \
+  -L interp input.decaf > result.pt 2> context.err
 dotnet trash tree -f result.pt > result.tree
 
 echo "Ordinary ALL(*) failed as expected; context-aware ALL(*) succeeded."
+cat context.err >&2
 cat result.tree

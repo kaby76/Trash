@@ -63,7 +63,8 @@ public static class AllStarParser
     /// </summary>
     public static List<ParseEvent> ParseContextAware(
         MyATN parserAtn, MyATN lexerAtn, string input, int startRuleIndex,
-        out List<LexerToken> allTokens)
+        out List<LexerToken> allTokens,
+        LexerStatistics lexerStatistics = null)
     {
         if (parserAtn == null) throw new ArgumentNullException(nameof(parserAtn));
         if (lexerAtn == null) throw new ArgumentNullException(nameof(lexerAtn));
@@ -77,7 +78,8 @@ public static class AllStarParser
         allTokens = new List<LexerToken>();
         var events = new List<ParseEvent>();
         var instance = new ParserInstance(
-            parserAtn, lexerAtn, input, allTokens, stateToDecision);
+            parserAtn, lexerAtn, input, allTokens, stateToDecision,
+            lexerStatistics);
         if (!instance.ParseRule(startRuleIndex, events, PredictionContext.EMPTY))
             return null;
         return events;
@@ -116,7 +118,8 @@ public static class AllStarParser
 
         public ParserInstance(MyATN parserAtn, MyATN lexerAtn, string input,
                               List<LexerToken> allTokens,
-                              Dictionary<int, int> stateToDecision)
+                              Dictionary<int, int> stateToDecision,
+                              LexerStatistics lexerStatistics)
         {
             _atn = parserAtn;
             _allTokens = allTokens;
@@ -124,7 +127,7 @@ public static class AllStarParser
             _tokenTypes = Array.Empty<int>();
             _stateToDecision = stateToDecision;
             _sim = new AllStarSimulator(parserAtn);
-            _lexer = new LexerAtnSimulator(lexerAtn);
+            _lexer = new LexerAtnSimulator(lexerAtn, lexerStatistics);
             _lexerCursor = new LexerAtnSimulator.Cursor();
             _input = input;
             _contextAware = true;
@@ -271,7 +274,8 @@ public static class AllStarParser
             while (true)
             {
                 var token = _lexer.NextToken(
-                    _input, cursor, firstOnChannel ? expected : null);
+                    _input, cursor, firstOnChannel ? expected : null,
+                    recordStatistics: false);
                 if (token.Channel == DEFAULT_CHANNEL || token.Type == EOF_TYPE)
                 {
                     types.Add(token.Type);

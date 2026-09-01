@@ -14,10 +14,15 @@ public class ContextAwareLexingTests
     [Fact]
     public void PrefersExpectedTokenBeforeMaximalMunch()
     {
-        var lexer = new LexerAtnSimulator(BuildLexerAtn());
+        var statistics = new LexerStatistics();
+        var lexer = new LexerAtnSimulator(BuildLexerAtn(), statistics);
         var ordinary = lexer.Tokenize("BDAY:2000-01-01");
         Assert.Equal(Value, ordinary[0].Type);
         Assert.Equal("BDAY:2000-01-01", ordinary[0].Text);
+        Assert.Equal(1, statistics.TokenDecisions);
+        Assert.Equal(1, statistics.DecisionsWithOverlap);
+        Assert.Equal(1, statistics.MaximalMunchResolutions);
+        Assert.Equal(0, statistics.EqualLengthPriorityResolutions);
 
         var cursor = new LexerAtnSimulator.Cursor();
         var contextual = lexer.NextToken(
@@ -29,7 +34,8 @@ public class ContextAwareLexingTests
     [Fact]
     public void FallsBackToOrdinaryLexerPolicyWhenExpectedRuleDoesNotMatch()
     {
-        var lexer = new LexerAtnSimulator(BuildLexerAtn());
+        var statistics = new LexerStatistics();
+        var lexer = new LexerAtnSimulator(BuildLexerAtn(), statistics);
         var cursor = new LexerAtnSimulator.Cursor();
 
         var token = lexer.NextToken(
@@ -37,6 +43,24 @@ public class ContextAwareLexingTests
 
         Assert.Equal(Value, token.Type);
         Assert.Equal("BDAY:2000-01-01", token.Text);
+        Assert.Equal(1, statistics.ContextFallbacks);
+    }
+
+    [Fact]
+    public void RecordsEqualLengthPriorityResolutionAndFormatsNames()
+    {
+        var statistics = new LexerStatistics();
+        var lexer = new LexerAtnSimulator(BuildEqualLengthLexerAtn(), statistics);
+
+        var token = lexer.Tokenize("1")[0];
+
+        Assert.Equal(1, token.Type);
+        Assert.Equal(1, statistics.DecisionsWithOverlap);
+        Assert.Equal(0, statistics.MaximalMunchResolutions);
+        Assert.Equal(1, statistics.EqualLengthPriorityResolutions);
+        Assert.Equal(1, statistics.RulePairOverlapCounts[(0, 1)]);
+        var summary = statistics.FormatSummary(["DECIMAL_LITERAL", "INT_LITERAL"]);
+        Assert.Contains("DECIMAL_LITERAL / INT_LITERAL: 1", summary);
     }
 
     [Fact]
@@ -45,12 +69,14 @@ public class ContextAwareLexingTests
         var parserAtn = BuildParserAtn();
         var lexerAtn = BuildLexerAtn();
         var input = "BDAY:2000-01-01";
+        var statistics = new LexerStatistics();
 
         var ordinaryTokens = new LexerAtnSimulator(lexerAtn).Tokenize(input);
         Assert.Null(AllStarParser.Parse(parserAtn, ordinaryTokens, 0));
 
         var events = AllStarParser.ParseContextAware(
-            parserAtn, lexerAtn, input, 0, out var contextualTokens);
+            parserAtn, lexerAtn, input, 0, out var contextualTokens,
+            statistics);
 
         Assert.NotNull(events);
         Assert.Equal(
@@ -59,6 +85,10 @@ public class ContextAwareLexingTests
                 .Where(token => token.Channel == 0 || token.Type == -1)
                 .Select(token => (token.Type, token.Text))
                 .ToArray());
+        // NAME, colon, and VALUE are committed decisions. Speculative ALL(*)
+        // scans must not increase this count.
+        Assert.Equal(3, statistics.TokenDecisions);
+        Assert.Equal(2, statistics.ContextOverrides);
     }
 
     [Fact]
@@ -152,6 +182,31 @@ public class ContextAwareLexingTests
             start = [nameStart, colonStart, valueStart],
             ruleToStopState = [nameStop, colonStop, valueStop],
             ruleToTokenType = [Name, Colon, Value],
+            modeToStartState = [modeStart]
+        };
+    }
+
+    private static MyATN BuildEqualLengthLexerAtn()
+    {
+        var states = new List<MyATNState>();
+        var modeStart = State(MyStateType.TokenStart, -1, states);
+        var starts = new MyATNState[2];
+        var stops = new MyATNState[2];
+        for (int rule = 0; rule < 2; rule++)
+        {
+            starts[rule] = State(MyStateType.RuleStart, rule, states);
+            stops[rule] = State(MyStateType.RuleStop, rule, states);
+            modeStart.AddTransition(new MyEpsilonTransition(starts[rule]));
+            starts[rule].AddTransition(new MyAtomTransition(stops[rule], '1'));
+        }
+        return new MyATN
+        {
+            grammarType = MyATNType.Lexer,
+            maxTokenType = 2,
+            allStates = states.ToArray(),
+            start = starts,
+            ruleToStopState = stops,
+            ruleToTokenType = [1, 2],
             modeToStartState = [modeStart]
         };
     }

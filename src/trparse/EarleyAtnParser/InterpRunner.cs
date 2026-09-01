@@ -25,7 +25,9 @@ public static class InterpRunner
         string lexerInterpPath,
         string inputText,
         string fileName,
-        bool lineNumbers)
+        bool lineNumbers,
+        bool lexerStats = false,
+        bool lexerOverlaps = false)
     {
         // Get options to lexer from process args.
         var args = Environment.GetCommandLineArgs().ToList();
@@ -43,8 +45,14 @@ public static class InterpRunner
         var lexerVocab  = new Antlr4.Runtime.Vocabulary(lexerInterp.LiteralNames,  lexerInterp.SymbolicNames);
         var parserVocab = new Antlr4.Runtime.Vocabulary(parserInterp.LiteralNames, parserInterp.SymbolicNames);
 
-        var sim = new LexerAtnSimulator(lexerAtn);
+        var statistics = lexerStats || lexerOverlaps
+            ? new LexerStatistics()
+            : null;
+        var sim = new LexerAtnSimulator(lexerAtn, statistics);
         var rawTokens = sim.Tokenize(inputText);
+        AllStarAtnParser.InterpRunner.PrintLexerStatistics(
+            statistics, lexerOverlaps, fileName,
+            lexerInterp.RuleNames, lexerInterp.SymbolicNames);
         if (show_tokens)
         {
             var symNames = lexerInterp.SymbolicNames;

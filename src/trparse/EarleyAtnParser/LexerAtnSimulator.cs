@@ -12,7 +12,13 @@ public class LexerAtnSimulator
     private const int DEFAULT_CHANNEL = 0;
     private const int EOF = -1;
 
-    public LexerAtnSimulator(MyATN lexerAtn) => _atn = lexerAtn;
+    public LexerStatistics Statistics { get; }
+
+    public LexerAtnSimulator(MyATN lexerAtn, LexerStatistics statistics = null)
+    {
+        _atn = lexerAtn;
+        Statistics = statistics;
+    }
 
     /// <summary>
     /// Mutable lexer position. Clone it when parser prediction needs speculative
@@ -58,7 +64,8 @@ public class LexerAtnSimulator
     /// eligible match exists, ordinary ANTLR lexer selection is used.
     /// </summary>
     public LexerToken NextToken(
-        string input, Cursor cursor, IReadOnlySet<int> expectedTokenTypes = null)
+        string input, Cursor cursor, IReadOnlySet<int> expectedTokenTypes = null,
+        bool recordStatistics = true)
     {
         if (cursor.Position == input.Length)
         {
@@ -79,8 +86,13 @@ public class LexerAtnSimulator
         int start = cursor.Position;
         int startLine = cursor.Line;
         int startColumn = cursor.Column;
-        var (matchedRule, matchEnd, actions) = MatchNextToken(
-            input, start, cursor.Mode, expectedTokenTypes);
+        int startMode = cursor.Mode;
+        var match = MatchNextToken(
+            input, start, cursor.Mode, expectedTokenTypes,
+            collectCandidates: recordStatistics && Statistics != null);
+        int matchedRule = match.RuleIndex;
+        int matchEnd = match.EndPosition;
+        var actions = match.Actions;
 
         if (matchedRule < 0)
             throw new InvalidOperationException(
@@ -130,15 +142,30 @@ public class LexerAtnSimulator
         cursor.Line = line;
         cursor.Column = column;
         cursor.Position = matchEnd;
+        if (recordStatistics && Statistics != null)
+            Statistics.Record(
+                start, startLine, startColumn, startMode,
+                match.Candidates, match.OrdinaryWinner, match.SelectedWinner,
+                expectedTokenTypes, match.UsedContextFallback);
         return token;
     }
 
-    // Returns (bestRuleIndex, endPosition, actions). bestRuleIndex < 0 on failure.
-    private (int ruleIdx, int endPos, List<IMyLexerAction> actions) MatchNextToken(
+    private sealed record MatchResult(
+        int RuleIndex,
+        int EndPosition,
+        List<IMyLexerAction> Actions,
+        IReadOnlyList<LexerCandidate> Candidates,
+        LexerCandidate OrdinaryWinner,
+        LexerCandidate SelectedWinner,
+        bool UsedContextFallback);
+
+    private MatchResult MatchNextToken(
         string input, int startPos, int mode,
-        IReadOnlySet<int> expectedTokenTypes = null)
+        IReadOnlySet<int> expectedTokenTypes = null,
+        bool collectCandidates = false)
     {
-        if (mode >= _atn.modeToStartState.Length) return (-1, startPos, new());
+        if (mode >= _atn.modeToStartState.Length)
+            return EmptyMatch(startPos);
         var modeStart = _atn.modeToStartState[mode];
 
         var initConfigs = new HashSet<LexerConfig>(LexerConfigEq.Instance);
@@ -149,10 +176,14 @@ public class LexerAtnSimulator
         int pos = startPos;
         int bestRule = -1, bestEnd = -1, bestActions = 0;
         int expectedRule = -1, expectedEnd = -1, expectedActions = 0;
+        Dictionary<int, (int End, int Actions)> acceptedRules = collectCandidates
+            ? new()
+            : null;
 
         CheckAccepts(current, pos, expectedTokenTypes,
             ref bestRule, ref bestEnd, ref bestActions,
-            ref expectedRule, ref expectedEnd, ref expectedActions);
+            ref expectedRule, ref expectedEnd, ref expectedActions,
+            acceptedRules);
 
         while (pos < input.Length)
         {
@@ -164,7 +195,8 @@ public class LexerAtnSimulator
             current = next;
             var nonGreedyAccepts = CheckAccepts(current, pos, expectedTokenTypes,
                 ref bestRule, ref bestEnd, ref bestActions,
-                ref expectedRule, ref expectedEnd, ref expectedActions);
+                ref expectedRule, ref expectedEnd, ref expectedActions,
+                acceptedRules);
             if (nonGreedyAccepts.Count != 0)
                 current.RemoveWhere(c =>
                     nonGreedyAccepts.Contains((c.OuterRule, c.NonGreedyDecision)) &&
@@ -182,10 +214,15 @@ public class LexerAtnSimulator
                 EpsClosure(eof);
                 CheckAccepts(eof, pos, expectedTokenTypes,
                     ref bestRule, ref bestEnd, ref bestActions,
-                    ref expectedRule, ref expectedEnd, ref expectedActions);
+                    ref expectedRule, ref expectedEnd, ref expectedActions,
+                    acceptedRules);
             }
         }
 
+        int ordinaryRule = bestRule;
+        int ordinaryEnd = bestEnd;
+        int ordinaryActions = bestActions;
+        bool usedContextFallback = expectedTokenTypes != null && expectedRule < 0;
         if (expectedRule >= 0)
         {
             bestRule = expectedRule;
@@ -193,21 +230,45 @@ public class LexerAtnSimulator
             bestActions = expectedActions;
         }
 
-        if (bestRule < 0) return (-1, startPos, new());
+        if (bestRule < 0) return EmptyMatch(startPos);
 
         var resolvedActions = new List<IMyLexerAction>();
         for (int i = 0; i < _atn.lexerActions.Length && i < 32; i++)
             if ((bestActions & (1 << i)) != 0)
                 resolvedActions.Add(_atn.lexerActions[i]);
 
-        return (bestRule, bestEnd, resolvedActions);
+        var candidates = acceptedRules == null
+            ? Array.Empty<LexerCandidate>()
+            : acceptedRules
+                .Where(entry => entry.Value.End > startPos)
+                .Select(entry => CreateCandidate(
+                    input, startPos, entry.Key,
+                    entry.Value.End, entry.Value.Actions))
+                .OrderBy(candidate => candidate.RuleIndex)
+                .ToArray();
+        var ordinaryWinner = CreateCandidate(
+            input, startPos, ordinaryRule, ordinaryEnd, ordinaryActions);
+        var selectedWinner = CreateCandidate(
+            input, startPos, bestRule, bestEnd, bestActions);
+        return new MatchResult(
+            bestRule, bestEnd, resolvedActions, candidates,
+            ordinaryWinner, selectedWinner, usedContextFallback);
+    }
+
+    private static MatchResult EmptyMatch(int startPosition)
+    {
+        var empty = new LexerCandidate(-1, -1, startPosition, 0, false, "");
+        return new MatchResult(
+            -1, startPosition, new List<IMyLexerAction>(),
+            Array.Empty<LexerCandidate>(), empty, empty, false);
     }
 
     private HashSet<(int Rule, int Decision)> CheckAccepts(
         HashSet<LexerConfig> configs, int pos,
         IReadOnlySet<int> expectedTokenTypes,
         ref int bestRule, ref int bestEnd, ref int bestActions,
-        ref int expectedRule, ref int expectedEnd, ref int expectedActions)
+        ref int expectedRule, ref int expectedEnd, ref int expectedActions,
+        Dictionary<int, (int End, int Actions)> acceptedRules)
     {
         var nonGreedyAccepts = new HashSet<(int, int)>();
         foreach (var c in configs)
@@ -215,6 +276,9 @@ public class LexerAtnSimulator
             if (c.State.stateType == MyStateType.RuleStop && c.Stack.IsEmpty)
             {
                 int ri = c.State.ruleIndex;
+                if (acceptedRules != null &&
+                    (!acceptedRules.TryGetValue(ri, out var accepted) || pos > accepted.End))
+                    acceptedRules[ri] = (pos, c.Actions);
                 // Longer match wins; tie-break by earlier rule index
                 if (pos > bestEnd || (pos == bestEnd && ri < bestRule))
                 {
@@ -237,8 +301,20 @@ public class LexerAtnSimulator
         return nonGreedyAccepts;
     }
 
-    private bool IsContextEligible(
-        int ruleIndex, int actionBits, IReadOnlySet<int> expectedTokenTypes)
+    private LexerCandidate CreateCandidate(
+        string input, int startPosition, int ruleIndex,
+        int endPosition, int actionBits)
+    {
+        var (tokenType, channel, skip) = ResolveDisposition(ruleIndex, actionBits);
+        return new LexerCandidate(
+            ruleIndex, tokenType, endPosition, channel, skip,
+            endPosition >= startPosition
+                ? input.Substring(startPosition, endPosition - startPosition)
+                : "");
+    }
+
+    private (int TokenType, int Channel, bool Skip) ResolveDisposition(
+        int ruleIndex, int actionBits)
     {
         int tokenType = _atn.ruleToTokenType[ruleIndex];
         int channel = DEFAULT_CHANNEL;
@@ -251,6 +327,13 @@ public class LexerAtnSimulator
             else if (action.ActionType == MyLexerActionType.Channel) channel = action.Arg1;
             else if (action.ActionType == MyLexerActionType.Skip) skip = true;
         }
+        return (tokenType, channel, skip);
+    }
+
+    private bool IsContextEligible(
+        int ruleIndex, int actionBits, IReadOnlySet<int> expectedTokenTypes)
+    {
+        var (tokenType, channel, skip) = ResolveDisposition(ruleIndex, actionBits);
         return skip || channel != DEFAULT_CHANNEL || expectedTokenTypes.Contains(tokenType);
     }
 

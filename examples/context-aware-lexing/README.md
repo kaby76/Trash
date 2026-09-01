@@ -37,6 +37,10 @@ then parses successfully with:
 dotnet trash parse --context-aware-lexing -L interp input.decaf
 ```
 
+The runner also specifies `--lexer-overlaps`. Its stderr report shows that
+`DECIMAL_LITERAL` would win under ordinary rule priority, while parser context
+selects `INT_LITERAL`, followed by aggregate overlap statistics.
+
 It writes the successful parsing result to `result.pt` and its indented tree to
 `result.tree`.
 

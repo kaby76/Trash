@@ -90,6 +90,12 @@ the lexer falls back to ordinary ANTLR maximal-munch and rule-priority
 semantics. Existing lexer modes and `skip`, `type`, `channel`, `mode`,
 `pushMode`, and `popMode` commands are honored.
 
+Use `--lexer-stats` to write a summary of lexer-rule overlaps observed while
+processing the input. Use `--lexer-overlaps` for per-position candidate and
+winner details; it implies the summary. Speculative ALL(*) lookahead is not
+counted—only committed lexer decisions are recorded. These are runtime corpus
+statistics, not a static proof that two lexer-rule languages are disjoint.
+
 ## Usage
 
     dotnet trash parse (<string> | <options>)*
@@ -101,6 +107,9 @@ semantics. Existing lexer modes and `skip`, `type`, `channel`, `mode`,
         --allstar      Use the ALL(*) interpreter instead of Earley.
         --context-aware-lexing
                        Prefer lexer tokens valid in the current ALL(*) parser context.
+        --lexer-stats  Write observed interp lexer-overlap statistics to stderr.
+        --lexer-overlaps
+                       Write detailed observed overlaps (implies --lexer-stats).
 
 ## Examples
 

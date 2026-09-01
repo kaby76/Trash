@@ -66,6 +66,14 @@ public class Config
         HelpText = "For ALL(*) interp parsing, prefer lexer tokens valid in the current parser context; fall back to normal ANTLR lexing when none match.")]
     public bool ContextAwareLexing { get; set; }
 
+    [Option("lexer-stats", Required = false,
+        HelpText = "Write observed interp lexer-overlap statistics to stderr.")]
+    public bool LexerStats { get; set; }
+
+    [Option("lexer-overlaps", Required = false,
+        HelpText = "Write details of observed interp lexer-rule overlaps to stderr (implies --lexer-stats).")]
+    public bool LexerOverlaps { get; set; }
+
     [Option("bundle", Required = false, HelpText = "Write an ordinary POSIX PAX artifact bundle to stdout (the default).")]
     public bool Bundle { get; set; } = true;
 

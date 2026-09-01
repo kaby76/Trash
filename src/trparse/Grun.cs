@@ -345,13 +345,15 @@ public class Grun
                 AllStarAtnParser.AllStarParser.Trace = config.Verbose;
                 (rs, interpTokenCount) = AllStarAtnParser.InterpRunner.Run(
                     resolvedPInterp, resolvedLInterp, txt, input_name,
-                    config.LineNumbers, config.ContextAwareLexing);
+                    config.LineNumbers, config.ContextAwareLexing,
+                    config.LexerStats, config.LexerOverlaps);
                 interpLabel = "ALL(*)";
             }
             else
             {
                 (rs, interpTokenCount) = EarleyAtnParser.InterpRunner.Run(
-                    resolvedPInterp, resolvedLInterp, txt, input_name, config.LineNumbers);
+                    resolvedPInterp, resolvedLInterp, txt, input_name,
+                    config.LineNumbers, config.LexerStats, config.LexerOverlaps);
                 interpLabel = "Earley";
             }
             DateTime interpAfter = DateTime.Now;
