@@ -169,7 +169,7 @@ public class LexerAtnSimulator
         var modeStart = _atn.modeToStartState[mode];
 
         var initConfigs = new HashSet<LexerConfig>(LexerConfigEq.Instance);
-        initConfigs.Add(new LexerConfig(modeStart, LexStack.Empty, 0, -1, -1, false));
+        initConfigs.Add(new LexerConfig(modeStart, LexStack.Empty, 0, -1, -1, false, -1));
         EpsClosure(initConfigs);
 
         var current = initConfigs;
@@ -200,6 +200,7 @@ public class LexerAtnSimulator
             if (nonGreedyAccepts.Count != 0)
                 current.RemoveWhere(c =>
                     nonGreedyAccepts.Contains((c.OuterRule, c.NonGreedyDecision)) &&
+                    c.State.stateType != MyStateType.RuleStop &&
                     !c.CompletedInnerRule);
         }
 
@@ -273,6 +274,14 @@ public class LexerAtnSimulator
         var nonGreedyAccepts = new HashSet<(int, int)>();
         foreach (var c in configs)
         {
+            // A non-greedy decision can be inside a referenced lexer rule
+            // (fragment), rather than directly in the outer token rule. Once
+            // that fragment returns, discard configurations which are still
+            // taking the loop for the same decision. Waiting for the outer
+            // RuleStop would let .*? in the fragment consume later delimiters.
+            if (c.CompletedNonGreedyDecision >= 0)
+                nonGreedyAccepts.Add((c.OuterRule, c.CompletedNonGreedyDecision));
+
             if (c.State.stateType == MyStateType.RuleStop && c.Stack.IsEmpty)
             {
                 int ri = c.State.ruleIndex;
@@ -348,7 +357,7 @@ public class LexerAtnSimulator
                     next.Add(new LexerConfig(
                         tr.target, c.Stack, c.Actions, c.OuterRule,
                         NextNonGreedyDecision(c),
-                        false));
+                        false, -1));
             }
         }
         return next;
@@ -377,9 +386,15 @@ public class LexerAtnSimulator
             if (c.State.stateType == MyStateType.RuleStop && !c.Stack.IsEmpty)
             {
                 var (ret, rest) = c.Stack.Pop();
+                bool completedNonGreedyDecision =
+                    c.NonGreedyDecision >= 0 &&
+                    c.NonGreedyDecision < _atn.allStates.Length &&
+                    _atn.allStates[c.NonGreedyDecision].ruleIndex == c.State.ruleIndex;
                 var next = new LexerConfig(
-                    ret, rest, c.Actions, c.OuterRule, c.NonGreedyDecision,
-                    true);
+                    ret, rest, c.Actions, c.OuterRule,
+                    completedNonGreedyDecision ? -1 : c.NonGreedyDecision,
+                    true,
+                    completedNonGreedyDecision ? c.NonGreedyDecision : -1);
                 if (configs.Add(next)) work.Push(next);
                 continue;
             }
@@ -396,7 +411,8 @@ public class LexerAtnSimulator
                             tr.target, c.Stack, c.Actions,
                             c.OuterRule < 0 ? tr.target.ruleIndex : c.OuterRule,
                             NextNonGreedyDecision(c),
-                            c.CompletedInnerRule);
+                            c.CompletedInnerRule,
+                            c.CompletedNonGreedyDecision);
                         if (configs.Add(next)) work.Push(next);
                         break;
 
@@ -410,7 +426,8 @@ public class LexerAtnSimulator
                         next = new LexerConfig(
                             tr.target, c.Stack, acts, c.OuterRule,
                             NextNonGreedyDecision(c),
-                            c.CompletedInnerRule);
+                            c.CompletedInnerRule,
+                            c.CompletedNonGreedyDecision);
                         if (configs.Add(next)) work.Push(next);
                         break;
 
@@ -421,7 +438,7 @@ public class LexerAtnSimulator
                         next = new LexerConfig(
                             ruleStart, pushed, c.Actions, c.OuterRule,
                             NextNonGreedyDecision(c),
-                            false);
+                            false, -1);
                         if (configs.Add(next)) work.Push(next);
                         break;
                 }
@@ -455,14 +472,19 @@ public class LexerAtnSimulator
         public readonly int Actions; // bitfield indexing into atn.lexerActions
         public readonly int OuterRule;
         public readonly int NonGreedyDecision;
-        // True when the most recently consumed character completed a
-        // referenced lexer rule. Such a path has priority over a competing
-        // wildcard path which accepts the outer rule at the same position.
+        // True when the most recently consumed character completed any
+        // referenced rule. This preserves a higher-priority fragment path
+        // when a wildcard path can accept at the same position.
         public readonly bool CompletedInnerRule;
+        // Non-greedy decision completed by a referenced lexer rule at the
+        // current input position, or -1. Kept separate from the active
+        // decision so a subsequent fragment invocation is not pruned.
+        public readonly int CompletedNonGreedyDecision;
 
         public LexerConfig(MyATNState state, LexStack stack, int actions,
                            int outerRule, int nonGreedyDecision,
-                           bool completedInnerRule)
+                           bool completedInnerRule,
+                           int completedNonGreedyDecision)
         {
             State = state;
             Stack = stack;
@@ -470,6 +492,7 @@ public class LexerAtnSimulator
             OuterRule = outerRule;
             NonGreedyDecision = nonGreedyDecision;
             CompletedInnerRule = completedInnerRule;
+            CompletedNonGreedyDecision = completedNonGreedyDecision;
         }
     }
 
@@ -483,7 +506,8 @@ public class LexerAtnSimulator
                LexStack.Same(x.Stack, y.Stack) &&
                x.OuterRule == y.OuterRule &&
                x.NonGreedyDecision == y.NonGreedyDecision &&
-               x.CompletedInnerRule == y.CompletedInnerRule;
+               x.CompletedInnerRule == y.CompletedInnerRule &&
+               x.CompletedNonGreedyDecision == y.CompletedNonGreedyDecision;
 
         public int GetHashCode(LexerConfig c)
         {
@@ -492,7 +516,8 @@ public class LexerAtnSimulator
                 int hash = c.State.stateNumber * 31 + c.Stack.GetHashCode();
                 hash = hash * 31 + c.OuterRule;
                 hash = hash * 31 + c.NonGreedyDecision;
-                return hash * 31 + (c.CompletedInnerRule ? 1 : 0);
+                hash = hash * 31 + (c.CompletedInnerRule ? 1 : 0);
+                return hash * 31 + c.CompletedNonGreedyDecision;
             }
         }
     }

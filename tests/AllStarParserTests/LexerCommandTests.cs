@@ -126,6 +126,18 @@ public class LexerCommandTests
         Assert.Equal(["\"first\"", "\"Hello, I'm CORUN\\\"DUM\""], literals);
     }
 
+    [Fact]
+    public void NonGreedyLoopInFragmentDoesNotConsumeLaterOuterTokens()
+    {
+        var tokens = new LexerAtnSimulator(BuildNestedNonGreedyAtn())
+            .Tokenize("<<a>>]<<b>>")
+            .Where(token => token.Type != -1)
+            .Select(token => token.Text)
+            .ToArray();
+
+        Assert.Equal(["<<a>>", "]", "<<b>>"], tokens);
+    }
+
     private static MyATN BuildCommandAtn() => BuildAtn(
         modeCount: 3,
         new RuleSpec(0, '<', 1, new(MyLexerActionType.PushMode, 1, 0)),
@@ -137,6 +149,62 @@ public class LexerCommandTests
         new RuleSpec(1, '>', 7, new(MyLexerActionType.PopMode, 0, 0)),
         new RuleSpec(2, 'y', 8),
         new RuleSpec(2, ']', 9, new(MyLexerActionType.Mode, 0, 0)));
+
+    private static MyATN BuildNestedNonGreedyAtn()
+    {
+        var states = new List<MyATNState>();
+        MyATNState New(MyStateType type, int rule)
+        {
+            var state = State(type, rule, states.Count);
+            states.Add(state);
+            return state;
+        }
+
+        var modeStart = New(MyStateType.TokenStart, -1);
+
+        // HTML : '<' (TAG | ~[<>])* '>' ;
+        var htmlStart = New(MyStateType.RuleStart, 0);
+        var htmlLoop = New(MyStateType.StarLoopEntry, 0);
+        var htmlClose = New(MyStateType.Basic, 0);
+        var htmlStop = New(MyStateType.RuleStop, 0);
+        htmlStart.AddTransition(new MyAtomTransition(htmlLoop, '<'));
+        htmlLoop.AddTransition(new MyRuleTransition(htmlLoop, 1, 0));
+        var angles = MyIntervalSet.Of('<');
+        angles.Add('>', '>');
+        htmlLoop.AddTransition(new MyNotSetTransition(htmlLoop, angles));
+        htmlLoop.AddTransition(new MyEpsilonTransition(htmlClose));
+        htmlClose.AddTransition(new MyAtomTransition(htmlStop, '>'));
+
+        // fragment TAG : '<' .*? '>' ;
+        var tagStart = New(MyStateType.RuleStart, 1);
+        var tagLoop = New(MyStateType.StarLoopEntry, 1);
+        tagLoop.nonGreedy = true;
+        var tagClose = New(MyStateType.Basic, 1);
+        var tagStop = New(MyStateType.RuleStop, 1);
+        tagStart.AddTransition(new MyAtomTransition(tagLoop, '<'));
+        tagLoop.AddTransition(new MyEpsilonTransition(tagClose));
+        tagLoop.AddTransition(new MyWildcardTransition(tagLoop));
+        tagClose.AddTransition(new MyAtomTransition(tagStop, '>'));
+
+        // CAB : ']' ;
+        var cabStart = New(MyStateType.RuleStart, 2);
+        var cabStop = New(MyStateType.RuleStop, 2);
+        cabStart.AddTransition(new MyAtomTransition(cabStop, ']'));
+
+        modeStart.AddTransition(new MyEpsilonTransition(htmlStart));
+        modeStart.AddTransition(new MyEpsilonTransition(cabStart));
+
+        return new MyATN
+        {
+            grammarType = MyATNType.Lexer,
+            maxTokenType = 2,
+            allStates = states.ToArray(),
+            start = [htmlStart, tagStart, cabStart],
+            ruleToStopState = [htmlStop, tagStop, cabStop],
+            ruleToTokenType = [1, 0, 2],
+            modeToStartState = [modeStart]
+        };
+    }
 
     private static MyATN BuildAtn(int modeCount, params RuleSpec[] rules)
     {
