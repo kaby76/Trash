@@ -1,4 +1,4 @@
-Release 3.1.0.
+Release 3.2.0.
 
 # trash
 
