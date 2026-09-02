@@ -1517,7 +1517,7 @@ mod_clause
 */
 
 pragmaRule
-    : PRAGMA identifier (LP pragma_argument_association (COMMA pragma_argument_association)* RP)? SEMI EOF
+    : PRAGMA identifier (LP pragma_argument_association (COMMA pragma_argument_association)* RP)? SEMI
     ;
 
 pragma_argument_association

@@ -1,7 +1,7 @@
 #
-# set -x
+set -x
 set -e
-for g in `cat action-free-grammars.txt`
+for g in `cat $1`
 do
 	pushd ~/grammars-v4/$g
 	dotnet trash parse -t ANTLRv4 *.g4 | dotnet trash interp -o interp
@@ -28,6 +28,6 @@ do
 	cd interp
         printf '%s\n' "${files[@]}" | dotnet trash parse -t gen -x --bundle -L . --allstar | dotnet trash tree --bundle | dotnet trash sponge -o ../allstar -c --bundle
 	cd ..
-	diff -r native allstar > /dev/null 2>&1
+	diff -rq native allstar
 	popd
 done
