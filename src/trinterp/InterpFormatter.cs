@@ -61,14 +61,9 @@ public static class InterpFormatter
             sb.AppendLine("channel names:");
             sb.AppendLine("DEFAULT_TOKEN_CHANNEL");
             sb.AppendLine("HIDDEN");
-            // Extra channels occupy indices 2+; indices 0/1 are printed as "null" placeholders.
-            if (grammar.ExtraChannelNames.Count > 0)
-            {
-                sb.AppendLine("null");
-                sb.AppendLine("null");
-                foreach (var ch in grammar.ExtraChannelNames)
-                    sb.AppendLine(ch);
-            }
+            // Extra channels occupy indices 2+ immediately after the two built-in channels.
+            foreach (var ch in grammar.ExtraChannelNames)
+                sb.AppendLine(ch);
             sb.AppendLine();
 
             // ---- mode names ----

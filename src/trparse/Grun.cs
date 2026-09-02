@@ -462,7 +462,6 @@ public class Grun
         }
         else if (parser_type == "gen")
         {
-            System.Console.Error.WriteLine("Using Generated-CSharp parser.");
             string path = config.ParserLocation != null
                 ? config.ParserLocation
                 : Environment.CurrentDirectory + Path.DirectorySeparatorChar;
