@@ -6,18 +6,27 @@ using Atn;
 /// Character-level ATN-based lexer. Implements a longest-match NFA simulation
 /// from scratch, with no Antlr4 runtime dependencies in the core algorithm.
 /// </summary>
-public class LexerAtnSimulator
+public partial class LexerAtnSimulator
 {
     private readonly MyATN _atn;
+    private readonly bool _enableDfa;
     private const int DEFAULT_CHANNEL = 0;
     private const int EOF = -1;
 
     public LexerStatistics Statistics { get; }
 
     public LexerAtnSimulator(MyATN lexerAtn, LexerStatistics statistics = null)
+        : this(lexerAtn, statistics, true)
+    {
+    }
+
+    internal LexerAtnSimulator(
+        MyATN lexerAtn, LexerStatistics statistics, bool enableDfa)
     {
         _atn = lexerAtn;
+        _enableDfa = enableDfa;
         Statistics = statistics;
+        _modeStartStates = new DfaState[lexerAtn.modeToStartState.Length];
     }
 
     /// <summary>
@@ -164,15 +173,9 @@ public class LexerAtnSimulator
         IReadOnlySet<int> expectedTokenTypes = null,
         bool collectCandidates = false)
     {
-        if (mode >= _atn.modeToStartState.Length)
+        if (mode < 0 || mode >= _atn.modeToStartState.Length)
             return EmptyMatch(startPos);
-        var modeStart = _atn.modeToStartState[mode];
-
-        var initConfigs = new HashSet<LexerConfig>(LexerConfigEq.Instance);
-        initConfigs.Add(new LexerConfig(modeStart, LexStack.Empty, 0, -1, -1, false, -1));
-        EpsClosure(initConfigs);
-
-        var current = initConfigs;
+        var current = GetModeStartState(mode);
         int pos = startPos;
         int bestRule = -1, bestEnd = -1, bestActions = 0;
         int expectedRule = -1, expectedEnd = -1, expectedActions = 0;
@@ -180,7 +183,7 @@ public class LexerAtnSimulator
             ? new()
             : null;
 
-        CheckAccepts(current, pos, expectedTokenTypes,
+        CheckAccepts(current.Configs, pos, expectedTokenTypes,
             ref bestRule, ref bestEnd, ref bestActions,
             ref expectedRule, ref expectedEnd, ref expectedActions,
             acceptedRules);
@@ -188,20 +191,14 @@ public class LexerAtnSimulator
         while (pos < input.Length)
         {
             int ch = input[pos];
-            var next = Scan(current, ch);
-            if (next.Count == 0) break;
-            EpsClosure(next);
+            var next = GetTargetState(current, ch);
+            if (next == null) break;
             pos++;
             current = next;
-            var nonGreedyAccepts = CheckAccepts(current, pos, expectedTokenTypes,
+            CheckAccepts(current.Configs, pos, expectedTokenTypes,
                 ref bestRule, ref bestEnd, ref bestActions,
                 ref expectedRule, ref expectedEnd, ref expectedActions,
                 acceptedRules);
-            if (nonGreedyAccepts.Count != 0)
-                current.RemoveWhere(c =>
-                    nonGreedyAccepts.Contains((c.OuterRule, c.NonGreedyDecision)) &&
-                    c.State.stateType != MyStateType.RuleStop &&
-                    !c.CompletedInnerRule);
         }
 
         // EOF is a real lexer-ATN symbol. It does not consume a character, but
@@ -209,11 +206,10 @@ public class LexerAtnSimulator
         // the end of a file that has no trailing newline.
         if (pos == input.Length)
         {
-            var eof = Scan(current, EOF);
-            if (eof.Count != 0)
+            var eof = GetTargetState(current, EOF);
+            if (eof != null)
             {
-                EpsClosure(eof);
-                CheckAccepts(eof, pos, expectedTokenTypes,
+                CheckAccepts(eof.Configs, pos, expectedTokenTypes,
                     ref bestRule, ref bestEnd, ref bestActions,
                     ref expectedRule, ref expectedEnd, ref expectedActions,
                     acceptedRules);
@@ -544,6 +540,30 @@ public class LexerAtnSimulator
 
         public static bool Same(LexStack a, LexStack b)
             => ReferenceEquals(a._node, b._node);
+
+        public static bool StructuralSame(LexStack a, LexStack b)
+        {
+            var left = a._node;
+            var right = b._node;
+            while (left != null && right != null)
+            {
+                if (!ReferenceEquals(left.Head, right.Head)) return false;
+                left = left.Tail;
+                right = right.Tail;
+            }
+            return left == null && right == null;
+        }
+
+        public int StructuralHashCode()
+        {
+            unchecked
+            {
+                int hash = 17;
+                for (var node = _node; node != null; node = node.Tail)
+                    hash = hash * 31 + node.Head.stateNumber;
+                return hash;
+            }
+        }
 
         public override int GetHashCode() => _node?.GetHashCode() ?? 0;
     }

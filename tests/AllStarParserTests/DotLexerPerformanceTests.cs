@@ -19,6 +19,31 @@ public sealed class DotLexerPerformanceTests(ITestOutputHelper output)
         AppContext.BaseDirectory, "TestData", "dot", "DOTLexer.interp");
 
     [Fact]
+    public void LearnedDfaReusesTransitionsAcrossTokens()
+    {
+        var interp = InterpFileReader.Read(File.ReadAllText(LexerInterp));
+        var simulator = new LexerAtnSimulator(
+            AtnDeserializer.Deserialize(interp.AtnData));
+
+        var tokens = simulator.Tokenize(GenerateDotInput(100));
+
+        Assert.Equal(-1, tokens[^1].Type);
+        Assert.True(simulator.DfaStateCount > 0);
+        Assert.True(simulator.DfaEdgeCacheMisses > 0);
+        Assert.True(simulator.DfaEdgeCacheHits > simulator.DfaEdgeCacheMisses,
+            $"Expected learned edges to dominate: {simulator.DfaEdgeCacheHits} hits, " +
+            $"{simulator.DfaEdgeCacheMisses} misses.");
+        output.WriteLine($"Learned lexer DFA: {simulator.DfaStateCount} states, " +
+            $"{simulator.DfaEdgeCacheHits} edge hits, " +
+            $"{simulator.DfaEdgeCacheMisses} edge misses");
+
+        var hitsBeforeSecondInput = simulator.DfaEdgeCacheHits;
+        _ = simulator.Tokenize("digraph second { alpha -> beta; }");
+        Assert.True(simulator.DfaEdgeCacheHits > hitsBeforeSecondInput,
+            "Expected the simulator to reuse its learned DFA on another input.");
+    }
+
+    [Fact]
     [Trait("Category", "Performance")]
     public void LargeGeneratedDotInputMaintainsLexerThroughput()
     {
@@ -70,9 +95,12 @@ public sealed class DotLexerPerformanceTests(ITestOutputHelper output)
         // Deliberately conservative: this catches catastrophic regressions while
         // remaining stable on slower CI hosts. Reported numbers provide the
         // baseline for evaluating the DFA work in subsequent #712 subtasks.
-        Assert.True(tokensPerSecond >= 5_000,
+        Assert.True(tokensPerSecond >= 100_000,
             $"DOT lexer throughput {tokensPerSecond:N0} tokens/s is below the " +
-            "5,000 tokens/s regression floor.");
+            "100,000 tokens/s learned-DFA regression floor.");
+        Assert.True(bytesPerToken < 5_000,
+            $"DOT lexer allocated {bytesPerToken:F1} bytes/token; expected less " +
+            "than 5,000 with learned DFA reuse.");
 
         GC.KeepAlive(tokens);
     }
@@ -117,9 +145,12 @@ public sealed class DotLexerPerformanceTests(ITestOutputHelper output)
         output.WriteLine($"Fixture decompression/read: {loadTime.TotalMilliseconds:F3} ms " +
             "(excluded from lexer time)");
 
-        Assert.True(tokensPerSecond >= 5_000,
+        Assert.True(tokensPerSecond >= 100_000,
             $"1864.dot lexer throughput {tokensPerSecond:N0} tokens/s is below " +
-            "the 5,000 tokens/s regression floor.");
+            "the 100,000 tokens/s learned-DFA regression floor.");
+        Assert.True(bytesPerToken < 5_000,
+            $"1864.dot allocated {bytesPerToken:F1} bytes/token; expected less " +
+            "than 5,000 with learned DFA reuse.");
         GC.KeepAlive(tokens);
     }
 

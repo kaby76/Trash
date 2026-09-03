@@ -1,4 +1,5 @@
 using System.IO;
+using Atn;
 using ParseTreeEditing.UnvParseTreeDOM;
 using EarleyAtnParser;
 using AllStarAtnParser;
@@ -12,6 +13,35 @@ namespace AllStarParserTests;
 /// </summary>
 public class MySqlInterpTests
 {
+    [Fact]
+    public void LearnedLexerDfaMatchesUncachedTokenStream()
+    {
+        var lexerInterp = InterpFileReader.Read(File.ReadAllText(LexerInterp));
+        var lexerAtn = Atn.AtnDeserializer.Deserialize(lexerInterp.AtnData);
+        var inputPath = Path.Combine(ExamplesDir, "admin.sql");
+        var input = File.ReadAllText(inputPath);
+
+        var expected = new LexerAtnSimulator(
+            lexerAtn, statistics: null, enableDfa: false).Tokenize(input);
+        var actual = new LexerAtnSimulator(lexerAtn).Tokenize(input);
+
+        Assert.Equal(expected.Count, actual.Count);
+        for (var i = 0; i < expected.Count; i++)
+        {
+            Assert.True(
+                expected[i].Type == actual[i].Type &&
+                expected[i].Channel == actual[i].Channel &&
+                expected[i].StartIndex == actual[i].StartIndex &&
+                expected[i].StopIndex == actual[i].StopIndex &&
+                expected[i].Line == actual[i].Line &&
+                expected[i].Column == actual[i].Column &&
+                expected[i].Text == actual[i].Text,
+                $"Token {i} differs. Expected type {expected[i].Type}, " +
+                $"channel {expected[i].Channel}, text '{expected[i].Text}'; " +
+                $"actual type {actual[i].Type}, channel {actual[i].Channel}, " +
+                $"text '{actual[i].Text}'.");
+        }
+    }
     private static readonly string InterpDir =
         Path.Combine(AppContext.BaseDirectory, "TestData", "mysql-interp");
 
