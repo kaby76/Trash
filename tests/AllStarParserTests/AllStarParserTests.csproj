@@ -137,6 +137,20 @@
     <Content Include="../grammars-v4/corundum/interp/CorundumLexer.interp"
              CopyToOutputDirectory="PreserveNewest"
              Link="TestData/corundum/interp/CorundumLexer.interp" />
+
+    <!-- CMake recursive bracket-argument lexer regression and native tree -->
+    <Content Include="../grammars-v4/cmake/interp/CMake.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/cmake/interp/CMake.interp" />
+    <Content Include="../grammars-v4/cmake/interp/CMakeLexer.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/cmake/interp/CMakeLexer.interp" />
+    <Content Include="../grammars-v4/cmake/examples/CMakeLists.txt"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/cmake/examples/CMakeLists.txt" />
+    <Content Include="../grammars-v4/cmake/native/CMakeLists.tree"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/cmake/native/CMakeLists.tree" />
   </ItemGroup>
 
 </Project>

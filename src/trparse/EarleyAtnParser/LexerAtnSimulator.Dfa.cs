@@ -26,7 +26,7 @@ public partial class LexerAtnSimulator
             var uncachedConfigs = new HashSet<LexerConfig>(LexerConfigEq.Instance)
             {
                 new LexerConfig(_atn.modeToStartState[mode], LexStack.Empty,
-                    0, -1, -1, false, -1)
+                    0, -1, -1, LexStack.Empty, false)
             };
             EpsClosure(uncachedConfigs);
             return new DfaState(uncachedConfigs);
@@ -37,7 +37,7 @@ public partial class LexerAtnSimulator
         var configs = NewDfaConfigSet();
         configs.Add(new LexerConfig(
             _atn.modeToStartState[mode], LexStack.Empty,
-            0, -1, -1, false, -1));
+            0, -1, -1, LexStack.Empty, false));
         EpsClosure(configs);
         cached = InternDfaState(configs);
         _modeStartStates[mode] = cached;
@@ -106,27 +106,35 @@ public partial class LexerAtnSimulator
 
     private static void PruneAfterNonGreedyAccept(HashSet<LexerConfig> configs)
     {
-        HashSet<(int Rule, int Decision)> accepts = null;
+        HashSet<NonGreedyAccept> accepts = null;
         foreach (var config in configs)
         {
-            if (config.CompletedNonGreedyDecision >= 0)
-            {
-                accepts ??= new();
-                accepts.Add((config.OuterRule, config.CompletedNonGreedyDecision));
-            }
             if (config.State.stateType == Atn.MyStateType.RuleStop &&
                 config.Stack.IsEmpty && config.NonGreedyDecision >= 0)
             {
-                accepts ??= new();
-                accepts.Add((config.State.ruleIndex, config.NonGreedyDecision));
+                accepts ??= new(NonGreedyAcceptEq.Instance);
+                accepts.Add(new NonGreedyAccept(
+                    config.State.ruleIndex, config.NonGreedyDecision,
+                    config.NonGreedyContext));
             }
         }
         if (accepts == null) return;
-
         configs.RemoveWhere(config =>
-            accepts.Contains((config.OuterRule, config.NonGreedyDecision)) &&
             config.State.stateType != Atn.MyStateType.RuleStop &&
-            !config.CompletedInnerRule);
+            IsLowerPriorityNonGreedyPath(config, accepts));
+    }
+
+    private static bool IsLowerPriorityNonGreedyPath(
+        LexerConfig config, HashSet<NonGreedyAccept> accepts)
+    {
+        foreach (var accept in accepts)
+            if (accept.Rule == config.OuterRule &&
+                accept.Decision == config.NonGreedyDecision &&
+                LexStack.StructuralSame(accept.Context, config.NonGreedyContext) &&
+                (!accept.Context.IsEmpty ||
+                 (config.Stack.IsEmpty && !config.CompletedInnerRule)))
+                return true;
+        return false;
     }
 
     private sealed class DfaLexerConfigEq : IEqualityComparer<LexerConfig>
@@ -139,8 +147,8 @@ public partial class LexerAtnSimulator
             x.Actions == y.Actions &&
             x.OuterRule == y.OuterRule &&
             x.NonGreedyDecision == y.NonGreedyDecision &&
-            x.CompletedInnerRule == y.CompletedInnerRule &&
-            x.CompletedNonGreedyDecision == y.CompletedNonGreedyDecision;
+            LexStack.StructuralSame(x.NonGreedyContext, y.NonGreedyContext) &&
+            x.CompletedInnerRule == y.CompletedInnerRule;
 
         public int GetHashCode(LexerConfig config)
         {
@@ -151,8 +159,9 @@ public partial class LexerAtnSimulator
                 hash = hash * 31 + config.Actions;
                 hash = hash * 31 + config.OuterRule;
                 hash = hash * 31 + config.NonGreedyDecision;
+                hash = hash * 31 + config.NonGreedyContext.StructuralHashCode();
                 hash = hash * 31 + (config.CompletedInnerRule ? 1 : 0);
-                return hash * 31 + config.CompletedNonGreedyDecision;
+                return hash;
             }
         }
     }

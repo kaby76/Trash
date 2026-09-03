@@ -67,6 +67,12 @@ internal static class NativeTreeTestSupport
         MinimumSuccessfulFiles: 2, MinimumTokensPerSecond: 50,
         NativeTreeDirectoryName: "native", TreeStyle: NativeTreeStyle.Block);
 
+    public static readonly NativeTreeGrammar CMake = new(
+        "CMake", "cmake", "CMake.interp", "CMakeLexer.interp",
+        "CMakeLists.txt", MinimumSuccessfulFiles: 1,
+        MinimumTokensPerSecond: 50,
+        NativeTreeDirectoryName: "native", TreeStyle: NativeTreeStyle.Block);
+
     public static IEnumerable<object[]> Cases(NativeTreeGrammar grammar) =>
         grammar.InputFiles().Select(path => new object[] { path });
 
