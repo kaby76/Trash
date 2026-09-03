@@ -11,6 +11,12 @@
     <Content Include="TestData/context-aware/*.interp"
              CopyToOutputDirectory="Always"
              Link="TestData/context-aware/%(Filename)%(Extension)" />
+    <Content Include="TestData/dot/DOTLexer.interp"
+             CopyToOutputDirectory="Always"
+             Link="TestData/dot/DOTLexer.interp" />
+    <Content Include="TestData/dot/1864.dot.gz"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/dot/1864.dot.gz" />
 
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Include="xunit" Version="2.9.3" />

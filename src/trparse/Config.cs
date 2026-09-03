@@ -74,6 +74,10 @@ public class Config
         HelpText = "Write details of observed interp lexer-rule overlaps to stderr (implies --lexer-stats).")]
     public bool LexerOverlaps { get; set; }
 
+    [Option("interp-timings", Required = false,
+        HelpText = "Write .interp loading, ATN deserialization, lexing, parsing, and tree-building timings to stderr.")]
+    public bool InterpTimings { get; set; }
+
     [Option("bundle", Required = false, HelpText = "Write an ordinary POSIX PAX artifact bundle to stdout (the default).")]
     public bool Bundle { get; set; } = true;
 
