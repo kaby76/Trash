@@ -54,10 +54,3 @@ css3
 csv
 ctl
 cto
-cypher
-d2
-datalog
-dice
-dif
-doiurl
-dot
