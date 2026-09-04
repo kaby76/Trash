@@ -83,6 +83,8 @@ public partial class LexerAtnSimulator
 
     private readonly DfaState[] _modeStartStates;
     private readonly List<DfaState> _dfaStates = new();
+    private readonly HashSet<NonGreedyAccept> _nonGreedyAcceptWork =
+        new(NonGreedyAcceptEq.Instance);
 
     internal int DfaStateCount => _dfaStates.Count;
     internal int LexerContextCount => _contextCache.Count;
@@ -156,7 +158,6 @@ public partial class LexerAtnSimulator
         }
 
         EpsClosure(targetConfigs);
-        targetConfigs = Canonicalize(targetConfigs);
         PruneAfterNonGreedyAccept(targetConfigs);
         if (targetConfigs.Count == 0)
         {
@@ -172,9 +173,6 @@ public partial class LexerAtnSimulator
     private HashSet<LexerConfig> NewDfaConfigSet() =>
         new(DfaLexerConfigEq.Instance);
 
-    private HashSet<LexerConfig> Canonicalize(IEnumerable<LexerConfig> configs) =>
-        new(configs, DfaLexerConfigEq.Instance);
-
     private DfaState InternDfaState(HashSet<LexerConfig> configs)
     {
         foreach (var state in _dfaStates)
@@ -186,21 +184,21 @@ public partial class LexerAtnSimulator
         return created;
     }
 
-    private static void PruneAfterNonGreedyAccept(HashSet<LexerConfig> configs)
+    private void PruneAfterNonGreedyAccept(HashSet<LexerConfig> configs)
     {
-        HashSet<NonGreedyAccept> accepts = null;
+        var accepts = _nonGreedyAcceptWork;
+        accepts.Clear();
         foreach (var config in configs)
         {
             if (config.State.stateType == Atn.MyStateType.RuleStop &&
                 config.Stack.IsEmpty && config.NonGreedyDecision >= 0)
             {
-                accepts ??= new(NonGreedyAcceptEq.Instance);
                 accepts.Add(new NonGreedyAccept(
                     config.State.ruleIndex, config.NonGreedyDecision,
                     config.NonGreedyContext));
             }
         }
-        if (accepts == null) return;
+        if (accepts.Count == 0) return;
         configs.RemoveWhere(config =>
             config.State.stateType != Atn.MyStateType.RuleStop &&
             IsLowerPriorityNonGreedyPath(config, accepts));

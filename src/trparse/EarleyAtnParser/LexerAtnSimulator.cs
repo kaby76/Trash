@@ -11,6 +11,8 @@ public partial class LexerAtnSimulator
     private readonly MyATN _atn;
     private readonly bool _enableDfa;
     private readonly LexContextCache _contextCache = new();
+    private readonly Stack<LexerConfig> _closureWork = new();
+    private readonly Dictionary<int, IMyLexerAction[]> _actionSets = new();
     private const int DEFAULT_CHANNEL = 0;
     private const int EOF = -1;
 
@@ -159,10 +161,10 @@ public partial class LexerAtnSimulator
         return token;
     }
 
-    private sealed record MatchResult(
+    private readonly record struct MatchResult(
         int RuleIndex,
         int EndPosition,
-        List<IMyLexerAction> Actions,
+        IReadOnlyList<IMyLexerAction> Actions,
         IReadOnlyList<LexerCandidate> Candidates,
         LexerCandidate OrdinaryWinner,
         LexerCandidate SelectedWinner,
@@ -229,10 +231,7 @@ public partial class LexerAtnSimulator
 
         if (bestRule < 0) return EmptyMatch(startPos);
 
-        var resolvedActions = new List<IMyLexerAction>();
-        for (int i = 0; i < _atn.lexerActions.Length && i < 32; i++)
-            if ((bestActions & (1 << i)) != 0)
-                resolvedActions.Add(_atn.lexerActions[i]);
+        var resolvedActions = ResolveActions(bestActions);
 
         var candidates = acceptedRules == null
             ? Array.Empty<LexerCandidate>()
@@ -244,10 +243,10 @@ public partial class LexerAtnSimulator
                 .OrderBy(candidate => candidate.RuleIndex)
                 .ToArray();
         var ordinaryWinner = acceptedRules == null
-            ? CreateCandidateWithoutText(ordinaryRule, ordinaryEnd, ordinaryActions)
+            ? null
             : CreateCandidate(input, startPos, ordinaryRule, ordinaryEnd, ordinaryActions);
         var selectedWinner = acceptedRules == null
-            ? CreateCandidateWithoutText(bestRule, bestEnd, bestActions)
+            ? null
             : CreateCandidate(input, startPos, bestRule, bestEnd, bestActions);
         return new MatchResult(
             bestRule, bestEnd, resolvedActions, candidates,
@@ -256,28 +255,20 @@ public partial class LexerAtnSimulator
 
     private static MatchResult EmptyMatch(int startPosition)
     {
-        var empty = new LexerCandidate(-1, -1, startPosition, 0, false, "");
         return new MatchResult(
-            -1, startPosition, new List<IMyLexerAction>(),
-            Array.Empty<LexerCandidate>(), empty, empty, false);
+            -1, startPosition, Array.Empty<IMyLexerAction>(),
+            Array.Empty<LexerCandidate>(), null, null, false);
     }
 
-    private HashSet<NonGreedyAccept> CheckAccepts(
+    private void CheckAccepts(
         HashSet<LexerConfig> configs, int pos,
         IReadOnlySet<int> expectedTokenTypes,
         ref int bestRule, ref int bestEnd, ref int bestActions,
         ref int expectedRule, ref int expectedEnd, ref int expectedActions,
         Dictionary<int, (int End, int Actions)> acceptedRules)
     {
-        var nonGreedyAccepts = new HashSet<NonGreedyAccept>(NonGreedyAcceptEq.Instance);
         foreach (var c in configs)
         {
-            // A non-greedy decision can be inside a referenced lexer rule
-            // (fragment), rather than directly in the outer token rule. Keep
-            // its call context so lower-priority continuations are pruned only
-            // after the complete outer token accepts. A locally valid fragment
-            // exit may still fail a recursive caller suffix (as in CMake's
-            // bracket arguments), in which case the continuation is required.
             if (c.State.stateType == MyStateType.RuleStop && c.Stack.IsEmpty)
             {
                 int ri = c.State.ruleIndex;
@@ -299,12 +290,8 @@ public partial class LexerAtnSimulator
                     expectedEnd = pos;
                     expectedActions = c.Actions;
                 }
-                if (c.NonGreedyDecision >= 0)
-                nonGreedyAccepts.Add(new NonGreedyAccept(
-                        ri, c.NonGreedyDecision, c.NonGreedyContext));
             }
         }
-        return nonGreedyAccepts;
     }
 
     private LexerCandidate CreateCandidate(
@@ -319,12 +306,17 @@ public partial class LexerAtnSimulator
                 : "");
     }
 
-    private LexerCandidate CreateCandidateWithoutText(
-        int ruleIndex, int endPosition, int actionBits)
+    private IReadOnlyList<IMyLexerAction> ResolveActions(int actionBits)
     {
-        var (tokenType, channel, skip) = ResolveDisposition(ruleIndex, actionBits);
-        return new LexerCandidate(
-            ruleIndex, tokenType, endPosition, channel, skip, "");
+        if (actionBits == 0) return Array.Empty<IMyLexerAction>();
+        if (_actionSets.TryGetValue(actionBits, out var cached)) return cached;
+        var actions = new List<IMyLexerAction>();
+        for (int i = 0; i < _atn.lexerActions.Length && i < 32; i++)
+            if ((actionBits & (1 << i)) != 0)
+                actions.Add(_atn.lexerActions[i]);
+        cached = actions.ToArray();
+        _actionSets.Add(actionBits, cached);
+        return cached;
     }
 
     private (int TokenType, int Channel, bool Skip) ResolveDisposition(
@@ -353,7 +345,9 @@ public partial class LexerAtnSimulator
 
     private HashSet<LexerConfig> Scan(HashSet<LexerConfig> configs, int ch)
     {
-        var next = new HashSet<LexerConfig>(LexerConfigEq.Instance);
+        var next = _enableDfa
+            ? NewDfaConfigSet()
+            : new HashSet<LexerConfig>(LexerConfigEq.Instance);
         foreach (var c in configs)
         {
             for (int transitionIndex = 0;
@@ -384,7 +378,8 @@ public partial class LexerAtnSimulator
 
     private void EpsClosure(HashSet<LexerConfig> configs)
     {
-        var work = new Stack<LexerConfig>();
+        var work = _closureWork;
+        work.Clear();
         foreach (var c in configs) work.Push(c);
 
         while (work.Count > 0)
