@@ -39,6 +39,8 @@ public sealed class InterpRunTimings
                 $"~{dfa.EstimatedRetainedBytes:N0} retained bytes");
             lines.Add($"{prefix}Lexer DFA cache: {dfa.CacheHits:N0} hits, " +
                 $"{dfa.CacheMisses:N0} misses");
+            lines.Add($"{prefix}Lexer DFA fast path: {dfa.FastPathRuns:N0} runs, " +
+                $"{dfa.FastPathCharacters:N0} characters");
         }
         return string.Join(Environment.NewLine, lines);
     }

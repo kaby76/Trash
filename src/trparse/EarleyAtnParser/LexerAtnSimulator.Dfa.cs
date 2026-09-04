@@ -11,6 +11,8 @@ public partial class LexerAtnSimulator
         int SparseEntries,
         long CacheHits,
         long CacheMisses,
+        long FastPathRuns,
+        long FastPathCharacters,
         int MaximumConfigurations,
         long EstimatedRetainedBytes);
 
@@ -71,6 +73,22 @@ public partial class LexerAtnSimulator
         public long EstimatedRetainedBytes =>
             (HasDenseRow ? 2 * 24L + AsciiLimit * (IntPtr.Size + 1L) : 0) +
             (SparseCount == 0 ? 0 : 48L + SparseCount * 32L);
+
+        public int ConsumeKnownAsciiSelfLoop(
+            DfaState owner, string input, int position)
+        {
+            if (_asciiKinds == null) return position;
+            while (position < input.Length)
+            {
+                var symbol = input[position];
+                if (symbol >= AsciiLimit ||
+                    _asciiKinds[symbol] != 1 ||
+                    !ReferenceEquals(_asciiTargets[symbol], owner))
+                    break;
+                position++;
+            }
+            return position;
+        }
     }
 
     private sealed class DfaState
@@ -90,6 +108,8 @@ public partial class LexerAtnSimulator
     internal int LexerContextCount => _contextCache.Count;
     internal long DfaEdgeCacheHits { get; private set; }
     internal long DfaEdgeCacheMisses { get; private set; }
+    internal long DfaFastPathRuns { get; private set; }
+    internal long DfaFastPathCharacters { get; private set; }
 
     public LexerDfaStatistics GetDfaStatistics()
     {
@@ -104,8 +124,24 @@ public partial class LexerAtnSimulator
             _contextCache.Count * 32L;
         return new LexerDfaStatistics(
             _dfaStates.Count, live, dead, denseRows, sparseEntries,
-            DfaEdgeCacheHits, DfaEdgeCacheMisses, maximumConfigurations,
+            DfaEdgeCacheHits, DfaEdgeCacheMisses,
+            DfaFastPathRuns, DfaFastPathCharacters, maximumConfigurations,
             estimatedBytes);
+    }
+
+    private int ConsumeKnownAsciiSelfLoop(
+        DfaState state, string input, int position)
+    {
+        if (!_enableDfa) return position;
+        var end = state.Edges.ConsumeKnownAsciiSelfLoop(state, input, position);
+        var consumed = end - position;
+        if (consumed != 0)
+        {
+            DfaFastPathRuns++;
+            DfaFastPathCharacters += consumed;
+            DfaEdgeCacheHits += consumed;
+        }
+        return end;
     }
 
     private DfaState GetModeStartState(int mode)

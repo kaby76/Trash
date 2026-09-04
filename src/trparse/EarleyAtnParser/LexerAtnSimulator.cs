@@ -197,6 +197,7 @@ public partial class LexerAtnSimulator
             if (next == null) break;
             pos++;
             current = next;
+            pos = ConsumeKnownAsciiSelfLoop(current, input, pos);
             CheckAccepts(current.Configs, pos, expectedTokenTypes,
                 ref bestRule, ref bestEnd, ref bestActions,
                 ref expectedRule, ref expectedEnd, ref expectedActions,

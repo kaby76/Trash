@@ -56,6 +56,9 @@ public sealed class DotLexerPerformanceTests(ITestOutputHelper output)
         Assert.True(simulator.DfaEdgeCacheHits > hitsBeforeSecondInput,
             "Expected the simulator to reuse its learned DFA on another input.");
         Assert.Equal(contextsBeforeSecondInput, simulator.LexerContextCount);
+        var warmedDfa = simulator.GetDfaStatistics();
+        Assert.True(warmedDfa.FastPathRuns > 0);
+        Assert.True(warmedDfa.FastPathCharacters > 0);
     }
 
     [Fact]
@@ -171,6 +174,7 @@ public sealed class DotLexerPerformanceTests(ITestOutputHelper output)
         Assert.Contains("Tokenization:", timings.Format());
         Assert.NotNull(timings.LexerDfa);
         Assert.Contains("Lexer DFA storage:", timings.Format());
+        Assert.Contains("Lexer DFA fast path:", timings.Format());
     }
 
     private static string GenerateDotInput(int edgeCount)
