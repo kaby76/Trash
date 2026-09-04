@@ -30,6 +30,7 @@ public sealed class DotLexerPerformanceTests(ITestOutputHelper output)
         Assert.Equal(-1, tokens[^1].Type);
         Assert.True(simulator.DfaStateCount > 0);
         Assert.True(simulator.DfaEdgeCacheMisses > 0);
+        Assert.True(simulator.LexerContextCount > 0);
         Assert.True(simulator.DfaEdgeCacheHits > simulator.DfaEdgeCacheMisses,
             $"Expected learned edges to dominate: {simulator.DfaEdgeCacheHits} hits, " +
             $"{simulator.DfaEdgeCacheMisses} misses.");
@@ -38,9 +39,11 @@ public sealed class DotLexerPerformanceTests(ITestOutputHelper output)
             $"{simulator.DfaEdgeCacheMisses} edge misses");
 
         var hitsBeforeSecondInput = simulator.DfaEdgeCacheHits;
+        var contextsBeforeSecondInput = simulator.LexerContextCount;
         _ = simulator.Tokenize("digraph second { alpha -> beta; }");
         Assert.True(simulator.DfaEdgeCacheHits > hitsBeforeSecondInput,
             "Expected the simulator to reuse its learned DFA on another input.");
+        Assert.Equal(contextsBeforeSecondInput, simulator.LexerContextCount);
     }
 
     [Fact]

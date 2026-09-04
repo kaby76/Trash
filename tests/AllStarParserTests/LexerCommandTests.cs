@@ -138,6 +138,21 @@ public class LexerCommandTests
         Assert.Equal(["<<a>>", "]", "<<b>>"], tokens);
     }
 
+    [Fact]
+    public void MutuallyRecursiveFragmentsReuseCanonicalContexts()
+    {
+        var simulator = new LexerAtnSimulator(BuildMutuallyRecursiveAtn());
+
+        var first = simulator.Tokenize("<abab>");
+        var contextsAfterFirstRun = simulator.LexerContextCount;
+        var second = simulator.Tokenize("<abab>");
+
+        Assert.Equal(["<abab>"], first.Where(t => t.Type != -1).Select(t => t.Text));
+        Assert.Equal(first.Select(t => t.Text), second.Select(t => t.Text));
+        Assert.True(contextsAfterFirstRun >= 4);
+        Assert.Equal(contextsAfterFirstRun, simulator.LexerContextCount);
+    }
+
     private static MyATN BuildCommandAtn() => BuildAtn(
         modeCount: 3,
         new RuleSpec(0, '<', 1, new(MyLexerActionType.PushMode, 1, 0)),
@@ -202,6 +217,57 @@ public class LexerCommandTests
             start = [htmlStart, tagStart, cabStart],
             ruleToStopState = [htmlStop, tagStop, cabStop],
             ruleToTokenType = [1, 0, 2],
+            modeToStartState = [modeStart]
+        };
+    }
+
+    private static MyATN BuildMutuallyRecursiveAtn()
+    {
+        var states = new List<MyATNState>();
+        MyATNState New(MyStateType type, int rule)
+        {
+            var state = State(type, rule, states.Count);
+            states.Add(state);
+            return state;
+        }
+
+        var modeStart = New(MyStateType.TokenStart, -1);
+
+        // TOKEN : '<' A '>' ;
+        var tokenStart = New(MyStateType.RuleStart, 0);
+        var tokenCall = New(MyStateType.Basic, 0);
+        var tokenClose = New(MyStateType.Basic, 0);
+        var tokenStop = New(MyStateType.RuleStop, 0);
+        tokenStart.AddTransition(new MyAtomTransition(tokenCall, '<'));
+        tokenCall.AddTransition(new MyRuleTransition(tokenClose, 1, 0));
+        tokenClose.AddTransition(new MyAtomTransition(tokenStop, '>'));
+
+        // fragment A : 'a' B? ;
+        var aStart = New(MyStateType.RuleStart, 1);
+        var aChoice = New(MyStateType.Basic, 1);
+        var aStop = New(MyStateType.RuleStop, 1);
+        aStart.AddTransition(new MyAtomTransition(aChoice, 'a'));
+        aChoice.AddTransition(new MyRuleTransition(aStop, 2, 0));
+        aChoice.AddTransition(new MyEpsilonTransition(aStop));
+
+        // fragment B : 'b' A? ;
+        var bStart = New(MyStateType.RuleStart, 2);
+        var bChoice = New(MyStateType.Basic, 2);
+        var bStop = New(MyStateType.RuleStop, 2);
+        bStart.AddTransition(new MyAtomTransition(bChoice, 'b'));
+        bChoice.AddTransition(new MyRuleTransition(bStop, 1, 0));
+        bChoice.AddTransition(new MyEpsilonTransition(bStop));
+
+        modeStart.AddTransition(new MyEpsilonTransition(tokenStart));
+
+        return new MyATN
+        {
+            grammarType = MyATNType.Lexer,
+            maxTokenType = 1,
+            allStates = states.ToArray(),
+            start = [tokenStart, aStart, bStart],
+            ruleToStopState = [tokenStop, aStop, bStop],
+            ruleToTokenType = [1, 0, 0],
             modeToStartState = [modeStart]
         };
     }

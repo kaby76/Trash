@@ -16,6 +16,7 @@ public partial class LexerAtnSimulator
     private readonly List<DfaState> _dfaStates = new();
 
     internal int DfaStateCount => _dfaStates.Count;
+    internal int LexerContextCount => _contextCache.Count;
     internal long DfaEdgeCacheHits { get; private set; }
     internal long DfaEdgeCacheMisses { get; private set; }
 
@@ -130,7 +131,7 @@ public partial class LexerAtnSimulator
         foreach (var accept in accepts)
             if (accept.Rule == config.OuterRule &&
                 accept.Decision == config.NonGreedyDecision &&
-                LexStack.StructuralSame(accept.Context, config.NonGreedyContext) &&
+                accept.Context.Id == config.NonGreedyContext.Id &&
                 (!accept.Context.IsEmpty ||
                  (config.Stack.IsEmpty && !config.CompletedInnerRule)))
                 return true;
@@ -143,11 +144,11 @@ public partial class LexerAtnSimulator
 
         public bool Equals(LexerConfig x, LexerConfig y) =>
             ReferenceEquals(x.State, y.State) &&
-            LexStack.StructuralSame(x.Stack, y.Stack) &&
+            x.Stack.Id == y.Stack.Id &&
             x.Actions == y.Actions &&
             x.OuterRule == y.OuterRule &&
             x.NonGreedyDecision == y.NonGreedyDecision &&
-            LexStack.StructuralSame(x.NonGreedyContext, y.NonGreedyContext) &&
+            x.NonGreedyContext.Id == y.NonGreedyContext.Id &&
             x.CompletedInnerRule == y.CompletedInnerRule;
 
         public int GetHashCode(LexerConfig config)
@@ -155,11 +156,11 @@ public partial class LexerAtnSimulator
             unchecked
             {
                 int hash = config.State.stateNumber * 31 +
-                    config.Stack.StructuralHashCode();
+                    config.Stack.Id;
                 hash = hash * 31 + config.Actions;
                 hash = hash * 31 + config.OuterRule;
                 hash = hash * 31 + config.NonGreedyDecision;
-                hash = hash * 31 + config.NonGreedyContext.StructuralHashCode();
+                hash = hash * 31 + config.NonGreedyContext.Id;
                 hash = hash * 31 + (config.CompletedInnerRule ? 1 : 0);
                 return hash;
             }

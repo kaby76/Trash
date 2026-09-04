@@ -10,6 +10,7 @@ public partial class LexerAtnSimulator
 {
     private readonly MyATN _atn;
     private readonly bool _enableDfa;
+    private readonly LexContextCache _contextCache = new();
     private const int DEFAULT_CHANNEL = 0;
     private const int EOF = -1;
 
@@ -431,7 +432,7 @@ public partial class LexerAtnSimulator
 
                     case MyRuleTransition rt:
                         // rt.target = followState; push it, then move to rule start
-                        var pushed = c.Stack.Push(rt.target);
+                        var pushed = _contextCache.Push(c.Stack, rt.target);
                         var ruleStart = _atn.start[rt.ruleIndex];
                         next = new LexerConfig(
                             ruleStart, pushed, c.Actions, c.OuterRule,
@@ -503,10 +504,10 @@ public partial class LexerAtnSimulator
 
         public bool Equals(LexerConfig x, LexerConfig y)
             => ReferenceEquals(x.State, y.State) &&
-               LexStack.Same(x.Stack, y.Stack) &&
+               x.Stack.Id == y.Stack.Id &&
                x.OuterRule == y.OuterRule &&
                x.NonGreedyDecision == y.NonGreedyDecision &&
-               LexStack.Same(x.NonGreedyContext, y.NonGreedyContext) &&
+               x.NonGreedyContext.Id == y.NonGreedyContext.Id &&
                x.CompletedInnerRule == y.CompletedInnerRule;
 
         public int GetHashCode(LexerConfig c)
@@ -532,59 +533,63 @@ public partial class LexerAtnSimulator
 
         public bool Equals(NonGreedyAccept x, NonGreedyAccept y) =>
             x.Rule == y.Rule && x.Decision == y.Decision &&
-            LexStack.StructuralSame(x.Context, y.Context);
+            x.Context.Id == y.Context.Id;
 
         public int GetHashCode(NonGreedyAccept value) => HashCode.Combine(
-            value.Rule, value.Decision, value.Context.StructuralHashCode());
+            value.Rule, value.Decision, value.Context.Id);
     }
 
-    // Persistent linked-list stack for return states (fragment rule calls)
+    // Canonical persistent stack for return states (fragment rule calls).
+    // Equal (return-state, parent-context) pairs share one node and compact ID.
     private readonly struct LexStack
     {
-        private sealed class Node
-        {
-            public readonly MyATNState Head;
-            public readonly Node Tail;
-            public Node(MyATNState h, Node t) { Head = h; Tail = t; }
-        }
-
-        private readonly Node _node;
+        private readonly LexContext _context;
         public static LexStack Empty => default;
-        public bool IsEmpty => _node == null;
-        private LexStack(Node n) => _node = n;
-
-        public LexStack Push(MyATNState s) => new(new Node(s, _node));
+        public bool IsEmpty => _context == null;
+        public int Id => _context?.Id ?? 0;
+        public LexStack(LexContext context) => _context = context;
 
         public (MyATNState head, LexStack rest) Pop()
-            => (_node.Head, new LexStack(_node.Tail));
+            => (_context.ReturnState, new LexStack(_context.Parent));
 
-        public static bool Same(LexStack a, LexStack b)
-            => ReferenceEquals(a._node, b._node);
+        public override int GetHashCode() => Id;
 
-        public static bool StructuralSame(LexStack a, LexStack b)
+    }
+
+    private sealed class LexContext
+    {
+        public readonly int Id;
+        public readonly MyATNState ReturnState;
+        public readonly LexContext Parent;
+
+        public LexContext(int id, MyATNState returnState, LexContext parent)
         {
-            var left = a._node;
-            var right = b._node;
-            while (left != null && right != null)
-            {
-                if (!ReferenceEquals(left.Head, right.Head)) return false;
-                left = left.Tail;
-                right = right.Tail;
-            }
-            return left == null && right == null;
+            Id = id;
+            ReturnState = returnState;
+            Parent = parent;
         }
+    }
 
-        public int StructuralHashCode()
+    private sealed class LexContextCache
+    {
+        private readonly Dictionary<(int ParentId, int ReturnState), LexContext>
+            _contexts = new();
+        private readonly List<LexContext> _byId = [null];
+        private int _nextId = 1;
+
+        public int Count => _contexts.Count;
+
+        public LexStack Push(LexStack parent, MyATNState returnState)
         {
-            unchecked
+            var key = (parent.Id, returnState.stateNumber);
+            if (!_contexts.TryGetValue(key, out var context))
             {
-                int hash = 17;
-                for (var node = _node; node != null; node = node.Tail)
-                    hash = hash * 31 + node.Head.stateNumber;
-                return hash;
+                var parentContext = _byId[parent.Id];
+                context = new LexContext(_nextId++, returnState, parentContext);
+                _contexts.Add(key, context);
+                _byId.Add(context);
             }
+            return new LexStack(context);
         }
-
-        public override int GetHashCode() => _node?.GetHashCode() ?? 0;
     }
 }
