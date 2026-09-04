@@ -153,6 +153,25 @@ public class LexerCommandTests
         Assert.Equal(contextsAfterFirstRun, simulator.LexerContextCount);
     }
 
+    [Fact]
+    public void NonAsciiDfaEdgesUseSparseStorageAndAreCached()
+    {
+        var simulator = new LexerAtnSimulator(BuildAtn(
+            modeCount: 1, new RuleSpec(0, '\u00E9', 1)));
+
+        var first = simulator.Tokenize("\u00E9\u00E9");
+        var missesAfterFirstRun = simulator.DfaEdgeCacheMisses;
+        var second = simulator.Tokenize("\u00E9\u00E9");
+        var statistics = simulator.GetDfaStatistics();
+
+        Assert.Equal(["\u00E9", "\u00E9"],
+            first.Where(t => t.Type != -1).Select(t => t.Text));
+        Assert.Equal(first.Select(t => t.Text), second.Select(t => t.Text));
+        Assert.True(statistics.SparseEntries > 0);
+        Assert.True(statistics.LiveTransitions > 0);
+        Assert.Equal(missesAfterFirstRun, simulator.DfaEdgeCacheMisses);
+    }
+
     private static MyATN BuildCommandAtn() => BuildAtn(
         modeCount: 3,
         new RuleSpec(0, '<', 1, new(MyLexerActionType.PushMode, 1, 0)),

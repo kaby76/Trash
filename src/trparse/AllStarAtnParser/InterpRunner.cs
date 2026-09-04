@@ -100,6 +100,7 @@ public static class InterpRunner
             rawTokens = sim.Tokenize(inputText);
             timer.Stop();
             timings.Tokenization = timer.Elapsed;
+            timings.LexerDfa = sim.GetDfaStatistics();
             timer.Restart();
             ReconcileLiteralTokenTypes(rawTokens, lexerInterp.SymbolicNames,
                 lexerInterp.LiteralNames, parserInterp.LiteralNames);

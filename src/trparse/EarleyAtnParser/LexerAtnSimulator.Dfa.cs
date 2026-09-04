@@ -3,11 +3,80 @@ namespace EarleyAtnParser;
 /// <summary>Learned, per-mode DFA support for <see cref="LexerAtnSimulator"/>.</summary>
 public partial class LexerAtnSimulator
 {
+    public readonly record struct LexerDfaStatistics(
+        int States,
+        int LiveTransitions,
+        int DeadTransitions,
+        int DenseAsciiRows,
+        int SparseEntries,
+        long CacheHits,
+        long CacheMisses,
+        int MaximumConfigurations,
+        long EstimatedRetainedBytes);
+
+    private sealed class DfaEdgeTable
+    {
+        private const int AsciiLimit = 128;
+        private DfaState[] _asciiTargets;
+        private byte[] _asciiKinds; // 0 = unknown, 1 = live, 2 = dead
+        private Dictionary<int, DfaState> _sparse;
+
+        public int LiveCount { get; private set; }
+        public int DeadCount { get; private set; }
+        public bool HasDenseRow => _asciiKinds != null;
+        public int SparseCount => _sparse?.Count ?? 0;
+
+        public bool TryGet(int symbol, out DfaState target)
+        {
+            if ((uint)symbol < AsciiLimit)
+            {
+                if (_asciiKinds == null || _asciiKinds[symbol] == 0)
+                {
+                    target = null;
+                    return false;
+                }
+                target = _asciiTargets[symbol];
+                return true;
+            }
+
+            if (_sparse != null && _sparse.TryGetValue(symbol, out target))
+                return true;
+            target = null;
+            return false;
+        }
+
+        public void Set(int symbol, DfaState target)
+        {
+            if ((uint)symbol < AsciiLimit)
+            {
+                _asciiTargets ??= new DfaState[AsciiLimit];
+                _asciiKinds ??= new byte[AsciiLimit];
+                if (_asciiKinds[symbol] == 0)
+                {
+                    if (target == null) DeadCount++; else LiveCount++;
+                }
+                _asciiTargets[symbol] = target;
+                _asciiKinds[symbol] = target == null ? (byte)2 : (byte)1;
+                return;
+            }
+
+            _sparse ??= new Dictionary<int, DfaState>();
+            if (!_sparse.ContainsKey(symbol))
+            {
+                if (target == null) DeadCount++; else LiveCount++;
+            }
+            _sparse[symbol] = target;
+        }
+
+        public long EstimatedRetainedBytes =>
+            (HasDenseRow ? 2 * 24L + AsciiLimit * (IntPtr.Size + 1L) : 0) +
+            (SparseCount == 0 ? 0 : 48L + SparseCount * 32L);
+    }
+
     private sealed class DfaState
     {
         public readonly HashSet<LexerConfig> Configs;
-        public readonly Dictionary<int, DfaState> Edges = new();
-        public readonly HashSet<int> DeadEdges = new();
+        public readonly DfaEdgeTable Edges = new();
 
         public DfaState(HashSet<LexerConfig> configs) => Configs = configs;
     }
@@ -19,6 +88,23 @@ public partial class LexerAtnSimulator
     internal int LexerContextCount => _contextCache.Count;
     internal long DfaEdgeCacheHits { get; private set; }
     internal long DfaEdgeCacheMisses { get; private set; }
+
+    public LexerDfaStatistics GetDfaStatistics()
+    {
+        var live = _dfaStates.Sum(state => state.Edges.LiveCount);
+        var dead = _dfaStates.Sum(state => state.Edges.DeadCount);
+        var denseRows = _dfaStates.Count(state => state.Edges.HasDenseRow);
+        var sparseEntries = _dfaStates.Sum(state => state.Edges.SparseCount);
+        var maximumConfigurations = _dfaStates.Count == 0
+            ? 0 : _dfaStates.Max(state => state.Configs.Count);
+        var estimatedBytes = _dfaStates.Sum(state =>
+            64L + state.Configs.Count * 64L + state.Edges.EstimatedRetainedBytes) +
+            _contextCache.Count * 32L;
+        return new LexerDfaStatistics(
+            _dfaStates.Count, live, dead, denseRows, sparseEntries,
+            DfaEdgeCacheHits, DfaEdgeCacheMisses, maximumConfigurations,
+            estimatedBytes);
+    }
 
     private DfaState GetModeStartState(int mode)
     {
@@ -55,22 +141,17 @@ public partial class LexerAtnSimulator
             PruneAfterNonGreedyAccept(uncachedConfigs);
             return uncachedConfigs.Count == 0 ? null : new DfaState(uncachedConfigs);
         }
-        if (source.Edges.TryGetValue(symbol, out var cached))
+        if (source.Edges.TryGet(symbol, out var cached))
         {
             DfaEdgeCacheHits++;
             return cached;
-        }
-        if (source.DeadEdges.Contains(symbol))
-        {
-            DfaEdgeCacheHits++;
-            return null;
         }
 
         DfaEdgeCacheMisses++;
         var targetConfigs = Scan(source.Configs, symbol);
         if (targetConfigs.Count == 0)
         {
-            source.DeadEdges.Add(symbol);
+            source.Edges.Set(symbol, null);
             return null;
         }
 
@@ -79,12 +160,12 @@ public partial class LexerAtnSimulator
         PruneAfterNonGreedyAccept(targetConfigs);
         if (targetConfigs.Count == 0)
         {
-            source.DeadEdges.Add(symbol);
+            source.Edges.Set(symbol, null);
             return null;
         }
 
         var target = InternDfaState(targetConfigs);
-        source.Edges[symbol] = target;
+        source.Edges.Set(symbol, target);
         return target;
     }
 

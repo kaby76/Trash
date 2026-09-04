@@ -32,6 +32,12 @@ public sealed class DotLexerPerformanceTests(ITestOutputHelper output)
         Assert.True(simulator.DfaStateCount > 0);
         Assert.True(simulator.DfaEdgeCacheMisses > 0);
         Assert.True(simulator.LexerContextCount > 0);
+        var dfa = simulator.GetDfaStatistics();
+        Assert.True(dfa.DenseAsciiRows > 0);
+        Assert.True(dfa.LiveTransitions > 0);
+        Assert.True(dfa.DeadTransitions > 0);
+        Assert.True(dfa.MaximumConfigurations > 0);
+        Assert.True(dfa.EstimatedRetainedBytes > 0);
         Assert.True(simulator.DfaEdgeCacheHits > simulator.DfaEdgeCacheMisses,
             $"Expected learned edges to dominate: {simulator.DfaEdgeCacheHits} hits, " +
             $"{simulator.DfaEdgeCacheMisses} misses.");
@@ -158,6 +164,8 @@ public sealed class DotLexerPerformanceTests(ITestOutputHelper output)
         Assert.True(timings.Parsing >= TimeSpan.Zero);
         Assert.True(timings.TreeBuilding >= TimeSpan.Zero);
         Assert.Contains("Tokenization:", timings.Format());
+        Assert.NotNull(timings.LexerDfa);
+        Assert.Contains("Lexer DFA storage:", timings.Format());
     }
 
     private static string GenerateDotInput(int edgeCount)
