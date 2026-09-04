@@ -136,11 +136,10 @@ public partial class LexerAtnSimulator
             }
         }
 
-        var token = new LexerToken
+        var token = new LexerToken(input)
         {
             Type = tokenType,
             Channel = skip ? LexerToken.SKIP_CHANNEL : channel,
-            Text = input.Substring(start, matchEnd - start),
             StartIndex = start,
             StopIndex = matchEnd - 1,
             Line = startLine,
@@ -244,10 +243,12 @@ public partial class LexerAtnSimulator
                     entry.Value.End, entry.Value.Actions))
                 .OrderBy(candidate => candidate.RuleIndex)
                 .ToArray();
-        var ordinaryWinner = CreateCandidate(
-            input, startPos, ordinaryRule, ordinaryEnd, ordinaryActions);
-        var selectedWinner = CreateCandidate(
-            input, startPos, bestRule, bestEnd, bestActions);
+        var ordinaryWinner = acceptedRules == null
+            ? CreateCandidateWithoutText(ordinaryRule, ordinaryEnd, ordinaryActions)
+            : CreateCandidate(input, startPos, ordinaryRule, ordinaryEnd, ordinaryActions);
+        var selectedWinner = acceptedRules == null
+            ? CreateCandidateWithoutText(bestRule, bestEnd, bestActions)
+            : CreateCandidate(input, startPos, bestRule, bestEnd, bestActions);
         return new MatchResult(
             bestRule, bestEnd, resolvedActions, candidates,
             ordinaryWinner, selectedWinner, usedContextFallback);
@@ -316,6 +317,14 @@ public partial class LexerAtnSimulator
             endPosition >= startPosition
                 ? input.Substring(startPosition, endPosition - startPosition)
                 : "");
+    }
+
+    private LexerCandidate CreateCandidateWithoutText(
+        int ruleIndex, int endPosition, int actionBits)
+    {
+        var (tokenType, channel, skip) = ResolveDisposition(ruleIndex, actionBits);
+        return new LexerCandidate(
+            ruleIndex, tokenType, endPosition, channel, skip, "");
     }
 
     private (int TokenType, int Channel, bool Skip) ResolveDisposition(
