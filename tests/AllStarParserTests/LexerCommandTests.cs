@@ -340,6 +340,30 @@ public class LexerCommandTests
         return atn;
     }
 
+    [Fact]
+    public void WarmDfaRetainsTypeRemappedAcceptCandidates()
+    {
+        var lexer = new LexerAtnSimulator(BuildAtn(
+            modeCount: 1,
+            new RuleSpec(0, 't', 3,
+                new MyLexerAction(MyLexerActionType.Type, 42, 0)),
+            new RuleSpec(0, 't', 7)));
+
+        var remapped = lexer.NextToken(
+            "t", new LexerAtnSimulator.Cursor(), new HashSet<int> { 42 });
+        Assert.Equal(42, remapped.Type);
+        var warm = lexer.GetDfaStatistics();
+
+        var secondRule = lexer.NextToken(
+            "t", new LexerAtnSimulator.Cursor(), new HashSet<int> { 7 });
+        Assert.Equal(7, secondRule.Type);
+        var final = lexer.GetDfaStatistics();
+
+        Assert.Equal(warm.States, final.States);
+        Assert.Equal(warm.CacheMisses, final.CacheMisses);
+        Assert.True(final.CacheHits > warm.CacheHits);
+    }
+
     private static MyATNState State(MyStateType type, int ruleIndex, int number) =>
         new() { stateType = type, ruleIndex = ruleIndex, stateNumber = number };
 

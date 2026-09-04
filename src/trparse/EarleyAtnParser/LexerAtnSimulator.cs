@@ -185,7 +185,7 @@ public partial class LexerAtnSimulator
             ? new()
             : null;
 
-        CheckAccepts(current.Configs, pos, expectedTokenTypes,
+        CheckAccepts(current, pos, expectedTokenTypes,
             ref bestRule, ref bestEnd, ref bestActions,
             ref expectedRule, ref expectedEnd, ref expectedActions,
             acceptedRules);
@@ -198,7 +198,7 @@ public partial class LexerAtnSimulator
             pos++;
             current = next;
             pos = ConsumeKnownAsciiSelfLoop(current, input, pos);
-            CheckAccepts(current.Configs, pos, expectedTokenTypes,
+            CheckAccepts(current, pos, expectedTokenTypes,
                 ref bestRule, ref bestEnd, ref bestActions,
                 ref expectedRule, ref expectedEnd, ref expectedActions,
                 acceptedRules);
@@ -212,7 +212,7 @@ public partial class LexerAtnSimulator
             var eof = GetTargetState(current, EOF);
             if (eof != null)
             {
-                CheckAccepts(eof.Configs, pos, expectedTokenTypes,
+                CheckAccepts(eof, pos, expectedTokenTypes,
                     ref bestRule, ref bestEnd, ref bestActions,
                     ref expectedRule, ref expectedEnd, ref expectedActions,
                     acceptedRules);
@@ -262,35 +262,33 @@ public partial class LexerAtnSimulator
     }
 
     private void CheckAccepts(
-        HashSet<LexerConfig> configs, int pos,
+        DfaState state, int pos,
         IReadOnlySet<int> expectedTokenTypes,
         ref int bestRule, ref int bestEnd, ref int bestActions,
         ref int expectedRule, ref int expectedEnd, ref int expectedActions,
         Dictionary<int, (int End, int Actions)> acceptedRules)
     {
-        foreach (var c in configs)
+        foreach (var acceptConfig in state.Accepts)
         {
-            if (c.State.stateType == MyStateType.RuleStop && c.Stack.IsEmpty)
+            int ri = acceptConfig.Rule;
+            int actions = acceptConfig.Actions;
+            if (acceptedRules != null &&
+                (!acceptedRules.TryGetValue(ri, out var accepted) || pos > accepted.End))
+                acceptedRules[ri] = (pos, actions);
+            // Longer match wins; tie-break by earlier rule index.
+            if (pos > bestEnd || (pos == bestEnd && ri < bestRule))
             {
-                int ri = c.State.ruleIndex;
-                if (acceptedRules != null &&
-                    (!acceptedRules.TryGetValue(ri, out var accepted) || pos > accepted.End))
-                    acceptedRules[ri] = (pos, c.Actions);
-                // Longer match wins; tie-break by earlier rule index
-                if (pos > bestEnd || (pos == bestEnd && ri < bestRule))
-                {
-                    bestRule = ri;
-                    bestEnd = pos;
-                    bestActions = c.Actions;
-                }
-                if (expectedTokenTypes != null &&
-                    IsContextEligible(ri, c.Actions, expectedTokenTypes) &&
-                    (pos > expectedEnd || (pos == expectedEnd && ri < expectedRule)))
-                {
-                    expectedRule = ri;
-                    expectedEnd = pos;
-                    expectedActions = c.Actions;
-                }
+                bestRule = ri;
+                bestEnd = pos;
+                bestActions = actions;
+            }
+            if (expectedTokenTypes != null &&
+                IsContextEligible(ri, actions, expectedTokenTypes) &&
+                (pos > expectedEnd || (pos == expectedEnd && ri < expectedRule)))
+            {
+                expectedRule = ri;
+                expectedEnd = pos;
+                expectedActions = actions;
             }
         }
     }

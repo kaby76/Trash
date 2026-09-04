@@ -94,10 +94,26 @@ public partial class LexerAtnSimulator
     private sealed class DfaState
     {
         public readonly HashSet<LexerConfig> Configs;
+        public readonly DfaAccept[] Accepts;
         public readonly DfaEdgeTable Edges = new();
 
-        public DfaState(HashSet<LexerConfig> configs) => Configs = configs;
+        public DfaState(HashSet<LexerConfig> configs)
+        {
+            Configs = configs;
+            Accepts = configs
+                .Where(config =>
+                    config.State.stateType == Atn.MyStateType.RuleStop &&
+                    config.Stack.IsEmpty)
+                .Select(config => new DfaAccept(
+                    config.State.ruleIndex, config.Actions))
+                .Distinct()
+                .OrderBy(accept => accept.Rule)
+                .ThenBy(accept => accept.Actions)
+                .ToArray();
+        }
     }
+
+    private readonly record struct DfaAccept(int Rule, int Actions);
 
     private readonly DfaState[] _modeStartStates;
     private readonly List<DfaState> _dfaStates = new();
@@ -120,7 +136,8 @@ public partial class LexerAtnSimulator
         var maximumConfigurations = _dfaStates.Count == 0
             ? 0 : _dfaStates.Max(state => state.Configs.Count);
         var estimatedBytes = _dfaStates.Sum(state =>
-            64L + state.Configs.Count * 64L + state.Edges.EstimatedRetainedBytes) +
+            88L + state.Configs.Count * 64L + state.Accepts.Length * 8L +
+            state.Edges.EstimatedRetainedBytes) +
             _contextCache.Count * 32L;
         return new LexerDfaStatistics(
             _dfaStates.Count, live, dead, denseRows, sparseEntries,
