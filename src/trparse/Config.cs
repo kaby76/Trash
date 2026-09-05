@@ -82,6 +82,18 @@ public class Config
         HelpText = "Write interpreted ALL(*) parser prediction and traversal statistics to stderr.")]
     public bool ParserStats { get; set; }
 
+    [Option("no-shared-parser-dfa", Required = false,
+        HelpText = "Do not reuse learned ALL(*) parser DFA states across input files.")]
+    public bool NoSharedParserDfa { get; set; }
+
+    [Option("parser-dfa-cache-states", Required = false, Default = 100000,
+        HelpText = "Maximum learned states retained in the shared ALL(*) parser DFA cache.")]
+    public int ParserDfaCacheStates { get; set; } = 100_000;
+
+    [Option("parser-dfa-cache-mb", Required = false, Default = 64,
+        HelpText = "Approximate memory budget in MiB for the shared ALL(*) parser DFA cache.")]
+    public int ParserDfaCacheMegabytes { get; set; } = 64;
+
     [Option("interp-timings", Required = false,
         HelpText = "Write .interp loading, ATN deserialization, lexing, parsing, and tree-building timings to stderr.")]
     public bool InterpTimings { get; set; }

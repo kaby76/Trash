@@ -25,7 +25,8 @@ public static class InterpRunner
         bool lexerStats = false,
         bool lexerOverlaps = false,
         InterpRunTimings timings = null,
-        ParserStatistics parserStatistics = null)
+        ParserStatistics parserStatistics = null,
+        ParserPredictionCache predictionCache = null)
     {
         timings ??= new InterpRunTimings();
         var timer = new System.Diagnostics.Stopwatch();
@@ -49,7 +50,12 @@ public static class InterpRunner
         timings.InterpParsing = timer.Elapsed;
 
         timer.Restart();
-        var parserAtn = AtnDeserializer.Deserialize(parserInterp.AtnData);
+        var parserAtn = predictionCache?.GetBoundAtn(parserInterp.AtnData);
+        if (parserAtn == null)
+        {
+            parserAtn = AtnDeserializer.Deserialize(parserInterp.AtnData);
+            predictionCache?.Bind(parserAtn, parserInterp.AtnData);
+        }
         var lexerAtn = AtnDeserializer.Deserialize(lexerInterp.AtnData);
         timer.Stop();
         timings.AtnDeserialization = timer.Elapsed;
@@ -89,7 +95,7 @@ public static class InterpRunner
             timer.Restart();
             events = AllStarParser.ParseContextAware(
                 parserAtn, lexerAtn, inputText, startRule, out rawTokens,
-                statistics, parserStatistics);
+                statistics, parserStatistics, predictionCache);
             timer.Stop();
             // Tokens are requested lazily here; this is combined lex/parse time.
             timings.Parsing = timer.Elapsed;
@@ -109,7 +115,8 @@ public static class InterpRunner
             timings.TokenReconciliation = timer.Elapsed;
             timer.Restart();
             events = AllStarParser.Parse(
-                parserAtn, rawTokens, startRule, parserStatistics);
+                parserAtn, rawTokens, startRule, parserStatistics,
+                predictionCache);
             timer.Stop();
             timings.Parsing = timer.Elapsed;
         }

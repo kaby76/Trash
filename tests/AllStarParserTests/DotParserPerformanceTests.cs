@@ -172,6 +172,109 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
         Assert.Equal(events.Count, statistics.ParseEventsCreated);
     }
 
+    [Fact]
+    public void SharedDotDfaReusesStatesAndCanBeCleared()
+    {
+        var fixture = Prepare(GenerateDotInput(100));
+        var cache = new ParserPredictionCache();
+        var coldStatistics = new ParserStatistics();
+        var coldEvents = AllStarParser.Parse(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            coldStatistics, cache);
+
+        var warmStatistics = new ParserStatistics();
+        var warmEvents = AllStarParser.Parse(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            warmStatistics, cache);
+
+        Assert.NotNull(coldEvents);
+        Assert.Equal(coldEvents, warmEvents);
+        Assert.Equal(0, coldStatistics.SharedDfaStatesAtStart);
+        Assert.True(warmStatistics.SharedDfaStatesAtStart > 0);
+        Assert.True(coldStatistics.DfaEdgeMisses > 0);
+        Assert.Equal(0, warmStatistics.DfaEdgeMisses);
+        Assert.True(warmStatistics.DfaEdgeHits > 0);
+        Assert.Equal(0, warmStatistics.DfaStatesCreated);
+        Assert.True(warmStatistics.ClosureConfigurationsVisited <
+            coldStatistics.ClosureConfigurationsVisited);
+
+        cache.Clear();
+        Assert.Equal(0, cache.RetainedStates);
+        Assert.Equal(0, cache.RetainedTransitions);
+        var clearedStatistics = new ParserStatistics();
+        var clearedEvents = AllStarParser.Parse(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            clearedStatistics, cache);
+        Assert.Equal(coldEvents, clearedEvents);
+        Assert.Equal(0, clearedStatistics.SharedDfaStatesAtStart);
+        Assert.True(clearedStatistics.DfaEdgeMisses > 0);
+    }
+
+    [Fact]
+    public void SharedDotDfaHonorsItsStateBudget()
+    {
+        var fixture = Prepare(GenerateDotInput(100));
+        var cache = new ParserPredictionCache(
+            maximumStates: 1, maximumEstimatedBytes: 1_000_000);
+        var statistics = new ParserStatistics();
+
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            statistics, cache));
+
+        Assert.True(cache.IsSaturated);
+        Assert.True(cache.RetainedStates <= 1);
+        Assert.True(statistics.SharedDfaCacheSaturated);
+    }
+
+    [Fact]
+    public void SharedDfaIsDisabledForSemanticPredicateAtn()
+    {
+        var source = new MyATNState { stateNumber = 0 };
+        var target = new MyATNState { stateNumber = 1 };
+        source.AddTransition(new MyPredicateTransition(
+            target, ruleIndex: 0, predIndex: 0, isCtxDependent: true));
+        var atn = new MyATN { allStates = new[] { source, target } };
+        var cache = new ParserPredictionCache();
+
+        _ = new AllStarSimulator(atn, predictionCache: cache);
+
+        Assert.False(cache.SharingEnabled);
+        Assert.Contains("semantic predicate", cache.SharingDisabledReason);
+    }
+
+    [Fact]
+    [Trait("Category", "Performance")]
+    public void GeneratedDotReportsColdAndWarmSharedDfaPerformance()
+    {
+        var fixture = Prepare(GenerateDotInput(8_000));
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            predictionCache: new ParserPredictionCache()));
+        var cold = Measure(() =>
+        {
+            Assert.True(AllStarParser.Recognize(
+                fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+                predictionCache: new ParserPredictionCache()));
+            return null;
+        }, fixture.OnChannelTokenCount);
+
+        var shared = new ParserPredictionCache();
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            predictionCache: shared));
+        var warm = Measure(() =>
+        {
+            Assert.True(AllStarParser.Recognize(
+                fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+                predictionCache: shared));
+            return null;
+        }, fixture.OnChannelTokenCount);
+
+        Report("Generated DOT cold DFA", cold);
+        Report("Generated DOT warm shared DFA", warm);
+    }
+
     private void ReportStatistics(DotFixture fixture)
     {
         var statistics = new ParserStatistics();

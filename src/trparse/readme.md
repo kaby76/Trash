@@ -106,6 +106,14 @@ prediction-context work, SLL-to-full-context fallbacks, retained DFA estimates,
 and committed ATN/rule/event counts. Statistics are disabled by default to keep
 normal parsing overhead negligible.
 
+Learned ALL(*) SLL decision DFAs are shared across input files handled by one
+`trparse` command. The cache is bound to the immutable parser ATN and is not
+used for grammars containing semantic-predicate transitions. Use
+`--no-shared-parser-dfa` for cold-DFA diagnostics. The default cache limits are
+100,000 states and approximately 64 MiB; change them with
+`--parser-dfa-cache-states` and `--parser-dfa-cache-mb`. The public
+`ParserPredictionCache.Clear()` API explicitly discards learned data.
+
 ## Usage
 
     dotnet trash parse (<string> | <options>)*
@@ -121,6 +129,12 @@ normal parsing overhead negligible.
         --lexer-overlaps
                        Write detailed observed overlaps (implies --lexer-stats).
         --parser-stats Write ALL(*) prediction and parser-work statistics to stderr.
+        --no-shared-parser-dfa
+                       Disable learned parser-DFA reuse across input files.
+        --parser-dfa-cache-states <n>
+                       Maximum retained shared parser-DFA states (default 100000).
+        --parser-dfa-cache-mb <n>
+                       Approximate shared parser-DFA budget in MiB (default 64).
         --interp-timings
                        Write separate interp loading, ATN, lexing, parsing, and
                        tree-building timings to stderr.

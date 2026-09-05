@@ -23,6 +23,7 @@ public class Grun
     private double _firstFileParseSeconds;
     private int _fileCount;
     private readonly List<BundleParse> _bundleParses = new();
+    private readonly AllStarAtnParser.ParserPredictionCache _parserPredictionCache;
 
     private sealed record BundleParse(string InputName,
         List<AntlrJson.ParsingResultSet> Results, string Diagnostics);
@@ -30,6 +31,12 @@ public class Grun
     public Grun(Config co)
     {
         config = co;
+        if (!co.NoSharedParserDfa)
+        {
+            _parserPredictionCache = new AllStarAtnParser.ParserPredictionCache(
+                co.ParserDfaCacheStates,
+                checked((long)co.ParserDfaCacheMegabytes * 1024 * 1024));
+        }
     }
 
     private static string JoinArguments(IEnumerable<string> arguments)
@@ -353,7 +360,7 @@ public class Grun
                     resolvedPInterp, resolvedLInterp, txt, input_name,
                     config.LineNumbers, config.ContextAwareLexing,
                     config.LexerStats, config.LexerOverlaps, interpTimings,
-                    parserStatistics);
+                    parserStatistics, _parserPredictionCache);
                 if (interpTimings != null)
                     System.Console.Error.WriteLine(interpTimings.Format(prefix));
                 interpLabel = "ALL(*)";

@@ -13,19 +13,36 @@ public sealed class AllStarSimulator
 {
     private readonly MyATN _atn;
     private readonly ParserStatistics _statistics;
+    private readonly ParserPredictionCache _sharedCache;
 
     // Reusable scratch buffers for Closure — cleared at the start of each use so
     // behaviour is identical to allocating fresh collections, but without the
     // per-call allocation cost on hot prediction paths.
     private readonly Stack<ATNConfig> _closureStack = new();
     private readonly HashSet<(int stateNum, int alt, PredictionContext context, int precedence)> _closureBusy = new();
-    private readonly Dictionary<(PredictionContext parent, int returnState, int precedence), SingletonPredictionContext> _contextCache = new();
-    private readonly Dictionary<(int decision, int precedence), DecisionDfa> _decisionDfas = new();
+    private readonly Dictionary<(PredictionContext parent, int returnState, int precedence), SingletonPredictionContext> _contextCache;
+    private readonly Dictionary<(int decision, int precedence), DecisionDfa> _decisionDfas;
 
-    public AllStarSimulator(MyATN atn, ParserStatistics statistics = null)
+    public AllStarSimulator(
+        MyATN atn, ParserStatistics statistics = null,
+        ParserPredictionCache predictionCache = null)
     {
         _atn = atn;
         _statistics = statistics;
+        if (predictionCache != null)
+        {
+            predictionCache.Bind(atn);
+            if (predictionCache.SharingEnabled)
+                _sharedCache = predictionCache;
+        }
+        _decisionDfas = _sharedCache?.DecisionDfas ?? new();
+        _contextCache = _sharedCache?.Contexts ?? new();
+        if (_statistics != null && _sharedCache != null)
+        {
+            _statistics.SharedDfaStatesAtStart = _sharedCache.RetainedStates;
+            _statistics.SharedDfaTransitionsAtStart =
+                _sharedCache.RetainedTransitions;
+        }
     }
 
     /// <summary>
@@ -33,6 +50,17 @@ public sealed class AllStarSimulator
     /// token. This is the valid-lookahead set supplied to context-aware lexing.
     /// </summary>
     public HashSet<int> GetExpectedTokenTypes(
+        MyATNState state, PredictionContext callerCtx, int precedence)
+    {
+        if (_sharedCache != null)
+        {
+            lock (_sharedCache.SyncRoot)
+                return GetExpectedTokenTypesCore(state, callerCtx, precedence);
+        }
+        return GetExpectedTokenTypesCore(state, callerCtx, precedence);
+    }
+
+    private HashSet<int> GetExpectedTokenTypesCore(
         MyATNState state, PredictionContext callerCtx, int precedence)
     {
         _closureBusy.Clear();
@@ -64,6 +92,20 @@ public sealed class AllStarSimulator
     // callerCtx:  the PredictionContext of the rule that contains this decision (for LL fallback).
     public int AdaptivePredict(int decision, int[] tokenTypes, int startPos,
                                PredictionContext callerCtx, int precedence)
+    {
+        if (_sharedCache != null)
+        {
+            lock (_sharedCache.SyncRoot)
+                return AdaptivePredictCore(
+                    decision, tokenTypes, startPos, callerCtx, precedence);
+        }
+        return AdaptivePredictCore(
+            decision, tokenTypes, startPos, callerCtx, precedence);
+    }
+
+    private int AdaptivePredictCore(
+        int decision, int[] tokenTypes, int startPos,
+        PredictionContext callerCtx, int precedence)
     {
         long lookaheadAtStart = _statistics?.BeginPrediction(decision) ?? 0;
         try
@@ -125,10 +167,14 @@ public sealed class AllStarSimulator
                            int precedence, int precedenceRuleIndex)
     {
         var dfaKey = (decision, precedence);
+        bool sharedDfa = _sharedCache != null;
         if (!_decisionDfas.TryGetValue(dfaKey, out DecisionDfa dfa))
         {
             dfa = new DecisionDfa();
-            _decisionDfas.Add(dfaKey, dfa);
+            if (_sharedCache == null || !_sharedCache.IsSaturated)
+                _decisionDfas.Add(dfaKey, dfa);
+            else
+                sharedDfa = false;
         }
         if (dfa.Start == null)
         {
@@ -138,7 +184,18 @@ public sealed class AllStarSimulator
                 Closure(new ATNConfig(decisionState.transitions[i].target, i + 1,
                                       PredictionContext.EMPTY, precedence),
                         initial, fullCtx: false, precedence, precedenceRuleIndex);
-            dfa.Start = InternDfaState(dfa, initial);
+            var start = InternDfaState(dfa, initial);
+            if (sharedDfa && !start.IsRetained)
+            {
+                // The shared budget is exhausted. Keep prediction correct with
+                // an ephemeral per-call DFA rather than retaining more data.
+                dfa = new DecisionDfa { Start = start };
+                sharedDfa = false;
+            }
+            else
+            {
+                dfa.Start = start;
+            }
         }
 
         DfaState state = dfa.Start;
@@ -168,17 +225,24 @@ public sealed class AllStarSimulator
                 // A completed alternative only needs caller context when the
                 // same lookahead also keeps a competing path alive. If no path
                 // consumes it, the completed alternative is the SLL result.
+                bool stopLive = false;
                 if (state.CompletedPrediction > 0)
                 {
                     target = reach.IsEmpty
                         ? DfaState.Accept(state.CompletedPrediction)
                         : InternDfaState(dfa, reach);
-                    if (!reach.IsEmpty)
-                        state.StopLiveEdges.Add(tokenType);
+                    stopLive = !reach.IsEmpty;
                 }
                 else
                     target = reach.IsEmpty ? DfaState.Error : InternDfaState(dfa, reach);
-                state.Edges[tokenType] = target;
+                bool retainEdge = !sharedDfa ||
+                    (target.IsRetained && _sharedCache.TryRetainTransition());
+                if (retainEdge)
+                {
+                    state.Edges[tokenType] = target;
+                    if (stopLive)
+                        state.StopLiveEdges.Add(tokenType);
+                }
             }
             else
             {
@@ -236,7 +300,12 @@ public sealed class AllStarSimulator
         else if (configs.GetAllSubsetsConflictAlt() > 0)
             state.RequiresFullContext = true;
         state.CompletedPrediction = configs.GetCompletedAlt();
-        dfa.States.Add(key, state);
+        if (_sharedCache == null ||
+            _sharedCache.TryRetainState(configs.Configs.Count))
+        {
+            state.IsRetained = true;
+            dfa.States.Add(key, state);
+        }
         if (_statistics != null)
             _statistics.DfaStatesCreated++;
         return state;
@@ -483,7 +552,8 @@ public sealed class AllStarSimulator
         if (!_contextCache.TryGetValue(key, out var context))
         {
             context = new SingletonPredictionContext(parent, returnState, precedence);
-            _contextCache.Add(key, context);
+            if (_sharedCache == null || _sharedCache.TryRetainContext())
+                _contextCache.Add(key, context);
             if (_statistics != null)
                 _statistics.PredictionContextCreations++;
         }
@@ -493,6 +563,17 @@ public sealed class AllStarSimulator
     }
 
     internal void CaptureRetainedStatistics()
+    {
+        if (_sharedCache != null)
+        {
+            lock (_sharedCache.SyncRoot)
+                CaptureRetainedStatisticsCore();
+            return;
+        }
+        CaptureRetainedStatisticsCore();
+    }
+
+    private void CaptureRetainedStatisticsCore()
     {
         if (_statistics == null) return;
         int states = 0;
@@ -511,8 +592,11 @@ public sealed class AllStarSimulator
         _statistics.RetainedDfaTransitions = transitions;
         _statistics.RetainedPredictionContexts = _contextCache.Count;
         _statistics.EstimatedRetainedBytes =
+            _sharedCache?.EstimatedRetainedBytes ??
             states * 96L + transitions * 32L + configurationSlots * 64L +
             _contextCache.Count * 48L;
+        _statistics.SharedDfaCacheSaturated =
+            _sharedCache?.IsSaturated ?? false;
     }
 
     // Number of frames in the context chain (0 for EMPTY).
@@ -529,15 +613,19 @@ public sealed class AllStarSimulator
         return minimum;
     }
 
-    private sealed class DecisionDfa
+    internal sealed class DecisionDfa
     {
         public DfaState Start;
         public readonly Dictionary<ConfigSetKey, DfaState> States = new();
     }
 
-    private sealed class DfaState
+    internal sealed class DfaState
     {
-        public static readonly DfaState Error = new(null) { IsError = true };
+        public static readonly DfaState Error = new(null)
+        {
+            IsError = true,
+            IsRetained = true
+        };
         public readonly ATNConfigSet Configs;
         public readonly Dictionary<int, DfaState> Edges = new();
         public readonly HashSet<int> StopLiveEdges = new();
@@ -545,14 +633,15 @@ public sealed class AllStarSimulator
         public int CompletedPrediction;
         public bool RequiresFullContext;
         public bool IsError;
+        public bool IsRetained;
 
         public DfaState(ATNConfigSet configs) => Configs = configs;
 
         public static DfaState Accept(int prediction) =>
-            new(null) { Prediction = prediction };
+            new(null) { Prediction = prediction, IsRetained = true };
     }
 
-    private sealed class ConfigSetKey : IEquatable<ConfigSetKey>
+    internal sealed class ConfigSetKey : IEquatable<ConfigSetKey>
     {
         private readonly HashSet<(int state, int alt, PredictionContext context, int precedence)> _items;
         private readonly int _hash;

@@ -33,6 +33,9 @@ public sealed class ParserStatistics
     public long CommittedAtnStatesVisited { get; internal set; }
     public long RuleCalls { get; internal set; }
     public long ParseEventsCreated { get; internal set; }
+    public int SharedDfaStatesAtStart { get; internal set; }
+    public int SharedDfaTransitionsAtStart { get; internal set; }
+    public bool SharedDfaCacheSaturated { get; internal set; }
 
     public IReadOnlyDictionary<int, DecisionStatistics> Decisions => _decisions;
     public IReadOnlyList<long> LookaheadHistogram => _lookaheadHistogram;
@@ -107,6 +110,9 @@ public sealed class ParserStatistics
             $"{prefix}DFA edges: {DfaEdgeHits:N0} hits, {DfaEdgeMisses:N0} misses",
             $"{prefix}DFA learning: {DfaStatesCreated:N0} states created, " +
                 $"{DfaStatesDeduplicated:N0} deduplicated",
+            $"{prefix}shared DFA at parse start: {SharedDfaStatesAtStart:N0} states, " +
+                $"{SharedDfaTransitionsAtStart:N0} transitions; " +
+                $"saturated: {SharedDfaCacheSaturated}",
             $"{prefix}lookahead: mean {MeanPredictionLookahead:F3}, " +
                 $"maximum {MaximumPredictionLookahead:N0}, total {PredictionLookaheadTokens:N0}",
             $"{prefix}lookahead histogram (0/1/2-4/5-16/17-64/65+): " +

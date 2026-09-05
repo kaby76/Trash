@@ -25,9 +25,12 @@ public static class AllStarParser
     /// </summary>
     public static List<ParseEvent> Parse(
         MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex,
-        ParserStatistics statistics = null)
+        ParserStatistics statistics = null,
+        ParserPredictionCache predictionCache = null)
     {
-        return ParseCore(atn, allTokens, startRuleIndex, buildEvents: true, statistics).Events;
+        return ParseCore(
+            atn, allTokens, startRuleIndex, buildEvents: true, statistics,
+            predictionCache).Events;
     }
 
     /// <summary>
@@ -37,14 +40,18 @@ public static class AllStarParser
     /// </summary>
     public static bool Recognize(
         MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex,
-        ParserStatistics statistics = null)
+        ParserStatistics statistics = null,
+        ParserPredictionCache predictionCache = null)
     {
-        return ParseCore(atn, allTokens, startRuleIndex, buildEvents: false, statistics).Success;
+        return ParseCore(
+            atn, allTokens, startRuleIndex, buildEvents: false, statistics,
+            predictionCache).Success;
     }
 
     private static (bool Success, List<ParseEvent> Events) ParseCore(
         MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex,
-        bool buildEvents, ParserStatistics statistics)
+        bool buildEvents, ParserStatistics statistics,
+        ParserPredictionCache predictionCache)
     {
         if (atn == null) throw new ArgumentNullException(nameof(atn));
         if (startRuleIndex < 0 || startRuleIndex >= atn.start.Length)
@@ -71,7 +78,8 @@ public static class AllStarParser
 
         var events = buildEvents ? new List<ParseEvent>() : null;
         var instance = new ParserInstance(
-            atn, allTokens, onIdx, tokenTypes, stateToDecision, statistics);
+            atn, allTokens, onIdx, tokenTypes, stateToDecision, statistics,
+            predictionCache);
         bool success = instance.ParseRule(startRuleIndex, events, PredictionContext.EMPTY);
         instance.CaptureStatistics();
         if (!success)
@@ -88,7 +96,8 @@ public static class AllStarParser
         MyATN parserAtn, MyATN lexerAtn, string input, int startRuleIndex,
         out List<LexerToken> allTokens,
         LexerStatistics lexerStatistics = null,
-        ParserStatistics parserStatistics = null)
+        ParserStatistics parserStatistics = null,
+        ParserPredictionCache predictionCache = null)
     {
         if (parserAtn == null) throw new ArgumentNullException(nameof(parserAtn));
         if (lexerAtn == null) throw new ArgumentNullException(nameof(lexerAtn));
@@ -103,7 +112,7 @@ public static class AllStarParser
         var events = new List<ParseEvent>();
         var instance = new ParserInstance(
             parserAtn, lexerAtn, input, allTokens, stateToDecision,
-            lexerStatistics, parserStatistics);
+            lexerStatistics, parserStatistics, predictionCache);
         bool success = instance.ParseRule(startRuleIndex, events, PredictionContext.EMPTY);
         instance.CaptureStatistics();
         if (!success)
@@ -134,7 +143,8 @@ public static class AllStarParser
         public ParserInstance(MyATN atn, IReadOnlyList<LexerToken> allTokens,
                               IReadOnlyList<int> onIdx, int[] tokenTypes,
                               Dictionary<int, int> stateToDecision,
-                              ParserStatistics statistics = null)
+                              ParserStatistics statistics = null,
+                              ParserPredictionCache predictionCache = null)
         {
             _atn = atn;
             _allTokens = allTokens as List<LexerToken> ?? allTokens.ToList();
@@ -142,14 +152,15 @@ public static class AllStarParser
             _tokenTypes = tokenTypes;
             _stateToDecision = stateToDecision;
             _statistics = statistics;
-            _sim = new AllStarSimulator(atn, statistics);
+            _sim = new AllStarSimulator(atn, statistics, predictionCache);
         }
 
         public ParserInstance(MyATN parserAtn, MyATN lexerAtn, string input,
                               List<LexerToken> allTokens,
                               Dictionary<int, int> stateToDecision,
                               LexerStatistics lexerStatistics,
-                              ParserStatistics parserStatistics = null)
+                              ParserStatistics parserStatistics = null,
+                              ParserPredictionCache predictionCache = null)
         {
             _atn = parserAtn;
             _allTokens = allTokens;
@@ -157,7 +168,8 @@ public static class AllStarParser
             _tokenTypes = Array.Empty<int>();
             _stateToDecision = stateToDecision;
             _statistics = parserStatistics;
-            _sim = new AllStarSimulator(parserAtn, parserStatistics);
+            _sim = new AllStarSimulator(
+                parserAtn, parserStatistics, predictionCache);
             _lexer = new LexerAtnSimulator(lexerAtn, lexerStatistics);
             _lexerCursor = new LexerAtnSimulator.Cursor();
             _input = input;
