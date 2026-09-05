@@ -13,8 +13,7 @@ public sealed class ParserPredictionCache
     internal readonly object SyncRoot = new();
     internal readonly Dictionary<(int decision, int precedence),
         AllStarSimulator.DecisionDfa> DecisionDfas = new();
-    internal readonly Dictionary<(PredictionContext parent, int returnState,
-        int precedence), SingletonPredictionContext> Contexts = new();
+    internal readonly PredictionContextArena ContextArena;
 
     private MyATN _atn;
     private string _serializedAtnFingerprint;
@@ -32,6 +31,7 @@ public sealed class ParserPredictionCache
             throw new ArgumentOutOfRangeException(nameof(maximumEstimatedBytes));
         MaximumStates = maximumStates;
         MaximumEstimatedBytes = maximumEstimatedBytes;
+        ContextArena = new PredictionContextArena(() => TryRetainContext());
     }
 
     public int MaximumStates { get; }
@@ -147,7 +147,7 @@ public sealed class ParserPredictionCache
         lock (SyncRoot)
         {
             DecisionDfas.Clear();
-            Contexts.Clear();
+            ContextArena.Clear();
             _retainedStates = 0;
             _retainedTransitions = 0;
             _estimatedBytes = 0;

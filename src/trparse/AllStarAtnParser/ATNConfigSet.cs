@@ -14,15 +14,18 @@ using EarleyAtnParser;
 public sealed class ATNConfigSet
 {
     private readonly ParserStatistics _statistics;
+    private readonly PredictionContextArena _contextArena;
     private readonly Dictionary<(int stateNum, int alt, int precedence), int> _configIndex = new();
     private readonly List<ATNConfig> _configs = new();
 
     public IReadOnlyList<ATNConfig> Configs => _configs;
     public bool IsEmpty => _configs.Count == 0;
 
-    public ATNConfigSet(ParserStatistics statistics = null)
+    public ATNConfigSet(ParserStatistics statistics = null,
+        PredictionContextArena contextArena = null)
     {
         _statistics = statistics;
+        _contextArena = contextArena ?? new PredictionContextArena();
     }
 
     // Add a config. Returns true if it was actually added (not a duplicate).
@@ -34,7 +37,17 @@ public sealed class ATNConfigSet
             if (_statistics != null)
                 _statistics.PredictionContextMerges++;
             var existing = _configs[index];
-            var merged = PredictionContextMerger.Merge(existing.Context, c.Context);
+            long creations = _contextArena.Creations;
+            long hits = _contextArena.Hits;
+            var merged = PredictionContextMerger.Merge(
+                _contextArena, existing.Context, c.Context);
+            if (_statistics != null)
+            {
+                _statistics.PredictionContextCreations +=
+                    _contextArena.Creations - creations;
+                _statistics.PredictionContextCacheHits +=
+                    _contextArena.Hits - hits;
+            }
             if (ReferenceEquals(merged, existing.Context)) return false;
             _configs[index] = existing.WithStateAndContext(existing.State, merged);
             return true;
@@ -84,10 +97,10 @@ public sealed class ATNConfigSet
     // identical, so additional lookahead cannot distinguish them.
     public int GetExactAmbiguityAlt()
     {
-        Dictionary<(int stateNum, PredictionContext context, int precedence), HashSet<int>> groups = new();
+        Dictionary<(int stateNum, int context, int precedence), HashSet<int>> groups = new();
         foreach (var c in _configs)
         {
-            var key = (c.State.stateNumber, c.Context, c.Precedence);
+            var key = (c.State.stateNumber, c.Context.Id, c.Precedence);
             if (!groups.TryGetValue(key, out var alts))
             {
                 alts = new HashSet<int>();
@@ -115,11 +128,11 @@ public sealed class ATNConfigSet
     // make one alternative uniquely viable with more lookahead.
     public int GetAllSubsetsConflictAlt()
     {
-        Dictionary<(int stateNum, PredictionContext context, int precedence), HashSet<int>> groups = new();
+        Dictionary<(int stateNum, int context, int precedence), HashSet<int>> groups = new();
         int minimum = int.MaxValue;
         foreach (var c in _configs)
         {
-            var key = (c.State.stateNumber, c.Context, c.Precedence);
+            var key = (c.State.stateNumber, c.Context.Id, c.Precedence);
             if (!groups.TryGetValue(key, out var alts))
             {
                 alts = new HashSet<int>();

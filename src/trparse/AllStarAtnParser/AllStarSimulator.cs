@@ -19,8 +19,8 @@ public sealed class AllStarSimulator
     // behaviour is identical to allocating fresh collections, but without the
     // per-call allocation cost on hot prediction paths.
     private readonly Stack<ATNConfig> _closureStack = new();
-    private readonly HashSet<(int stateNum, int alt, PredictionContext context, int precedence)> _closureBusy = new();
-    private readonly Dictionary<(PredictionContext parent, int returnState, int precedence), SingletonPredictionContext> _contextCache;
+    private readonly HashSet<(int stateNum, int alt, int context, int precedence)> _closureBusy = new();
+    private readonly PredictionContextArena _contextArena;
     private readonly Dictionary<(int decision, int precedence), DecisionDfa> _decisionDfas;
 
     public AllStarSimulator(
@@ -36,7 +36,7 @@ public sealed class AllStarSimulator
                 _sharedCache = predictionCache;
         }
         _decisionDfas = _sharedCache?.DecisionDfas ?? new();
-        _contextCache = _sharedCache?.Contexts ?? new();
+        _contextArena = _sharedCache?.ContextArena ?? new PredictionContextArena();
         if (_statistics != null && _sharedCache != null)
         {
             _statistics.SharedDfaStatesAtStart = _sharedCache.RetainedStates;
@@ -64,7 +64,7 @@ public sealed class AllStarSimulator
         MyATNState state, PredictionContext callerCtx, int precedence)
     {
         _closureBusy.Clear();
-        var configs = new ATNConfigSet(_statistics);
+        var configs = new ATNConfigSet(_statistics, _contextArena);
         int precedenceRuleIndex = state.isPrecedenceDecision
             ? state.ruleIndex
             : -1;
@@ -179,7 +179,7 @@ public sealed class AllStarSimulator
         if (dfa.Start == null)
         {
             _closureBusy.Clear();
-            var initial = new ATNConfigSet(_statistics);
+            var initial = new ATNConfigSet(_statistics, _contextArena);
             for (int i = 0; i < decisionState.transitions.Count; i++)
                 Closure(new ATNConfig(decisionState.transitions[i].target, i + 1,
                                       PredictionContext.EMPTY, precedence),
@@ -270,7 +270,7 @@ public sealed class AllStarSimulator
         if (returnState == PredictionContext.EMPTY_RETURN_STATE) return false;
 
         _closureBusy.Clear();
-        var continuation = new ATNConfigSet(_statistics);
+        var continuation = new ATNConfigSet(_statistics, _contextArena);
         Closure(new ATNConfig(_atn.allStates[returnState], alt, callerCtx.Parent,
                               callerCtx.GetPrecedence(0)),
                 continuation, fullCtx: true, precedence,
@@ -317,7 +317,7 @@ public sealed class AllStarSimulator
                         int precedenceRuleIndex = -1)
     {
         _closureBusy.Clear();
-        var initial = new ATNConfigSet(_statistics);
+        var initial = new ATNConfigSet(_statistics, _contextArena);
 
         for (int i = 0; i < decisionState.transitions.Count; i++)
         {
@@ -413,7 +413,7 @@ public sealed class AllStarSimulator
                                          bool fullCtx, int precedence,
                                          int precedenceRuleIndex = -1)
     {
-        var reach = new ATNConfigSet(_statistics);
+        var reach = new ATNConfigSet(_statistics, _contextArena);
         foreach (var cfg in configs.Configs)
         {
             if (_statistics != null)
@@ -426,7 +426,7 @@ public sealed class AllStarSimulator
         }
 
         _closureBusy.Clear();
-        var closed = new ATNConfigSet(_statistics);
+        var closed = new ATNConfigSet(_statistics, _contextArena);
         foreach (var c in reach.Configs)
             Closure(c, closed, fullCtx, precedence, precedenceRuleIndex);
         return closed;
@@ -444,7 +444,7 @@ public sealed class AllStarSimulator
             if (_statistics != null)
                 _statistics.ClosureConfigurationsVisited++;
 
-            var key = (config.State.stateNumber, config.Alt, config.Context,
+            var key = (config.State.stateNumber, config.Alt, config.Context.Id,
                        config.Precedence);
             if (!_closureBusy.Add(key)) continue;
 
@@ -522,7 +522,7 @@ public sealed class AllStarSimulator
         int tok = tokenTypes[startPos];
 
         _closureBusy.Clear();
-        var initial = new ATNConfigSet(_statistics);
+        var initial = new ATNConfigSet(_statistics, _contextArena);
         for (int i = 0; i < decisionState.transitions.Count; i++)
         {
             var target = decisionState.transitions[i].target;
@@ -544,21 +544,19 @@ public sealed class AllStarSimulator
         t is MyAtomTransition || t is MySetTransition || t is MyNotSetTransition ||
         t is MyWildcardTransition || t is MyRangeTransition;
 
-    private SingletonPredictionContext GetChildContext(PredictionContext parent,
+    internal SingletonPredictionContext GetChildContext(PredictionContext parent,
                                                         int returnState,
                                                         int precedence)
     {
-        var key = (parent, returnState, precedence);
-        if (!_contextCache.TryGetValue(key, out var context))
+        long creations = _contextArena.Creations;
+        var context = _contextArena.GetChild(parent, returnState, precedence);
+        if (_statistics != null)
         {
-            context = new SingletonPredictionContext(parent, returnState, precedence);
-            if (_sharedCache == null || _sharedCache.TryRetainContext())
-                _contextCache.Add(key, context);
-            if (_statistics != null)
+            if (_contextArena.Creations != creations)
                 _statistics.PredictionContextCreations++;
+            else
+                _statistics.PredictionContextCacheHits++;
         }
-        else if (_statistics != null)
-            _statistics.PredictionContextCacheHits++;
         return context;
     }
 
@@ -590,11 +588,11 @@ public sealed class AllStarSimulator
         }
         _statistics.RetainedDfaStates = states;
         _statistics.RetainedDfaTransitions = transitions;
-        _statistics.RetainedPredictionContexts = _contextCache.Count;
+        _statistics.RetainedPredictionContexts = _contextArena.Count;
         _statistics.EstimatedRetainedBytes =
             _sharedCache?.EstimatedRetainedBytes ??
             states * 96L + transitions * 32L + configurationSlots * 64L +
-            _contextCache.Count * 48L;
+            _contextArena.Count * 48L;
         _statistics.SharedDfaCacheSaturated =
             _sharedCache?.IsSaturated ?? false;
     }
@@ -643,18 +641,18 @@ public sealed class AllStarSimulator
 
     internal sealed class ConfigSetKey : IEquatable<ConfigSetKey>
     {
-        private readonly HashSet<(int state, int alt, PredictionContext context, int precedence)> _items;
+        private readonly HashSet<(int state, int alt, int context, int precedence)> _items;
         private readonly int _hash;
 
         public ConfigSetKey(ATNConfigSet configs)
         {
-            _items = new HashSet<(int, int, PredictionContext, int)>();
+            _items = new HashSet<(int, int, int, int)>();
             int hash = 0;
             foreach (var c in configs.Configs)
             {
-                var item = (c.State.stateNumber, c.Alt, c.Context, c.Precedence);
+                var item = (c.State.stateNumber, c.Alt, c.Context.Id, c.Precedence);
                 _items.Add(item);
-                hash ^= HashCode.Combine(item.stateNumber, item.Alt, item.Context,
+                hash ^= HashCode.Combine(item.stateNumber, item.Alt, item.Id,
                                          item.Precedence);
             }
             _hash = HashCode.Combine(hash, _items.Count);

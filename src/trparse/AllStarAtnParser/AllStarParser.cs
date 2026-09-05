@@ -300,9 +300,8 @@ public static class AllStarParser
                                     $"[ALLSTAR] call rule={rt.ruleIndex} from={state.stateNumber} " +
                                     $"prec={rt.precedence} pos={Pos}");
                             // Push follow state onto context for LL prediction inside the sub-rule.
-                            var childCtx = new SingletonPredictionContext(
+                            var childCtx = _sim.GetChildContext(
                                 callerCtx, rt.target.stateNumber, precedence);
-                            if (_statistics != null) _statistics.PredictionContextCreations++;
                             if (!ParseRule(rt.ruleIndex, events, childCtx, rt.precedence))
                                 return false;
                             state = rt.target;

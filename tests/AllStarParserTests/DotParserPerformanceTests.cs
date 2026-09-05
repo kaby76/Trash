@@ -256,6 +256,26 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void SharedDotParserInternsCommittedCallerContexts()
+    {
+        var fixture = Prepare(GenerateDotInput(100));
+        var cache = new ParserPredictionCache();
+        var cold = new ParserStatistics();
+        var warm = new ParserStatistics();
+
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule, cold, cache));
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule, warm, cache));
+
+        Assert.True(cold.PredictionContextCreations > 0);
+        Assert.True(warm.PredictionContextCacheHits > 0);
+        Assert.Equal(0, warm.PredictionContextCreations);
+        Assert.Equal(cold.RetainedPredictionContexts,
+            warm.RetainedPredictionContexts);
+    }
+
+    [Fact]
     public void SharedDotDfaHonorsItsStateBudget()
     {
         var fixture = Prepare(GenerateDotInput(100));
