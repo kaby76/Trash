@@ -154,9 +154,37 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
         Assert.True(statistics.EstimatedRetainedBytes > 0);
         Assert.True(statistics.CommittedAtnStatesVisited > 0);
         Assert.True(statistics.RuleCalls > 0);
+        Assert.True(statistics.MaximumRuleDepth > 0);
         Assert.Equal(0, statistics.ParseEventsCreated);
         Assert.NotEmpty(statistics.Decisions);
         Assert.Contains("busiest decisions", statistics.Format());
+    }
+
+    [Fact]
+    public void DotCommittedAtnMetadataIsCachedAndClassifiesEveryLiveState()
+    {
+        var fixture = Prepare(GenerateDotInput(10));
+        var first = CommittedAtnMetadata.For(fixture.ParserAtn);
+        var second = CommittedAtnMetadata.For(fixture.ParserAtn);
+
+        Assert.Same(first, second);
+        foreach (var state in fixture.ParserAtn.allStates.Where(s => s != null))
+        {
+            if (state.stateType != MyStateType.RuleStop &&
+                first.Decision[state.stateNumber] < 0 &&
+                state.transitions.Count != 1)
+                continue;
+            Assert.NotEqual(CommittedStateKind.Invalid,
+                first.Kind[state.stateNumber]);
+            if (first.Kind[state.stateNumber] == CommittedStateKind.Decision)
+                Assert.Equal(state.transitions.Count,
+                    first.DecisionTargets[state.stateNumber].Length);
+            if (first.Kind[state.stateNumber] == CommittedStateKind.Rule)
+                Assert.NotNull(first.RuleTransition[state.stateNumber]);
+            if (first.Kind[state.stateNumber] == CommittedStateKind.Terminal)
+                Assert.NotEqual(CommittedTerminalKind.None,
+                    first.TerminalKind[state.stateNumber]);
+        }
     }
 
     [Fact]

@@ -90,15 +90,11 @@ public static class AllStarParser
         for (int i = 0; i < onIdx.Count; i++)
             tokenTypes[i] = allTokens[onIdx[i]].Type;
 
-        // Build an index-addressed reverse map once for the committed walker.
-        var stateToDecision = new int[atn.allStates.Length];
-        Array.Fill(stateToDecision, -1);
-        for (int i = 0; i < atn.decisionToState.Length; i++)
-            stateToDecision[atn.decisionToState[i].stateNumber] = i;
+        var metadata = CommittedAtnMetadata.For(atn);
 
         var events = buildEvents ? new List<ParseEvent>() : null;
         var instance = new ParserInstance(
-            atn, allTokens, onIdx, tokenTypes, stateToDecision, statistics,
+            atn, allTokens, onIdx, tokenTypes, metadata, statistics,
             predictionCache, enableLl1Bypass);
         bool success = instance.ParseRule(startRuleIndex, events, PredictionContext.EMPTY);
         instance.CaptureStatistics();
@@ -124,15 +120,12 @@ public static class AllStarParser
         if (startRuleIndex < 0 || startRuleIndex >= parserAtn.start.Length)
             throw new ArgumentOutOfRangeException(nameof(startRuleIndex));
 
-        var stateToDecision = new int[parserAtn.allStates.Length];
-        Array.Fill(stateToDecision, -1);
-        for (int i = 0; i < parserAtn.decisionToState.Length; i++)
-            stateToDecision[parserAtn.decisionToState[i].stateNumber] = i;
+        var metadata = CommittedAtnMetadata.For(parserAtn);
 
         allTokens = new List<LexerToken>();
         var events = new List<ParseEvent>();
         var instance = new ParserInstance(
-            parserAtn, lexerAtn, input, allTokens, stateToDecision,
+            parserAtn, lexerAtn, input, allTokens, metadata,
             lexerStatistics, parserStatistics, predictionCache);
         bool success = instance.ParseRule(startRuleIndex, events, PredictionContext.EMPTY);
         instance.CaptureStatistics();
@@ -151,7 +144,7 @@ public static class AllStarParser
         private readonly List<LexerToken> _allTokens;
         private readonly List<int> _onIdx;  // on-channel pos → all-token index
         private readonly int[] _tokenTypes;
-        private readonly int[] _stateToDecision;
+        private readonly CommittedAtnMetadata _metadata;
         private readonly AllStarSimulator _sim;
         private readonly LexerAtnSimulator _lexer;
         private readonly LexerAtnSimulator.Cursor _lexerCursor;
@@ -164,7 +157,7 @@ public static class AllStarParser
 
         public ParserInstance(MyATN atn, IReadOnlyList<LexerToken> allTokens,
                               IReadOnlyList<int> onIdx, int[] tokenTypes,
-                              int[] stateToDecision,
+                              CommittedAtnMetadata metadata,
                               ParserStatistics statistics = null,
                               ParserPredictionCache predictionCache = null,
                               bool enableLl1Bypass = true)
@@ -173,7 +166,7 @@ public static class AllStarParser
             _allTokens = allTokens as List<LexerToken> ?? allTokens.ToList();
             _onIdx = onIdx as List<int> ?? onIdx.ToList();
             _tokenTypes = tokenTypes;
-            _stateToDecision = stateToDecision;
+            _metadata = metadata;
             _statistics = statistics;
             _ll1Tables = enableLl1Bypass
                 ? Ll1DecisionAnalyzer.For(atn).Tables
@@ -183,7 +176,7 @@ public static class AllStarParser
 
         public ParserInstance(MyATN parserAtn, MyATN lexerAtn, string input,
                               List<LexerToken> allTokens,
-                              int[] stateToDecision,
+                              CommittedAtnMetadata metadata,
                               LexerStatistics lexerStatistics,
                               ParserStatistics parserStatistics = null,
                               ParserPredictionCache predictionCache = null)
@@ -192,7 +185,7 @@ public static class AllStarParser
             _allTokens = allTokens;
             _onIdx = new List<int>();
             _tokenTypes = Array.Empty<int>();
-            _stateToDecision = stateToDecision;
+            _metadata = metadata;
             _statistics = parserStatistics;
             _ll1Tables = null;
             _sim = new AllStarSimulator(
@@ -205,25 +198,36 @@ public static class AllStarParser
 
         /// <summary>Parse one rule; emits Enter/Exit/Consume events. Returns false on error.</summary>
         public bool ParseRule(int ruleIndex, List<ParseEvent> events,
-                              PredictionContext callerCtx, int precedence = 0)
+                              PredictionContext callerCtx, int precedence = 0,
+                              int depth = 1)
         {
-            if (_statistics != null) _statistics.RuleCalls++;
+            if (_statistics != null)
+            {
+                _statistics.RuleCalls++;
+                if (depth > _statistics.MaximumRuleDepth)
+                    _statistics.MaximumRuleDepth = depth;
+            }
             bool isRecursion = _atn.start[ruleIndex].isPrecedenceRule;
-            AddEvent(events, isRecursion ? ParseEvent.EnterRecursionRule(ruleIndex) : ParseEvent.EnterRule(ruleIndex));
+            AddEvent(events, isRecursion
+                ? ParseEvent.EnterRecursionRule(ruleIndex)
+                : ParseEvent.EnterRule(ruleIndex));
             var state = _atn.start[ruleIndex];
 
-            while (state.stateType != MyStateType.RuleStop)
+            while (true)
             {
+                int stateNumber = state.stateNumber;
+                var stateKind = _metadata.Kind[stateNumber];
+                if (stateKind == CommittedStateKind.Stop)
+                    break;
+
                 if (_statistics != null) _statistics.CommittedAtnStatesVisited++;
-                if (state.transitions.Count == 0)
+                if (stateKind == CommittedStateKind.Invalid)
                     throw new InvalidOperationException($"Dead ATN state {state.stateNumber}");
 
-                int decision = (uint)state.stateNumber <
-                    (uint)_stateToDecision.Length
-                    ? _stateToDecision[state.stateNumber]
-                    : -1;
-                if (decision >= 0)
+                int decision = _metadata.Decision[stateNumber];
+                if (stateKind == CommittedStateKind.Decision)
                 {
+                    var decisionTargets = _metadata.DecisionTargets[stateNumber];
                     int currentTokenType = !_contextAware && Pos < _tokenTypes.Length
                         ? _tokenTypes[Pos]
                         : -1;
@@ -268,13 +272,13 @@ public static class AllStarParser
                             $"[ALLSTAR] dec={decision} state={state.stateNumber} pos={Pos} " +
                             $"tok={currentTokenType} " +
                             $"prec={precedence} → alt={alt}");
-                    if (alt <= 0 || alt > state.transitions.Count)
+                    if (alt <= 0 || alt > decisionTargets.Length)
                     {
                         if (AllStarParser.Trace)
                             Console.Error.WriteLine($"[ALLSTAR] FAIL: alt out of range");
                         return false;
                     }
-                    var nextState = state.transitions[alt - 1].target;
+                    var nextState = decisionTargets[alt - 1];
                     // Mirror ANTLR4 ParserInterpreter.visitDecisionState: when taking a non-exit
                     // path from the precedence suffix loop, wrap the accumulated context as the
                     // first child of a fresh rule element (PushNewRecursionContext equivalent).
@@ -282,19 +286,17 @@ public static class AllStarParser
                         AddEvent(events, ParseEvent.PushRecursionContext(state.ruleIndex));
                     state = nextState;
                 }
-                else if (state.transitions.Count == 1)
+                else
                 {
-                    var tr = state.transitions[0];
-                    switch (tr)
+                    var tr = _metadata.Transition[stateNumber];
+                    switch (stateKind)
                     {
-                        case MyEpsilonTransition:
-                        case MyActionTransition:
-                        case MyPredicateTransition:
-                        case MyPrecedencePredicateTransition:
+                        case CommittedStateKind.Epsilon:
                             state = tr.target;
                             break;
 
-                        case MyRuleTransition rt:
+                        case CommittedStateKind.Rule:
+                            var rt = _metadata.RuleTransition[stateNumber];
                             if (AllStarParser.Trace && rt.precedence != 0)
                                 Console.Error.WriteLine(
                                     $"[ALLSTAR] call rule={rt.ruleIndex} from={state.stateNumber} " +
@@ -302,14 +304,15 @@ public static class AllStarParser
                             // Push follow state onto context for LL prediction inside the sub-rule.
                             var childCtx = _sim.GetChildContext(
                                 callerCtx, rt.target.stateNumber, precedence);
-                            if (!ParseRule(rt.ruleIndex, events, childCtx, rt.precedence))
+                            if (!ParseRule(rt.ruleIndex, events, childCtx,
+                                rt.precedence, depth + 1))
                                 return false;
                             state = rt.target;
                             break;
 
-                        default:
+                        case CommittedStateKind.Terminal:
                             // Terminal transition: consume the next on-channel token.
-                            if (!ConsumeToken(tr, events))
+                            if (!ConsumeToken(stateNumber, tr, events))
                             {
                                 if (AllStarParser.Trace)
                                 {
@@ -323,28 +326,29 @@ public static class AllStarParser
                             }
                             state = tr.target;
                             break;
+                        default:
+                            throw new InvalidOperationException(
+                                $"Unsupported committed ATN state {state.stateNumber}.");
                     }
-                }
-                else
-                {
-                    throw new InvalidOperationException(
-                        $"ATN state {state.stateNumber} (type={state.stateType}) has " +
-                        $"{state.transitions.Count} transitions but is not a registered decision state.");
                 }
             }
 
-            AddEvent(events, isRecursion ? ParseEvent.ExitRecursionRule(ruleIndex) : ParseEvent.ExitRule(ruleIndex));
+            AddEvent(events, isRecursion
+                ? ParseEvent.ExitRecursionRule(ruleIndex)
+                : ParseEvent.ExitRule(ruleIndex));
             return true;
         }
 
-        private bool ConsumeToken(MyTransition tr, List<ParseEvent> events)
+        private bool ConsumeToken(int stateNumber, MyTransition tr,
+            List<ParseEvent> events)
         {
             if (_contextAware)
             {
                 var expected = TokenTypesForTransition(tr);
                 int contextualTokenIndex = ReadOnChannelToken(expected);
                 var contextualToken = _allTokens[contextualTokenIndex];
-                if (!TerminalMatches(tr, contextualToken.Type)) return false;
+                if (!_metadata.TerminalMatches(stateNumber, contextualToken.Type))
+                    return false;
                 if (AllStarParser.Trace)
                     Console.Error.WriteLine(
                         $"[ALLSTAR] consume pos={Pos} tok={contextualToken.Type} '{contextualToken.Text}'");
@@ -355,7 +359,7 @@ public static class AllStarParser
             if (Pos >= _onIdx.Count) return false;
             int allTokIdx = _onIdx[Pos];
             var tok = _allTokens[allTokIdx];
-            if (!TerminalMatches(tr, tok.Type)) return false;
+            if (!_metadata.TerminalMatches(stateNumber, tok.Type)) return false;
             if (AllStarParser.Trace)
                 Console.Error.WriteLine($"[ALLSTAR] consume pos={Pos} tok={tok.Type} '{tok.Text}'");
             AddEvent(events, ParseEvent.Consume(allTokIdx));
@@ -430,17 +434,4 @@ public static class AllStarParser
         };
     }
 
-    // =========================================================================
-    // Terminal helpers
-    // =========================================================================
-
-    private static bool TerminalMatches(MyTransition t, int tokenType) => t switch
-    {
-        MyAtomTransition a => a.label == tokenType,
-        MySetTransition s => s.set.Contains(tokenType),
-        MyNotSetTransition ns => !ns.set.Contains(tokenType) && tokenType != EOF_TYPE,
-        MyWildcardTransition => tokenType != EOF_TYPE,
-        MyRangeTransition r => tokenType >= r.from && tokenType <= r.to,
-        _ => false
-    };
 }

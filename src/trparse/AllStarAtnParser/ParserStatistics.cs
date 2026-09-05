@@ -32,6 +32,7 @@ public sealed class ParserStatistics
     public long EstimatedRetainedBytes { get; internal set; }
     public long CommittedAtnStatesVisited { get; internal set; }
     public long RuleCalls { get; internal set; }
+    public int MaximumRuleDepth { get; internal set; }
     public long ParseEventsCreated { get; internal set; }
     public int SharedDfaStatesAtStart { get; internal set; }
     public int SharedDfaTransitionsAtStart { get; internal set; }
@@ -140,7 +141,8 @@ public sealed class ParserStatistics
                 $"{RetainedPredictionContexts:N0} contexts, " +
                 $"~{EstimatedRetainedBytes:N0} bytes",
             $"{prefix}committed parser: {CommittedAtnStatesVisited:N0} ATN states, " +
-                $"{RuleCalls:N0} rule calls, {ParseEventsCreated:N0} parse events"
+                $"{RuleCalls:N0} rule calls, maximum depth {MaximumRuleDepth:N0}, " +
+                $"{ParseEventsCreated:N0} parse events"
         };
 
         var busiest = _decisions
