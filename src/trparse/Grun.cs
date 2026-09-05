@@ -189,7 +189,7 @@ public class Grun
             DateTime overallAfter = DateTime.Now;
             PrintPerfSummary((overallAfter - overallBefore).TotalSeconds);
 
-            if (config.NoParsingResultSets) return result;
+            if (config.NoParsingResultSets || config.NoOutput) return result;
             if (config.Bundle)
             {
                 WriteBundle();

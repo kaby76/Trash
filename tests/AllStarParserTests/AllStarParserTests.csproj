@@ -14,6 +14,9 @@
     <Content Include="TestData/dot/DOTLexer.interp"
              CopyToOutputDirectory="Always"
              Link="TestData/dot/DOTLexer.interp" />
+    <Content Include="TestData/dot/DOTParser.interp"
+             CopyToOutputDirectory="Always"
+             Link="TestData/dot/DOTParser.interp" />
     <Content Include="TestData/dot/1864.dot.gz"
              CopyToOutputDirectory="PreserveNewest"
              Link="TestData/dot/1864.dot.gz" />

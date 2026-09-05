@@ -113,12 +113,19 @@ and reports how many raw overlaps context eliminated.
         --lexer-stats  Write observed interp lexer-overlap statistics to stderr.
         --lexer-overlaps
                        Write detailed observed overlaps (implies --lexer-stats).
+        --interp-timings
+                       Write separate interp loading, ATN, lexing, parsing, and
+                       tree-building timings to stderr.
+        --no-output    Parse inputs and build their parse trees, but do not write
+                       parsing-result data to stdout. Performance and error
+                       diagnostics are still written to stderr.
 
 ## Examples
 
     dotnet trash parse Java.g2
     dotnet trash parse -i "1+2+3"
     dotnet trash parse Foobar.g -t ANTLRv2
+    dotnet trash parse --allstar -L interp --no-output input.txt
     echo "1+2+3" | dotnet trash parse | dotnet trash tree
     mkdir out; dotnet trash parse MyParser.g4 MyLexer.g4 | dotnet trash sponge -o out
 
