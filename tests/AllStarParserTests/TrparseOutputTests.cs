@@ -20,6 +20,7 @@ public sealed class TrparseOutputTests
         startInfo.ArgumentList.Add(trparse);
         startInfo.ArgumentList.Add("--allstar");
         startInfo.ArgumentList.Add("--no-output");
+        startInfo.ArgumentList.Add("--parser-stats");
         startInfo.ArgumentList.Add("-L");
         startInfo.ArgumentList.Add(interpDirectory);
         startInfo.ArgumentList.Add("-i");
@@ -34,6 +35,9 @@ public sealed class TrparseOutputTests
         Assert.Equal(0, process.ExitCode);
         Assert.Equal(string.Empty, stdout);
         Assert.Contains("ALL(*)", stderr);
+        Assert.Contains("Parser statistics:", stderr);
+        Assert.Contains("DFA edges:", stderr);
+        Assert.Contains("committed parser:", stderr);
         Assert.Contains("PT:", stderr);
     }
 }

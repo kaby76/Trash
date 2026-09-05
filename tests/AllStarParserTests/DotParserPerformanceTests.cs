@@ -32,6 +32,8 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
         var fixture = Prepare(GenerateDotInput(8_000));
         Assert.True(fixture.OnChannelTokenCount >= 50_000);
 
+        ReportStatistics(fixture);
+
         Assert.True(AllStarParser.Recognize(
             fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
         var recognition = Measure(() =>
@@ -85,6 +87,8 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
         setupWatch.Stop();
         Assert.Equal(1_109_453, fixture.Tokens.Count);
 
+        ReportStatistics(fixture);
+
         Assert.True(AllStarParser.Recognize(
             fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
         var samples = Measure(() =>
@@ -126,6 +130,57 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
         return new DotFixture(
             parserAtn, parserInterp, lexerInterp, tokens,
             startRule, onChannelTokenCount);
+    }
+
+    [Fact]
+    public void DotParserStatisticsDescribePredictionAndCommittedWork()
+    {
+        var fixture = Prepare(GenerateDotInput(100));
+        var statistics = new ParserStatistics();
+
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule, statistics));
+
+        Assert.True(statistics.AdaptivePredictionCalls > 0);
+        Assert.Equal(statistics.AdaptivePredictionCalls,
+            statistics.LookaheadHistogram.Sum());
+        Assert.True(statistics.DfaEdgeHits + statistics.DfaEdgeMisses > 0);
+        Assert.True(statistics.DfaStatesCreated > 0);
+        Assert.True(statistics.PredictionLookaheadTokens > 0);
+        Assert.True(statistics.ClosureConfigurationsVisited > 0);
+        Assert.True(statistics.ReachConfigurationsExamined > 0);
+        Assert.True(statistics.MaximumConfigurationsPerSet > 0);
+        Assert.True(statistics.RetainedDfaStates > 0);
+        Assert.True(statistics.EstimatedRetainedBytes > 0);
+        Assert.True(statistics.CommittedAtnStatesVisited > 0);
+        Assert.True(statistics.RuleCalls > 0);
+        Assert.Equal(0, statistics.ParseEventsCreated);
+        Assert.NotEmpty(statistics.Decisions);
+        Assert.Contains("busiest decisions", statistics.Format());
+    }
+
+    [Fact]
+    public void DotParserStatisticsCountConstructedEvents()
+    {
+        var fixture = Prepare(GenerateDotInput(10));
+        var statistics = new ParserStatistics();
+
+        var events = AllStarParser.Parse(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule, statistics);
+
+        Assert.NotNull(events);
+        Assert.Equal(events.Count, statistics.ParseEventsCreated);
+    }
+
+    private void ReportStatistics(DotFixture fixture)
+    {
+        var statistics = new ParserStatistics();
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule, statistics));
+        output.WriteLine(statistics.Format());
+        output.WriteLine(
+            "Statistics collection is a separate warm-up run and is excluded " +
+            "from the five timed samples.");
     }
 
     private static ParserSample[] Measure(

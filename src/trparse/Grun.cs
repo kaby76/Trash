@@ -77,7 +77,7 @@ public class Grun
             if (config.ReadFileNameStdin)
             {
                 List<string> inputs = new List<string>();
-                for (;;)
+                for (; ; )
                 {
                     var line = System.Console.In.ReadLine();
                     line = line?.Trim();
@@ -126,7 +126,7 @@ public class Grun
             else if (config.Input == null && (config.Files == null || config.Files.Count() == 0))
             {
                 string lines = null;
-                for (;;)
+                for (; ; )
                 {
                     lines = System.Console.In.ReadToEnd();
                     if (lines != null && lines != "") break;
@@ -346,10 +346,14 @@ public class Grun
                 var interpTimings = config.InterpTimings
                     ? new AllStarAtnParser.InterpRunTimings()
                     : null;
+                var parserStatistics = config.ParserStats
+                    ? new AllStarAtnParser.ParserStatistics()
+                    : null;
                 (rs, interpTokenCount) = AllStarAtnParser.InterpRunner.Run(
                     resolvedPInterp, resolvedLInterp, txt, input_name,
                     config.LineNumbers, config.ContextAwareLexing,
-                    config.LexerStats, config.LexerOverlaps, interpTimings);
+                    config.LexerStats, config.LexerOverlaps, interpTimings,
+                    parserStatistics);
                 if (interpTimings != null)
                     System.Console.Error.WriteLine(interpTimings.Format(prefix));
                 interpLabel = "ALL(*)";
@@ -623,7 +627,9 @@ public class Grun
                     Lexer = lexer
                 };
                 data.Add(tuple);
-            } else {
+            }
+            else
+            {
                 foreach (var tt in tuples)
                 {
                     var list_of_trees = new List<UnvParseTreeNode>();

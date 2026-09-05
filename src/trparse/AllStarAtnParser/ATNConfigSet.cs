@@ -13,11 +13,17 @@ using EarleyAtnParser;
 
 public sealed class ATNConfigSet
 {
+    private readonly ParserStatistics _statistics;
     private readonly Dictionary<(int stateNum, int alt, int precedence), int> _configIndex = new();
     private readonly List<ATNConfig> _configs = new();
 
     public IReadOnlyList<ATNConfig> Configs => _configs;
     public bool IsEmpty => _configs.Count == 0;
+
+    public ATNConfigSet(ParserStatistics statistics = null)
+    {
+        _statistics = statistics;
+    }
 
     // Add a config. Returns true if it was actually added (not a duplicate).
     public bool Add(ATNConfig c)
@@ -25,6 +31,8 @@ public sealed class ATNConfigSet
         var key = (c.State.stateNumber, c.Alt, c.Precedence);
         if (_configIndex.TryGetValue(key, out int index))
         {
+            if (_statistics != null)
+                _statistics.PredictionContextMerges++;
             var existing = _configs[index];
             var merged = PredictionContextMerger.Merge(existing.Context, c.Context);
             if (ReferenceEquals(merged, existing.Context)) return false;
@@ -33,6 +41,7 @@ public sealed class ATNConfigSet
         }
         _configIndex.Add(key, _configs.Count);
         _configs.Add(c);
+        _statistics?.ObserveConfigurations(_configs.Count);
         return true;
     }
 

@@ -78,6 +78,10 @@ public class Config
         HelpText = "Write details of observed interp lexer-rule overlaps to stderr (implies --lexer-stats).")]
     public bool LexerOverlaps { get; set; }
 
+    [Option("parser-stats", Required = false,
+        HelpText = "Write interpreted ALL(*) parser prediction and traversal statistics to stderr.")]
+    public bool ParserStats { get; set; }
+
     [Option("interp-timings", Required = false,
         HelpText = "Write .interp loading, ATN deserialization, lexing, parsing, and tree-building timings to stderr.")]
     public bool InterpTimings { get; set; }
