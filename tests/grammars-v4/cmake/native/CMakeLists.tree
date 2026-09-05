@@ -1,0 +1,218 @@
+file_
+├── command_invocation
+│   ├── Attribute Skip Value '# take from https://cmake.org/cmake/help/v3.12/manual/cmake-language.7.html&#10;'
+│   ├── Identifier
+│   │   └── "add_executable"
+│   ├── T__1
+│   │   └── "("
+│   ├── single_argument
+│   │   └── Identifier
+│   │       └── "hello"
+│   ├── single_argument
+│   │   ├── Attribute Skip Value ' '
+│   │   └── Unquoted_argument
+│   │       └── "world.c"
+│   └── Identifier
+│       └── ")"
+├── command_invocation
+│   ├── Attribute Skip Value '&#10;&#10;'
+│   ├── Identifier
+│   │   └── "if"
+│   ├── T__1
+│   │   └── "("
+│   ├── single_argument
+│   │   └── Identifier
+│   │       └── "FALSE"
+│   ├── single_argument
+│   │   ├── Attribute Skip Value ' '
+│   │   └── Identifier
+│   │       └── "AND"
+│   ├── compound_argument
+│   │   ├── Attribute Skip Value ' '
+│   │   ├── T__1
+│   │   │   └── "("
+│   │   ├── single_argument
+│   │   │   └── Identifier
+│   │   │       └── "FALSE"
+│   │   ├── single_argument
+│   │   │   ├── Attribute Skip Value ' '
+│   │   │   └── Identifier
+│   │   │       └── "OR"
+│   │   ├── compound_argument
+│   │   │   ├── Attribute Skip Value ' '
+│   │   │   ├── T__1
+│   │   │   │   └── "("
+│   │   │   ├── single_argument
+│   │   │   │   └── Identifier
+│   │   │   │       └── "HELLO"
+│   │   │   ├── single_argument
+│   │   │   │   ├── Attribute Skip Value ' '
+│   │   │   │   └── Identifier
+│   │   │   │       └── "WORLD"
+│   │   │   └── Identifier
+│   │   │       └── ")"
+│   │   ├── single_argument
+│   │   │   ├── Attribute Skip Value ' '
+│   │   │   └── Identifier
+│   │   │       └── "TRUE"
+│   │   └── Identifier
+│   │       └── ")"
+│   └── Identifier
+│       └── ")"
+├── command_invocation
+│   ├── Attribute Skip Value ' # evaluates to FALSE&#10;&#10;'
+│   ├── Identifier
+│   │   └── "message"
+│   ├── T__1
+│   │   └── "("
+│   ├── single_argument
+│   │   └── Bracket_argument
+│   │       └── "[=[&#10;This is the first line in a bracket argument with bracket length 1.&#10;No \-escape sequences or ${variable} references are evaluated.&#10;This is always one argument even though it contains a ; character.&#10;The text does not end on a closing bracket of length 0 like ]].&#10;It does end in a closing bracket of length 1.&#10;]=]"
+│   └── Identifier
+│       └── ")"
+├── command_invocation
+│   ├── Attribute Skip Value '&#10;&#10;'
+│   ├── Identifier
+│   │   └── "message"
+│   ├── T__1
+│   │   └── "("
+│   ├── single_argument
+│   │   └── Quoted_argument
+│   │       └── ""This is a quoted argument containing multiple lines.&#10;This is always one argument even though it contains a ; character.&#10;Both \\-escape sequences and ${variable} references are evaluated.&#10;The text does not end on an escaped double-quote like \".&#10;It does end in an unescaped double quote.&#10;""
+│   └── Identifier
+│       └── ")"
+├── command_invocation
+│   ├── Attribute Skip Value '&#10;&#10;'
+│   ├── Identifier
+│   │   └── "message"
+│   ├── T__1
+│   │   └── "("
+│   ├── single_argument
+│   │   └── Quoted_argument
+│   │       └── ""\&#10;This is the first line of a quoted argument. \&#10;In fact it is the only line but since it is long \&#10;the source code uses line continuation.\&#10;""
+│   └── Identifier
+│       └── ")"
+├── command_invocation
+│   ├── Attribute Skip Value '&#10;&#10;'
+│   ├── Identifier
+│   │   └── "foreach"
+│   ├── T__1
+│   │   └── "("
+│   ├── single_argument
+│   │   └── Identifier
+│   │       └── "arg"
+│   ├── single_argument
+│   │   ├── Attribute Skip Value '&#10;    '
+│   │   └── Identifier
+│   │       └── "NoSpace"
+│   ├── single_argument
+│   │   ├── Attribute Skip Value '&#10;    '
+│   │   └── Unquoted_argument
+│   │       └── "Escaped\ Space"
+│   ├── single_argument
+│   │   ├── Attribute Skip Value '&#10;    '
+│   │   └── Unquoted_argument
+│   │       └── "This;Divides;Into;Five;Arguments"
+│   ├── single_argument
+│   │   ├── Attribute Skip Value '&#10;    '
+│   │   └── Unquoted_argument
+│   │       └── "Escaped\;Semicolon"
+│   ├── Attribute Skip Value '&#10;    '
+│   └── Identifier
+│       └── ")"
+├── command_invocation
+│   ├── Attribute Skip Value '&#10;  '
+│   ├── Identifier
+│   │   └── "message"
+│   ├── T__1
+│   │   └── "("
+│   ├── single_argument
+│   │   └── Quoted_argument
+│   │       └── ""${arg}""
+│   └── Identifier
+│       └── ")"
+├── command_invocation
+│   ├── Attribute Skip Value '&#10;'
+│   ├── Identifier
+│   │   └── "endforeach"
+│   ├── T__1
+│   │   └── "("
+│   └── Identifier
+│       └── ")"
+├── command_invocation
+│   ├── Attribute Skip Value '&#10;&#10;#[[This is a bracket comment.&#10;It runs until the close bracket.]]&#10;'
+│   ├── Identifier
+│   │   └── "message"
+│   ├── T__1
+│   │   └── "("
+│   ├── single_argument
+│   │   └── Quoted_argument
+│   │       └── ""First Argument\n""
+│   ├── single_argument
+│   │   ├── Attribute Skip Value ' #[[Bracket Comment]] '
+│   │   └── Quoted_argument
+│   │       └── ""Second Argument""
+│   └── Identifier
+│       └── ")"
+├── command_invocation
+│   ├── Attribute Skip Value '&#10;&#10;# This is a line comment.&#10;'
+│   ├── Identifier
+│   │   └── "message"
+│   ├── T__1
+│   │   └── "("
+│   ├── single_argument
+│   │   └── Quoted_argument
+│   │       └── ""First Argument\n""
+│   ├── single_argument
+│   │   ├── Attribute Skip Value ' # This is a line comment :)&#10;        '
+│   │   └── Quoted_argument
+│   │       └── ""Second Argument""
+│   └── Identifier
+│       └── ")"
+├── command_invocation
+│   ├── Attribute Skip Value ' # This is a line comment.&#10;&#10;'
+│   ├── Identifier
+│   │   └── "set"
+│   ├── T__1
+│   │   └── "("
+│   ├── single_argument
+│   │   └── Identifier
+│   │       └── "srcs"
+│   ├── single_argument
+│   │   ├── Attribute Skip Value ' '
+│   │   └── Unquoted_argument
+│   │       └── "a.c"
+│   ├── single_argument
+│   │   ├── Attribute Skip Value ' '
+│   │   └── Unquoted_argument
+│   │       └── "b.c"
+│   ├── single_argument
+│   │   ├── Attribute Skip Value ' '
+│   │   └── Unquoted_argument
+│   │       └── "c.c"
+│   └── Identifier
+│       └── ")"
+├── command_invocation
+│   ├── Attribute Skip Value ' # sets "srcs" to "a.c;b.c;c.c"&#10;&#10;'
+│   ├── Identifier
+│   │   └── "set"
+│   ├── T__1
+│   │   └── "("
+│   ├── single_argument
+│   │   └── Identifier
+│   │       └── "x"
+│   ├── single_argument
+│   │   ├── Attribute Skip Value ' '
+│   │   └── Identifier
+│   │       └── "a"
+│   ├── single_argument
+│   │   ├── Attribute Skip Value ' '
+│   │   └── Quoted_argument
+│   │       └── ""b;c""
+│   └── Identifier
+│       └── ")"
+├── Attribute Skip Value ' # sets "x" to "a;b;c", not "a;b\;c"&#10;'
+└── EOF
+    └── ""
+
+

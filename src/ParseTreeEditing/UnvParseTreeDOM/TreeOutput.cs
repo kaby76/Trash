@@ -43,7 +43,7 @@ public class TreeOutput
                 "( "
                 + " text:'" + PerformEscapes(t.Data) + "'"
                 + " tt:" + t.TokenType
-                + " chnl:" + lexer.ChannelNames[t.Channel]
+                + " chnl:" + GetChannelName(t.Channel)
                 //+ " l:" + t.Line
                 //+ " c:" + t.Column
                 //+ " si:" + t.StartIndex
@@ -59,10 +59,10 @@ public class TreeOutput
             sb.Append(" Value '");
             sb.Append(PerformEscapes(a.StringValue));
             sb.Append("'");
-            if (a.Channel >= 0 && a.Channel < lexer.ChannelNames.Length)
+            if (a.Channel >= 0)
             {
                 sb.Append(" chnl:");
-                sb.Append(lexer.ChannelNames[a.Channel].ToString());
+                sb.Append(GetChannelName(a.Channel));
             }
             sb.AppendLine();
         }
@@ -185,10 +185,10 @@ public class TreeOutput
             sb.Append(" Value '");
             sb.Append(PerformEscapes(a.StringValue));
             sb.Append("'");
-            if (a.Channel >= 0 && a.Channel < lexer.ChannelNames.Length)
+            if (a.Channel >= 0)
             {
                 sb.Append(" chnl:");
-                sb.Append(lexer.ChannelNames[a.Channel].ToString());
+                sb.Append(GetChannelName(a.Channel));
             }
             sb.AppendLine();
         }
@@ -267,14 +267,26 @@ public class TreeOutput
                  + " Value '"
                  + PerformEscapes(a.StringValue)
                  + "'"
-                 + ((a.Channel >= 0 && a.Channel < lexer.ChannelNames.Length)
-                   ? " chnl:"
-                     + lexer.ChannelNames[a.Channel].ToString() : "");
+                 + (a.Channel >= 0 ? " chnl:" + GetChannelName(a.Channel) : "");
         }
         else if (tree is UnvParseTreeElement e)
         {
             return e.LocalName;
         }
         else return "";
+    }
+
+    private string GetChannelName(int channel)
+    {
+        var channelNames = lexer?.ChannelNames;
+        if (channelNames != null
+            && channel >= 0
+            && channel < channelNames.Length
+            && !string.IsNullOrEmpty(channelNames[channel]))
+        {
+            return channelNames[channel];
+        }
+
+        return channel.ToString(System.Globalization.CultureInfo.InvariantCulture);
     }
 }

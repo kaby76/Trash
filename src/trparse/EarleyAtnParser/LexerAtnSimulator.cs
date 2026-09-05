@@ -6,18 +6,30 @@ using Atn;
 /// Character-level ATN-based lexer. Implements a longest-match NFA simulation
 /// from scratch, with no Antlr4 runtime dependencies in the core algorithm.
 /// </summary>
-public class LexerAtnSimulator
+public partial class LexerAtnSimulator
 {
     private readonly MyATN _atn;
+    private readonly bool _enableDfa;
+    private readonly LexContextCache _contextCache = new();
+    private readonly Stack<LexerConfig> _closureWork = new();
+    private readonly Dictionary<int, IMyLexerAction[]> _actionSets = new();
     private const int DEFAULT_CHANNEL = 0;
     private const int EOF = -1;
 
     public LexerStatistics Statistics { get; }
 
     public LexerAtnSimulator(MyATN lexerAtn, LexerStatistics statistics = null)
+        : this(lexerAtn, statistics, true)
+    {
+    }
+
+    internal LexerAtnSimulator(
+        MyATN lexerAtn, LexerStatistics statistics, bool enableDfa)
     {
         _atn = lexerAtn;
+        _enableDfa = enableDfa;
         Statistics = statistics;
+        _modeStartStates = new DfaState[lexerAtn.modeToStartState.Length];
     }
 
     /// <summary>
@@ -126,11 +138,10 @@ public class LexerAtnSimulator
             }
         }
 
-        var token = new LexerToken
+        var token = new LexerToken(input)
         {
             Type = tokenType,
             Channel = skip ? LexerToken.SKIP_CHANNEL : channel,
-            Text = input.Substring(start, matchEnd - start),
             StartIndex = start,
             StopIndex = matchEnd - 1,
             Line = startLine,
@@ -150,10 +161,10 @@ public class LexerAtnSimulator
         return token;
     }
 
-    private sealed record MatchResult(
+    private readonly record struct MatchResult(
         int RuleIndex,
         int EndPosition,
-        List<IMyLexerAction> Actions,
+        IReadOnlyList<IMyLexerAction> Actions,
         IReadOnlyList<LexerCandidate> Candidates,
         LexerCandidate OrdinaryWinner,
         LexerCandidate SelectedWinner,
@@ -164,15 +175,9 @@ public class LexerAtnSimulator
         IReadOnlySet<int> expectedTokenTypes = null,
         bool collectCandidates = false)
     {
-        if (mode >= _atn.modeToStartState.Length)
+        if (mode < 0 || mode >= _atn.modeToStartState.Length)
             return EmptyMatch(startPos);
-        var modeStart = _atn.modeToStartState[mode];
-
-        var initConfigs = new HashSet<LexerConfig>(LexerConfigEq.Instance);
-        initConfigs.Add(new LexerConfig(modeStart, LexStack.Empty, 0, -1, -1, false));
-        EpsClosure(initConfigs);
-
-        var current = initConfigs;
+        var current = GetModeStartState(mode);
         int pos = startPos;
         int bestRule = -1, bestEnd = -1, bestActions = 0;
         int expectedRule = -1, expectedEnd = -1, expectedActions = 0;
@@ -188,19 +193,15 @@ public class LexerAtnSimulator
         while (pos < input.Length)
         {
             int ch = input[pos];
-            var next = Scan(current, ch);
-            if (next.Count == 0) break;
-            EpsClosure(next);
+            var next = GetTargetState(current, ch);
+            if (next == null) break;
             pos++;
             current = next;
-            var nonGreedyAccepts = CheckAccepts(current, pos, expectedTokenTypes,
+            pos = ConsumeKnownAsciiSelfLoop(current, input, pos);
+            CheckAccepts(current, pos, expectedTokenTypes,
                 ref bestRule, ref bestEnd, ref bestActions,
                 ref expectedRule, ref expectedEnd, ref expectedActions,
                 acceptedRules);
-            if (nonGreedyAccepts.Count != 0)
-                current.RemoveWhere(c =>
-                    nonGreedyAccepts.Contains((c.OuterRule, c.NonGreedyDecision)) &&
-                    !c.CompletedInnerRule);
         }
 
         // EOF is a real lexer-ATN symbol. It does not consume a character, but
@@ -208,10 +209,9 @@ public class LexerAtnSimulator
         // the end of a file that has no trailing newline.
         if (pos == input.Length)
         {
-            var eof = Scan(current, EOF);
-            if (eof.Count != 0)
+            var eof = GetTargetState(current, EOF);
+            if (eof != null)
             {
-                EpsClosure(eof);
                 CheckAccepts(eof, pos, expectedTokenTypes,
                     ref bestRule, ref bestEnd, ref bestActions,
                     ref expectedRule, ref expectedEnd, ref expectedActions,
@@ -232,10 +232,7 @@ public class LexerAtnSimulator
 
         if (bestRule < 0) return EmptyMatch(startPos);
 
-        var resolvedActions = new List<IMyLexerAction>();
-        for (int i = 0; i < _atn.lexerActions.Length && i < 32; i++)
-            if ((bestActions & (1 << i)) != 0)
-                resolvedActions.Add(_atn.lexerActions[i]);
+        var resolvedActions = ResolveActions(bestActions);
 
         var candidates = acceptedRules == null
             ? Array.Empty<LexerCandidate>()
@@ -246,10 +243,12 @@ public class LexerAtnSimulator
                     entry.Value.End, entry.Value.Actions))
                 .OrderBy(candidate => candidate.RuleIndex)
                 .ToArray();
-        var ordinaryWinner = CreateCandidate(
-            input, startPos, ordinaryRule, ordinaryEnd, ordinaryActions);
-        var selectedWinner = CreateCandidate(
-            input, startPos, bestRule, bestEnd, bestActions);
+        var ordinaryWinner = acceptedRules == null
+            ? null
+            : CreateCandidate(input, startPos, ordinaryRule, ordinaryEnd, ordinaryActions);
+        var selectedWinner = acceptedRules == null
+            ? null
+            : CreateCandidate(input, startPos, bestRule, bestEnd, bestActions);
         return new MatchResult(
             bestRule, bestEnd, resolvedActions, candidates,
             ordinaryWinner, selectedWinner, usedContextFallback);
@@ -257,48 +256,41 @@ public class LexerAtnSimulator
 
     private static MatchResult EmptyMatch(int startPosition)
     {
-        var empty = new LexerCandidate(-1, -1, startPosition, 0, false, "");
         return new MatchResult(
-            -1, startPosition, new List<IMyLexerAction>(),
-            Array.Empty<LexerCandidate>(), empty, empty, false);
+            -1, startPosition, Array.Empty<IMyLexerAction>(),
+            Array.Empty<LexerCandidate>(), null, null, false);
     }
 
-    private HashSet<(int Rule, int Decision)> CheckAccepts(
-        HashSet<LexerConfig> configs, int pos,
+    private void CheckAccepts(
+        DfaState state, int pos,
         IReadOnlySet<int> expectedTokenTypes,
         ref int bestRule, ref int bestEnd, ref int bestActions,
         ref int expectedRule, ref int expectedEnd, ref int expectedActions,
         Dictionary<int, (int End, int Actions)> acceptedRules)
     {
-        var nonGreedyAccepts = new HashSet<(int, int)>();
-        foreach (var c in configs)
+        foreach (var acceptConfig in state.Accepts)
         {
-            if (c.State.stateType == MyStateType.RuleStop && c.Stack.IsEmpty)
+            int ri = acceptConfig.Rule;
+            int actions = acceptConfig.Actions;
+            if (acceptedRules != null &&
+                (!acceptedRules.TryGetValue(ri, out var accepted) || pos > accepted.End))
+                acceptedRules[ri] = (pos, actions);
+            // Longer match wins; tie-break by earlier rule index.
+            if (pos > bestEnd || (pos == bestEnd && ri < bestRule))
             {
-                int ri = c.State.ruleIndex;
-                if (acceptedRules != null &&
-                    (!acceptedRules.TryGetValue(ri, out var accepted) || pos > accepted.End))
-                    acceptedRules[ri] = (pos, c.Actions);
-                // Longer match wins; tie-break by earlier rule index
-                if (pos > bestEnd || (pos == bestEnd && ri < bestRule))
-                {
-                    bestRule = ri;
-                    bestEnd = pos;
-                    bestActions = c.Actions;
-                }
-                if (expectedTokenTypes != null &&
-                    IsContextEligible(ri, c.Actions, expectedTokenTypes) &&
-                    (pos > expectedEnd || (pos == expectedEnd && ri < expectedRule)))
-                {
-                    expectedRule = ri;
-                    expectedEnd = pos;
-                    expectedActions = c.Actions;
-                }
-                if (c.NonGreedyDecision >= 0)
-                    nonGreedyAccepts.Add((ri, c.NonGreedyDecision));
+                bestRule = ri;
+                bestEnd = pos;
+                bestActions = actions;
+            }
+            if (expectedTokenTypes != null &&
+                IsContextEligible(ri, actions, expectedTokenTypes) &&
+                (pos > expectedEnd || (pos == expectedEnd && ri < expectedRule)))
+            {
+                expectedRule = ri;
+                expectedEnd = pos;
+                expectedActions = actions;
             }
         }
-        return nonGreedyAccepts;
     }
 
     private LexerCandidate CreateCandidate(
@@ -311,6 +303,19 @@ public class LexerAtnSimulator
             endPosition >= startPosition
                 ? input.Substring(startPosition, endPosition - startPosition)
                 : "");
+    }
+
+    private IReadOnlyList<IMyLexerAction> ResolveActions(int actionBits)
+    {
+        if (actionBits == 0) return Array.Empty<IMyLexerAction>();
+        if (_actionSets.TryGetValue(actionBits, out var cached)) return cached;
+        var actions = new List<IMyLexerAction>();
+        for (int i = 0; i < _atn.lexerActions.Length && i < 32; i++)
+            if ((actionBits & (1 << i)) != 0)
+                actions.Add(_atn.lexerActions[i]);
+        cached = actions.ToArray();
+        _actionSets.Add(actionBits, cached);
+        return cached;
     }
 
     private (int TokenType, int Channel, bool Skip) ResolveDisposition(
@@ -339,15 +344,21 @@ public class LexerAtnSimulator
 
     private HashSet<LexerConfig> Scan(HashSet<LexerConfig> configs, int ch)
     {
-        var next = new HashSet<LexerConfig>(LexerConfigEq.Instance);
+        var next = _enableDfa
+            ? NewDfaConfigSet()
+            : new HashSet<LexerConfig>(LexerConfigEq.Instance);
         foreach (var c in configs)
         {
-            foreach (var tr in c.State.transitions)
+            for (int transitionIndex = 0;
+                 transitionIndex < c.State.transitions.Count;
+                 transitionIndex++)
             {
+                var tr = c.State.transitions[transitionIndex];
                 if (CharMatches(tr, ch))
                     next.Add(new LexerConfig(
                         tr.target, c.Stack, c.Actions, c.OuterRule,
                         NextNonGreedyDecision(c),
+                        NextNonGreedyContext(c),
                         false));
             }
         }
@@ -366,7 +377,8 @@ public class LexerAtnSimulator
 
     private void EpsClosure(HashSet<LexerConfig> configs)
     {
-        var work = new Stack<LexerConfig>();
+        var work = _closureWork;
+        work.Clear();
         foreach (var c in configs) work.Push(c);
 
         while (work.Count > 0)
@@ -378,14 +390,19 @@ public class LexerAtnSimulator
             {
                 var (ret, rest) = c.Stack.Pop();
                 var next = new LexerConfig(
-                    ret, rest, c.Actions, c.OuterRule, c.NonGreedyDecision,
+                    ret, rest, c.Actions, c.OuterRule,
+                    c.NonGreedyDecision,
+                    c.NonGreedyContext,
                     true);
                 if (configs.Add(next)) work.Push(next);
                 continue;
             }
 
-            foreach (var tr in c.State.transitions)
+            for (int transitionIndex = 0;
+                 transitionIndex < c.State.transitions.Count;
+                 transitionIndex++)
             {
+                var tr = c.State.transitions[transitionIndex];
                 LexerConfig next;
                 switch (tr)
                 {
@@ -396,6 +413,7 @@ public class LexerAtnSimulator
                             tr.target, c.Stack, c.Actions,
                             c.OuterRule < 0 ? tr.target.ruleIndex : c.OuterRule,
                             NextNonGreedyDecision(c),
+                            NextNonGreedyContext(c),
                             c.CompletedInnerRule);
                         if (configs.Add(next)) work.Push(next);
                         break;
@@ -410,17 +428,19 @@ public class LexerAtnSimulator
                         next = new LexerConfig(
                             tr.target, c.Stack, acts, c.OuterRule,
                             NextNonGreedyDecision(c),
+                            NextNonGreedyContext(c),
                             c.CompletedInnerRule);
                         if (configs.Add(next)) work.Push(next);
                         break;
 
                     case MyRuleTransition rt:
                         // rt.target = followState; push it, then move to rule start
-                        var pushed = c.Stack.Push(rt.target);
+                        var pushed = _contextCache.Push(c.Stack, rt.target);
                         var ruleStart = _atn.start[rt.ruleIndex];
                         next = new LexerConfig(
                             ruleStart, pushed, c.Actions, c.OuterRule,
                             NextNonGreedyDecision(c),
+                            NextNonGreedyContext(c),
                             false);
                         if (configs.Add(next)) work.Push(next);
                         break;
@@ -437,6 +457,11 @@ public class LexerAtnSimulator
             ? config.State.stateNumber
             : config.NonGreedyDecision;
     }
+
+    private static LexStack NextNonGreedyContext(LexerConfig config) =>
+        config.State.transitions.Count > 1 && config.State.nonGreedy
+            ? config.Stack
+            : config.NonGreedyContext;
 
     private static void UpdateLineCol(string input, int from, int to, ref int line, ref int col)
     {
@@ -455,13 +480,14 @@ public class LexerAtnSimulator
         public readonly int Actions; // bitfield indexing into atn.lexerActions
         public readonly int OuterRule;
         public readonly int NonGreedyDecision;
-        // True when the most recently consumed character completed a
-        // referenced lexer rule. Such a path has priority over a competing
-        // wildcard path which accepts the outer rule at the same position.
+        public readonly LexStack NonGreedyContext;
+        // True when the most recently consumed character completed any
+        // referenced rule. This preserves a higher-priority fragment path
+        // when a wildcard path can accept at the same position.
         public readonly bool CompletedInnerRule;
-
         public LexerConfig(MyATNState state, LexStack stack, int actions,
                            int outerRule, int nonGreedyDecision,
+                           LexStack nonGreedyContext,
                            bool completedInnerRule)
         {
             State = state;
@@ -469,6 +495,7 @@ public class LexerAtnSimulator
             Actions = actions;
             OuterRule = outerRule;
             NonGreedyDecision = nonGreedyDecision;
+            NonGreedyContext = nonGreedyContext;
             CompletedInnerRule = completedInnerRule;
         }
     }
@@ -480,9 +507,10 @@ public class LexerAtnSimulator
 
         public bool Equals(LexerConfig x, LexerConfig y)
             => ReferenceEquals(x.State, y.State) &&
-               LexStack.Same(x.Stack, y.Stack) &&
+               x.Stack.Id == y.Stack.Id &&
                x.OuterRule == y.OuterRule &&
                x.NonGreedyDecision == y.NonGreedyDecision &&
+               x.NonGreedyContext.Id == y.NonGreedyContext.Id &&
                x.CompletedInnerRule == y.CompletedInnerRule;
 
         public int GetHashCode(LexerConfig c)
@@ -492,34 +520,79 @@ public class LexerAtnSimulator
                 int hash = c.State.stateNumber * 31 + c.Stack.GetHashCode();
                 hash = hash * 31 + c.OuterRule;
                 hash = hash * 31 + c.NonGreedyDecision;
-                return hash * 31 + (c.CompletedInnerRule ? 1 : 0);
+                hash = hash * 31 + c.NonGreedyContext.GetHashCode();
+                hash = hash * 31 + (c.CompletedInnerRule ? 1 : 0);
+                return hash;
             }
         }
     }
 
-    // Persistent linked-list stack for return states (fragment rule calls)
+    private readonly record struct NonGreedyAccept(
+        int Rule, int Decision, LexStack Context);
+
+    private sealed class NonGreedyAcceptEq : IEqualityComparer<NonGreedyAccept>
+    {
+        public static readonly NonGreedyAcceptEq Instance = new();
+
+        public bool Equals(NonGreedyAccept x, NonGreedyAccept y) =>
+            x.Rule == y.Rule && x.Decision == y.Decision &&
+            x.Context.Id == y.Context.Id;
+
+        public int GetHashCode(NonGreedyAccept value) => HashCode.Combine(
+            value.Rule, value.Decision, value.Context.Id);
+    }
+
+    // Canonical persistent stack for return states (fragment rule calls).
+    // Equal (return-state, parent-context) pairs share one node and compact ID.
     private readonly struct LexStack
     {
-        private sealed class Node
-        {
-            public readonly MyATNState Head;
-            public readonly Node Tail;
-            public Node(MyATNState h, Node t) { Head = h; Tail = t; }
-        }
-
-        private readonly Node _node;
+        private readonly LexContext _context;
         public static LexStack Empty => default;
-        public bool IsEmpty => _node == null;
-        private LexStack(Node n) => _node = n;
-
-        public LexStack Push(MyATNState s) => new(new Node(s, _node));
+        public bool IsEmpty => _context == null;
+        public int Id => _context?.Id ?? 0;
+        public LexStack(LexContext context) => _context = context;
 
         public (MyATNState head, LexStack rest) Pop()
-            => (_node.Head, new LexStack(_node.Tail));
+            => (_context.ReturnState, new LexStack(_context.Parent));
 
-        public static bool Same(LexStack a, LexStack b)
-            => ReferenceEquals(a._node, b._node);
+        public override int GetHashCode() => Id;
 
-        public override int GetHashCode() => _node?.GetHashCode() ?? 0;
+    }
+
+    private sealed class LexContext
+    {
+        public readonly int Id;
+        public readonly MyATNState ReturnState;
+        public readonly LexContext Parent;
+
+        public LexContext(int id, MyATNState returnState, LexContext parent)
+        {
+            Id = id;
+            ReturnState = returnState;
+            Parent = parent;
+        }
+    }
+
+    private sealed class LexContextCache
+    {
+        private readonly Dictionary<(int ParentId, int ReturnState), LexContext>
+            _contexts = new();
+        private readonly List<LexContext> _byId = [null];
+        private int _nextId = 1;
+
+        public int Count => _contexts.Count;
+
+        public LexStack Push(LexStack parent, MyATNState returnState)
+        {
+            var key = (parent.Id, returnState.stateNumber);
+            if (!_contexts.TryGetValue(key, out var context))
+            {
+                var parentContext = _byId[parent.Id];
+                context = new LexContext(_nextId++, returnState, parentContext);
+                _contexts.Add(key, context);
+                _byId.Add(context);
+            }
+            return new LexStack(context);
+        }
     }
 }

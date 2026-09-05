@@ -42,7 +42,7 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "3.1.0";
+    public string Version { get; set; } = "3.2.0";
 
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }
@@ -73,6 +73,10 @@ public class Config
     [Option("lexer-overlaps", Required = false,
         HelpText = "Write details of observed interp lexer-rule overlaps to stderr (implies --lexer-stats).")]
     public bool LexerOverlaps { get; set; }
+
+    [Option("interp-timings", Required = false,
+        HelpText = "Write .interp loading, ATN deserialization, lexing, parsing, and tree-building timings to stderr.")]
+    public bool InterpTimings { get; set; }
 
     [Option("bundle", Required = false, HelpText = "Write an ordinary POSIX PAX artifact bundle to stdout (the default).")]
     public bool Bundle { get; set; } = true;

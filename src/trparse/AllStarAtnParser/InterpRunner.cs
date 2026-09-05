@@ -23,8 +23,11 @@ public static class InterpRunner
         bool lineNumbers,
         bool contextAwareLexing = false,
         bool lexerStats = false,
-        bool lexerOverlaps = false)
+        bool lexerOverlaps = false,
+        InterpRunTimings timings = null)
     {
+        timings ??= new InterpRunTimings();
+        var timer = new System.Diagnostics.Stopwatch();
         // Get options to lexer from process args.
         var args = Environment.GetCommandLineArgs().ToList();
 
@@ -32,12 +35,25 @@ public static class InterpRunner
         show_tokens = args?.Where(a => a.IndexOf("--tokens", StringComparison.OrdinalIgnoreCase) >= 0).Any() ?? false;
         numeric_token_types = args?.Where(a => a.IndexOf("--numeric-token-types", StringComparison.OrdinalIgnoreCase) >= 0).Any() ?? false;
 
-        var parserInterp = InterpFileReader.Read(File.ReadAllText(parserInterpPath));
-        var lexerInterp  = InterpFileReader.Read(File.ReadAllText(lexerInterpPath));
+        timer.Start();
+        var parserInterpText = File.ReadAllText(parserInterpPath);
+        var lexerInterpText = File.ReadAllText(lexerInterpPath);
+        timer.Stop();
+        timings.InterpFileReading = timer.Elapsed;
 
+        timer.Restart();
+        var parserInterp = InterpFileReader.Read(parserInterpText);
+        var lexerInterp  = InterpFileReader.Read(lexerInterpText);
+        timer.Stop();
+        timings.InterpParsing = timer.Elapsed;
+
+        timer.Restart();
         var parserAtn = AtnDeserializer.Deserialize(parserInterp.AtnData);
         var lexerAtn  = AtnDeserializer.Deserialize(lexerInterp.AtnData);
+        timer.Stop();
+        timings.AtnDeserialization = timer.Elapsed;
 
+        timer.Restart();
         var lexerVocab  = new Antlr4.Runtime.Vocabulary(lexerInterp.LiteralNames,  lexerInterp.SymbolicNames);
         var parserVocab = new Antlr4.Runtime.Vocabulary(parserInterp.LiteralNames, parserInterp.SymbolicNames);
         var statistics = lexerStats || lexerOverlaps
@@ -62,22 +78,38 @@ public static class InterpRunner
                 throw new InvalidOperationException(
                     $"Start state {parserInterp.StartStateNumber} not found in deserialized parser ATN.");
         }
+        timer.Stop();
+        timings.Initialization = timer.Elapsed;
 
         List<LexerToken> rawTokens;
         List<ParseEvent> events;
         if (contextAwareLexing)
         {
+            timer.Restart();
             events = AllStarParser.ParseContextAware(
                 parserAtn, lexerAtn, inputText, startRule, out rawTokens,
                 statistics);
+            timer.Stop();
+            // Tokens are requested lazily here; this is combined lex/parse time.
+            timings.Parsing = timer.Elapsed;
         }
         else
         {
             var sim = new EarleyAtnParser.LexerAtnSimulator(lexerAtn, statistics);
+            timer.Restart();
             rawTokens = sim.Tokenize(inputText);
+            timer.Stop();
+            timings.Tokenization = timer.Elapsed;
+            timings.LexerDfa = sim.GetDfaStatistics();
+            timer.Restart();
             ReconcileLiteralTokenTypes(rawTokens, lexerInterp.SymbolicNames,
                 lexerInterp.LiteralNames, parserInterp.LiteralNames);
+            timer.Stop();
+            timings.TokenReconciliation = timer.Elapsed;
+            timer.Restart();
             events = AllStarParser.Parse(parserAtn, rawTokens, startRule);
+            timer.Stop();
+            timings.Parsing = timer.Elapsed;
         }
         PrintLexerStatistics(
             statistics, lexerOverlaps, fileName,
@@ -103,6 +135,7 @@ public static class InterpRunner
             }
         }
 
+        timer.Restart();
         var domTree = DomBuilder.Build(
             events, rawTokens,
             parserInterp.RuleNames,
@@ -110,6 +143,8 @@ public static class InterpRunner
             parserInterp.LiteralNames,
             lexerInterp.RuleNames,
             lineNumbers);
+        timer.Stop();
+        timings.TreeBuilding = timer.Elapsed;
 
         // Stub lexer/parser objects required by ParsingResultSet and the JSON serializer.
         var charStream = new Antlr4.Runtime.AntlrInputStream(inputText);

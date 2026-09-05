@@ -11,6 +11,12 @@
     <Content Include="TestData/context-aware/*.interp"
              CopyToOutputDirectory="Always"
              Link="TestData/context-aware/%(Filename)%(Extension)" />
+    <Content Include="TestData/dot/DOTLexer.interp"
+             CopyToOutputDirectory="Always"
+             Link="TestData/dot/DOTLexer.interp" />
+    <Content Include="TestData/dot/1864.dot.gz"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/dot/1864.dot.gz" />
 
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.13.0" />
     <PackageReference Include="xunit" Version="2.9.3" />
@@ -131,6 +137,20 @@
     <Content Include="../grammars-v4/corundum/interp/CorundumLexer.interp"
              CopyToOutputDirectory="PreserveNewest"
              Link="TestData/corundum/interp/CorundumLexer.interp" />
+
+    <!-- CMake recursive bracket-argument lexer regression and native tree -->
+    <Content Include="../grammars-v4/cmake/interp/CMake.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/cmake/interp/CMake.interp" />
+    <Content Include="../grammars-v4/cmake/interp/CMakeLexer.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/cmake/interp/CMakeLexer.interp" />
+    <Content Include="../grammars-v4/cmake/examples/CMakeLists.txt"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/cmake/examples/CMakeLists.txt" />
+    <Content Include="../grammars-v4/cmake/native/CMakeLists.tree"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/cmake/native/CMakeLists.tree" />
   </ItemGroup>
 
 </Project>

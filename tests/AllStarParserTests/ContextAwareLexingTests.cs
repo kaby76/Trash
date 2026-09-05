@@ -50,6 +50,42 @@ public class ContextAwareLexingTests
     }
 
     [Fact]
+    public void WarmDfaIsIndependentOfExpectedTokenSet()
+    {
+        var statistics = new LexerStatistics();
+        var lexer = new LexerAtnSimulator(BuildLexerAtn(), statistics);
+        const string input = "BDAY:2000-01-01";
+
+        var ordinary = lexer.NextToken(input, new LexerAtnSimulator.Cursor());
+        Assert.Equal(Value, ordinary.Type);
+        var warm = lexer.GetDfaStatistics();
+
+        var contextual = lexer.NextToken(
+            input, new LexerAtnSimulator.Cursor(), new HashSet<int> { Name });
+        Assert.Equal(Name, contextual.Type);
+        Assert.Equal("BDAY", contextual.Text);
+
+        var fallback = lexer.NextToken(
+            input, new LexerAtnSimulator.Cursor(), new HashSet<int> { Colon });
+        Assert.Equal(Value, fallback.Type);
+        Assert.Equal(input, fallback.Text);
+
+        var final = lexer.GetDfaStatistics();
+        Assert.Equal(warm.States, final.States);
+        Assert.Equal(warm.LiveTransitions, final.LiveTransitions);
+        Assert.Equal(warm.DeadTransitions, final.DeadTransitions);
+        Assert.Equal(warm.DenseAsciiRows, final.DenseAsciiRows);
+        Assert.Equal(warm.SparseEntries, final.SparseEntries);
+        Assert.Equal(warm.CacheMisses, final.CacheMisses);
+        Assert.True(final.CacheHits > warm.CacheHits);
+        Assert.Equal(1, statistics.ContextOverrides);
+        Assert.Equal(1, statistics.ContextFallbacks);
+        Assert.Equal(3, statistics.DecisionsWithOverlap);
+        Assert.Equal(2, statistics.EffectiveDecisionsWithOverlap);
+        Assert.Equal(1, statistics.OverlapsEliminatedByContext);
+    }
+
+    [Fact]
     public void RecordsEqualLengthPriorityResolutionAndFormatsNames()
     {
         var statistics = new LexerStatistics();

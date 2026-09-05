@@ -34,7 +34,7 @@ for grammar in "${grammars[@]}"; do
 #    echo diff between Antlr4 and Antlr-ng
 #    python $full_path_script_dir/compare-atn.py a n
 
-    echo diff between Antlr4 and Trinterp
+    echo checking diff between Antlr4 and Trinterp
     python $full_path_script_dir/compare-atn.py a i
 
 #    echo diff between Antlr-ng and Trinterp

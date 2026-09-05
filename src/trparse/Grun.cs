@@ -343,10 +343,15 @@ public class Grun
             if (config.AllStar || config.ContextAwareLexing)
             {
                 AllStarAtnParser.AllStarParser.Trace = config.Verbose;
+                var interpTimings = config.InterpTimings
+                    ? new AllStarAtnParser.InterpRunTimings()
+                    : null;
                 (rs, interpTokenCount) = AllStarAtnParser.InterpRunner.Run(
                     resolvedPInterp, resolvedLInterp, txt, input_name,
                     config.LineNumbers, config.ContextAwareLexing,
-                    config.LexerStats, config.LexerOverlaps);
+                    config.LexerStats, config.LexerOverlaps, interpTimings);
+                if (interpTimings != null)
+                    System.Console.Error.WriteLine(interpTimings.Format(prefix));
                 interpLabel = "ALL(*)";
             }
             else
@@ -462,7 +467,6 @@ public class Grun
         }
         else if (parser_type == "gen")
         {
-            System.Console.Error.WriteLine("Using Generated-CSharp parser.");
             string path = config.ParserLocation != null
                 ? config.ParserLocation
                 : Environment.CurrentDirectory + Path.DirectorySeparatorChar;

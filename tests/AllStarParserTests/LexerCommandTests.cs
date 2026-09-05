@@ -126,6 +126,52 @@ public class LexerCommandTests
         Assert.Equal(["\"first\"", "\"Hello, I'm CORUN\\\"DUM\""], literals);
     }
 
+    [Fact]
+    public void NonGreedyLoopInFragmentDoesNotConsumeLaterOuterTokens()
+    {
+        var tokens = new LexerAtnSimulator(BuildNestedNonGreedyAtn())
+            .Tokenize("<<a>>]<<b>>")
+            .Where(token => token.Type != -1)
+            .Select(token => token.Text)
+            .ToArray();
+
+        Assert.Equal(["<<a>>", "]", "<<b>>"], tokens);
+    }
+
+    [Fact]
+    public void MutuallyRecursiveFragmentsReuseCanonicalContexts()
+    {
+        var simulator = new LexerAtnSimulator(BuildMutuallyRecursiveAtn());
+
+        var first = simulator.Tokenize("<abab>");
+        var contextsAfterFirstRun = simulator.LexerContextCount;
+        var second = simulator.Tokenize("<abab>");
+
+        Assert.Equal(["<abab>"], first.Where(t => t.Type != -1).Select(t => t.Text));
+        Assert.Equal(first.Select(t => t.Text), second.Select(t => t.Text));
+        Assert.True(contextsAfterFirstRun >= 4);
+        Assert.Equal(contextsAfterFirstRun, simulator.LexerContextCount);
+    }
+
+    [Fact]
+    public void NonAsciiDfaEdgesUseSparseStorageAndAreCached()
+    {
+        var simulator = new LexerAtnSimulator(BuildAtn(
+            modeCount: 1, new RuleSpec(0, '\u00E9', 1)));
+
+        var first = simulator.Tokenize("\u00E9\u00E9");
+        var missesAfterFirstRun = simulator.DfaEdgeCacheMisses;
+        var second = simulator.Tokenize("\u00E9\u00E9");
+        var statistics = simulator.GetDfaStatistics();
+
+        Assert.Equal(["\u00E9", "\u00E9"],
+            first.Where(t => t.Type != -1).Select(t => t.Text));
+        Assert.Equal(first.Select(t => t.Text), second.Select(t => t.Text));
+        Assert.True(statistics.SparseEntries > 0);
+        Assert.True(statistics.LiveTransitions > 0);
+        Assert.Equal(missesAfterFirstRun, simulator.DfaEdgeCacheMisses);
+    }
+
     private static MyATN BuildCommandAtn() => BuildAtn(
         modeCount: 3,
         new RuleSpec(0, '<', 1, new(MyLexerActionType.PushMode, 1, 0)),
@@ -137,6 +183,113 @@ public class LexerCommandTests
         new RuleSpec(1, '>', 7, new(MyLexerActionType.PopMode, 0, 0)),
         new RuleSpec(2, 'y', 8),
         new RuleSpec(2, ']', 9, new(MyLexerActionType.Mode, 0, 0)));
+
+    private static MyATN BuildNestedNonGreedyAtn()
+    {
+        var states = new List<MyATNState>();
+        MyATNState New(MyStateType type, int rule)
+        {
+            var state = State(type, rule, states.Count);
+            states.Add(state);
+            return state;
+        }
+
+        var modeStart = New(MyStateType.TokenStart, -1);
+
+        // HTML : '<' (TAG | ~[<>])* '>' ;
+        var htmlStart = New(MyStateType.RuleStart, 0);
+        var htmlLoop = New(MyStateType.StarLoopEntry, 0);
+        var htmlClose = New(MyStateType.Basic, 0);
+        var htmlStop = New(MyStateType.RuleStop, 0);
+        htmlStart.AddTransition(new MyAtomTransition(htmlLoop, '<'));
+        htmlLoop.AddTransition(new MyRuleTransition(htmlLoop, 1, 0));
+        var angles = MyIntervalSet.Of('<');
+        angles.Add('>', '>');
+        htmlLoop.AddTransition(new MyNotSetTransition(htmlLoop, angles));
+        htmlLoop.AddTransition(new MyEpsilonTransition(htmlClose));
+        htmlClose.AddTransition(new MyAtomTransition(htmlStop, '>'));
+
+        // fragment TAG : '<' .*? '>' ;
+        var tagStart = New(MyStateType.RuleStart, 1);
+        var tagLoop = New(MyStateType.StarLoopEntry, 1);
+        tagLoop.nonGreedy = true;
+        var tagClose = New(MyStateType.Basic, 1);
+        var tagStop = New(MyStateType.RuleStop, 1);
+        tagStart.AddTransition(new MyAtomTransition(tagLoop, '<'));
+        tagLoop.AddTransition(new MyEpsilonTransition(tagClose));
+        tagLoop.AddTransition(new MyWildcardTransition(tagLoop));
+        tagClose.AddTransition(new MyAtomTransition(tagStop, '>'));
+
+        // CAB : ']' ;
+        var cabStart = New(MyStateType.RuleStart, 2);
+        var cabStop = New(MyStateType.RuleStop, 2);
+        cabStart.AddTransition(new MyAtomTransition(cabStop, ']'));
+
+        modeStart.AddTransition(new MyEpsilonTransition(htmlStart));
+        modeStart.AddTransition(new MyEpsilonTransition(cabStart));
+
+        return new MyATN
+        {
+            grammarType = MyATNType.Lexer,
+            maxTokenType = 2,
+            allStates = states.ToArray(),
+            start = [htmlStart, tagStart, cabStart],
+            ruleToStopState = [htmlStop, tagStop, cabStop],
+            ruleToTokenType = [1, 0, 2],
+            modeToStartState = [modeStart]
+        };
+    }
+
+    private static MyATN BuildMutuallyRecursiveAtn()
+    {
+        var states = new List<MyATNState>();
+        MyATNState New(MyStateType type, int rule)
+        {
+            var state = State(type, rule, states.Count);
+            states.Add(state);
+            return state;
+        }
+
+        var modeStart = New(MyStateType.TokenStart, -1);
+
+        // TOKEN : '<' A '>' ;
+        var tokenStart = New(MyStateType.RuleStart, 0);
+        var tokenCall = New(MyStateType.Basic, 0);
+        var tokenClose = New(MyStateType.Basic, 0);
+        var tokenStop = New(MyStateType.RuleStop, 0);
+        tokenStart.AddTransition(new MyAtomTransition(tokenCall, '<'));
+        tokenCall.AddTransition(new MyRuleTransition(tokenClose, 1, 0));
+        tokenClose.AddTransition(new MyAtomTransition(tokenStop, '>'));
+
+        // fragment A : 'a' B? ;
+        var aStart = New(MyStateType.RuleStart, 1);
+        var aChoice = New(MyStateType.Basic, 1);
+        var aStop = New(MyStateType.RuleStop, 1);
+        aStart.AddTransition(new MyAtomTransition(aChoice, 'a'));
+        aChoice.AddTransition(new MyRuleTransition(aStop, 2, 0));
+        aChoice.AddTransition(new MyEpsilonTransition(aStop));
+
+        // fragment B : 'b' A? ;
+        var bStart = New(MyStateType.RuleStart, 2);
+        var bChoice = New(MyStateType.Basic, 2);
+        var bStop = New(MyStateType.RuleStop, 2);
+        bStart.AddTransition(new MyAtomTransition(bChoice, 'b'));
+        bChoice.AddTransition(new MyRuleTransition(bStop, 1, 0));
+        bChoice.AddTransition(new MyEpsilonTransition(bStop));
+
+        modeStart.AddTransition(new MyEpsilonTransition(tokenStart));
+
+        return new MyATN
+        {
+            grammarType = MyATNType.Lexer,
+            maxTokenType = 1,
+            allStates = states.ToArray(),
+            start = [tokenStart, aStart, bStart],
+            ruleToStopState = [tokenStop, aStop, bStop],
+            ruleToTokenType = [1, 0, 0],
+            modeToStartState = [modeStart]
+        };
+    }
 
     private static MyATN BuildAtn(int modeCount, params RuleSpec[] rules)
     {
@@ -185,6 +338,30 @@ public class LexerCommandTests
 
         atn.allStates = states.ToArray();
         return atn;
+    }
+
+    [Fact]
+    public void WarmDfaRetainsTypeRemappedAcceptCandidates()
+    {
+        var lexer = new LexerAtnSimulator(BuildAtn(
+            modeCount: 1,
+            new RuleSpec(0, 't', 3,
+                new MyLexerAction(MyLexerActionType.Type, 42, 0)),
+            new RuleSpec(0, 't', 7)));
+
+        var remapped = lexer.NextToken(
+            "t", new LexerAtnSimulator.Cursor(), new HashSet<int> { 42 });
+        Assert.Equal(42, remapped.Type);
+        var warm = lexer.GetDfaStatistics();
+
+        var secondRule = lexer.NextToken(
+            "t", new LexerAtnSimulator.Cursor(), new HashSet<int> { 7 });
+        Assert.Equal(7, secondRule.Type);
+        var final = lexer.GetDfaStatistics();
+
+        Assert.Equal(warm.States, final.States);
+        Assert.Equal(warm.CacheMisses, final.CacheMisses);
+        Assert.True(final.CacheHits > warm.CacheHits);
     }
 
     private static MyATNState State(MyStateType type, int ruleIndex, int number) =>
