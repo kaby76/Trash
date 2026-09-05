@@ -114,6 +114,12 @@ used for grammars containing semantic-predicate transitions. Use
 `--parser-dfa-cache-states` and `--parser-dfa-cache-mb`. The public
 `ParserPredictionCache.Clear()` API explicitly discards learned data.
 
+An experimental conservative LL(1) decision-table bypass is retained in the
+code and differential performance tests, but is disabled in production because
+the DOT corpus did not show a reliable improvement. All production decisions
+currently retain adaptive ALL(*) prediction; `--parser-stats` consequently
+reports zero LL(1) bypasses.
+
 ## Usage
 
     dotnet trash parse (<string> | <options>)*

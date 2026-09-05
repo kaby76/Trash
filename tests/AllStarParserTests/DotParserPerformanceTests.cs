@@ -173,6 +173,51 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void DotLl1BypassMatchesAllStarSimulation()
+    {
+        var fixture = Prepare(GenerateDotInput(100));
+        var statistics = new ParserStatistics();
+
+        var bypassEvents = AllStarParser.ParseWithLl1(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            statistics);
+        var simulatorEvents = AllStarParser.Parse(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule);
+
+        Assert.NotNull(bypassEvents);
+        Assert.Equal(simulatorEvents, bypassEvents);
+        Assert.True(statistics.Ll1Bypasses > 0);
+        Assert.True(statistics.AdaptivePredictionCalls > 0);
+    }
+
+    [Fact]
+    [Trait("Category", "Performance")]
+    public void GeneratedDotReportsLl1BypassPerformance()
+    {
+        var fixture = Prepare(GenerateDotInput(8_000));
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+        Assert.True(AllStarParser.RecognizeWithLl1(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+
+        var simulator = Measure(() =>
+        {
+            Assert.True(AllStarParser.Recognize(
+                fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+            return null;
+        }, fixture.OnChannelTokenCount);
+        var bypass = Measure(() =>
+        {
+            Assert.True(AllStarParser.RecognizeWithLl1(
+                fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+            return null;
+        }, fixture.OnChannelTokenCount);
+
+        Report("Generated DOT without LL(1) bypass", simulator);
+        Report("Generated DOT with LL(1) bypass", bypass);
+    }
+
+    [Fact]
     public void SharedDotDfaReusesStatesAndCanBeCleared()
     {
         var fixture = Prepare(GenerateDotInput(100));

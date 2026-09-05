@@ -65,6 +65,12 @@ public sealed class ParserStatistics
         GetDecision(decision).DfaEdgeHits++;
     }
 
+    internal void RecordLl1Bypass(int decision)
+    {
+        Ll1Bypasses++;
+        GetDecision(decision).Ll1Bypasses++;
+    }
+
     internal void RecordDfaMiss(int decision)
     {
         DfaEdgeMisses++;
@@ -138,16 +144,18 @@ public sealed class ParserStatistics
         };
 
         var busiest = _decisions
-            .OrderByDescending(pair => pair.Value.Calls)
+            .OrderByDescending(pair =>
+                pair.Value.Calls + pair.Value.Ll1Bypasses)
             .ThenBy(pair => pair.Key)
             .Take(10)
             .ToList();
         if (busiest.Count > 0)
         {
             lines.Add($"{prefix}busiest decisions " +
-                "(decision:calls,hits,misses,LL-fallbacks,mean/max-lookahead):");
+                "(decision:adaptive,LL1,hits,misses,LL-fallbacks,mean/max-lookahead):");
             lines.AddRange(busiest.Select(pair =>
                 $"{prefix}  {pair.Key}:{pair.Value.Calls:N0}," +
+                $"{pair.Value.Ll1Bypasses:N0}," +
                 $"{pair.Value.DfaEdgeHits:N0},{pair.Value.DfaEdgeMisses:N0}," +
                 $"{pair.Value.FullContextFallbacks:N0}," +
                 $"{pair.Value.MeanLookahead:F2}/{pair.Value.MaximumLookahead:N0}"));
@@ -159,6 +167,7 @@ public sealed class ParserStatistics
 public sealed class DecisionStatistics
 {
     public long Calls { get; internal set; }
+    public long Ll1Bypasses { get; internal set; }
     public long DfaEdgeHits { get; internal set; }
     public long DfaEdgeMisses { get; internal set; }
     public long FullContextFallbacks { get; internal set; }
