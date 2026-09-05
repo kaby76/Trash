@@ -24,6 +24,8 @@ public class Grun
     private int _fileCount;
     private readonly List<BundleParse> _bundleParses = new();
     private readonly AllStarAtnParser.ParserPredictionCache _parserPredictionCache;
+    private readonly AllStarAtnParser.InterpRunTimings _interpTimings = new();
+    private readonly AllStarAtnParser.InterpRuntimeCache _interpRuntimeCache = new();
 
     private sealed record BundleParse(string InputName,
         List<AntlrJson.ParsingResultSet> Results, string Diagnostics);
@@ -35,7 +37,8 @@ public class Grun
         {
             _parserPredictionCache = new AllStarAtnParser.ParserPredictionCache(
                 co.ParserDfaCacheStates,
-                checked((long)co.ParserDfaCacheMegabytes * 1024 * 1024));
+                checked((long)co.ParserDfaCacheMegabytes * 1024 * 1024),
+                synchronizeAccess: false);
         }
     }
 
@@ -293,6 +296,8 @@ public class Grun
     private void PrintPerfSummary(double overallSeconds)
     {
         if (config.Quiet) return;
+        if (config.InterpTimings && _interpTimings.Files > 0)
+            System.Console.Error.WriteLine(_interpTimings.Format());
         var warmTokens = _totalTokens - _firstFileTokens;
         var warmSeconds = _totalParseSeconds - _firstFileParseSeconds;
         var warmTps = (_fileCount > 1 && warmSeconds > 0)
@@ -360,16 +365,18 @@ public class Grun
                     resolvedPInterp, resolvedLInterp, txt, input_name,
                     config.LineNumbers, config.ContextAwareLexing,
                     config.LexerStats, config.LexerOverlaps, interpTimings,
-                    parserStatistics, _parserPredictionCache);
+                    parserStatistics, _parserPredictionCache,
+                    _interpRuntimeCache);
                 if (interpTimings != null)
-                    System.Console.Error.WriteLine(interpTimings.Format(prefix));
+                    _interpTimings.Add(interpTimings);
                 interpLabel = "ALL(*)";
             }
             else
             {
                 (rs, interpTokenCount) = EarleyAtnParser.InterpRunner.Run(
                     resolvedPInterp, resolvedLInterp, txt, input_name,
-                    config.LineNumbers, config.LexerStats, config.LexerOverlaps);
+                    config.LineNumbers, config.LexerStats, config.LexerOverlaps,
+                    _interpRuntimeCache);
                 interpLabel = "Earley";
             }
             DateTime interpAfter = DateTime.Now;

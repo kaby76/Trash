@@ -54,7 +54,7 @@ public sealed class AllStarSimulator
     public HashSet<int> GetExpectedTokenTypes(
         MyATNState state, PredictionContext callerCtx, int precedence)
     {
-        if (_sharedCache != null)
+        if (_sharedCache?.SynchronizeAccess == true)
         {
             lock (_sharedCache.SyncRoot)
                 return GetExpectedTokenTypesCore(state, callerCtx, precedence);
@@ -96,7 +96,7 @@ public sealed class AllStarSimulator
     public int AdaptivePredict(int decision, int[] tokenTypes, int startPos,
                                PredictionContext callerCtx, int precedence)
     {
-        if (_sharedCache != null)
+        if (_sharedCache?.SynchronizeAccess == true)
         {
             lock (_sharedCache.SyncRoot)
                 return AdaptivePredictCore(
@@ -569,7 +569,7 @@ public sealed class AllStarSimulator
 
     internal void CaptureRetainedStatistics()
     {
-        if (_sharedCache != null)
+        if (_sharedCache?.SynchronizeAccess == true)
         {
             lock (_sharedCache.SyncRoot)
                 CaptureRetainedStatisticsCore();

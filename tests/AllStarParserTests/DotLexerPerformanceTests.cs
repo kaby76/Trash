@@ -171,10 +171,67 @@ public sealed class DotLexerPerformanceTests(ITestOutputHelper output)
         Assert.True(timings.Tokenization >= TimeSpan.Zero);
         Assert.True(timings.Parsing >= TimeSpan.Zero);
         Assert.True(timings.TreeBuilding >= TimeSpan.Zero);
+        Assert.True(timings.ResultConstruction >= TimeSpan.Zero);
+        Assert.Equal(1, timings.Files);
         Assert.Contains("Tokenization:", timings.Format());
+        Assert.Contains("Result construction:", timings.Format());
         Assert.NotNull(timings.LexerDfa);
         Assert.Contains("Lexer DFA storage:", timings.Format());
         Assert.Contains("Lexer DFA fast path:", timings.Format());
+
+        var aggregate = new AllStarAtnParser.InterpRunTimings();
+        aggregate.Add(timings);
+        aggregate.Add(timings);
+        Assert.Equal(2, aggregate.Files);
+        Assert.Equal(timings.Parsing + timings.Parsing, aggregate.Parsing);
+    }
+
+    [Fact]
+    public void AllStarRuntimeCacheLoadsInterpPairOnlyOnce()
+    {
+        var interpDir = Path.Combine(AppContext.BaseDirectory, "TestData", "interp");
+        var parserPath = Path.Combine(interpDir, "Abnf.interp");
+        var lexerPath = Path.Combine(interpDir, "AbnfLexer.interp");
+        var cache = new AllStarAtnParser.InterpRuntimeCache();
+        var first = new AllStarAtnParser.InterpRunTimings();
+        var second = new AllStarAtnParser.InterpRunTimings();
+
+        var firstResult = AllStarAtnParser.InterpRunner.Run(
+            parserPath, lexerPath, "rule = %x41\r\n", "first.abnf", false,
+            timings: first, runtimeCache: cache);
+        var secondResult = AllStarAtnParser.InterpRunner.Run(
+            parserPath, lexerPath, "other = %x42\r\n", "second.abnf", false,
+            timings: second, runtimeCache: cache);
+
+        Assert.NotNull(firstResult.Result);
+        Assert.NotNull(secondResult.Result);
+        Assert.Equal(TimeSpan.Zero, second.InterpFileReading);
+        Assert.Equal(TimeSpan.Zero, second.InterpParsing);
+        Assert.Equal(TimeSpan.Zero, second.AtnDeserialization);
+        Assert.Equal(TimeSpan.Zero, second.Initialization);
+        Assert.True(second.Tokenization >= TimeSpan.Zero);
+        Assert.True(second.Parsing >= TimeSpan.Zero);
+        Assert.Equal(1, cache.Count);
+    }
+
+    [Fact]
+    public void EarleyRuntimeCacheLoadsInterpPairOnlyOnce()
+    {
+        var interpDir = Path.Combine(AppContext.BaseDirectory, "TestData", "interp");
+        var parserPath = Path.Combine(interpDir, "Abnf.interp");
+        var lexerPath = Path.Combine(interpDir, "AbnfLexer.interp");
+        var cache = new AllStarAtnParser.InterpRuntimeCache();
+
+        var first = EarleyAtnParser.InterpRunner.Run(
+            parserPath, lexerPath, "rule = %x41\r\n", "first.abnf", false,
+            runtimeCache: cache);
+        var second = EarleyAtnParser.InterpRunner.Run(
+            parserPath, lexerPath, "other = %x42\r\n", "second.abnf", false,
+            runtimeCache: cache);
+
+        Assert.NotNull(first.Result);
+        Assert.NotNull(second.Result);
+        Assert.Equal(1, cache.Count);
     }
 
     private static string GenerateDotInput(int edgeCount)

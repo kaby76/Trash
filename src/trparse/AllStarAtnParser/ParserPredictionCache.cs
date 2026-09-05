@@ -23,7 +23,8 @@ public sealed class ParserPredictionCache
 
     public ParserPredictionCache(
         int maximumStates = 100_000,
-        long maximumEstimatedBytes = 64L * 1024 * 1024)
+        long maximumEstimatedBytes = 64L * 1024 * 1024,
+        bool synchronizeAccess = true)
     {
         if (maximumStates < 0)
             throw new ArgumentOutOfRangeException(nameof(maximumStates));
@@ -31,11 +32,13 @@ public sealed class ParserPredictionCache
             throw new ArgumentOutOfRangeException(nameof(maximumEstimatedBytes));
         MaximumStates = maximumStates;
         MaximumEstimatedBytes = maximumEstimatedBytes;
+        SynchronizeAccess = synchronizeAccess;
         ContextArena = new PredictionContextArena(() => TryRetainContext());
     }
 
     public int MaximumStates { get; }
     public long MaximumEstimatedBytes { get; }
+    public bool SynchronizeAccess { get; }
     public int RetainedStates => _retainedStates;
     public int RetainedTransitions => _retainedTransitions;
     public long EstimatedRetainedBytes => _estimatedBytes;

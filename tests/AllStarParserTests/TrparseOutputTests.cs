@@ -63,6 +63,7 @@ public sealed class TrparseOutputTests
             startInfo.ArgumentList.Add("--allstar");
             startInfo.ArgumentList.Add("--no-output");
             startInfo.ArgumentList.Add("--parser-stats");
+            startInfo.ArgumentList.Add("--interp-timings");
             startInfo.ArgumentList.Add("-L");
             startInfo.ArgumentList.Add(interpDirectory);
             startInfo.ArgumentList.Add(first);
@@ -81,6 +82,8 @@ public sealed class TrparseOutputTests
             Assert.Matches(
                 @"shared DFA at parse start: [1-9][0-9,]* states",
                 stderr);
+            Assert.Matches(
+                @"ALL\(\*\) stage timings \(2 files\):", stderr);
         }
         finally
         {
