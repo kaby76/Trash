@@ -13,6 +13,10 @@ public class Config
     [Option("no-prs", Required = false, HelpText = "Output parse errors only. No parsing result sets.")]
     public bool NoParsingResultSets { get; set; }
 
+    [Option("no-output", Required = false,
+        HelpText = "Parse inputs and build parse trees, but do not write parsing results to stdout. Performance and error diagnostics are still written to stderr.")]
+    public bool NoOutput { get; set; }
+
     [Option("fmt", Required = false, HelpText = "Output formatted parsing results set.")]
     public bool Format { get; set; }
 

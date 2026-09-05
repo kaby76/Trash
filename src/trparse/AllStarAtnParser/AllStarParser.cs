@@ -26,6 +26,24 @@ public static class AllStarParser
     public static List<ParseEvent> Parse(
         MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex)
     {
+        return ParseCore(atn, allTokens, startRuleIndex, buildEvents: true).Events;
+    }
+
+    /// <summary>
+    /// Recognize an already-tokenized input without constructing parse events
+    /// or a parse tree. This isolates parser prediction and committed ATN
+    /// traversal for performance measurement.
+    /// </summary>
+    public static bool Recognize(
+        MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex)
+    {
+        return ParseCore(atn, allTokens, startRuleIndex, buildEvents: false).Success;
+    }
+
+    private static (bool Success, List<ParseEvent> Events) ParseCore(
+        MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex,
+        bool buildEvents)
+    {
         if (atn == null) throw new ArgumentNullException(nameof(atn));
         if (startRuleIndex < 0 || startRuleIndex >= atn.start.Length)
             throw new ArgumentOutOfRangeException(nameof(startRuleIndex));
@@ -49,11 +67,11 @@ public static class AllStarParser
         for (int i = 0; i < atn.decisionToState.Length; i++)
             stateToDecision[atn.decisionToState[i].stateNumber] = i;
 
-        var events = new List<ParseEvent>();
+        var events = buildEvents ? new List<ParseEvent>() : null;
         var instance = new ParserInstance(atn, allTokens, onIdx, tokenTypes, stateToDecision);
         if (!instance.ParseRule(startRuleIndex, events, PredictionContext.EMPTY))
-            return null;
-        return events;
+            return (false, null);
+        return (true, events);
     }
 
     /// <summary>
@@ -138,7 +156,7 @@ public static class AllStarParser
                               PredictionContext callerCtx, int precedence = 0)
         {
             bool isRecursion = _atn.start[ruleIndex].isPrecedenceRule;
-            events.Add(isRecursion ? ParseEvent.EnterRecursionRule(ruleIndex) : ParseEvent.EnterRule(ruleIndex));
+            events?.Add(isRecursion ? ParseEvent.EnterRecursionRule(ruleIndex) : ParseEvent.EnterRule(ruleIndex));
             var state = _atn.start[ruleIndex];
 
             while (state.stateType != MyStateType.RuleStop)
@@ -182,7 +200,7 @@ public static class AllStarParser
                     // path from the precedence suffix loop, wrap the accumulated context as the
                     // first child of a fresh rule element (PushNewRecursionContext equivalent).
                     if (state.isPrecedenceDecision && nextState.stateType != MyStateType.LoopEnd)
-                        events.Add(ParseEvent.PushRecursionContext(state.ruleIndex));
+                        events?.Add(ParseEvent.PushRecursionContext(state.ruleIndex));
                     state = nextState;
                 }
                 else if (state.transitions.Count == 1)
@@ -236,7 +254,7 @@ public static class AllStarParser
                 }
             }
 
-            events.Add(isRecursion ? ParseEvent.ExitRecursionRule(ruleIndex) : ParseEvent.ExitRule(ruleIndex));
+            events?.Add(isRecursion ? ParseEvent.ExitRecursionRule(ruleIndex) : ParseEvent.ExitRule(ruleIndex));
             return true;
         }
 
@@ -251,7 +269,7 @@ public static class AllStarParser
                 if (AllStarParser.Trace)
                     Console.Error.WriteLine(
                         $"[ALLSTAR] consume pos={Pos} tok={contextualToken.Type} '{contextualToken.Text}'");
-                events.Add(ParseEvent.Consume(contextualTokenIndex));
+                events?.Add(ParseEvent.Consume(contextualTokenIndex));
                 Pos++;
                 return true;
             }
@@ -261,7 +279,7 @@ public static class AllStarParser
             if (!TerminalMatches(tr, tok.Type)) return false;
             if (AllStarParser.Trace)
                 Console.Error.WriteLine($"[ALLSTAR] consume pos={Pos} tok={tok.Type} '{tok.Text}'");
-            events.Add(ParseEvent.Consume(allTokIdx));
+            events?.Add(ParseEvent.Consume(allTokIdx));
             Pos++;
             return true;
         }
