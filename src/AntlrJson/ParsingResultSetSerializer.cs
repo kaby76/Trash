@@ -451,7 +451,12 @@ public class ParsingResultSetSerializer : JsonConverter<ParsingResultSet[]>
                 writer.WriteEndArray();
             }
 
-            if (tuple.Nodes != null && tuple.Nodes.Any())
+            if (tuple.NodeProvider != null && tuple.NodeProvider.Count > 0)
+            {
+                writer.WritePropertyName("Nodes");
+                tuple.NodeProvider.WriteNodes(writer);
+            }
+            else if (tuple.Nodes != null && tuple.Nodes.Any())
             {
                 writer.WritePropertyName("Nodes");
                 writer.WriteStartArray();

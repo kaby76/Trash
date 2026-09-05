@@ -158,7 +158,7 @@ public static class InterpRunner
         }
 
         timer.Restart();
-        var domTree = DomBuilder.Build(
+        var compactTree = CompactTreeBuilder.Build(
             events, rawTokens,
             parserInterp.RuleNames,
             parserInterp.SymbolicNames,
@@ -193,7 +193,7 @@ public static class InterpRunner
         var result = new ParsingResultSet
         {
             FileName = fileName,
-            Nodes = new[] { (UnvParseTreeNode)domTree },
+            NodeProvider = compactTree,
             Parser = myParser,
             Lexer = myLexer
         };

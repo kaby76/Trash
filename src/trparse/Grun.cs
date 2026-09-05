@@ -185,6 +185,8 @@ public class Grun
 
             foreach (var d in data)
             {
+                if (d.NodeProvider != null && !d.HasMaterializedNodes)
+                    continue;
                 foreach (var t1 in d.Nodes)
                 {
                     var count = 0;

@@ -60,13 +60,25 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
             fixture.ParserInterp.LiteralNames,
             fixture.LexerInterp.RuleNames,
             lineNumbers: false), fixture.OnChannelTokenCount);
+        var compactTreeBuilding = Measure(() => CompactTreeBuilder.Build(
+            events, fixture.Tokens,
+            fixture.ParserInterp.RuleNames,
+            fixture.ParserInterp.SymbolicNames,
+            fixture.ParserInterp.LiteralNames,
+            fixture.LexerInterp.RuleNames,
+            lineNumbers: false), fixture.OnChannelTokenCount);
 
         Report("Generated DOT recognition only", recognition);
         Report("Generated DOT parser + events", withEvents);
         Report("Generated DOT tree building only", treeBuilding);
+        Report("Generated DOT compact tree building only", compactTreeBuilding);
 
         Assert.True(Statistics(recognition.Select(s => s.TokensPerSecond)).Mean >= 25_000,
             "Generated DOT recognition fell below the conservative parser baseline.");
+        Assert.True(
+            Statistics(compactTreeBuilding.Select(s => (double)s.AllocatedBytes)).Mean <
+            Statistics(treeBuilding.Select(s => (double)s.AllocatedBytes)).Mean,
+            "Compact tree construction should allocate less than mutable DOM construction.");
     }
 
     [Fact]
