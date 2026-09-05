@@ -58,4 +58,33 @@ public sealed class PredictionContextArenaTests
         Assert.Same(first, second);
         Assert.Equal(2, first.Size);
     }
+
+    [Fact]
+    public void MergeWorkspaceMemoizesPairsAndPreservesSortedEntries()
+    {
+        var arena = new PredictionContextArena();
+        var parentA = arena.GetChild(PredictionContext.EMPTY, 1);
+        var parentB = arena.GetChild(PredictionContext.EMPTY, 2);
+        var left = arena.GetArray(
+            new PredictionContext[] { parentA, parentA },
+            new[] { 10, 30 }, new[] { 0, 0 });
+        var right = arena.GetArray(
+            new PredictionContext[] { parentB, parentB },
+            new[] { 10, 20 }, new[] { 0, 0 });
+        var workspace = new PredictionContextMergeWorkspace(arena);
+
+        var first = workspace.Merge(left, right);
+        var second = workspace.Merge(right, left);
+
+        Assert.Same(first, second);
+        Assert.Equal(1, workspace.CacheHits);
+        Assert.Equal(new[] { 10, 20, 30 },
+            Enumerable.Range(0, first.Size)
+                .Select(first.GetReturnState).ToArray());
+        Assert.Equal(2, first.GetParent(0).Size);
+
+        workspace.Reset();
+        Assert.Equal(0, workspace.CacheHits);
+        Assert.Same(first, workspace.Merge(left, right));
+    }
 }

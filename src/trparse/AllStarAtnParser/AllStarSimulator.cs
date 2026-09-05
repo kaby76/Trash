@@ -21,6 +21,7 @@ public sealed class AllStarSimulator
     private readonly Stack<ATNConfig> _closureStack = new();
     private readonly HashSet<(int stateNum, int alt, int context, int precedence)> _closureBusy = new();
     private readonly PredictionContextArena _contextArena;
+    private readonly PredictionContextMergeWorkspace _mergeWorkspace;
     private readonly Dictionary<(int decision, int precedence), DecisionDfa> _decisionDfas;
 
     public AllStarSimulator(
@@ -37,6 +38,7 @@ public sealed class AllStarSimulator
         }
         _decisionDfas = _sharedCache?.DecisionDfas ?? new();
         _contextArena = _sharedCache?.ContextArena ?? new PredictionContextArena();
+        _mergeWorkspace = new PredictionContextMergeWorkspace(_contextArena);
         if (_statistics != null && _sharedCache != null)
         {
             _statistics.SharedDfaStatesAtStart = _sharedCache.RetainedStates;
@@ -63,8 +65,9 @@ public sealed class AllStarSimulator
     private HashSet<int> GetExpectedTokenTypesCore(
         MyATNState state, PredictionContext callerCtx, int precedence)
     {
+        _mergeWorkspace.Reset();
         _closureBusy.Clear();
-        var configs = new ATNConfigSet(_statistics, _contextArena);
+        var configs = NewConfigSet();
         int precedenceRuleIndex = state.isPrecedenceDecision
             ? state.ruleIndex
             : -1;
@@ -107,6 +110,7 @@ public sealed class AllStarSimulator
         int decision, int[] tokenTypes, int startPos,
         PredictionContext callerCtx, int precedence)
     {
+        _mergeWorkspace.Reset();
         long lookaheadAtStart = _statistics?.BeginPrediction(decision) ?? 0;
         try
         {
@@ -179,7 +183,7 @@ public sealed class AllStarSimulator
         if (dfa.Start == null)
         {
             _closureBusy.Clear();
-            var initial = new ATNConfigSet(_statistics, _contextArena);
+            var initial = NewConfigSet();
             for (int i = 0; i < decisionState.transitions.Count; i++)
                 Closure(new ATNConfig(decisionState.transitions[i].target, i + 1,
                                       PredictionContext.EMPTY, precedence),
@@ -270,7 +274,7 @@ public sealed class AllStarSimulator
         if (returnState == PredictionContext.EMPTY_RETURN_STATE) return false;
 
         _closureBusy.Clear();
-        var continuation = new ATNConfigSet(_statistics, _contextArena);
+        var continuation = NewConfigSet();
         Closure(new ATNConfig(_atn.allStates[returnState], alt, callerCtx.Parent,
                               callerCtx.GetPrecedence(0)),
                 continuation, fullCtx: true, precedence,
@@ -317,7 +321,7 @@ public sealed class AllStarSimulator
                         int precedenceRuleIndex = -1)
     {
         _closureBusy.Clear();
-        var initial = new ATNConfigSet(_statistics, _contextArena);
+        var initial = NewConfigSet();
 
         for (int i = 0; i < decisionState.transitions.Count; i++)
         {
@@ -413,7 +417,7 @@ public sealed class AllStarSimulator
                                          bool fullCtx, int precedence,
                                          int precedenceRuleIndex = -1)
     {
-        var reach = new ATNConfigSet(_statistics, _contextArena);
+        var reach = NewConfigSet();
         foreach (var cfg in configs.Configs)
         {
             if (_statistics != null)
@@ -426,7 +430,7 @@ public sealed class AllStarSimulator
         }
 
         _closureBusy.Clear();
-        var closed = new ATNConfigSet(_statistics, _contextArena);
+        var closed = NewConfigSet();
         foreach (var c in reach.Configs)
             Closure(c, closed, fullCtx, precedence, precedenceRuleIndex);
         return closed;
@@ -522,7 +526,7 @@ public sealed class AllStarSimulator
         int tok = tokenTypes[startPos];
 
         _closureBusy.Clear();
-        var initial = new ATNConfigSet(_statistics, _contextArena);
+        var initial = NewConfigSet();
         for (int i = 0; i < decisionState.transitions.Count; i++)
         {
             var target = decisionState.transitions[i].target;
@@ -543,6 +547,9 @@ public sealed class AllStarSimulator
     private static bool IsTerminal(MyTransition t) =>
         t is MyAtomTransition || t is MySetTransition || t is MyNotSetTransition ||
         t is MyWildcardTransition || t is MyRangeTransition;
+
+    private ATNConfigSet NewConfigSet() =>
+        new(_statistics, _contextArena, _mergeWorkspace);
 
     internal SingletonPredictionContext GetChildContext(PredictionContext parent,
                                                         int returnState,

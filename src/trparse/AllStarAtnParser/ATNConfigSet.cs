@@ -15,6 +15,7 @@ public sealed class ATNConfigSet
 {
     private readonly ParserStatistics _statistics;
     private readonly PredictionContextArena _contextArena;
+    private readonly PredictionContextMergeWorkspace _mergeWorkspace;
     private readonly Dictionary<(int stateNum, int alt, int precedence), int> _configIndex = new();
     private readonly List<ATNConfig> _configs = new();
 
@@ -22,10 +23,13 @@ public sealed class ATNConfigSet
     public bool IsEmpty => _configs.Count == 0;
 
     public ATNConfigSet(ParserStatistics statistics = null,
-        PredictionContextArena contextArena = null)
+        PredictionContextArena contextArena = null,
+        PredictionContextMergeWorkspace mergeWorkspace = null)
     {
         _statistics = statistics;
         _contextArena = contextArena ?? new PredictionContextArena();
+        _mergeWorkspace = mergeWorkspace ??
+            new PredictionContextMergeWorkspace(_contextArena);
     }
 
     // Add a config. Returns true if it was actually added (not a duplicate).
@@ -39,14 +43,16 @@ public sealed class ATNConfigSet
             var existing = _configs[index];
             long creations = _contextArena.Creations;
             long hits = _contextArena.Hits;
-            var merged = PredictionContextMerger.Merge(
-                _contextArena, existing.Context, c.Context);
+            long mergeHits = _mergeWorkspace.CacheHits;
+            var merged = _mergeWorkspace.Merge(existing.Context, c.Context);
             if (_statistics != null)
             {
                 _statistics.PredictionContextCreations +=
                     _contextArena.Creations - creations;
                 _statistics.PredictionContextCacheHits +=
                     _contextArena.Hits - hits;
+                _statistics.PredictionContextMergeCacheHits +=
+                    _mergeWorkspace.CacheHits - mergeHits;
             }
             if (ReferenceEquals(merged, existing.Context)) return false;
             _configs[index] = existing.WithStateAndContext(existing.State, merged);
