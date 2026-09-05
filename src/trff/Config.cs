@@ -12,7 +12,7 @@ namespace Trash
         public bool Verbose { get; set; }
 
 	[Option("version", Required = false)]
-	public string Version { get; set; } = "3.2.0";
+	public string Version { get; set; } = "3.3.0";
 
         [Value(0, Required = false, Default = 1)]
         public int K { get; set; }
