@@ -2,8 +2,8 @@
   "profiles": {
     "trparse": {
       "commandName": "Project",
-      "commandLineArgs": "-L . --tokens ../examples/dml_select.sql",
-      "workingDirectory": "C:\\msys64\\home\\Kenne\\issues\\trash-release-2.6.0\\tests\\grammars-v4\\Positive-Technologies\\interp"
+      "commandLineArgs": "-L . --allstar --no-output ../examples/cluster.dot ../examples/crazy.dot ../examples/graphviz-tests/1864.dot",
+      "workingDirectory": "C:\\msys64\\home\\Kenne\\grammars-v4\\dot\\interp"
     }
   }
 }

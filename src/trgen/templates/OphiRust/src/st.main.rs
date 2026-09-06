@@ -106,7 +106,12 @@ fn parse_input(
     // supported by this runtime's API; use a debugger or tracing instead.
     let _ = flags.show_tokens;
 
+    // OphiRust fills the token buffer eagerly in CommonTokenStream::new.
+    // Measure that work so PT/TPS are comparable with targets whose token
+    // streams lex lazily while the start rule is running.
+    let lex_start = Instant::now();
     let token_stream = CommonTokenStream::new(lexer);
+    let lex_elapsed = lex_start.elapsed();
     let mut parser = <ophirust_parser_name>::new(token_stream);
     parser.remove_error_listeners();
     parser.add_error_listener(CountingErrorListener {
@@ -114,10 +119,10 @@ fn parse_input(
         state: Arc::clone(&parse_state),
     });
 
-    let start = Instant::now();
+    let parse_start = Instant::now();
     let tree = parser.<ophirust_start_symbol>().expect("parser initialization failed");
-    let elapsed = start.elapsed();
-    let parse_seconds = elapsed.as_secs_f64();
+    let parse_elapsed = parse_start.elapsed();
+    let parse_seconds = lex_elapsed.as_secs_f64() + parse_elapsed.as_secs_f64();
 
     // Get token count from the buffered token stream.
     // IntStream::size() returns the total number of tokens (including EOF).
