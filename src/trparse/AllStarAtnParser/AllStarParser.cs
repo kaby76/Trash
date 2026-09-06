@@ -110,7 +110,7 @@ public static class AllStarParser
     /// </summary>
     public static List<ParseEvent> ParseContextAware(
         MyATN parserAtn, MyATN lexerAtn, string input, int startRuleIndex,
-        out List<LexerToken> allTokens,
+        out TokenStore allTokens,
         LexerStatistics lexerStatistics = null,
         ParserStatistics parserStatistics = null,
         ParserPredictionCache predictionCache = null)
@@ -122,7 +122,7 @@ public static class AllStarParser
 
         var metadata = CommittedAtnMetadata.For(parserAtn);
 
-        allTokens = new List<LexerToken>();
+        allTokens = new TokenStore(input);
         var events = new List<ParseEvent>();
         var instance = new ParserInstance(
             parserAtn, lexerAtn, input, allTokens, metadata,
@@ -141,7 +141,8 @@ public static class AllStarParser
     private sealed class ParserInstance
     {
         private readonly MyATN _atn;
-        private readonly List<LexerToken> _allTokens;
+        private readonly IReadOnlyList<LexerToken> _allTokens;
+        private readonly TokenStore _contextTokens;
         private readonly List<int> _onIdx;  // on-channel pos → all-token index
         private readonly int[] _tokenTypes;
         private readonly CommittedAtnMetadata _metadata;
@@ -163,7 +164,7 @@ public static class AllStarParser
                               bool enableLl1Bypass = true)
         {
             _atn = atn;
-            _allTokens = allTokens as List<LexerToken> ?? allTokens.ToList();
+            _allTokens = allTokens;
             _onIdx = onIdx as List<int> ?? onIdx.ToList();
             _tokenTypes = tokenTypes;
             _metadata = metadata;
@@ -175,7 +176,7 @@ public static class AllStarParser
         }
 
         public ParserInstance(MyATN parserAtn, MyATN lexerAtn, string input,
-                              List<LexerToken> allTokens,
+                              TokenStore allTokens,
                               CommittedAtnMetadata metadata,
                               LexerStatistics lexerStatistics,
                               ParserStatistics parserStatistics = null,
@@ -183,6 +184,7 @@ public static class AllStarParser
         {
             _atn = parserAtn;
             _allTokens = allTokens;
+            _contextTokens = allTokens;
             _onIdx = new List<int>();
             _tokenTypes = Array.Empty<int>();
             _metadata = metadata;
@@ -403,7 +405,7 @@ public static class AllStarParser
                 var token = _lexer.NextToken(_input, _lexerCursor, expected);
                 int index = _allTokens.Count;
                 token.TokenIndex = index;
-                _allTokens.Add(token);
+                _contextTokens.Add(token);
                 if (token.Channel == DEFAULT_CHANNEL || token.Type == EOF_TYPE)
                 {
                     _onIdx.Add(index);

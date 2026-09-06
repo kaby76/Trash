@@ -99,7 +99,7 @@ public static class InterpRunner
             ? new LexerStatistics()
             : null;
 
-        List<LexerToken> rawTokens;
+        TokenStore rawTokens;
         List<ParseEvent> events;
         if (contextAwareLexing)
         {
@@ -239,7 +239,7 @@ public static class InterpRunner
     // implicit token type to the literal used by the parser rule. Reconcile that
     // duplicate so the independently interpreted lexer and parser share a vocabulary.
     internal static void ReconcileLiteralTokenTypes(
-        List<LexerToken> tokens, string[] lexerSymbolicNames,
+        IReadOnlyList<LexerToken> tokens, string[] lexerSymbolicNames,
         string[] lexerLiteralNames, string[] parserLiteralNames)
     {
         var remap = new Dictionary<int, int>();
@@ -271,7 +271,8 @@ public static class InterpRunner
             if (!string.Equals(token.Text, symbolicName, StringComparison.OrdinalIgnoreCase))
                 continue;
             token.Type = parserType;
-            tokens[i] = token;
+            if (tokens is List<LexerToken> list)
+                list[i] = token;
         }
     }
 }

@@ -33,7 +33,7 @@ public sealed class DotLexerPerformanceTests(ITestOutputHelper output)
             token => Assert.False(token.IsTextMaterialized));
         var firstToken = tokens.First(token => token.Type != -1);
         Assert.Equal("digraph", firstToken.Text);
-        Assert.True(firstToken.IsTextMaterialized);
+        Assert.False(firstToken.IsTextMaterialized);
         Assert.True(simulator.DfaStateCount > 0);
         Assert.True(simulator.DfaEdgeCacheMisses > 0);
         Assert.True(simulator.LexerContextCount > 0);

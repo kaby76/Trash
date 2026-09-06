@@ -56,9 +56,9 @@ public partial class LexerAtnSimulator
         };
     }
 
-    public List<LexerToken> Tokenize(string input)
+    public TokenStore Tokenize(string input)
     {
-        var tokens = new List<LexerToken>();
+        var tokens = new TokenStore(input);
         var cursor = new Cursor();
         while (cursor.Position <= input.Length)
         {

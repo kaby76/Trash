@@ -16,12 +16,15 @@ public sealed class CompactParseTree : IParsingResultNodeProvider
     private readonly CompactNode[] _nodes;
     private readonly int[] _children;
     private readonly int _root;
+    private readonly TokenStore _tokens;
 
-    internal CompactParseTree(CompactNode[] nodes, int[] children, int root)
+    internal CompactParseTree(CompactNode[] nodes, int[] children, int root,
+        TokenStore tokens)
     {
         _nodes = nodes;
         _children = children;
         _root = root;
+        _tokens = tokens;
     }
 
     public int Count => _root >= 0 ? 1 : 0;
@@ -54,12 +57,12 @@ public sealed class CompactParseTree : IParsingResultNodeProvider
                 break;
             case CompactNodeKind.Attribute:
                 writer.WriteStringValue(node.Name);
-                writer.WriteStringValue(node.Value);
+                WriteValue(writer, node);
                 writer.WriteNumberValue(node.Channel);
                 writer.WriteNumberValue(node.TokenType);
                 break;
             case CompactNodeKind.Text:
-                writer.WriteStringValue(node.Value);
+                WriteValue(writer, node);
                 writer.WriteNumberValue(node.Channel);
                 writer.WriteNumberValue(node.TokenType);
                 break;
@@ -72,6 +75,25 @@ public sealed class CompactParseTree : IParsingResultNodeProvider
             WriteNode(writer, _children[node.ChildStart + i]);
         writer.WriteEndArray();
         writer.WriteEndArray();
+    }
+
+    private void WriteValue(Utf8JsonWriter writer, in CompactNode node)
+    {
+        if (_tokens != null && node.TokenIndex >= 0)
+            writer.WriteStringValue(_tokens.GetTextSpan(node.TokenIndex));
+        else if (_tokens != null && node.SourceStart >= 0)
+            writer.WriteStringValue(_tokens.GetSourceSpan(node.SourceStart, node.SourceLength));
+        else
+            writer.WriteStringValue(node.Value);
+    }
+
+    private string Value(in CompactNode node)
+    {
+        if (_tokens != null && node.TokenIndex >= 0)
+            return _tokens.GetText(node.TokenIndex);
+        if (_tokens != null && node.SourceStart >= 0)
+            return _tokens.GetSourceSpan(node.SourceStart, node.SourceLength).ToString();
+        return node.Value;
     }
 
     private UnvParseTreeNode MaterializeNode(int id, UnvParseTreeNode parent)
@@ -89,13 +111,13 @@ public sealed class CompactParseTree : IParsingResultNodeProvider
             CompactNodeKind.Attribute => new UnvParseTreeAttr
             {
                 Name = compact.Name,
-                StringValue = compact.Value,
+                StringValue = Value(compact),
                 Channel = compact.Channel,
                 TokenType = compact.TokenType
             },
             CompactNodeKind.Text => new UnvParseTreeText
             {
-                Data = compact.Value,
+                Data = Value(compact),
                 Channel = compact.Channel,
                 TokenType = compact.TokenType
             },
@@ -138,6 +160,9 @@ internal struct CompactNode
     public int TokenType;
     public int ChildStart;
     public int ChildCount;
+    public int TokenIndex;
+    public int SourceStart;
+    public int SourceLength;
 }
 
 /// <summary>Builds a compact tree directly from parser events.</summary>
@@ -155,7 +180,7 @@ public static class CompactTreeBuilder
         string[] lexerRuleNames,
         bool lineNumbers)
     {
-        var builder = new Builder();
+        var builder = new Builder(allTokens as TokenStore);
         var stack = new Stack<int>();
         var recursionParents = new Stack<int>();
         var root = -1;
@@ -222,8 +247,11 @@ public static class CompactTreeBuilder
 
                     var terminal = builder.Element(
                         GetTokenName(token.Type, symbolicNames, lexerRuleNames), -1);
-                    builder.AddChild(terminal,
-                        builder.Text(token.Type == EofType ? "" : token.Text ?? ""));
+                    builder.AddChild(terminal, token.Type == EofType
+                        ? builder.Text("")
+                        : builder.HasTokenStore
+                            ? builder.TextToken(tokenIndex)
+                            : builder.Text(token.Text ?? ""));
                     if (lineNumbers)
                     {
                         builder.AddChild(terminal, builder.Attribute("Line", token.Line.ToString(), 0, 0));
@@ -251,21 +279,26 @@ public static class CompactTreeBuilder
             int attr;
             if (token.Channel == LexerToken.SKIP_CHANNEL)
             {
-                var text = new StringBuilder(token.Text ?? "");
+                int first = j;
+                StringBuilder text = builder.HasTokenStore ? null : new(token.Text ?? "");
                 while (j + 1 < current &&
                        tokens[j + 1].Channel == LexerToken.SKIP_CHANNEL &&
                        tokens[j + 1].StartIndex == tokens[j].StopIndex + 1)
                 {
                     j++;
-                    text.Append(tokens[j].Text ?? "");
+                    text?.Append(tokens[j].Text ?? "");
                 }
-                attr = builder.Attribute("Skip", text.ToString(), -1, -1);
+                attr = builder.HasTokenStore
+                    ? builder.AttributeSource("Skip", token.StartIndex,
+                        tokens[j].StopIndex - token.StartIndex + 1, -1, -1)
+                    : builder.Attribute("Skip", text.ToString(), -1, -1);
             }
             else
             {
-                attr = builder.Attribute(
-                    GetTokenName(token.Type, symbolicNames, lexerRuleNames),
-                    token.Text ?? "", token.Channel, token.Type);
+                var name = GetTokenName(token.Type, symbolicNames, lexerRuleNames);
+                attr = builder.HasTokenStore
+                    ? builder.AttributeToken(name, j, token.Channel, token.Type)
+                    : builder.Attribute(name, token.Text ?? "", token.Channel, token.Type);
             }
             if (lineNumbers)
             {
@@ -302,18 +335,24 @@ public static class CompactTreeBuilder
 
     private sealed class Builder
     {
+        private readonly TokenStore _tokens;
         private readonly List<CompactNode> _nodes = [];
         private readonly List<int> _first = [];
         private readonly List<int> _last = [];
         private readonly List<int> _next = [];
         private readonly List<int> _children = [];
 
+        public Builder(TokenStore tokens) => _tokens = tokens;
+        public bool HasTokenStore => _tokens != null;
+
         public int Element(string name, int ruleIndex) => Add(new CompactNode
         {
             Kind = CompactNodeKind.Element,
             Name = name,
             RuleIndex = ruleIndex,
-            ChildStart = -1
+            ChildStart = -1,
+            TokenIndex = -1,
+            SourceStart = -1
         });
 
         public int Attribute(string name, string value, int channel, int tokenType) => Add(new CompactNode
@@ -324,7 +363,23 @@ public static class CompactTreeBuilder
             Channel = channel,
             TokenType = tokenType,
             RuleIndex = -1,
-            ChildStart = -1
+            ChildStart = -1,
+            TokenIndex = -1,
+            SourceStart = -1
+        });
+
+        public int AttributeToken(string name, int tokenIndex, int channel, int tokenType) => Add(new CompactNode
+        {
+            Kind = CompactNodeKind.Attribute, Name = name, Channel = channel,
+            TokenType = tokenType, RuleIndex = -1, ChildStart = -1,
+            TokenIndex = tokenIndex, SourceStart = -1
+        });
+
+        public int AttributeSource(string name, int start, int length, int channel, int tokenType) => Add(new CompactNode
+        {
+            Kind = CompactNodeKind.Attribute, Name = name, Channel = channel,
+            TokenType = tokenType, RuleIndex = -1, ChildStart = -1,
+            TokenIndex = -1, SourceStart = start, SourceLength = length
         });
 
         public int Text(string value) => Add(new CompactNode
@@ -332,7 +387,15 @@ public static class CompactTreeBuilder
             Kind = CompactNodeKind.Text,
             Value = value,
             RuleIndex = -1,
-            ChildStart = -1
+            ChildStart = -1,
+            TokenIndex = -1,
+            SourceStart = -1
+        });
+
+        public int TextToken(int tokenIndex) => Add(new CompactNode
+        {
+            Kind = CompactNodeKind.Text, RuleIndex = -1, ChildStart = -1,
+            TokenIndex = tokenIndex, SourceStart = -1
         });
 
         private int Add(CompactNode node)
@@ -397,7 +460,8 @@ public static class CompactTreeBuilder
         public CompactParseTree Complete(int root)
         {
             if (root >= 0) Finish(root);
-            return new CompactParseTree(_nodes.ToArray(), _children.ToArray(), root);
+            return new CompactParseTree(
+                _nodes.ToArray(), _children.ToArray(), root, _tokens);
         }
     }
 }

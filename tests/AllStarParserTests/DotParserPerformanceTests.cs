@@ -474,7 +474,7 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
         MyATN ParserAtn,
         ParsedInterp ParserInterp,
         ParsedInterp LexerInterp,
-        List<LexerToken> Tokens,
+        TokenStore Tokens,
         int StartRule,
         int OnChannelTokenCount);
 
