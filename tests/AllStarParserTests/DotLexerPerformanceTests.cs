@@ -33,7 +33,7 @@ public sealed class DotLexerPerformanceTests(ITestOutputHelper output)
             token => Assert.False(token.IsTextMaterialized));
         var firstToken = tokens.First(token => token.Type != -1);
         Assert.Equal("digraph", firstToken.Text);
-        Assert.True(firstToken.IsTextMaterialized);
+        Assert.False(firstToken.IsTextMaterialized);
         Assert.True(simulator.DfaStateCount > 0);
         Assert.True(simulator.DfaEdgeCacheMisses > 0);
         Assert.True(simulator.LexerContextCount > 0);
@@ -171,10 +171,111 @@ public sealed class DotLexerPerformanceTests(ITestOutputHelper output)
         Assert.True(timings.Tokenization >= TimeSpan.Zero);
         Assert.True(timings.Parsing >= TimeSpan.Zero);
         Assert.True(timings.TreeBuilding >= TimeSpan.Zero);
+        Assert.True(timings.ResultConstruction >= TimeSpan.Zero);
+        Assert.Equal(1, timings.Files);
         Assert.Contains("Tokenization:", timings.Format());
+        Assert.Contains("Result construction:", timings.Format());
         Assert.NotNull(timings.LexerDfa);
         Assert.Contains("Lexer DFA storage:", timings.Format());
         Assert.Contains("Lexer DFA fast path:", timings.Format());
+
+        var aggregate = new AllStarAtnParser.InterpRunTimings();
+        aggregate.Add(timings);
+        aggregate.Add(timings);
+        Assert.Equal(2, aggregate.Files);
+        Assert.Equal(timings.Parsing + timings.Parsing, aggregate.Parsing);
+    }
+
+    [Fact]
+    public void AllStarRunReportsAllClusterTokensIncludingHiddenChannel()
+    {
+        const string input =
+            "digraph G {\r\n\r\n" +
+            "\tsubgraph cluster_0 {\r\n" +
+            "\t\tstyle=filled;\r\n" +
+            "\t\tcolor=lightgrey;\r\n" +
+            "\t\tnode [style=filled,color=white];\r\n" +
+            "\t\ta0 -> a1 -> a2 -> a3;\r\n" +
+            "\t\tlabel = \"process #1\";\r\n" +
+            "\t}\r\n\r\n" +
+            "\tsubgraph cluster_1 {\r\n" +
+            "\t\tnode [style=filled];\r\n" +
+            "\t\tb0 -> b1 -> b2 -> b3;\r\n" +
+            "\t\tlabel = \"process #2\";\r\n" +
+            "\t\tcolor=blue\r\n" +
+            "\t}\r\n" +
+            "\tstart -> a0;\r\n" +
+            "\tstart -> b0;\r\n" +
+            "\ta1 -> b3;\r\n" +
+            "\tb2 -> a3;\r\n" +
+            "\ta3 -> a0;\r\n" +
+            "\ta3 -> end;\r\n" +
+            "\tb3 -> end;\r\n\r\n" +
+            "\tstart [shape=Mdiamond];\r\n" +
+            "\tend [shape=Msquare];\r\n" +
+            "}";
+        var interpDir = Path.Combine(AppContext.BaseDirectory, "TestData", "dot");
+        var lexerInterp = InterpFileReader.Read(File.ReadAllText(
+            Path.Combine(interpDir, "DOTLexer.interp")));
+        var lexerAtn = AtnDeserializer.Deserialize(lexerInterp.AtnData);
+        var rawTokens = new LexerAtnSimulator(lexerAtn).Tokenize(input);
+
+        var (_, reportedTokenCount) = AllStarAtnParser.InterpRunner.Run(
+            Path.Combine(interpDir, "DOTParser.interp"),
+            Path.Combine(interpDir, "DOTLexer.interp"),
+            input, "cluster.dot", false);
+
+        Assert.Equal(171, rawTokens.Count);
+        Assert.Contains(rawTokens, token => token.Channel != 0);
+        Assert.Equal(rawTokens.Count, reportedTokenCount);
+    }
+
+    [Fact]
+    public void AllStarRuntimeCacheLoadsInterpPairOnlyOnce()
+    {
+        var interpDir = Path.Combine(AppContext.BaseDirectory, "TestData", "interp");
+        var parserPath = Path.Combine(interpDir, "Abnf.interp");
+        var lexerPath = Path.Combine(interpDir, "AbnfLexer.interp");
+        var cache = new AllStarAtnParser.InterpRuntimeCache();
+        var first = new AllStarAtnParser.InterpRunTimings();
+        var second = new AllStarAtnParser.InterpRunTimings();
+
+        var firstResult = AllStarAtnParser.InterpRunner.Run(
+            parserPath, lexerPath, "rule = %x41\r\n", "first.abnf", false,
+            timings: first, runtimeCache: cache);
+        var secondResult = AllStarAtnParser.InterpRunner.Run(
+            parserPath, lexerPath, "other = %x42\r\n", "second.abnf", false,
+            timings: second, runtimeCache: cache);
+
+        Assert.NotNull(firstResult.Result);
+        Assert.NotNull(secondResult.Result);
+        Assert.Equal(TimeSpan.Zero, second.InterpFileReading);
+        Assert.Equal(TimeSpan.Zero, second.InterpParsing);
+        Assert.Equal(TimeSpan.Zero, second.AtnDeserialization);
+        Assert.Equal(TimeSpan.Zero, second.Initialization);
+        Assert.True(second.Tokenization >= TimeSpan.Zero);
+        Assert.True(second.Parsing >= TimeSpan.Zero);
+        Assert.Equal(1, cache.Count);
+    }
+
+    [Fact]
+    public void EarleyRuntimeCacheLoadsInterpPairOnlyOnce()
+    {
+        var interpDir = Path.Combine(AppContext.BaseDirectory, "TestData", "interp");
+        var parserPath = Path.Combine(interpDir, "Abnf.interp");
+        var lexerPath = Path.Combine(interpDir, "AbnfLexer.interp");
+        var cache = new AllStarAtnParser.InterpRuntimeCache();
+
+        var first = EarleyAtnParser.InterpRunner.Run(
+            parserPath, lexerPath, "rule = %x41\r\n", "first.abnf", false,
+            runtimeCache: cache);
+        var second = EarleyAtnParser.InterpRunner.Run(
+            parserPath, lexerPath, "other = %x42\r\n", "second.abnf", false,
+            runtimeCache: cache);
+
+        Assert.NotNull(first.Result);
+        Assert.NotNull(second.Result);
+        Assert.Equal(1, cache.Count);
     }
 
     private static string GenerateDotInput(int edgeCount)

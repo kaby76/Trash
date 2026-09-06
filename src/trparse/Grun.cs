@@ -23,6 +23,9 @@ public class Grun
     private double _firstFileParseSeconds;
     private int _fileCount;
     private readonly List<BundleParse> _bundleParses = new();
+    private readonly AllStarAtnParser.ParserPredictionCache _parserPredictionCache;
+    private readonly AllStarAtnParser.InterpRunTimings _interpTimings = new();
+    private readonly AllStarAtnParser.InterpRuntimeCache _interpRuntimeCache = new();
 
     private sealed record BundleParse(string InputName,
         List<AntlrJson.ParsingResultSet> Results, string Diagnostics);
@@ -30,6 +33,13 @@ public class Grun
     public Grun(Config co)
     {
         config = co;
+        if (!co.NoSharedParserDfa)
+        {
+            _parserPredictionCache = new AllStarAtnParser.ParserPredictionCache(
+                co.ParserDfaCacheStates,
+                checked((long)co.ParserDfaCacheMegabytes * 1024 * 1024),
+                synchronizeAccess: false);
+        }
     }
 
     private static string JoinArguments(IEnumerable<string> arguments)
@@ -77,7 +87,7 @@ public class Grun
             if (config.ReadFileNameStdin)
             {
                 List<string> inputs = new List<string>();
-                for (;;)
+                for (; ; )
                 {
                     var line = System.Console.In.ReadLine();
                     line = line?.Trim();
@@ -126,7 +136,7 @@ public class Grun
             else if (config.Input == null && (config.Files == null || config.Files.Count() == 0))
             {
                 string lines = null;
-                for (;;)
+                for (; ; )
                 {
                     lines = System.Console.In.ReadToEnd();
                     if (lines != null && lines != "") break;
@@ -175,6 +185,8 @@ public class Grun
 
             foreach (var d in data)
             {
+                if (d.NodeProvider != null && !d.HasMaterializedNodes)
+                    continue;
                 foreach (var t1 in d.Nodes)
                 {
                     var count = 0;
@@ -189,7 +201,7 @@ public class Grun
             DateTime overallAfter = DateTime.Now;
             PrintPerfSummary((overallAfter - overallBefore).TotalSeconds);
 
-            if (config.NoParsingResultSets) return result;
+            if (config.NoParsingResultSets || config.NoOutput) return result;
             if (config.Bundle)
             {
                 WriteBundle();
@@ -286,6 +298,8 @@ public class Grun
     private void PrintPerfSummary(double overallSeconds)
     {
         if (config.Quiet) return;
+        if (config.InterpTimings && _interpTimings.Files > 0)
+            System.Console.Error.WriteLine(_interpTimings.Format());
         var warmTokens = _totalTokens - _firstFileTokens;
         var warmSeconds = _totalParseSeconds - _firstFileParseSeconds;
         var warmTps = (_fileCount > 1 && warmSeconds > 0)
@@ -346,19 +360,25 @@ public class Grun
                 var interpTimings = config.InterpTimings
                     ? new AllStarAtnParser.InterpRunTimings()
                     : null;
+                var parserStatistics = config.ParserStats
+                    ? new AllStarAtnParser.ParserStatistics()
+                    : null;
                 (rs, interpTokenCount) = AllStarAtnParser.InterpRunner.Run(
                     resolvedPInterp, resolvedLInterp, txt, input_name,
                     config.LineNumbers, config.ContextAwareLexing,
-                    config.LexerStats, config.LexerOverlaps, interpTimings);
+                    config.LexerStats, config.LexerOverlaps, interpTimings,
+                    parserStatistics, _parserPredictionCache,
+                    _interpRuntimeCache);
                 if (interpTimings != null)
-                    System.Console.Error.WriteLine(interpTimings.Format(prefix));
+                    _interpTimings.Add(interpTimings);
                 interpLabel = "ALL(*)";
             }
             else
             {
                 (rs, interpTokenCount) = EarleyAtnParser.InterpRunner.Run(
                     resolvedPInterp, resolvedLInterp, txt, input_name,
-                    config.LineNumbers, config.LexerStats, config.LexerOverlaps);
+                    config.LineNumbers, config.LexerStats, config.LexerOverlaps,
+                    _interpRuntimeCache);
                 interpLabel = "Earley";
             }
             DateTime interpAfter = DateTime.Now;
@@ -623,7 +643,9 @@ public class Grun
                     Lexer = lexer
                 };
                 data.Add(tuple);
-            } else {
+            }
+            else
+            {
                 foreach (var tt in tuples)
                 {
                     var list_of_trees = new List<UnvParseTreeNode>();

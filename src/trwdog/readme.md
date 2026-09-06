@@ -18,7 +18,7 @@ Execute a command with a watchdog timer.
 
 ## Current version
 
-Release 3.2.0.
+Release 3.3.0.
 
 ## License
 

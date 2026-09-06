@@ -13,6 +13,10 @@ public class Config
     [Option("no-prs", Required = false, HelpText = "Output parse errors only. No parsing result sets.")]
     public bool NoParsingResultSets { get; set; }
 
+    [Option("no-output", Required = false,
+        HelpText = "Parse inputs and build parse trees, but do not write parsing results to stdout. Performance and error diagnostics are still written to stderr.")]
+    public bool NoOutput { get; set; }
+
     [Option("fmt", Required = false, HelpText = "Output formatted parsing results set.")]
     public bool Format { get; set; }
 
@@ -42,7 +46,7 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "3.2.0";
+    public string Version { get; set; } = "3.3.0";
 
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }
@@ -73,6 +77,22 @@ public class Config
     [Option("lexer-overlaps", Required = false,
         HelpText = "Write details of observed interp lexer-rule overlaps to stderr (implies --lexer-stats).")]
     public bool LexerOverlaps { get; set; }
+
+    [Option("parser-stats", Required = false,
+        HelpText = "Write interpreted ALL(*) parser prediction and traversal statistics to stderr.")]
+    public bool ParserStats { get; set; }
+
+    [Option("no-shared-parser-dfa", Required = false,
+        HelpText = "Do not reuse learned ALL(*) parser DFA states across input files.")]
+    public bool NoSharedParserDfa { get; set; }
+
+    [Option("parser-dfa-cache-states", Required = false, Default = 100000,
+        HelpText = "Maximum learned states retained in the shared ALL(*) parser DFA cache.")]
+    public int ParserDfaCacheStates { get; set; } = 100_000;
+
+    [Option("parser-dfa-cache-mb", Required = false, Default = 64,
+        HelpText = "Approximate memory budget in MiB for the shared ALL(*) parser DFA cache.")]
+    public int ParserDfaCacheMegabytes { get; set; } = 64;
 
     [Option("interp-timings", Required = false,
         HelpText = "Write .interp loading, ATN deserialization, lexing, parsing, and tree-building timings to stderr.")]

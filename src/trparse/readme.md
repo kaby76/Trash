@@ -99,6 +99,27 @@ The summary distinguishes raw overlaps from effective overlaps in the actual
 selection pool after parser-context filtering (or after ordinary fallback),
 and reports how many raw overlaps context eliminated.
 
+Use `--parser-stats` with the ALL(*) interpreter to write opt-in prediction and
+committed-parse diagnostics to stderr. The report includes per-decision adaptive
+prediction calls, DFA hits and misses, lookahead distribution, closure/reach and
+prediction-context work, SLL-to-full-context fallbacks, retained DFA estimates,
+and committed ATN/rule/event counts. Statistics are disabled by default to keep
+normal parsing overhead negligible.
+
+Learned ALL(*) SLL decision DFAs are shared across input files handled by one
+`trparse` command. The cache is bound to the immutable parser ATN and is not
+used for grammars containing semantic-predicate transitions. Use
+`--no-shared-parser-dfa` for cold-DFA diagnostics. The default cache limits are
+100,000 states and approximately 64 MiB; change them with
+`--parser-dfa-cache-states` and `--parser-dfa-cache-mb`. The public
+`ParserPredictionCache.Clear()` API explicitly discards learned data.
+
+An experimental conservative LL(1) decision-table bypass is retained in the
+code and differential performance tests, but is disabled in production because
+the DOT corpus did not show a reliable improvement. All production decisions
+currently retain adaptive ALL(*) prediction; `--parser-stats` consequently
+reports zero LL(1) bypasses.
+
 ## Usage
 
     dotnet trash parse (<string> | <options>)*
@@ -113,12 +134,27 @@ and reports how many raw overlaps context eliminated.
         --lexer-stats  Write observed interp lexer-overlap statistics to stderr.
         --lexer-overlaps
                        Write detailed observed overlaps (implies --lexer-stats).
+        --parser-stats Write ALL(*) prediction and parser-work statistics to stderr.
+        --no-shared-parser-dfa
+                       Disable learned parser-DFA reuse across input files.
+        --parser-dfa-cache-states <n>
+                       Maximum retained shared parser-DFA states (default 100000).
+        --parser-dfa-cache-mb <n>
+                       Approximate shared parser-DFA budget in MiB (default 64).
+        --interp-timings
+                       Write separate interp loading, ATN, lexing, parsing, and
+                       tree-building timings to stderr.
+        --no-output    Parse inputs and build their parse trees, but do not write
+                       parsing-result data to stdout. Performance and error
+                       diagnostics are still written to stderr.
 
 ## Examples
 
     dotnet trash parse Java.g2
     dotnet trash parse -i "1+2+3"
     dotnet trash parse Foobar.g -t ANTLRv2
+    dotnet trash parse --allstar -L interp --no-output input.txt
+    dotnet trash parse --allstar --parser-stats -L interp --no-output input.txt
     echo "1+2+3" | dotnet trash parse | dotnet trash tree
     mkdir out; dotnet trash parse MyParser.g4 MyLexer.g4 | dotnet trash sponge -o out
 
@@ -128,7 +164,7 @@ and reports how many raw overlaps context eliminated.
 
 ## Current version
 
-Release 3.2.0.
+Release 3.3.0.
 
 ## License
 

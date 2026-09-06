@@ -24,9 +24,13 @@ public static class InterpRunner
         bool contextAwareLexing = false,
         bool lexerStats = false,
         bool lexerOverlaps = false,
-        InterpRunTimings timings = null)
+        InterpRunTimings timings = null,
+        ParserStatistics parserStatistics = null,
+        ParserPredictionCache predictionCache = null,
+        InterpRuntimeCache runtimeCache = null)
     {
         timings ??= new InterpRunTimings();
+        timings.Files = 1;
         var timer = new System.Diagnostics.Stopwatch();
         // Get options to lexer from process args.
         var args = Environment.GetCommandLineArgs().ToList();
@@ -35,60 +39,74 @@ public static class InterpRunner
         show_tokens = args?.Where(a => a.IndexOf("--tokens", StringComparison.OrdinalIgnoreCase) >= 0).Any() ?? false;
         numeric_token_types = args?.Where(a => a.IndexOf("--numeric-token-types", StringComparison.OrdinalIgnoreCase) >= 0).Any() ?? false;
 
-        timer.Start();
-        var parserInterpText = File.ReadAllText(parserInterpPath);
-        var lexerInterpText = File.ReadAllText(lexerInterpPath);
-        timer.Stop();
-        timings.InterpFileReading = timer.Elapsed;
+        InterpRuntimeCache.RuntimeData runtime;
+        if (runtimeCache == null ||
+            !runtimeCache.TryGet(parserInterpPath, lexerInterpPath, out runtime))
+        {
+            timer.Start();
+            var parserInterpText = File.ReadAllText(parserInterpPath);
+            var lexerInterpText = File.ReadAllText(lexerInterpPath);
+            timer.Stop();
+            timings.InterpFileReading = timer.Elapsed;
 
-        timer.Restart();
-        var parserInterp = InterpFileReader.Read(parserInterpText);
-        var lexerInterp  = InterpFileReader.Read(lexerInterpText);
-        timer.Stop();
-        timings.InterpParsing = timer.Elapsed;
+            timer.Restart();
+            var loadedParserInterp = InterpFileReader.Read(parserInterpText);
+            var loadedLexerInterp = InterpFileReader.Read(lexerInterpText);
+            timer.Stop();
+            timings.InterpParsing = timer.Elapsed;
 
-        timer.Restart();
-        var parserAtn = AtnDeserializer.Deserialize(parserInterp.AtnData);
-        var lexerAtn  = AtnDeserializer.Deserialize(lexerInterp.AtnData);
-        timer.Stop();
-        timings.AtnDeserialization = timer.Elapsed;
+            timer.Restart();
+            var loadedParserAtn = predictionCache?.GetBoundAtn(
+                loadedParserInterp.AtnData);
+            if (loadedParserAtn == null)
+            {
+                loadedParserAtn = AtnDeserializer.Deserialize(
+                    loadedParserInterp.AtnData);
+                predictionCache?.Bind(
+                    loadedParserAtn, loadedParserInterp.AtnData);
+            }
+            var loadedLexerAtn = AtnDeserializer.Deserialize(
+                loadedLexerInterp.AtnData);
+            timer.Stop();
+            timings.AtnDeserialization = timer.Elapsed;
 
-        timer.Restart();
-        var lexerVocab  = new Antlr4.Runtime.Vocabulary(lexerInterp.LiteralNames,  lexerInterp.SymbolicNames);
-        var parserVocab = new Antlr4.Runtime.Vocabulary(parserInterp.LiteralNames, parserInterp.SymbolicNames);
+            timer.Restart();
+            var loadedLexerVocab = new Antlr4.Runtime.Vocabulary(
+                loadedLexerInterp.LiteralNames, loadedLexerInterp.SymbolicNames);
+            var loadedParserVocab = new Antlr4.Runtime.Vocabulary(
+                loadedParserInterp.LiteralNames, loadedParserInterp.SymbolicNames);
+            int loadedStartRule = ResolveStartRule(
+                loadedParserAtn, loadedParserInterp);
+            timer.Stop();
+            timings.Initialization = timer.Elapsed;
+
+            runtime = new InterpRuntimeCache.RuntimeData(
+                loadedParserInterp, loadedLexerInterp,
+                loadedParserAtn, loadedLexerAtn,
+                loadedParserVocab, loadedLexerVocab, loadedStartRule);
+            if (runtimeCache != null)
+                runtime = runtimeCache.Add(
+                    parserInterpPath, lexerInterpPath, runtime);
+        }
+        var parserInterp = runtime.ParserInterp;
+        var lexerInterp = runtime.LexerInterp;
+        var parserAtn = runtime.ParserAtn;
+        var lexerAtn = runtime.LexerAtn;
+        var parserVocab = runtime.ParserVocabulary;
+        var lexerVocab = runtime.LexerVocabulary;
+        int startRule = runtime.StartRule;
         var statistics = lexerStats || lexerOverlaps
             ? new LexerStatistics()
             : null;
 
-        // Determine the start rule from the 'start-rule:' section in the parser interp file.
-        int startRule = 0;
-        if (parserInterp.StartStateNumber >= 0)
-        {
-            bool found = false;
-            for (int ri = 0; ri < parserAtn.start.Length; ri++)
-            {
-                if (parserAtn.start[ri].stateNumber == parserInterp.StartStateNumber)
-                {
-                    startRule = ri;
-                    found = true;
-                    break;
-                }
-            }
-            if (!found)
-                throw new InvalidOperationException(
-                    $"Start state {parserInterp.StartStateNumber} not found in deserialized parser ATN.");
-        }
-        timer.Stop();
-        timings.Initialization = timer.Elapsed;
-
-        List<LexerToken> rawTokens;
+        TokenStore rawTokens;
         List<ParseEvent> events;
         if (contextAwareLexing)
         {
             timer.Restart();
             events = AllStarParser.ParseContextAware(
                 parserAtn, lexerAtn, inputText, startRule, out rawTokens,
-                statistics);
+                statistics, parserStatistics, predictionCache);
             timer.Stop();
             // Tokens are requested lazily here; this is combined lex/parse time.
             timings.Parsing = timer.Elapsed;
@@ -107,13 +125,17 @@ public static class InterpRunner
             timer.Stop();
             timings.TokenReconciliation = timer.Elapsed;
             timer.Restart();
-            events = AllStarParser.Parse(parserAtn, rawTokens, startRule);
+            events = AllStarParser.Parse(
+                parserAtn, rawTokens, startRule, parserStatistics,
+                predictionCache);
             timer.Stop();
             timings.Parsing = timer.Elapsed;
         }
         PrintLexerStatistics(
             statistics, lexerOverlaps, fileName,
             lexerInterp.RuleNames, lexerInterp.SymbolicNames);
+        if (parserStatistics != null)
+            Console.Error.WriteLine(parserStatistics.Format());
         if (events == null)
             throw new InvalidOperationException(
                 $"ALL(*) parse failed for '{fileName}': input rejected by grammar.");
@@ -136,7 +158,7 @@ public static class InterpRunner
         }
 
         timer.Restart();
-        var domTree = DomBuilder.Build(
+        var compactTree = CompactTreeBuilder.Build(
             events, rawTokens,
             parserInterp.RuleNames,
             parserInterp.SymbolicNames,
@@ -146,34 +168,50 @@ public static class InterpRunner
         timer.Stop();
         timings.TreeBuilding = timer.Elapsed;
 
+        timer.Restart();
         // Stub lexer/parser objects required by ParsingResultSet and the JSON serializer.
         var charStream = new Antlr4.Runtime.AntlrInputStream(inputText);
         var myLexer = new MyLexer(charStream);
-        myLexer._ruleNames       = lexerInterp.RuleNames;
-        myLexer._modeNames       = lexerInterp.ModeNames.Length > 0
+        myLexer._ruleNames = lexerInterp.RuleNames;
+        myLexer._modeNames = lexerInterp.ModeNames.Length > 0
             ? lexerInterp.ModeNames : new[] { "DEFAULT_MODE" };
-        myLexer._channelNames    = lexerInterp.ChannelNames.Length > 0
+        myLexer._channelNames = lexerInterp.ChannelNames.Length > 0
             ? lexerInterp.ChannelNames : new[] { "DEFAULT_TOKEN_CHANNEL", "HIDDEN" };
-        myLexer._vocabulary      = lexerVocab;
-        myLexer._tokenTypeMap    = BuildTokenTypeMap(lexerInterp.SymbolicNames);
+        myLexer._vocabulary = lexerVocab;
+        myLexer._tokenTypeMap = BuildTokenTypeMap(lexerInterp.SymbolicNames);
         myLexer._grammarFileName = Path.GetFileNameWithoutExtension(lexerInterpPath);
 
         var myParser = new EditableAntlrTree.MyParser();
-        myParser._ruleNames       = parserInterp.RuleNames;
-        myParser._vocabulary      = parserVocab;
+        myParser._ruleNames = parserInterp.RuleNames;
+        myParser._vocabulary = parserVocab;
         myParser._grammarFileName = Path.GetFileNameWithoutExtension(parserInterpPath);
 
-        int tokenCount = 0;
-        foreach (var t in rawTokens)
-            if (t.Channel == 0 || t.Type == -1) tokenCount++;
+        // Match CommonTokenStream.Size in the generated-target drivers: report
+        // every retained token, including hidden-channel tokens and EOF.  The
+        // parser itself still indexes only default-channel tokens.
+        int tokenCount = rawTokens.Count;
 
-        return (new ParsingResultSet
+        var result = new ParsingResultSet
         {
             FileName = fileName,
-            Nodes    = new[] { (UnvParseTreeNode)domTree },
-            Parser   = myParser,
-            Lexer    = myLexer
-        }, tokenCount);
+            NodeProvider = compactTree,
+            Parser = myParser,
+            Lexer = myLexer
+        };
+        timer.Stop();
+        timings.ResultConstruction = timer.Elapsed;
+
+        return (result, tokenCount);
+    }
+
+    private static int ResolveStartRule(MyATN parserAtn, ParsedInterp parserInterp)
+    {
+        if (parserInterp.StartStateNumber < 0) return 0;
+        for (int rule = 0; rule < parserAtn.start.Length; rule++)
+            if (parserAtn.start[rule].stateNumber == parserInterp.StartStateNumber)
+                return rule;
+        throw new InvalidOperationException(
+            $"Start state {parserInterp.StartStateNumber} not found in deserialized parser ATN.");
     }
 
     internal static void PrintLexerStatistics(
@@ -202,7 +240,7 @@ public static class InterpRunner
     // implicit token type to the literal used by the parser rule. Reconcile that
     // duplicate so the independently interpreted lexer and parser share a vocabulary.
     internal static void ReconcileLiteralTokenTypes(
-        List<LexerToken> tokens, string[] lexerSymbolicNames,
+        IReadOnlyList<LexerToken> tokens, string[] lexerSymbolicNames,
         string[] lexerLiteralNames, string[] parserLiteralNames)
     {
         var remap = new Dictionary<int, int>();
@@ -234,7 +272,8 @@ public static class InterpRunner
             if (!string.Equals(token.Text, symbolicName, StringComparison.OrdinalIgnoreCase))
                 continue;
             token.Type = parserType;
-            tokens[i] = token;
+            if (tokens is List<LexerToken> list)
+                list[i] = token;
         }
     }
 }
