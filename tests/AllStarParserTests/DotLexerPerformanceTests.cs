@@ -187,6 +187,50 @@ public sealed class DotLexerPerformanceTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void AllStarRunReportsAllClusterTokensIncludingHiddenChannel()
+    {
+        const string input =
+            "digraph G {\r\n\r\n" +
+            "\tsubgraph cluster_0 {\r\n" +
+            "\t\tstyle=filled;\r\n" +
+            "\t\tcolor=lightgrey;\r\n" +
+            "\t\tnode [style=filled,color=white];\r\n" +
+            "\t\ta0 -> a1 -> a2 -> a3;\r\n" +
+            "\t\tlabel = \"process #1\";\r\n" +
+            "\t}\r\n\r\n" +
+            "\tsubgraph cluster_1 {\r\n" +
+            "\t\tnode [style=filled];\r\n" +
+            "\t\tb0 -> b1 -> b2 -> b3;\r\n" +
+            "\t\tlabel = \"process #2\";\r\n" +
+            "\t\tcolor=blue\r\n" +
+            "\t}\r\n" +
+            "\tstart -> a0;\r\n" +
+            "\tstart -> b0;\r\n" +
+            "\ta1 -> b3;\r\n" +
+            "\tb2 -> a3;\r\n" +
+            "\ta3 -> a0;\r\n" +
+            "\ta3 -> end;\r\n" +
+            "\tb3 -> end;\r\n\r\n" +
+            "\tstart [shape=Mdiamond];\r\n" +
+            "\tend [shape=Msquare];\r\n" +
+            "}";
+        var interpDir = Path.Combine(AppContext.BaseDirectory, "TestData", "dot");
+        var lexerInterp = InterpFileReader.Read(File.ReadAllText(
+            Path.Combine(interpDir, "DOTLexer.interp")));
+        var lexerAtn = AtnDeserializer.Deserialize(lexerInterp.AtnData);
+        var rawTokens = new LexerAtnSimulator(lexerAtn).Tokenize(input);
+
+        var (_, reportedTokenCount) = AllStarAtnParser.InterpRunner.Run(
+            Path.Combine(interpDir, "DOTParser.interp"),
+            Path.Combine(interpDir, "DOTLexer.interp"),
+            input, "cluster.dot", false);
+
+        Assert.Equal(171, rawTokens.Count);
+        Assert.Contains(rawTokens, token => token.Channel != 0);
+        Assert.Equal(rawTokens.Count, reportedTokenCount);
+    }
+
+    [Fact]
     public void AllStarRuntimeCacheLoadsInterpPairOnlyOnce()
     {
         var interpDir = Path.Combine(AppContext.BaseDirectory, "TestData", "interp");

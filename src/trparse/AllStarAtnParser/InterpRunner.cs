@@ -186,9 +186,10 @@ public static class InterpRunner
         myParser._vocabulary = parserVocab;
         myParser._grammarFileName = Path.GetFileNameWithoutExtension(parserInterpPath);
 
-        int tokenCount = 0;
-        foreach (var t in rawTokens)
-            if (t.Channel == 0 || t.Type == -1) tokenCount++;
+        // Match CommonTokenStream.Size in the generated-target drivers: report
+        // every retained token, including hidden-channel tokens and EOF.  The
+        // parser itself still indexes only default-channel tokens.
+        int tokenCount = rawTokens.Count;
 
         var result = new ParsingResultSet
         {
