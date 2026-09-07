@@ -348,14 +348,15 @@ public class LexerCommandTests
             new RuleSpec(0, 't', 3,
                 new MyLexerAction(MyLexerActionType.Type, 42, 0)),
             new RuleSpec(0, 't', 7)));
+        lexer.SetInput("t");
 
         var remapped = lexer.NextToken(
-            "t", new LexerAtnSimulator.Cursor(), new HashSet<int> { 42 });
+            new LexerAtnSimulator.Cursor(), new HashSet<int> { 42 });
         Assert.Equal(42, remapped.Type);
         var warm = lexer.GetDfaStatistics();
 
         var secondRule = lexer.NextToken(
-            "t", new LexerAtnSimulator.Cursor(), new HashSet<int> { 7 });
+            new LexerAtnSimulator.Cursor(), new HashSet<int> { 7 });
         Assert.Equal(7, secondRule.Type);
         var final = lexer.GetDfaStatistics();
 

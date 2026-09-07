@@ -193,6 +193,7 @@ public static class AllStarParser
             _sim = new AllStarSimulator(
                 parserAtn, parserStatistics, predictionCache);
             _lexer = new LexerAtnSimulator(lexerAtn, lexerStatistics);
+            _lexer.SetInput(input);
             _lexerCursor = new LexerAtnSimulator.Cursor();
             _input = input;
             _contextAware = true;
@@ -382,19 +383,27 @@ public static class AllStarParser
         {
             var cursor = _lexerCursor.Clone();
             var types = new List<int>();
+            var speculativeTokens = new TokenStore(_input);
             bool firstOnChannel = true;
-            while (true)
+            bool previousRecordStatistics = _lexer.RecordStatistics;
+            _lexer.RecordStatistics = false;
+            try
             {
-                var token = _lexer.NextToken(
-                    _input, cursor, firstOnChannel ? expected : null,
-                    recordStatistics: false);
-                if (token.Channel == DEFAULT_CHANNEL || token.Type == EOF_TYPE)
+                while (true)
                 {
-                    types.Add(token.Type);
-                    firstOnChannel = false;
+                    int index = _lexer.NextToken(
+                        speculativeTokens, cursor,
+                        firstOnChannel ? expected : null);
+                    var token = speculativeTokens[index];
+                    if (token.Channel == DEFAULT_CHANNEL || token.Type == EOF_TYPE)
+                    {
+                        types.Add(token.Type);
+                        firstOnChannel = false;
+                    }
+                    if (token.Type == EOF_TYPE) break;
                 }
-                if (token.Type == EOF_TYPE) break;
             }
+            finally { _lexer.RecordStatistics = previousRecordStatistics; }
             return types.ToArray();
         }
 
@@ -402,10 +411,9 @@ public static class AllStarParser
         {
             while (true)
             {
-                var token = _lexer.NextToken(_input, _lexerCursor, expected);
-                int index = _allTokens.Count;
-                token.TokenIndex = index;
-                _contextTokens.Add(token);
+                int index = _lexer.NextToken(
+                    _contextTokens, _lexerCursor, expected);
+                var token = _contextTokens[index];
                 if (token.Channel == DEFAULT_CHANNEL || token.Type == EOF_TYPE)
                 {
                     _onIdx.Add(index);

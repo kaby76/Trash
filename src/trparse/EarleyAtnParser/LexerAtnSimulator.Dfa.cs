@@ -147,10 +147,10 @@ public partial class LexerAtnSimulator
     }
 
     private int ConsumeKnownAsciiSelfLoop(
-        DfaState state, string input, int position)
+        DfaState state, int position)
     {
         if (!_enableDfa) return position;
-        var end = state.Edges.ConsumeKnownAsciiSelfLoop(state, input, position);
+        var end = state.Edges.ConsumeKnownAsciiSelfLoop(state, _input, position);
         var consumed = end - position;
         if (consumed != 0)
         {
