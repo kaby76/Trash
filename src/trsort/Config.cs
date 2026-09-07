@@ -23,7 +23,7 @@ namespace Trash
         public bool Verbose { get; set; }
 
         [Option("version", Required = false)]
-        public string Version { get; set; } = "3.3.0";
+        public string Version { get; set; } = "3.4.0";
 
         [Value(0, Required = false, HelpText = "Name of the start rule (optional for --bfs and --dfs; auto-detected when omitted).")]
         public string Expr { get; set; }

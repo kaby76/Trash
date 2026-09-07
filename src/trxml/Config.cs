@@ -14,5 +14,5 @@ public class Config
     public bool Bundle { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "3.3.0";
+    public string Version { get; set; } = "3.4.0";
 }
