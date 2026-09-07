@@ -194,6 +194,7 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
         var second = CommittedAtnMetadata.For(fixture.ParserAtn);
 
         Assert.Same(first, second);
+        Assert.Contains(first.EpsilonPathLength, length => length > 1);
         foreach (var state in fixture.ParserAtn.allStates.Where(s => s != null))
         {
             if (state.stateType != MyStateType.RuleStop &&
@@ -210,6 +211,11 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
             if (first.Kind[state.stateNumber] == CommittedStateKind.Terminal)
                 Assert.NotEqual(CommittedTerminalKind.None,
                     first.TerminalKind[state.stateNumber]);
+            var operation = first.NextOperationState[state.stateNumber];
+            Assert.NotNull(operation);
+            if (first.EpsilonPathLength[state.stateNumber] > 0)
+                Assert.NotEqual(CommittedStateKind.Epsilon,
+                    first.Kind[operation.stateNumber]);
         }
     }
 

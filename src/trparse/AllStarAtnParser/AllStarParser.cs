@@ -219,7 +219,7 @@ public static class AllStarParser
             AddEvent(isRecursion
                 ? ParseEventKind.EnterRecursionRule
                 : ParseEventKind.EnterRule, ruleIndex);
-            var state = _atn.start[ruleIndex];
+            var state = _metadata.SkipEpsilon(_atn.start[ruleIndex]);
 
             while (true)
             {
@@ -292,7 +292,7 @@ public static class AllStarParser
                     // first child of a fresh rule element (PushNewRecursionContext equivalent).
                     if (state.isPrecedenceDecision && nextState.stateType != MyStateType.LoopEnd)
                         AddEvent(ParseEventKind.PushRecursionContext, state.ruleIndex);
-                    state = nextState;
+                    state = _metadata.SkipEpsilon(nextState);
                 }
                 else
                 {
@@ -300,7 +300,7 @@ public static class AllStarParser
                     switch (stateKind)
                     {
                         case CommittedStateKind.Epsilon:
-                            state = tr.target;
+                            state = _metadata.SkipEpsilon(tr.target);
                             break;
 
                         case CommittedStateKind.Rule:
@@ -315,7 +315,7 @@ public static class AllStarParser
                             if (!ParseRule(rt.ruleIndex, childCtx,
                                 rt.precedence, depth + 1))
                                 return false;
-                            state = rt.target;
+                            state = _metadata.SkipEpsilon(rt.target);
                             break;
 
                         case CommittedStateKind.Terminal:
@@ -332,7 +332,7 @@ public static class AllStarParser
                                 }
                                 return false;
                             }
-                            state = tr.target;
+                            state = _metadata.SkipEpsilon(tr.target);
                             break;
                         default:
                             throw new InvalidOperationException(
