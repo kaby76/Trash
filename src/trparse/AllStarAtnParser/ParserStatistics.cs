@@ -16,6 +16,14 @@ public sealed class ParserStatistics
     public int MaximumPredictionLookahead { get; private set; }
     public long ClosureConfigurationsVisited { get; internal set; }
     public long ReachConfigurationsExamined { get; internal set; }
+    public long CallerCanMatchTokenCalls { get; internal set; }
+    public long CallerCanMatchTokenConfigurationsVisited { get; internal set; }
+    public long CallerCanMatchTokenShortCircuits { get; internal set; }
+    public long CallerCanMatchTokenExhaustions { get; internal set; }
+    public long CallerCanMatchTokenCacheHits { get; internal set; }
+    public long CallerCanMatchTokenCacheMisses { get; internal set; }
+    public int CallerCanMatchTokenCacheEntries { get; internal set; }
+    public long CallerCanMatchTokenConfigurationsAvoided { get; internal set; }
     public long PredictionContextCreations { get; internal set; }
     public long PredictionContextCacheHits { get; internal set; }
     public long PredictionContextMerges { get; internal set; }
@@ -42,6 +50,16 @@ public sealed class ParserStatistics
     public IReadOnlyList<long> LookaheadHistogram => _lookaheadHistogram;
     public double MeanPredictionLookahead => AdaptivePredictionCalls == 0
         ? 0 : (double)PredictionLookaheadTokens / AdaptivePredictionCalls;
+    public double MeanCallerCanMatchTokenConfigurations =>
+        CallerCanMatchTokenCalls == 0
+            ? 0
+            : (double)CallerCanMatchTokenConfigurationsVisited /
+              CallerCanMatchTokenCalls;
+    public double MeanCallerCanMatchTokenConfigurationsPerMiss =>
+        CallerCanMatchTokenCacheMisses == 0
+            ? 0
+            : (double)CallerCanMatchTokenConfigurationsVisited /
+              CallerCanMatchTokenCacheMisses;
 
     internal long BeginPrediction(int decision)
     {
@@ -126,6 +144,17 @@ public sealed class ParserStatistics
                 string.Join("/", _lookaheadHistogram.Select(value => value.ToString("N0"))),
             $"{prefix}ATN work: {ClosureConfigurationsVisited:N0} closure configurations, " +
                 $"{ReachConfigurationsExamined:N0} reach configurations",
+            $"{prefix}caller continuation: {CallerCanMatchTokenCalls:N0} queries, " +
+                $"{CallerCanMatchTokenConfigurationsVisited:N0} configurations " +
+                $"({MeanCallerCanMatchTokenConfigurations:F3}/query, " +
+                $"{MeanCallerCanMatchTokenConfigurationsPerMiss:F3}/miss), " +
+                $"{CallerCanMatchTokenShortCircuits:N0} matched early, " +
+                $"{CallerCanMatchTokenExhaustions:N0} exhausted",
+            $"{prefix}caller continuation cache: " +
+                $"{CallerCanMatchTokenCacheHits:N0} hits, " +
+                $"{CallerCanMatchTokenCacheMisses:N0} misses, " +
+                $"{CallerCanMatchTokenCacheEntries:N0} entries, " +
+                $"{CallerCanMatchTokenConfigurationsAvoided:N0} configurations avoided",
             $"{prefix}prediction contexts: {PredictionContextCreations:N0} created, " +
                 $"{PredictionContextCacheHits:N0} cache hits, " +
                 $"{PredictionContextMerges:N0} merges, " +

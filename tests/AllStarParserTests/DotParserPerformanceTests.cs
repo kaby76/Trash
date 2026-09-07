@@ -161,6 +161,18 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
         Assert.True(statistics.PredictionLookaheadTokens > 0);
         Assert.True(statistics.ClosureConfigurationsVisited > 0);
         Assert.True(statistics.ReachConfigurationsExamined > 0);
+        Assert.True(statistics.CallerCanMatchTokenCalls > 0);
+        Assert.True(statistics.CallerCanMatchTokenConfigurationsVisited > 0);
+        Assert.Equal(statistics.CallerCanMatchTokenCalls,
+            statistics.CallerCanMatchTokenShortCircuits +
+            statistics.CallerCanMatchTokenExhaustions);
+        Assert.Equal(statistics.CallerCanMatchTokenCalls,
+            statistics.CallerCanMatchTokenCacheHits +
+            statistics.CallerCanMatchTokenCacheMisses);
+        Assert.True(statistics.CallerCanMatchTokenCacheHits > 0);
+        Assert.True(statistics.CallerCanMatchTokenCacheMisses > 0);
+        Assert.True(statistics.CallerCanMatchTokenCacheEntries > 0);
+        Assert.True(statistics.CallerCanMatchTokenConfigurationsAvoided > 0);
         Assert.True(statistics.MaximumConfigurationsPerSet > 0);
         Assert.True(statistics.RetainedDfaStates > 0);
         Assert.True(statistics.EstimatedRetainedBytes > 0);
@@ -169,6 +181,8 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
         Assert.True(statistics.MaximumRuleDepth > 0);
         Assert.Equal(0, statistics.ParseEventsCreated);
         Assert.NotEmpty(statistics.Decisions);
+        Assert.Contains("caller continuation:", statistics.Format());
+        Assert.Contains("caller continuation cache:", statistics.Format());
         Assert.Contains("busiest decisions", statistics.Format());
     }
 
