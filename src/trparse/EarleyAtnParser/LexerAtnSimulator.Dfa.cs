@@ -1,5 +1,7 @@
 namespace EarleyAtnParser;
 
+using Atn;
+
 /// <summary>Learned, per-mode DFA support for <see cref="LexerAtnSimulator"/>.</summary>
 public partial class LexerAtnSimulator
 {
@@ -13,8 +15,41 @@ public partial class LexerAtnSimulator
         long CacheMisses,
         long FastPathRuns,
         long FastPathCharacters,
+        int StatesAtStart,
+        int TransitionsAtStart,
         int MaximumConfigurations,
         long EstimatedRetainedBytes);
+
+    /// <summary>
+    /// Grammar-scoped learned lexer DFA data shared by lexer instances in one
+    /// command. Input text, cursor state, and per-file counters are not shared.
+    /// </summary>
+    public sealed class LexerDfaCache
+    {
+        internal MyATN _atn;
+        internal object ModeStartStates;
+        internal object DfaStates;
+        internal object ContextCache;
+        internal object ActionSets;
+
+        internal void Bind(MyATN atn)
+        {
+            ArgumentNullException.ThrowIfNull(atn);
+            if (_atn == null)
+            {
+                _atn = atn;
+                ModeStartStates = new DfaState[atn.modeToStartState.Length];
+                DfaStates = new List<DfaState>();
+                ContextCache = new LexContextCache();
+                ActionSets = new Dictionary<int, IMyLexerAction[]>();
+            }
+            else if (!ReferenceEquals(_atn, atn))
+            {
+                throw new InvalidOperationException(
+                    "A lexer DFA cache cannot be shared by different ATN instances.");
+            }
+        }
+    }
 
     private sealed class DfaEdgeTable
     {
@@ -116,7 +151,7 @@ public partial class LexerAtnSimulator
     private readonly record struct DfaAccept(int Rule, int Actions);
 
     private readonly DfaState[] _modeStartStates;
-    private readonly List<DfaState> _dfaStates = new();
+    private readonly List<DfaState> _dfaStates;
     private readonly HashSet<NonGreedyAccept> _nonGreedyAcceptWork =
         new(NonGreedyAcceptEq.Instance);
 
@@ -126,6 +161,11 @@ public partial class LexerAtnSimulator
     internal long DfaEdgeCacheMisses { get; private set; }
     internal long DfaFastPathRuns { get; private set; }
     internal long DfaFastPathCharacters { get; private set; }
+    private readonly int _dfaStatesAtStart;
+    private readonly int _dfaTransitionsAtStart;
+
+    private int CountDfaTransitions() =>
+        _dfaStates.Sum(state => state.Edges.LiveCount + state.Edges.DeadCount);
 
     public LexerDfaStatistics GetDfaStatistics()
     {
@@ -142,7 +182,8 @@ public partial class LexerAtnSimulator
         return new LexerDfaStatistics(
             _dfaStates.Count, live, dead, denseRows, sparseEntries,
             DfaEdgeCacheHits, DfaEdgeCacheMisses,
-            DfaFastPathRuns, DfaFastPathCharacters, maximumConfigurations,
+            DfaFastPathRuns, DfaFastPathCharacters,
+            _dfaStatesAtStart, _dfaTransitionsAtStart, maximumConfigurations,
             estimatedBytes);
     }
 

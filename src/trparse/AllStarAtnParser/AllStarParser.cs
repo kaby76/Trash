@@ -113,7 +113,8 @@ public static class AllStarParser
         out TokenStore allTokens,
         LexerStatistics lexerStatistics = null,
         ParserStatistics parserStatistics = null,
-        ParserPredictionCache predictionCache = null)
+        ParserPredictionCache predictionCache = null,
+        LexerAtnSimulator.LexerDfaCache lexerDfaCache = null)
     {
         if (parserAtn == null) throw new ArgumentNullException(nameof(parserAtn));
         if (lexerAtn == null) throw new ArgumentNullException(nameof(lexerAtn));
@@ -126,7 +127,8 @@ public static class AllStarParser
         var events = new List<ParseEvent>();
         var instance = new ParserInstance(
             parserAtn, lexerAtn, input, allTokens, metadata,
-            events, lexerStatistics, parserStatistics, predictionCache);
+            events, lexerStatistics, parserStatistics, predictionCache,
+            lexerDfaCache);
         bool success = instance.ParseRule(startRuleIndex, PredictionContext.EMPTY);
         instance.CaptureStatistics();
         if (!success)
@@ -184,7 +186,8 @@ public static class AllStarParser
                               List<ParseEvent> events,
                               LexerStatistics lexerStatistics,
                               ParserStatistics parserStatistics = null,
-                              ParserPredictionCache predictionCache = null)
+                              ParserPredictionCache predictionCache = null,
+                              LexerAtnSimulator.LexerDfaCache lexerDfaCache = null)
         {
             _atn = parserAtn;
             _allTokens = allTokens;
@@ -197,7 +200,8 @@ public static class AllStarParser
             _ll1Tables = null;
             _sim = new AllStarSimulator(
                 parserAtn, parserStatistics, predictionCache);
-            _lexer = new LexerAtnSimulator(lexerAtn, lexerStatistics);
+            _lexer = new LexerAtnSimulator(
+                lexerAtn, lexerStatistics, lexerDfaCache);
             _lexer.SetInput(input);
             _lexerCursor = new LexerAtnSimulator.Cursor();
             _input = input;

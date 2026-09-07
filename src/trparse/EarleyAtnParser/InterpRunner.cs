@@ -28,7 +28,8 @@ public static class InterpRunner
         bool lineNumbers,
         bool lexerStats = false,
         bool lexerOverlaps = false,
-        AllStarAtnParser.InterpRuntimeCache runtimeCache = null)
+        AllStarAtnParser.InterpRuntimeCache runtimeCache = null,
+        LexerAtnSimulator.LexerDfaCache lexerDfaCache = null)
     {
         // Get options to lexer from process args.
         var args = Environment.GetCommandLineArgs().ToList();
@@ -75,7 +76,7 @@ public static class InterpRunner
         var statistics = lexerStats || lexerOverlaps
             ? new LexerStatistics()
             : null;
-        var sim = new LexerAtnSimulator(lexerAtn, statistics);
+        var sim = new LexerAtnSimulator(lexerAtn, statistics, lexerDfaCache);
         var rawTokens = sim.Tokenize(inputText);
         AllStarAtnParser.InterpRunner.PrintLexerStatistics(
             statistics, lexerOverlaps, fileName,

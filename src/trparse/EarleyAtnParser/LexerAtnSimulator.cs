@@ -10,9 +10,9 @@ public partial class LexerAtnSimulator
 {
     private readonly MyATN _atn;
     private readonly bool _enableDfa;
-    private readonly LexContextCache _contextCache = new();
+    private readonly LexContextCache _contextCache;
     private readonly Stack<LexerConfig> _closureWork = new();
-    private readonly Dictionary<int, IMyLexerAction[]> _actionSets = new();
+    private readonly Dictionary<int, IMyLexerAction[]> _actionSets;
     private string _input;
     private const int DEFAULT_CHANNEL = 0;
     private const int EOF = -1;
@@ -21,17 +21,41 @@ public partial class LexerAtnSimulator
     public bool RecordStatistics { get; set; } = true;
 
     public LexerAtnSimulator(MyATN lexerAtn, LexerStatistics statistics = null)
-        : this(lexerAtn, statistics, true)
+        : this(lexerAtn, statistics, true, null)
+    {
+    }
+
+    public LexerAtnSimulator(MyATN lexerAtn, LexerStatistics statistics,
+        LexerDfaCache dfaCache)
+        : this(lexerAtn, statistics, true, dfaCache)
     {
     }
 
     internal LexerAtnSimulator(
-        MyATN lexerAtn, LexerStatistics statistics, bool enableDfa)
+        MyATN lexerAtn, LexerStatistics statistics, bool enableDfa,
+        LexerDfaCache dfaCache = null)
     {
         _atn = lexerAtn;
         _enableDfa = enableDfa;
         Statistics = statistics;
-        _modeStartStates = new DfaState[lexerAtn.modeToStartState.Length];
+        if (enableDfa && dfaCache != null)
+        {
+            dfaCache.Bind(lexerAtn);
+            _modeStartStates = (DfaState[])dfaCache.ModeStartStates;
+            _dfaStates = (List<DfaState>)dfaCache.DfaStates;
+            _contextCache = (LexContextCache)dfaCache.ContextCache;
+            _actionSets =
+                (Dictionary<int, IMyLexerAction[]>)dfaCache.ActionSets;
+        }
+        else
+        {
+            _modeStartStates = new DfaState[lexerAtn.modeToStartState.Length];
+            _dfaStates = new List<DfaState>();
+            _contextCache = new LexContextCache();
+            _actionSets = new Dictionary<int, IMyLexerAction[]>();
+        }
+        _dfaStatesAtStart = _dfaStates.Count;
+        _dfaTransitionsAtStart = CountDfaTransitions();
     }
 
     /// <summary>

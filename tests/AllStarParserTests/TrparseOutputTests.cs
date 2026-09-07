@@ -83,6 +83,10 @@ public sealed class TrparseOutputTests
                 @"shared DFA at parse start: [1-9][0-9,]* states",
                 stderr);
             Assert.Matches(
+                @"Lexer DFA \(last file\) at input start: [1-9][0-9,]* states, " +
+                @"[1-9][0-9,]* transitions",
+                stderr);
+            Assert.Matches(
                 @"ALL\(\*\) stage timings \(2 files\):", stderr);
         }
         finally
