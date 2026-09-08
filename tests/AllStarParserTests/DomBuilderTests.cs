@@ -83,6 +83,11 @@ public class DomBuilderTests
         Assert.Equal(1, compact.Count);
         Assert.True(compact.NodeCount > 0);
         Assert.True(compact.EdgeCount > 0);
+        if (!lineNumbers)
+        {
+            Assert.Equal(4, compact.NodeCount);
+            Assert.Equal(3, compact.EdgeCount);
+        }
     }
 
     [Fact]
