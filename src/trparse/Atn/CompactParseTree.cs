@@ -15,21 +15,25 @@ public sealed class CompactParseTree : IParsingResultNodeProvider
 {
     private readonly CompactNode[] _nodes;
     private readonly int[] _children;
+    private readonly int _nodeCount;
+    private readonly int _edgeCount;
     private readonly int _root;
     private readonly TokenStore _tokens;
 
-    internal CompactParseTree(CompactNode[] nodes, int[] children, int root,
-        TokenStore tokens)
+    internal CompactParseTree(CompactNode[] nodes, int nodeCount,
+        int[] children, int edgeCount, int root, TokenStore tokens)
     {
         _nodes = nodes;
+        _nodeCount = nodeCount;
         _children = children;
+        _edgeCount = edgeCount;
         _root = root;
         _tokens = tokens;
     }
 
     public int Count => _root >= 0 ? 1 : 0;
-    internal int NodeCount => _nodes.Length;
-    internal int EdgeCount => _children.Length;
+    internal int NodeCount => _nodeCount;
+    internal int EdgeCount => _edgeCount;
 
     public void WriteNodes(Utf8JsonWriter writer)
     {
@@ -372,11 +376,8 @@ public static class CompactTreeBuilder
     private sealed class Builder
     {
         private readonly TokenStore _tokens;
-        private readonly List<CompactNode> _nodes = [];
-        private readonly List<int> _first = [];
-        private readonly List<int> _last = [];
-        private readonly List<int> _next = [];
-        private readonly List<int> _children = [];
+        private readonly NodeBuffer _nodes = new();
+        private readonly IntBuffer _children = new();
 
         public Builder(TokenStore tokens) => _tokens = tokens;
         public bool HasTokenStore => _tokens != null;
@@ -447,48 +448,42 @@ public static class CompactTreeBuilder
         });
 
         private int Add(CompactNode node)
-        {
-            var id = _nodes.Count;
-            _nodes.Add(node);
-            _first.Add(-1);
-            _last.Add(-1);
-            _next.Add(-1);
-            return id;
-        }
+            => _nodes.Add(node);
 
         public void AddChild(int parent, int child)
         {
-            if (_first[parent] < 0) _first[parent] = child;
-            else _next[_last[parent]] = child;
-            _last[parent] = child;
+            if (_nodes.First[parent] < 0) _nodes.First[parent] = child;
+            else _nodes.Next[_nodes.Last[parent]] = child;
+            _nodes.Last[parent] = child;
         }
 
         public void AddFirst(int parent, int child)
         {
-            _next[child] = _first[parent];
-            _first[parent] = child;
-            if (_last[parent] < 0) _last[parent] = child;
+            _nodes.Next[child] = _nodes.First[parent];
+            _nodes.First[parent] = child;
+            if (_nodes.Last[parent] < 0) _nodes.Last[parent] = child;
         }
 
         public void Finish(int id)
         {
-            var node = _nodes[id];
+            var node = _nodes.Nodes[id];
             if (node.ChildStart >= 0) return;
             node.ChildStart = _children.Count;
-            var child = _first[id];
+            var child = _nodes.First[id];
             while (child >= 0)
             {
                 _children.Add(child);
                 node.ChildCount++;
-                child = _next[child];
+                child = _nodes.Next[child];
             }
-            _nodes[id] = node;
+            _nodes.Nodes[id] = node;
         }
 
         public int FirstElementChild(int id)
         {
-            for (var child = _first[id]; child >= 0; child = _next[child])
-                if (_nodes[child].Kind is CompactNodeKind.Element or
+            for (var child = _nodes.First[id]; child >= 0;
+                 child = _nodes.Next[child])
+                if (_nodes.Nodes[child].Kind is CompactNodeKind.Element or
                     CompactNodeKind.Terminal)
                     return child;
             return -1;
@@ -497,9 +492,10 @@ public static class CompactTreeBuilder
         public List<CompactNode> LineColumnAttributes(int id)
         {
             var result = new List<CompactNode>(2);
-            for (var child = _first[id]; child >= 0; child = _next[child])
+            for (var child = _nodes.First[id]; child >= 0;
+                 child = _nodes.Next[child])
             {
-                var node = _nodes[child];
+                var node = _nodes.Nodes[child];
                 if (node.Kind == CompactNodeKind.Attribute &&
                     (node.Name == "Line" || node.Name == "Column"))
                     result.Add(node);
@@ -511,7 +507,62 @@ public static class CompactTreeBuilder
         {
             if (root >= 0) Finish(root);
             return new CompactParseTree(
-                _nodes.ToArray(), _children.ToArray(), root, _tokens);
+                _nodes.Nodes, _nodes.Count,
+                _children.Items, _children.Count, root, _tokens);
+        }
+
+        /// <summary>
+        /// Grows node and relationship storage together with one capacity
+        /// check per node instead of four independent List&lt;T&gt;.Add calls.
+        /// The backing arrays transfer directly to CompactParseTree.
+        /// </summary>
+        private sealed class NodeBuffer
+        {
+            private const int InitialCapacity = 256;
+            public CompactNode[] Nodes = Array.Empty<CompactNode>();
+            public int[] First = Array.Empty<int>();
+            public int[] Last = Array.Empty<int>();
+            public int[] Next = Array.Empty<int>();
+            public int Count { get; private set; }
+
+            public int Add(CompactNode node)
+            {
+                if (Count == Nodes.Length) Grow();
+                int id = Count++;
+                Nodes[id] = node;
+                First[id] = -1;
+                Last[id] = -1;
+                Next[id] = -1;
+                return id;
+            }
+
+            private void Grow()
+            {
+                int capacity = Nodes.Length == 0
+                    ? InitialCapacity : checked(Nodes.Length * 2);
+                Array.Resize(ref Nodes, capacity);
+                Array.Resize(ref First, capacity);
+                Array.Resize(ref Last, capacity);
+                Array.Resize(ref Next, capacity);
+            }
+        }
+
+        private sealed class IntBuffer
+        {
+            private const int InitialCapacity = 256;
+            public int[] Items = Array.Empty<int>();
+            public int Count { get; private set; }
+
+            public void Add(int value)
+            {
+                if (Count == Items.Length)
+                {
+                    int capacity = Items.Length == 0
+                        ? InitialCapacity : checked(Items.Length * 2);
+                    Array.Resize(ref Items, capacity);
+                }
+                Items[Count++] = value;
+            }
         }
     }
 }
