@@ -157,12 +157,12 @@ public partial class LexerAtnSimulator
         int startLine = cursor.Line;
         int startColumn = cursor.Column;
         int startMode = cursor.Mode;
+        bool collectDiagnostics = RecordStatistics && Statistics != null;
+        var diagnostics = collectDiagnostics ? new MatchDiagnostics() : null;
         var match = MatchNextToken(
-            start, cursor.Mode, expectedTokenTypes,
-            collectCandidates: RecordStatistics && Statistics != null);
+            start, cursor.Mode, expectedTokenTypes, diagnostics);
         int matchedRule = match.RuleIndex;
         int matchEnd = match.EndPosition;
-        var actions = match.Actions;
 
         if (matchedRule < 0)
             throw new InvalidOperationException(
@@ -172,27 +172,35 @@ public partial class LexerAtnSimulator
         int channel = DEFAULT_CHANNEL;
         bool skip = false;
 
-        foreach (var action in actions)
+        // Most lexer rules have no commands. Avoid resolving and enumerating an
+        // empty action collection on the production path.
+        var actions = match.ActionBits == 0
+            ? null
+            : ResolveActions(match.ActionBits);
+        if (actions != null)
         {
-            switch (action.ActionType)
+            foreach (var action in actions)
             {
-                case MyLexerActionType.Skip:    skip = true; break;
-                case MyLexerActionType.Channel: channel = action.Arg1; break;
-                case MyLexerActionType.Type:    tokenType = action.Arg1; break;
-                case MyLexerActionType.Mode:    cursor.Mode = action.Arg1; break;
-                case MyLexerActionType.PushMode:
-                    cursor.ModeStack.Push(cursor.Mode);
-                    cursor.Mode = action.Arg1;
-                    break;
-                case MyLexerActionType.PopMode:
-                    if (cursor.ModeStack.Count == 0)
-                        throw new InvalidOperationException(
-                            "Cannot pop the lexer mode because the mode stack is empty.");
-                    cursor.Mode = cursor.ModeStack.Pop();
-                    break;
-                default:
-                    throw new NotSupportedException(
-                        $"Lexer action '{action.ActionType}' is not supported by the Earley ATN lexer.");
+                switch (action.ActionType)
+                {
+                    case MyLexerActionType.Skip:    skip = true; break;
+                    case MyLexerActionType.Channel: channel = action.Arg1; break;
+                    case MyLexerActionType.Type:    tokenType = action.Arg1; break;
+                    case MyLexerActionType.Mode:    cursor.Mode = action.Arg1; break;
+                    case MyLexerActionType.PushMode:
+                        cursor.ModeStack.Push(cursor.Mode);
+                        cursor.Mode = action.Arg1;
+                        break;
+                    case MyLexerActionType.PopMode:
+                        if (cursor.ModeStack.Count == 0)
+                            throw new InvalidOperationException(
+                                "Cannot pop the lexer mode because the mode stack is empty.");
+                        cursor.Mode = cursor.ModeStack.Pop();
+                        break;
+                    default:
+                        throw new NotSupportedException(
+                            $"Lexer action '{action.ActionType}' is not supported by the Earley ATN lexer.");
+                }
             }
         }
 
@@ -205,11 +213,12 @@ public partial class LexerAtnSimulator
         cursor.Line = line;
         cursor.Column = column;
         cursor.Position = matchEnd;
-        if (RecordStatistics && Statistics != null)
+        if (diagnostics != null)
             Statistics.Record(
                 start, startLine, startColumn, startMode,
-                match.Candidates, match.OrdinaryWinner, match.SelectedWinner,
-                expectedTokenTypes, match.UsedContextFallback);
+                diagnostics.Candidates, diagnostics.OrdinaryWinner,
+                diagnostics.SelectedWinner, expectedTokenTypes,
+                diagnostics.UsedContextFallback);
         return tokenIndex;
     }
 
@@ -232,19 +241,26 @@ public partial class LexerAtnSimulator
                 "No lexer input is bound. Call SetInput or Tokenize first.");
     }
 
-    private readonly record struct MatchResult(
-        int RuleIndex,
-        int EndPosition,
-        IReadOnlyList<IMyLexerAction> Actions,
-        IReadOnlyList<LexerCandidate> Candidates,
-        LexerCandidate OrdinaryWinner,
-        LexerCandidate SelectedWinner,
-        bool UsedContextFallback);
+    /// <summary>
+    /// The production lexer returns only the values needed to emit a token.
+    /// Candidate lists and winner objects are populated separately, and only
+    /// when lexer statistics have explicitly been requested.
+    /// </summary>
+    private readonly record struct TokenMatch(
+        int RuleIndex, int EndPosition, int ActionBits);
 
-    private MatchResult MatchNextToken(
+    private sealed class MatchDiagnostics
+    {
+        public IReadOnlyList<LexerCandidate> Candidates;
+        public LexerCandidate OrdinaryWinner;
+        public LexerCandidate SelectedWinner;
+        public bool UsedContextFallback;
+    }
+
+    private TokenMatch MatchNextToken(
         int startPos, int mode,
         IReadOnlySet<int> expectedTokenTypes = null,
-        bool collectCandidates = false)
+        MatchDiagnostics diagnostics = null)
     {
         if (mode < 0 || mode >= _atn.modeToStartState.Length)
             return EmptyMatch(startPos);
@@ -252,7 +268,7 @@ public partial class LexerAtnSimulator
         int pos = startPos;
         int bestRule = -1, bestEnd = -1, bestActions = 0;
         int expectedRule = -1, expectedEnd = -1, expectedActions = 0;
-        Dictionary<int, (int End, int Actions)> acceptedRules = collectCandidates
+        Dictionary<int, (int End, int Actions)> acceptedRules = diagnostics != null
             ? new()
             : null;
 
@@ -303,34 +319,26 @@ public partial class LexerAtnSimulator
 
         if (bestRule < 0) return EmptyMatch(startPos);
 
-        var resolvedActions = ResolveActions(bestActions);
-
-        var candidates = acceptedRules == null
-            ? Array.Empty<LexerCandidate>()
-            : acceptedRules
+        if (diagnostics != null)
+        {
+            diagnostics.Candidates = acceptedRules
                 .Where(entry => entry.Value.End > startPos)
                 .Select(entry => CreateCandidate(
                     startPos, entry.Key,
                     entry.Value.End, entry.Value.Actions))
                 .OrderBy(candidate => candidate.RuleIndex)
                 .ToArray();
-        var ordinaryWinner = acceptedRules == null
-            ? null
-            : CreateCandidate(startPos, ordinaryRule, ordinaryEnd, ordinaryActions);
-        var selectedWinner = acceptedRules == null
-            ? null
-            : CreateCandidate(startPos, bestRule, bestEnd, bestActions);
-        return new MatchResult(
-            bestRule, bestEnd, resolvedActions, candidates,
-            ordinaryWinner, selectedWinner, usedContextFallback);
+            diagnostics.OrdinaryWinner = CreateCandidate(
+                startPos, ordinaryRule, ordinaryEnd, ordinaryActions);
+            diagnostics.SelectedWinner = CreateCandidate(
+                startPos, bestRule, bestEnd, bestActions);
+            diagnostics.UsedContextFallback = usedContextFallback;
+        }
+        return new TokenMatch(bestRule, bestEnd, bestActions);
     }
 
-    private static MatchResult EmptyMatch(int startPosition)
-    {
-        return new MatchResult(
-            -1, startPosition, Array.Empty<IMyLexerAction>(),
-            Array.Empty<LexerCandidate>(), null, null, false);
-    }
+    private static TokenMatch EmptyMatch(int startPosition)
+        => new(-1, startPosition, 0);
 
     private void CheckAccepts(
         DfaState state, int pos,
