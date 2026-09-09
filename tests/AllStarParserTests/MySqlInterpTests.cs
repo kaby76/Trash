@@ -72,6 +72,19 @@ public class MySqlInterpTests
         Assert.Equal(-1, tokens[^1].Type);
     }
 
+    [Fact]
+    public void NonGreedyIdentifierFragmentRetainsGreedySuffix()
+    {
+        var interp = InterpFileReader.Read(File.ReadAllText(LexerInterp));
+        var lexerAtn = Atn.AtnDeserializer.Deserialize(interp.AtnData);
+        var tokens = new LexerAtnSimulator(lexerAtn).Tokenize("v1");
+
+        var identifier = Assert.Single(tokens,
+            token => token.Channel == 0 && token.Type != -1);
+        Assert.Equal("ID", interp.SymbolicNames[identifier.Type]);
+        Assert.Equal("v1", identifier.Text);
+    }
+
     [Theory]
     [MemberData(nameof(SqlFiles))]
     public void AllStarParsesSuccessfully(string filePath)

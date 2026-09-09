@@ -209,7 +209,7 @@ public partial class LexerAtnSimulator
             var uncachedConfigs = new HashSet<LexerConfig>(LexerConfigEq.Instance)
             {
                 new LexerConfig(_atn.modeToStartState[mode], LexStack.Empty,
-                    0, -1, -1, LexStack.Empty, false)
+                    0, -1, -1, LexStack.Empty, -1, false)
             };
             EpsClosure(uncachedConfigs);
             return new DfaState(uncachedConfigs);
@@ -220,7 +220,7 @@ public partial class LexerAtnSimulator
         var configs = NewDfaConfigSet();
         configs.Add(new LexerConfig(
             _atn.modeToStartState[mode], LexStack.Empty,
-            0, -1, -1, LexStack.Empty, false));
+            0, -1, -1, LexStack.Empty, -1, false));
         EpsClosure(configs);
         cached = InternDfaState(configs);
         _modeStartStates[mode] = cached;
@@ -289,7 +289,7 @@ public partial class LexerAtnSimulator
             {
                 accepts.Add(new NonGreedyAccept(
                     config.State.ruleIndex, config.NonGreedyDecision,
-                    config.NonGreedyContext));
+                    config.NonGreedyContext, config.NonGreedyBranch));
             }
         }
         if (accepts.Count == 0) return;
@@ -301,14 +301,23 @@ public partial class LexerAtnSimulator
     private static bool IsLowerPriorityNonGreedyPath(
         LexerConfig config, HashSet<NonGreedyAccept> accepts)
     {
+        bool competingBranchAccepted = false;
         foreach (var accept in accepts)
             if (accept.Rule == config.OuterRule &&
                 accept.Decision == config.NonGreedyDecision &&
-                accept.Context.Id == config.NonGreedyContext.Id &&
-                (!accept.Context.IsEmpty ||
-                 (config.Stack.IsEmpty && !config.CompletedInnerRule)))
-                return true;
-        return false;
+                accept.Context.Id == config.NonGreedyContext.Id)
+            {
+                // Preserve the selected branch while it remains inside the
+                // rule context which owns the non-greedy decision. Once that
+                // fragment has returned, its successful accept must prune
+                // outer continuations just like ANTLR's ordered closure does.
+                if ((accept.Branch == config.NonGreedyBranch ||
+                     config.CompletedInnerRule) &&
+                    accept.Context.Id == config.Stack.Id)
+                    return false;
+                competingBranchAccepted = true;
+            }
+        return competingBranchAccepted;
     }
 
     private sealed class DfaLexerConfigEq : IEqualityComparer<LexerConfig>
@@ -322,6 +331,7 @@ public partial class LexerAtnSimulator
             x.OuterRule == y.OuterRule &&
             x.NonGreedyDecision == y.NonGreedyDecision &&
             x.NonGreedyContext.Id == y.NonGreedyContext.Id &&
+            x.NonGreedyBranch == y.NonGreedyBranch &&
             x.CompletedInnerRule == y.CompletedInnerRule;
 
         public int GetHashCode(LexerConfig config)
@@ -334,6 +344,7 @@ public partial class LexerAtnSimulator
                 hash = hash * 31 + config.OuterRule;
                 hash = hash * 31 + config.NonGreedyDecision;
                 hash = hash * 31 + config.NonGreedyContext.Id;
+                hash = hash * 31 + config.NonGreedyBranch;
                 hash = hash * 31 + (config.CompletedInnerRule ? 1 : 0);
                 return hash;
             }
