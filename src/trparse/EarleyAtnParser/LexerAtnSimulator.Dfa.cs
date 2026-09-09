@@ -1,5 +1,7 @@
 namespace EarleyAtnParser;
 
+using Atn;
+
 /// <summary>Learned, per-mode DFA support for <see cref="LexerAtnSimulator"/>.</summary>
 public partial class LexerAtnSimulator
 {
@@ -13,8 +15,41 @@ public partial class LexerAtnSimulator
         long CacheMisses,
         long FastPathRuns,
         long FastPathCharacters,
+        int StatesAtStart,
+        int TransitionsAtStart,
         int MaximumConfigurations,
         long EstimatedRetainedBytes);
+
+    /// <summary>
+    /// Grammar-scoped learned lexer DFA data shared by lexer instances in one
+    /// command. Input text, cursor state, and per-file counters are not shared.
+    /// </summary>
+    public sealed class LexerDfaCache
+    {
+        internal MyATN _atn;
+        internal object ModeStartStates;
+        internal object DfaStates;
+        internal object ContextCache;
+        internal object ActionSets;
+
+        internal void Bind(MyATN atn)
+        {
+            ArgumentNullException.ThrowIfNull(atn);
+            if (_atn == null)
+            {
+                _atn = atn;
+                ModeStartStates = new DfaState[atn.modeToStartState.Length];
+                DfaStates = new List<DfaState>();
+                ContextCache = new LexContextCache();
+                ActionSets = new Dictionary<int, IMyLexerAction[]>();
+            }
+            else if (!ReferenceEquals(_atn, atn))
+            {
+                throw new InvalidOperationException(
+                    "A lexer DFA cache cannot be shared by different ATN instances.");
+            }
+        }
+    }
 
     private sealed class DfaEdgeTable
     {
@@ -116,7 +151,7 @@ public partial class LexerAtnSimulator
     private readonly record struct DfaAccept(int Rule, int Actions);
 
     private readonly DfaState[] _modeStartStates;
-    private readonly List<DfaState> _dfaStates = new();
+    private readonly List<DfaState> _dfaStates;
     private readonly HashSet<NonGreedyAccept> _nonGreedyAcceptWork =
         new(NonGreedyAcceptEq.Instance);
 
@@ -126,6 +161,11 @@ public partial class LexerAtnSimulator
     internal long DfaEdgeCacheMisses { get; private set; }
     internal long DfaFastPathRuns { get; private set; }
     internal long DfaFastPathCharacters { get; private set; }
+    private readonly int _dfaStatesAtStart;
+    private readonly int _dfaTransitionsAtStart;
+
+    private int CountDfaTransitions() =>
+        _dfaStates.Sum(state => state.Edges.LiveCount + state.Edges.DeadCount);
 
     public LexerDfaStatistics GetDfaStatistics()
     {
@@ -142,15 +182,16 @@ public partial class LexerAtnSimulator
         return new LexerDfaStatistics(
             _dfaStates.Count, live, dead, denseRows, sparseEntries,
             DfaEdgeCacheHits, DfaEdgeCacheMisses,
-            DfaFastPathRuns, DfaFastPathCharacters, maximumConfigurations,
+            DfaFastPathRuns, DfaFastPathCharacters,
+            _dfaStatesAtStart, _dfaTransitionsAtStart, maximumConfigurations,
             estimatedBytes);
     }
 
     private int ConsumeKnownAsciiSelfLoop(
-        DfaState state, string input, int position)
+        DfaState state, int position)
     {
         if (!_enableDfa) return position;
-        var end = state.Edges.ConsumeKnownAsciiSelfLoop(state, input, position);
+        var end = state.Edges.ConsumeKnownAsciiSelfLoop(state, _input, position);
         var consumed = end - position;
         if (consumed != 0)
         {
@@ -168,7 +209,7 @@ public partial class LexerAtnSimulator
             var uncachedConfigs = new HashSet<LexerConfig>(LexerConfigEq.Instance)
             {
                 new LexerConfig(_atn.modeToStartState[mode], LexStack.Empty,
-                    0, -1, -1, LexStack.Empty, false)
+                    0, -1, -1, LexStack.Empty, -1, false)
             };
             EpsClosure(uncachedConfigs);
             return new DfaState(uncachedConfigs);
@@ -179,7 +220,7 @@ public partial class LexerAtnSimulator
         var configs = NewDfaConfigSet();
         configs.Add(new LexerConfig(
             _atn.modeToStartState[mode], LexStack.Empty,
-            0, -1, -1, LexStack.Empty, false));
+            0, -1, -1, LexStack.Empty, -1, false));
         EpsClosure(configs);
         cached = InternDfaState(configs);
         _modeStartStates[mode] = cached;
@@ -248,7 +289,7 @@ public partial class LexerAtnSimulator
             {
                 accepts.Add(new NonGreedyAccept(
                     config.State.ruleIndex, config.NonGreedyDecision,
-                    config.NonGreedyContext));
+                    config.NonGreedyContext, config.NonGreedyBranch));
             }
         }
         if (accepts.Count == 0) return;
@@ -260,14 +301,23 @@ public partial class LexerAtnSimulator
     private static bool IsLowerPriorityNonGreedyPath(
         LexerConfig config, HashSet<NonGreedyAccept> accepts)
     {
+        bool competingBranchAccepted = false;
         foreach (var accept in accepts)
             if (accept.Rule == config.OuterRule &&
                 accept.Decision == config.NonGreedyDecision &&
-                accept.Context.Id == config.NonGreedyContext.Id &&
-                (!accept.Context.IsEmpty ||
-                 (config.Stack.IsEmpty && !config.CompletedInnerRule)))
-                return true;
-        return false;
+                accept.Context.Id == config.NonGreedyContext.Id)
+            {
+                // Preserve the selected branch while it remains inside the
+                // rule context which owns the non-greedy decision. Once that
+                // fragment has returned, its successful accept must prune
+                // outer continuations just like ANTLR's ordered closure does.
+                if ((accept.Branch == config.NonGreedyBranch ||
+                     config.CompletedInnerRule) &&
+                    accept.Context.Id == config.Stack.Id)
+                    return false;
+                competingBranchAccepted = true;
+            }
+        return competingBranchAccepted;
     }
 
     private sealed class DfaLexerConfigEq : IEqualityComparer<LexerConfig>
@@ -281,6 +331,7 @@ public partial class LexerAtnSimulator
             x.OuterRule == y.OuterRule &&
             x.NonGreedyDecision == y.NonGreedyDecision &&
             x.NonGreedyContext.Id == y.NonGreedyContext.Id &&
+            x.NonGreedyBranch == y.NonGreedyBranch &&
             x.CompletedInnerRule == y.CompletedInnerRule;
 
         public int GetHashCode(LexerConfig config)
@@ -293,6 +344,7 @@ public partial class LexerAtnSimulator
                 hash = hash * 31 + config.OuterRule;
                 hash = hash * 31 + config.NonGreedyDecision;
                 hash = hash * 31 + config.NonGreedyContext.Id;
+                hash = hash * 31 + config.NonGreedyBranch;
                 hash = hash * 31 + (config.CompletedInnerRule ? 1 : 0);
                 return hash;
             }

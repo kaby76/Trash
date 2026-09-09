@@ -25,7 +25,7 @@ public readonly struct ParseEvent
     // Consume: index into the all-channel LexerToken list.
     public int Index { get; }
 
-    private ParseEvent(ParseEventKind kind, int index) { Kind = kind; Index = index; }
+    internal ParseEvent(ParseEventKind kind, int index) { Kind = kind; Index = index; }
 
     public static ParseEvent EnterRule(int ruleIndex)           => new(ParseEventKind.EnterRule,           ruleIndex);
     public static ParseEvent ExitRule(int ruleIndex)            => new(ParseEventKind.ExitRule,            ruleIndex);

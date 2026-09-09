@@ -14,22 +14,26 @@ using System.Text.Json;
 public sealed class CompactParseTree : IParsingResultNodeProvider
 {
     private readonly CompactNode[] _nodes;
-    private readonly int[] _children;
+    private readonly int[] _nextSibling;
+    private readonly int _nodeCount;
+    private readonly int _edgeCount;
     private readonly int _root;
     private readonly TokenStore _tokens;
 
-    internal CompactParseTree(CompactNode[] nodes, int[] children, int root,
-        TokenStore tokens)
+    internal CompactParseTree(CompactNode[] nodes, int nodeCount,
+        int[] nextSibling, int edgeCount, int root, TokenStore tokens)
     {
         _nodes = nodes;
-        _children = children;
+        _nodeCount = nodeCount;
+        _nextSibling = nextSibling;
+        _edgeCount = edgeCount;
         _root = root;
         _tokens = tokens;
     }
 
     public int Count => _root >= 0 ? 1 : 0;
-    internal int NodeCount => _nodes.Length;
-    internal int EdgeCount => _children.Length;
+    internal int NodeCount => _nodeCount;
+    internal int EdgeCount => _edgeCount;
 
     public void WriteNodes(Utf8JsonWriter writer)
     {
@@ -48,10 +52,12 @@ public sealed class CompactParseTree : IParsingResultNodeProvider
     {
         ref readonly var node = ref _nodes[id];
         writer.WriteStartArray();
-        writer.WriteNumberValue((short)node.Kind);
+        writer.WriteNumberValue((short)(node.Kind == CompactNodeKind.Terminal
+            ? CompactNodeKind.Element : node.Kind));
         switch (node.Kind)
         {
             case CompactNodeKind.Element:
+            case CompactNodeKind.Terminal:
                 writer.WriteNumberValue(node.RuleIndex);
                 writer.WriteStringValue(node.Name);
                 break;
@@ -71,8 +77,23 @@ public sealed class CompactParseTree : IParsingResultNodeProvider
         }
 
         writer.WriteStartArray();
-        for (var i = 0; i < node.ChildCount; i++)
-            WriteNode(writer, _children[node.ChildStart + i]);
+        if (node.Kind == CompactNodeKind.Terminal)
+            WriteTerminalText(writer, node);
+        for (var child = node.ChildStart; child >= 0;
+             child = _nextSibling[child])
+            WriteNode(writer, child);
+        writer.WriteEndArray();
+        writer.WriteEndArray();
+    }
+
+    private void WriteTerminalText(Utf8JsonWriter writer, in CompactNode terminal)
+    {
+        writer.WriteStartArray();
+        writer.WriteNumberValue((short)CompactNodeKind.Text);
+        WriteValue(writer, terminal);
+        writer.WriteNumberValue(0);
+        writer.WriteNumberValue(0);
+        writer.WriteStartArray();
         writer.WriteEndArray();
         writer.WriteEndArray();
     }
@@ -108,6 +129,13 @@ public sealed class CompactParseTree : IParsingResultNodeProvider
                 ChildNodes = new UnvParseTreeNodeList(),
                 Attributes = new AntlrNamedNodeMap()
             },
+            CompactNodeKind.Terminal => new UnvParseTreeElement
+            {
+                LocalName = compact.Name,
+                RuleIndex = -1,
+                ChildNodes = new UnvParseTreeNodeList(),
+                Attributes = new AntlrNamedNodeMap()
+            },
             CompactNodeKind.Attribute => new UnvParseTreeAttr
             {
                 Name = compact.Name,
@@ -128,9 +156,21 @@ public sealed class CompactParseTree : IParsingResultNodeProvider
             attr.OwnerElement = parent as UnvParseTreeElement;
 
         UnvParseTreeNode previous = null;
-        for (var i = 0; i < compact.ChildCount; i++)
+        if (compact.Kind == CompactNodeKind.Terminal)
         {
-            var child = MaterializeNode(_children[compact.ChildStart + i], result);
+            previous = new UnvParseTreeText
+            {
+                Data = Value(compact),
+                Channel = 0,
+                TokenType = 0,
+                ParentNode = result
+            };
+            result.ChildNodes.Add(previous);
+        }
+        for (var childId = compact.ChildStart; childId >= 0;
+             childId = _nextSibling[childId])
+        {
+            var child = MaterializeNode(childId, result);
             result.ChildNodes.Add(child);
             if (previous != null)
             {
@@ -147,7 +187,11 @@ internal enum CompactNodeKind : short
 {
     Text = 1,
     Element = 2,
-    Attribute = 5
+    Attribute = 5,
+    // Internally combines the public element and its sole token-text child.
+    // Serialization and materialization expand it back to the established
+    // two-node representation.
+    Terminal = 6
 }
 
 internal struct CompactNode
@@ -203,7 +247,6 @@ public static class CompactTreeBuilder
                     {
                         var done = stack.Pop();
                         if (lineNumbers) PropagateLineColumn(builder, done);
-                        builder.Finish(done);
                     }
                     break;
                 case ParseEventKind.EnterRecursionRule:
@@ -219,7 +262,6 @@ public static class CompactTreeBuilder
                 {
                     var previous = stack.Pop();
                     if (lineNumbers) PropagateLineColumn(builder, previous);
-                    builder.Finish(previous);
                     var next = builder.Element(ruleNames[ev.Index], ev.Index);
                     builder.AddChild(next, previous);
                     stack.Push(next);
@@ -230,7 +272,6 @@ public static class CompactTreeBuilder
                     {
                         var done = stack.Pop();
                         if (lineNumbers) PropagateLineColumn(builder, done);
-                        builder.Finish(done);
                         var parent = recursionParents.Pop();
                         if (parent >= 0) builder.AddChild(parent, done);
                         else root = done;
@@ -245,19 +286,16 @@ public static class CompactTreeBuilder
                         EmitHiddenTokens(builder, parent, allTokens, previousToken,
                             tokenIndex, symbolicNames, lexerRuleNames, lineNumbers);
 
-                    var terminal = builder.Element(
-                        GetTokenName(token.Type, symbolicNames, lexerRuleNames), -1);
-                    builder.AddChild(terminal, token.Type == EofType
-                        ? builder.Text("")
-                        : builder.HasTokenStore
-                            ? builder.TextToken(tokenIndex)
-                            : builder.Text(token.Text ?? ""));
+                    var terminal = builder.Terminal(
+                        GetTokenName(token.Type, symbolicNames, lexerRuleNames),
+                        token.Type == EofType ? -1 : tokenIndex,
+                        token.Type == EofType ? "" : builder.HasTokenStore
+                            ? null : token.Text ?? "");
                     if (lineNumbers)
                     {
                         builder.AddChild(terminal, builder.Attribute("Line", token.Line.ToString(), 0, 0));
                         builder.AddChild(terminal, builder.Attribute("Column", token.Column.ToString(), 0, 0));
                     }
-                    builder.Finish(terminal);
                     if (parent >= 0) builder.AddChild(parent, terminal);
                     previousToken = tokenIndex;
                     break;
@@ -305,7 +343,6 @@ public static class CompactTreeBuilder
                 builder.AddChild(attr, builder.Attribute("Line", token.Line.ToString(), 0, 0));
                 builder.AddChild(attr, builder.Attribute("Column", token.Column.ToString(), 0, 0));
             }
-            builder.Finish(attr);
             builder.AddChild(parent, attr);
         }
     }
@@ -336,11 +373,8 @@ public static class CompactTreeBuilder
     private sealed class Builder
     {
         private readonly TokenStore _tokens;
-        private readonly List<CompactNode> _nodes = [];
-        private readonly List<int> _first = [];
-        private readonly List<int> _last = [];
-        private readonly List<int> _next = [];
-        private readonly List<int> _children = [];
+        private readonly NodeBuffer _nodes = new();
+        private int _edgeCount;
 
         public Builder(TokenStore tokens) => _tokens = tokens;
         public bool HasTokenStore => _tokens != null;
@@ -354,6 +388,18 @@ public static class CompactTreeBuilder
             TokenIndex = -1,
             SourceStart = -1
         });
+
+        public int Terminal(string name, int tokenIndex, string value) =>
+            Add(new CompactNode
+            {
+                Kind = CompactNodeKind.Terminal,
+                Name = name,
+                Value = value,
+                RuleIndex = -1,
+                ChildStart = -1,
+                TokenIndex = tokenIndex,
+                SourceStart = -1
+            });
 
         public int Attribute(string name, string value, int channel, int tokenType) => Add(new CompactNode
         {
@@ -399,57 +445,45 @@ public static class CompactTreeBuilder
         });
 
         private int Add(CompactNode node)
-        {
-            var id = _nodes.Count;
-            _nodes.Add(node);
-            _first.Add(-1);
-            _last.Add(-1);
-            _next.Add(-1);
-            return id;
-        }
+            => _nodes.Add(node);
 
         public void AddChild(int parent, int child)
         {
-            if (_first[parent] < 0) _first[parent] = child;
-            else _next[_last[parent]] = child;
-            _last[parent] = child;
+            ref var node = ref _nodes.Nodes[parent];
+            if (node.ChildStart < 0) node.ChildStart = child;
+            else _nodes.Next[_nodes.Last[parent]] = child;
+            _nodes.Last[parent] = child;
+            node.ChildCount++;
+            _edgeCount++;
         }
 
         public void AddFirst(int parent, int child)
         {
-            _next[child] = _first[parent];
-            _first[parent] = child;
-            if (_last[parent] < 0) _last[parent] = child;
-        }
-
-        public void Finish(int id)
-        {
-            var node = _nodes[id];
-            if (node.ChildStart >= 0) return;
-            node.ChildStart = _children.Count;
-            var child = _first[id];
-            while (child >= 0)
-            {
-                _children.Add(child);
-                node.ChildCount++;
-                child = _next[child];
-            }
-            _nodes[id] = node;
+            ref var node = ref _nodes.Nodes[parent];
+            _nodes.Next[child] = node.ChildStart;
+            node.ChildStart = child;
+            if (_nodes.Last[parent] < 0) _nodes.Last[parent] = child;
+            node.ChildCount++;
+            _edgeCount++;
         }
 
         public int FirstElementChild(int id)
         {
-            for (var child = _first[id]; child >= 0; child = _next[child])
-                if (_nodes[child].Kind == CompactNodeKind.Element) return child;
+            for (var child = _nodes.Nodes[id].ChildStart; child >= 0;
+                 child = _nodes.Next[child])
+                if (_nodes.Nodes[child].Kind is CompactNodeKind.Element or
+                    CompactNodeKind.Terminal)
+                    return child;
             return -1;
         }
 
         public List<CompactNode> LineColumnAttributes(int id)
         {
             var result = new List<CompactNode>(2);
-            for (var child = _first[id]; child >= 0; child = _next[child])
+            for (var child = _nodes.Nodes[id].ChildStart; child >= 0;
+                 child = _nodes.Next[child])
             {
-                var node = _nodes[child];
+                var node = _nodes.Nodes[child];
                 if (node.Kind == CompactNodeKind.Attribute &&
                     (node.Name == "Line" || node.Name == "Column"))
                     result.Add(node);
@@ -459,9 +493,42 @@ public static class CompactTreeBuilder
 
         public CompactParseTree Complete(int root)
         {
-            if (root >= 0) Finish(root);
             return new CompactParseTree(
-                _nodes.ToArray(), _children.ToArray(), root, _tokens);
+                _nodes.Nodes, _nodes.Count,
+                _nodes.Next, _edgeCount, root, _tokens);
+        }
+
+        /// <summary>
+        /// Grows node and relationship storage together with one capacity
+        /// check per node instead of four independent List&lt;T&gt;.Add calls.
+        /// The backing arrays transfer directly to CompactParseTree.
+        /// </summary>
+        private sealed class NodeBuffer
+        {
+            private const int InitialCapacity = 256;
+            public CompactNode[] Nodes = Array.Empty<CompactNode>();
+            public int[] Last = Array.Empty<int>();
+            public int[] Next = Array.Empty<int>();
+            public int Count { get; private set; }
+
+            public int Add(CompactNode node)
+            {
+                if (Count == Nodes.Length) Grow();
+                int id = Count++;
+                Nodes[id] = node;
+                Last[id] = -1;
+                Next[id] = -1;
+                return id;
+            }
+
+            private void Grow()
+            {
+                int capacity = Nodes.Length == 0
+                    ? InitialCapacity : checked(Nodes.Length * 2);
+                Array.Resize(ref Nodes, capacity);
+                Array.Resize(ref Last, capacity);
+                Array.Resize(ref Next, capacity);
+            }
         }
     }
 }

@@ -37,6 +37,12 @@ internal sealed class CommittedAtnMetadata
     public readonly CommittedTerminalKind[] TerminalKind;
     public readonly int[] TerminalArgument1;
     public readonly int[] TerminalArgument2;
+    // Compiled destination after following a deterministic epsilon/action/
+    // predicate chain.  The prediction engine continues to use the original
+    // ATN; this table is only for the committed parser walk after an
+    // alternative has been selected.
+    public readonly MyATNState[] NextOperationState;
+    public readonly int[] EpsilonPathLength;
 
     public static CommittedAtnMetadata For(MyATN atn) =>
         Cache.GetValue(atn, static value => new CommittedAtnMetadata(value));
@@ -52,6 +58,8 @@ internal sealed class CommittedAtnMetadata
         TerminalKind = new CommittedTerminalKind[atn.allStates.Length];
         TerminalArgument1 = new int[atn.allStates.Length];
         TerminalArgument2 = new int[atn.allStates.Length];
+        NextOperationState = new MyATNState[atn.allStates.Length];
+        EpsilonPathLength = new int[atn.allStates.Length];
 
         for (int i = 0; i < atn.decisionToState.Length; i++)
         {
@@ -97,7 +105,40 @@ internal sealed class CommittedAtnMetadata
                 _ => CommittedTerminalKind.None
             };
         }
+
+        foreach (var state in atn.allStates)
+        {
+            if (state == null) continue;
+            CompileEpsilonPath(state);
+        }
     }
+
+    private void CompileEpsilonPath(MyATNState start)
+    {
+        var state = start;
+        int distance = 0;
+        // A deterministic epsilon cycle would also make the old committed
+        // walker loop forever.  Detect it here and retain the original state
+        // so malformed ATNs do not hang metadata construction.
+        var seen = new HashSet<int>();
+        while (Kind[state.stateNumber] == CommittedStateKind.Epsilon)
+        {
+            if (!seen.Add(state.stateNumber))
+            {
+                state = start;
+                distance = 0;
+                break;
+            }
+            state = Transition[state.stateNumber].target;
+            distance++;
+        }
+        NextOperationState[start.stateNumber] = state;
+        EpsilonPathLength[start.stateNumber] = distance;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public MyATNState SkipEpsilon(MyATNState state) =>
+        NextOperationState[state.stateNumber];
 
     private CommittedTerminalKind SetArguments(int state, CommittedTerminalKind kind,
         int argument1, int argument2 = 0)

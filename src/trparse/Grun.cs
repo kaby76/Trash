@@ -26,6 +26,8 @@ public class Grun
     private readonly AllStarAtnParser.ParserPredictionCache _parserPredictionCache;
     private readonly AllStarAtnParser.InterpRunTimings _interpTimings = new();
     private readonly AllStarAtnParser.InterpRuntimeCache _interpRuntimeCache = new();
+    private readonly EarleyAtnParser.LexerAtnSimulator.LexerDfaCache
+        _lexerDfaCache = new();
 
     private sealed record BundleParse(string InputName,
         List<AntlrJson.ParsingResultSet> Results, string Diagnostics);
@@ -368,7 +370,7 @@ public class Grun
                     config.LineNumbers, config.ContextAwareLexing,
                     config.LexerStats, config.LexerOverlaps, interpTimings,
                     parserStatistics, _parserPredictionCache,
-                    _interpRuntimeCache);
+                    _interpRuntimeCache, _lexerDfaCache);
                 if (interpTimings != null)
                     _interpTimings.Add(interpTimings);
                 interpLabel = "ALL(*)";
@@ -378,7 +380,7 @@ public class Grun
                 (rs, interpTokenCount) = EarleyAtnParser.InterpRunner.Run(
                     resolvedPInterp, resolvedLInterp, txt, input_name,
                     config.LineNumbers, config.LexerStats, config.LexerOverlaps,
-                    _interpRuntimeCache);
+                    _interpRuntimeCache, _lexerDfaCache);
                 interpLabel = "Earley";
             }
             DateTime interpAfter = DateTime.Now;

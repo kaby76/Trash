@@ -11,6 +11,7 @@ using EarleyAtnParser;
 
 public sealed class AllStarSimulator
 {
+    private const int MaximumCallerMatchCacheEntries = 16_384;
     private readonly MyATN _atn;
     private readonly ParserStatistics _statistics;
     private readonly ParserPredictionCache _sharedCache;
@@ -23,6 +24,8 @@ public sealed class AllStarSimulator
     private readonly PredictionContextArena _contextArena;
     private readonly PredictionContextMergeWorkspace _mergeWorkspace;
     private readonly Dictionary<(int decision, int precedence), DecisionDfa> _decisionDfas;
+    private readonly Dictionary<CallerMatchKey, CallerMatchResult>
+        _callerMatchCache = new();
 
     public AllStarSimulator(
         MyATN atn, ParserStatistics statistics = null,
@@ -33,7 +36,10 @@ public sealed class AllStarSimulator
         if (predictionCache != null)
         {
             predictionCache.Bind(atn);
-            if (predictionCache.SharingEnabled)
+            // Once the shared cache reaches its retention budget, do not mix
+            // its partial DFA with new ephemeral states. A fresh local DFA and
+            // context arena preserve prediction correctness for later files.
+            if (predictionCache.SharingEnabled && !predictionCache.IsSaturated)
                 _sharedCache = predictionCache;
         }
         _decisionDfas = _sharedCache?.DecisionDfas ?? new();
@@ -170,6 +176,13 @@ public sealed class AllStarSimulator
                            int[] tokenTypes, int startPos, PredictionContext callerCtx,
                            int precedence, int precedenceRuleIndex)
     {
+        // A simulator can cross the shared-cache budget during its own parse.
+        // Do not continue prediction through a mixture of retained and
+        // ephemeral shared-DFA states; full LL remains correct, and parser
+        // instances created after saturation use a fresh local SLL DFA.
+        if (_sharedCache?.IsSaturated == true)
+            return -1;
+
         var dfaKey = (decision, precedence);
         bool sharedDfa = _sharedCache != null;
         if (!_decisionDfas.TryGetValue(dfaKey, out DecisionDfa dfa))
@@ -252,9 +265,11 @@ public sealed class AllStarSimulator
             {
                 _statistics?.RecordDfaHit(decision);
             }
+            if (_sharedCache?.IsSaturated == true)
+                return -1;
             if (state.StopLiveEdges.Contains(tokenType) &&
                 CallerCanMatchToken(
-                    callerCtx, tokenType, state.CompletedPrediction, precedence,
+                    callerCtx, tokenType, state.CompletedPrediction,
                     precedenceRuleIndex))
             {
                 if (AllStarParser.Trace)
@@ -266,26 +281,145 @@ public sealed class AllStarSimulator
     }
 
     private bool CallerCanMatchToken(PredictionContext callerCtx, int tokenType,
-                                     int alt, int precedence,
-                                     int precedenceRuleIndex)
+                                     int alt, int precedenceRuleIndex)
     {
-        if (callerCtx.IsEmpty) return false;
+        if (callerCtx.IsEmpty)
+            return false;
         int returnState = callerCtx.ReturnState;
-        if (returnState == PredictionContext.EMPTY_RETURN_STATE) return false;
+        if (returnState == PredictionContext.EMPTY_RETURN_STATE)
+            return false;
+        if (_statistics != null)
+            _statistics.CallerCanMatchTokenCalls++;
+
+        var key = new CallerMatchKey(
+            callerCtx.Id, tokenType, alt, precedenceRuleIndex);
+        if (_callerMatchCache.TryGetValue(key, out var cached))
+        {
+            if (_statistics != null)
+            {
+                _statistics.CallerCanMatchTokenCacheHits++;
+                _statistics.CallerCanMatchTokenConfigurationsAvoided +=
+                    cached.ConfigurationsVisited;
+                if (cached.CanMatch)
+                    _statistics.CallerCanMatchTokenShortCircuits++;
+                else
+                    _statistics.CallerCanMatchTokenExhaustions++;
+            }
+            return cached.CanMatch;
+        }
+        if (_statistics != null)
+            _statistics.CallerCanMatchTokenCacheMisses++;
 
         _closureBusy.Clear();
-        var continuation = NewConfigSet();
-        Closure(new ATNConfig(_atn.allStates[returnState], alt, callerCtx.Parent,
-                              callerCtx.GetPrecedence(0)),
-                continuation, fullCtx: true, precedence,
-                precedenceRuleIndex);
-        foreach (var config in continuation.Configs)
+        bool canMatch = ClosureCanMatchToken(
+            new ATNConfig(_atn.allStates[returnState], alt, callerCtx.Parent,
+                          callerCtx.GetPrecedence(0)),
+            tokenType, precedenceRuleIndex, out int configurationsVisited);
+        if (_callerMatchCache.Count < MaximumCallerMatchCacheEntries)
+        {
+            _callerMatchCache.Add(
+                key, new CallerMatchResult(canMatch, configurationsVisited));
+            if (_statistics != null)
+                _statistics.CallerCanMatchTokenCacheEntries =
+                    _callerMatchCache.Count;
+        }
+        return canMatch;
+    }
+
+    // Existential closure used by CallerCanMatchToken. Unlike Closure, this
+    // does not construct and merge a frontier ATNConfigSet and then traverse
+    // it a second time. It tests terminal transitions as they are discovered
+    // and stops at the first match.
+    private bool ClosureCanMatchToken(
+        ATNConfig seed, int tokenType, int precedenceRuleIndex,
+        out int configurationsVisited)
+    {
+        configurationsVisited = 0;
+        _closureStack.Clear();
+        _closureStack.Push(seed);
+
+        while (_closureStack.Count > 0)
+        {
+            var config = _closureStack.Pop();
+            configurationsVisited++;
+            if (_statistics != null)
+            {
+                _statistics.ClosureConfigurationsVisited++;
+                _statistics.CallerCanMatchTokenConfigurationsVisited++;
+            }
+
+            var key = (config.State.stateNumber, config.Alt, config.Context.Id,
+                       config.Precedence);
+            if (!_closureBusy.Add(key)) continue;
+
+            if (config.State.stateType == MyStateType.RuleStop)
+            {
+                if (config.Context.IsEmpty) continue;
+                for (int i = 0; i < config.Context.Size; i++)
+                {
+                    int returnStateNum = config.Context.GetReturnState(i);
+                    if (returnStateNum == PredictionContext.EMPTY_RETURN_STATE)
+                        continue;
+                    _closureStack.Push(new ATNConfig(
+                        _atn.allStates[returnStateNum], config.Alt,
+                        config.Context.GetParent(i),
+                        config.Context.GetPrecedence(i)));
+                }
+                continue;
+            }
+
             foreach (var transition in config.State.transitions)
-                if (IsTerminal(transition) &&
-                    transition.Matches(tokenType, 0, _atn.maxTokenType))
-                    return true;
+            {
+                if (IsTerminal(transition))
+                {
+                    if (transition.Matches(tokenType, 0, _atn.maxTokenType))
+                    {
+                        if (_statistics != null)
+                            _statistics.CallerCanMatchTokenShortCircuits++;
+                        return true;
+                    }
+                    continue;
+                }
+
+                ATNConfig next = null;
+                switch (transition)
+                {
+                    case MyEpsilonTransition:
+                    case MyActionTransition:
+                    case MyPredicateTransition:
+                        next = config.WithState(transition.target);
+                        break;
+
+                    case MyPrecedencePredicateTransition predicate:
+                        if (config.State.ruleIndex != precedenceRuleIndex ||
+                            predicate.precedence >= config.Precedence)
+                            next = config.WithState(predicate.target);
+                        break;
+
+                    case MyRuleTransition rule:
+                        PredictionContext context = !rule.isTailCall
+                            ? GetChildContext(
+                                config.Context, rule.target.stateNumber,
+                                config.Precedence)
+                            : config.Context;
+                        next = new ATNConfig(
+                            _atn.start[rule.ruleIndex], config.Alt,
+                            context, rule.precedence);
+                        break;
+                }
+                if (next != null) _closureStack.Push(next);
+            }
+        }
+        if (_statistics != null)
+            _statistics.CallerCanMatchTokenExhaustions++;
         return false;
     }
+
+    private readonly record struct CallerMatchKey(
+        int ContextId, int TokenType, int Alt, int PrecedenceRuleIndex);
+
+    private readonly record struct CallerMatchResult(
+        bool CanMatch, int ConfigurationsVisited);
 
     private DfaState InternDfaState(DecisionDfa dfa, ATNConfigSet configs)
     {

@@ -1,10 +1,13 @@
 {
   "compilerOptions": {
-    "target": "ES5",
-    "module": "amd",
+    "module": "ES2020",
+    "moduleResolution": "bundler",
+    "target": "ESNext",
     "noImplicitAny": true,
-    "removeComments": true,
-    "preserveConstEnums": true,
-    "sourceMap": true
+    "types": [ "node" ]
+  },
+  "ts-node": {
+    "esm": true,
+    "experimentalSpecifierResolution": "node"
   }
 }

@@ -27,7 +27,8 @@ public static class InterpRunner
         InterpRunTimings timings = null,
         ParserStatistics parserStatistics = null,
         ParserPredictionCache predictionCache = null,
-        InterpRuntimeCache runtimeCache = null)
+        InterpRuntimeCache runtimeCache = null,
+        LexerAtnSimulator.LexerDfaCache lexerDfaCache = null)
     {
         timings ??= new InterpRunTimings();
         timings.Files = 1;
@@ -113,7 +114,8 @@ public static class InterpRunner
         }
         else
         {
-            var sim = new EarleyAtnParser.LexerAtnSimulator(lexerAtn, statistics);
+            var sim = new EarleyAtnParser.LexerAtnSimulator(
+                lexerAtn, statistics, lexerDfaCache);
             timer.Restart();
             rawTokens = sim.Tokenize(inputText);
             timer.Stop();

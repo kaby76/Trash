@@ -161,6 +161,18 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
         Assert.True(statistics.PredictionLookaheadTokens > 0);
         Assert.True(statistics.ClosureConfigurationsVisited > 0);
         Assert.True(statistics.ReachConfigurationsExamined > 0);
+        Assert.True(statistics.CallerCanMatchTokenCalls > 0);
+        Assert.True(statistics.CallerCanMatchTokenConfigurationsVisited > 0);
+        Assert.Equal(statistics.CallerCanMatchTokenCalls,
+            statistics.CallerCanMatchTokenShortCircuits +
+            statistics.CallerCanMatchTokenExhaustions);
+        Assert.Equal(statistics.CallerCanMatchTokenCalls,
+            statistics.CallerCanMatchTokenCacheHits +
+            statistics.CallerCanMatchTokenCacheMisses);
+        Assert.True(statistics.CallerCanMatchTokenCacheHits > 0);
+        Assert.True(statistics.CallerCanMatchTokenCacheMisses > 0);
+        Assert.True(statistics.CallerCanMatchTokenCacheEntries > 0);
+        Assert.True(statistics.CallerCanMatchTokenConfigurationsAvoided > 0);
         Assert.True(statistics.MaximumConfigurationsPerSet > 0);
         Assert.True(statistics.RetainedDfaStates > 0);
         Assert.True(statistics.EstimatedRetainedBytes > 0);
@@ -169,6 +181,8 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
         Assert.True(statistics.MaximumRuleDepth > 0);
         Assert.Equal(0, statistics.ParseEventsCreated);
         Assert.NotEmpty(statistics.Decisions);
+        Assert.Contains("caller continuation:", statistics.Format());
+        Assert.Contains("caller continuation cache:", statistics.Format());
         Assert.Contains("busiest decisions", statistics.Format());
     }
 
@@ -180,6 +194,7 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
         var second = CommittedAtnMetadata.For(fixture.ParserAtn);
 
         Assert.Same(first, second);
+        Assert.Contains(first.EpsilonPathLength, length => length > 1);
         foreach (var state in fixture.ParserAtn.allStates.Where(s => s != null))
         {
             if (state.stateType != MyStateType.RuleStop &&
@@ -196,6 +211,11 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
             if (first.Kind[state.stateNumber] == CommittedStateKind.Terminal)
                 Assert.NotEqual(CommittedTerminalKind.None,
                     first.TerminalKind[state.stateNumber]);
+            var operation = first.NextOperationState[state.stateNumber];
+            Assert.NotNull(operation);
+            if (first.EpsilonPathLength[state.stateNumber] > 0)
+                Assert.NotEqual(CommittedStateKind.Epsilon,
+                    first.Kind[operation.stateNumber]);
         }
     }
 
@@ -330,6 +350,26 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
         Assert.True(cache.IsSaturated);
         Assert.True(cache.RetainedStates <= 1);
         Assert.True(statistics.SharedDfaCacheSaturated);
+    }
+
+    [Fact]
+    public void SaturatedSharedDfaFallsBackToLocalPrediction()
+    {
+        var fixture = Prepare(GenerateDotInput(100));
+        var cache = new ParserPredictionCache(
+            maximumStates: 1, maximumEstimatedBytes: 1_000_000);
+
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            predictionCache: cache));
+        Assert.True(cache.IsSaturated);
+
+        var statistics = new ParserStatistics();
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            statistics, cache));
+        Assert.Equal(0, statistics.SharedDfaStatesAtStart);
+        Assert.Equal(0, statistics.SharedDfaTransitionsAtStart);
     }
 
     [Fact]

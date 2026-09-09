@@ -27,8 +27,7 @@ public class ContextAwareLexingTests
         Assert.Equal(0, statistics.EqualLengthPriorityResolutions);
 
         var cursor = new LexerAtnSimulator.Cursor();
-        var contextual = lexer.NextToken(
-            "BDAY:2000-01-01", cursor, new HashSet<int> { Name });
+        var contextual = lexer.NextToken(cursor, new HashSet<int> { Name });
         Assert.Equal(Name, contextual.Type);
         Assert.Equal("BDAY", contextual.Text);
     }
@@ -38,10 +37,10 @@ public class ContextAwareLexingTests
     {
         var statistics = new LexerStatistics();
         var lexer = new LexerAtnSimulator(BuildLexerAtn(), statistics);
+        lexer.SetInput("BDAY:2000-01-01");
         var cursor = new LexerAtnSimulator.Cursor();
 
-        var token = lexer.NextToken(
-            "BDAY:2000-01-01", cursor, new HashSet<int> { Colon });
+        var token = lexer.NextToken(cursor, new HashSet<int> { Colon });
 
         Assert.Equal(Value, token.Type);
         Assert.Equal("BDAY:2000-01-01", token.Text);
@@ -55,18 +54,19 @@ public class ContextAwareLexingTests
         var statistics = new LexerStatistics();
         var lexer = new LexerAtnSimulator(BuildLexerAtn(), statistics);
         const string input = "BDAY:2000-01-01";
+        lexer.SetInput(input);
 
-        var ordinary = lexer.NextToken(input, new LexerAtnSimulator.Cursor());
+        var ordinary = lexer.NextToken(new LexerAtnSimulator.Cursor());
         Assert.Equal(Value, ordinary.Type);
         var warm = lexer.GetDfaStatistics();
 
         var contextual = lexer.NextToken(
-            input, new LexerAtnSimulator.Cursor(), new HashSet<int> { Name });
+            new LexerAtnSimulator.Cursor(), new HashSet<int> { Name });
         Assert.Equal(Name, contextual.Type);
         Assert.Equal("BDAY", contextual.Text);
 
         var fallback = lexer.NextToken(
-            input, new LexerAtnSimulator.Cursor(), new HashSet<int> { Colon });
+            new LexerAtnSimulator.Cursor(), new HashSet<int> { Colon });
         Assert.Equal(Value, fallback.Type);
         Assert.Equal(input, fallback.Text);
 

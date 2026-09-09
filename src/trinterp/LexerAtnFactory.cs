@@ -742,12 +742,16 @@ public class LexerAtnFactory : ParserAtnFactory
     /// lower-case and upper-case form (using invariant culture), matching
     /// ANTLR4's caseInsensitive grammar option behaviour.
     /// </summary>
-    private static IntervalSet CaseExpandSet(IntervalSet set)
+    internal static IntervalSet CaseExpandSet(IntervalSet set)
     {
         var expanded = new IntervalSet();
         foreach (var iv in set.GetIntervals())
             for (int c = iv.a; c <= iv.b; c++)
             {
+                // Expansion must retain every explicitly matched code point.
+                // A Unicode titlecase character can differ from both its
+                // lowercase and uppercase mappings.
+                expanded.Add(c);
                 expanded.Add(char.ToLowerInvariant((char)c));
                 expanded.Add(char.ToUpperInvariant((char)c));
             }

@@ -38,16 +38,24 @@ public sealed class TokenStore : IReadOnlyList<LexerToken>
 
     public int Add(LexerToken token)
     {
+        return Add(token.Type, token.Channel, token.StartIndex, token.StopIndex,
+            token.Line, token.Column, token.ExplicitText);
+    }
+
+    public int Add(
+        int type, int channel, int startIndex, int stopIndex,
+        int line, int column, string explicitText = null)
+    {
         EnsureCapacity(Count + 1);
         var index = Count++;
-        _types[index] = token.Type;
-        _channels[index] = token.Channel;
-        _starts[index] = token.StartIndex;
-        _stops[index] = token.StopIndex;
-        _lines[index] = token.Line;
-        _columns[index] = token.Column;
-        if (token.ExplicitText != null)
-            SetExplicitText(index, token.ExplicitText);
+        _types[index] = type;
+        _channels[index] = channel;
+        _starts[index] = startIndex;
+        _stops[index] = stopIndex;
+        _lines[index] = line;
+        _columns[index] = column;
+        if (explicitText != null)
+            SetExplicitText(index, explicitText);
         return index;
     }
 

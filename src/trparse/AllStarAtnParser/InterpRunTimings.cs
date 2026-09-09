@@ -51,6 +51,9 @@ public sealed class InterpRunTimings
         if (LexerDfa is { } dfa)
         {
             string lexerLabel = Files > 1 ? "Lexer DFA (last file)" : "Lexer DFA";
+            lines.Add($"{prefix}{lexerLabel} at input start: " +
+                $"{dfa.StatesAtStart} states, " +
+                $"{dfa.TransitionsAtStart} transitions");
             lines.Add($"{prefix}{lexerLabel}: {dfa.States} states, " +
                 $"{dfa.LiveTransitions} live transitions, " +
                 $"{dfa.DeadTransitions} dead transitions");
