@@ -1,6 +1,6 @@
 # Trash
 
-[![Build](https://github.com/kaby76/Trash/workflows/CI/badge.svg)](https://github.com/kaby76/Trash/actions?query=workflow%3ACI)
+[![Build](https://github.com/kaby76/Trash/actions/workflows/main.yml/badge.svg?branch=main&event=push)](https://github.com/kaby76/Trash/actions/workflows/main.yml?query=branch%3Amain+event%3Apush)
 
 Trash is a collection of command-line tools to analyze and transform
 Antlr4 grammars and parse trees. The toolkit can:
