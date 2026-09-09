@@ -36,7 +36,10 @@ public sealed class AllStarSimulator
         if (predictionCache != null)
         {
             predictionCache.Bind(atn);
-            if (predictionCache.SharingEnabled)
+            // Once the shared cache reaches its retention budget, do not mix
+            // its partial DFA with new ephemeral states. A fresh local DFA and
+            // context arena preserve prediction correctness for later files.
+            if (predictionCache.SharingEnabled && !predictionCache.IsSaturated)
                 _sharedCache = predictionCache;
         }
         _decisionDfas = _sharedCache?.DecisionDfas ?? new();
@@ -173,6 +176,13 @@ public sealed class AllStarSimulator
                            int[] tokenTypes, int startPos, PredictionContext callerCtx,
                            int precedence, int precedenceRuleIndex)
     {
+        // A simulator can cross the shared-cache budget during its own parse.
+        // Do not continue prediction through a mixture of retained and
+        // ephemeral shared-DFA states; full LL remains correct, and parser
+        // instances created after saturation use a fresh local SLL DFA.
+        if (_sharedCache?.IsSaturated == true)
+            return -1;
+
         var dfaKey = (decision, precedence);
         bool sharedDfa = _sharedCache != null;
         if (!_decisionDfas.TryGetValue(dfaKey, out DecisionDfa dfa))
@@ -255,6 +265,8 @@ public sealed class AllStarSimulator
             {
                 _statistics?.RecordDfaHit(decision);
             }
+            if (_sharedCache?.IsSaturated == true)
+                return -1;
             if (state.StopLiveEdges.Contains(tokenType) &&
                 CallerCanMatchToken(
                     callerCtx, tokenType, state.CompletedPrediction,

@@ -353,6 +353,26 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void SaturatedSharedDfaFallsBackToLocalPrediction()
+    {
+        var fixture = Prepare(GenerateDotInput(100));
+        var cache = new ParserPredictionCache(
+            maximumStates: 1, maximumEstimatedBytes: 1_000_000);
+
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            predictionCache: cache));
+        Assert.True(cache.IsSaturated);
+
+        var statistics = new ParserStatistics();
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            statistics, cache));
+        Assert.Equal(0, statistics.SharedDfaStatesAtStart);
+        Assert.Equal(0, statistics.SharedDfaTransitionsAtStart);
+    }
+
+    [Fact]
     public void SharedDfaIsDisabledForSemanticPredicateAtn()
     {
         var source = new MyATNState { stateNumber = 0 };
