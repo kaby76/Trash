@@ -85,6 +85,12 @@ After all files are parsed, six summary lines are printed:
 
 Release 3.5.0.
 
+## Ignore file
+
+`trgen` looks for `.trgen-ignore` in the current directory and then in each
+parent directory up to the filesystem root. The closest file is used. Patterns
+specified with `--ignore` are added to the patterns read from that file.
+
 ## License
 
 The MIT License
