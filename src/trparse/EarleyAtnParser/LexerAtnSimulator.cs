@@ -469,11 +469,14 @@ public partial class LexerAtnSimulator
             if (c.State.stateType == MyStateType.RuleStop && !c.Stack.IsEmpty)
             {
                 var (ret, rest) = c.Stack.Pop();
+                bool exitedNonGreedyOwner = c.CompletedInnerRule &&
+                    c.NonGreedyDecision >= 0 &&
+                    c.Stack.Id != c.NonGreedyContext.Id;
                 var next = new LexerConfig(
                     ret, rest, c.Actions, c.OuterRule,
-                    c.NonGreedyDecision,
-                    c.NonGreedyContext,
-                    c.NonGreedyBranch,
+                    exitedNonGreedyOwner ? -1 : c.NonGreedyDecision,
+                    exitedNonGreedyOwner ? LexStack.Empty : c.NonGreedyContext,
+                    exitedNonGreedyOwner ? -1 : c.NonGreedyBranch,
                     true);
                 if (configs.Add(next)) work.Push(next);
                 continue;

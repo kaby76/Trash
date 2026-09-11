@@ -73,6 +73,10 @@ internal static class NativeTreeTestSupport
         MinimumTokensPerSecond: 50,
         NativeTreeDirectoryName: "native", TreeStyle: NativeTreeStyle.Block);
 
+    public static readonly NativeTreeGrammar Yini = new(
+        "YINI", "yini", "YiniParser.interp", "YiniLexer.interp", "*.yini",
+        MinimumSuccessfulFiles: 1, MinimumTokensPerSecond: 50);
+
     public static IEnumerable<object[]> Cases(NativeTreeGrammar grammar) =>
         grammar.InputFiles().Select(path => new object[] { path });
 
