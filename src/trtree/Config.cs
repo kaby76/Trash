@@ -13,8 +13,11 @@ public class Config
     [Option('v', "verbose", Required = false)]
     public bool Verbose { get; set; }
 
-    [Option('a', "antlr-style", Required = false, HelpText = "Output tree as Antlr ToStringTree() style.")]
+    [Option('a', "antlr-style", Required = false, HelpText = "Output tree exactly as Antlr ToStringTree() style (terminal token types omitted).")]
     public bool AntlrStyle { get; set; }
+
+    [Option('A', "antlr-style-with-token-types", Required = false, HelpText = "Output an Antlr-like parenthesized tree including terminal token types.")]
+    public bool AntlrStyleWithTokenTypes { get; set; }
 
     [Option('i', "indent-style", Required = false, HelpText = "Output tree as plain indented style.")]
     public bool IndentStyle { get; set; }

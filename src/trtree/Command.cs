@@ -31,6 +31,7 @@ class Command
         if (config.Verbose) LoggerNs.TimedStderrOutput.WriteLine("deserialized");
         bool more_than_one_fn = data.Count() > 1 || config.DisplayName;
         Console.OutputEncoding = System.Text.Encoding.UTF8;
+        var wroteAntlrTree = false;
         foreach (var in_tuple in data)
         {
             var nodes = in_tuple.Nodes;
@@ -38,9 +39,23 @@ class Command
             var parser = in_tuple.Parser;
             var fn = in_tuple.FileName;
             var prefix = more_than_one_fn ? fn + ": " : "";
-            System.Console.Write(Render(in_tuple, config, prefix));
+            var rendered = Render(in_tuple, config, prefix);
+            if (config.AntlrStyle)
+            {
+                if (rendered.Length == 0)
+                    continue;
+                if (wroteAntlrTree)
+                    System.Console.WriteLine();
+                System.Console.Write(rendered);
+                wroteAntlrTree = true;
+            }
+            else
+            {
+                System.Console.Write(rendered);
+            }
         }
-        System.Console.WriteLine();
+        if (!config.AntlrStyle)
+            System.Console.WriteLine();
     }
 
     private static void ExecuteBundle(Config config)
@@ -55,10 +70,18 @@ class Command
     private static string Render(AntlrJson.ParsingResultSet result, Config config, string prefix)
     {
         var sb = new StringBuilder();
+        var firstAntlrTree = true;
         foreach (var node in result.Nodes)
         {
             if (config.AntlrStyle)
-                sb.AppendLine(new TreeOutput(result.Lexer, result.Parser, prefix).OutputTreeAntlrStyle(node).ToString());
+            {
+                if (!firstAntlrTree)
+                    sb.AppendLine();
+                sb.Append(new TreeOutput(result.Lexer, result.Parser, prefix).OutputTreeAntlrStyle(node));
+                firstAntlrTree = false;
+            }
+            else if (config.AntlrStyleWithTokenTypes)
+                sb.AppendLine(new TreeOutput(result.Lexer, result.Parser, prefix).OutputTreeAntlrStyleWithTokenTypes(node).ToString());
             else if (config.ParenIndentStyle)
                 sb.AppendLine(new TreeOutput(result.Lexer, result.Parser, prefix).OutputTree(node).ToString());
             else if (config.IndentStyle)

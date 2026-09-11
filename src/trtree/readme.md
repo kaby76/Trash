@@ -15,6 +15,12 @@ Reads a tree from stdin and prints the tree as an indented node list.
 ## Examples
 
     dotnet trash parse A.g4 | dotnet trash tree
+    dotnet trash parse A.g4 | dotnet trash tree -a
+    dotnet trash parse A.g4 | dotnet trash tree -A
+
+`-a` matches ANTLR's `ToStringTree()` output and prints terminal token text
+without terminal token-type nodes or a trailing line terminator. `-A` retains
+the previous ANTLR-like form, which includes terminal token-type nodes.
 
 ## Current version
 
