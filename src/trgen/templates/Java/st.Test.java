@@ -199,13 +199,16 @@ public class Test {
         <parser_name> parser = new <parser_name>(tokens);
         String out_name = input_name;
         if (output_dir != null) {
-            String absPath = new File(input_name).getAbsolutePath();
-            // Strip drive letter (Windows, e.g. "C:") then leading separators.
-            // Avoid backslash literals to prevent StringTemplate escaping issues.
-            int si = 0;
-            if (absPath.length() >= 2 && absPath.charAt(1) == ':') si = 2;
-            while (si \< absPath.length() && (absPath.charAt(si) == '/' || absPath.charAt(si) == File.separatorChar)) si++;
-            String rootless = absPath.substring(si);
+            File abs = new File(input_name).getAbsoluteFile();
+            File root = new File("../<example_dir_unix>").getAbsoluteFile();
+            String rootless;
+            try {
+                rootless = root.toPath().normalize().relativize(abs.toPath().normalize()).toString();
+                if (rootless.equals("..") || rootless.startsWith(".." + File.separator))
+                    rootless = abs.getName();
+            } catch (IllegalArgumentException ex) {
+                rootless = abs.getName();
+            }
             out_name = new File(output_dir, rootless).getPath();
             new File(out_name).getParentFile().mkdirs();
         }
