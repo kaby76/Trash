@@ -1,4 +1,5 @@
 #
+# set -x
 
 # Get full path of this script.
 full_path_script=$(realpath $0)
