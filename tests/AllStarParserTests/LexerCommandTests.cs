@@ -109,6 +109,16 @@ public class LexerCommandTests
     }
 
     [Fact]
+    public void NonGreedyLexerLoopStopsAtFirstRepeatedTerminator()
+    {
+        var tokens = new LexerAtnSimulator(BuildLineCommentAtn())
+            .Tokenize("// first\n\n");
+
+        Assert.Equal("// first\n", tokens[0].Text);
+        Assert.Equal("\n", tokens[1].Text);
+    }
+
+    [Fact]
     public void NonGreedyLexerLoopPreservesHigherPriorityEscapedDelimiter()
     {
         var lexerInterp = Path.Combine(
@@ -183,6 +193,55 @@ public class LexerCommandTests
         new RuleSpec(1, '>', 7, new(MyLexerActionType.PopMode, 0, 0)),
         new RuleSpec(2, 'y', 8),
         new RuleSpec(2, ']', 9, new(MyLexerActionType.Mode, 0, 0)));
+
+    private static MyATN BuildLineCommentAtn()
+    {
+        var states = new List<MyATNState>();
+        MyATNState New(MyStateType type, int rule)
+        {
+            var state = State(type, rule, states.Count);
+            states.Add(state);
+            return state;
+        }
+
+        var modeStart = New(MyStateType.TokenStart, -1);
+
+        // LINE_COMMENT : '//' .*? '\n' ;
+        var commentStart = New(MyStateType.RuleStart, 0);
+        var secondSlash = New(MyStateType.Basic, 0);
+        var decision = New(MyStateType.StarLoopEntry, 0);
+        decision.nonGreedy = true;
+        var suffix = New(MyStateType.Basic, 0);
+        var loopBody = New(MyStateType.Basic, 0);
+        var loopBack = New(MyStateType.StarLoopBack, 0);
+        var commentStop = New(MyStateType.RuleStop, 0);
+        commentStart.AddTransition(new MyAtomTransition(secondSlash, '/'));
+        secondSlash.AddTransition(new MyAtomTransition(decision, '/'));
+        decision.AddTransition(new MyEpsilonTransition(suffix));
+        decision.AddTransition(new MyEpsilonTransition(loopBody));
+        suffix.AddTransition(new MyAtomTransition(commentStop, '\n'));
+        loopBody.AddTransition(new MyWildcardTransition(loopBack));
+        loopBack.AddTransition(new MyEpsilonTransition(decision));
+
+        // WS : '\n' ;
+        var wsStart = New(MyStateType.RuleStart, 1);
+        var wsStop = New(MyStateType.RuleStop, 1);
+        wsStart.AddTransition(new MyAtomTransition(wsStop, '\n'));
+
+        modeStart.AddTransition(new MyEpsilonTransition(commentStart));
+        modeStart.AddTransition(new MyEpsilonTransition(wsStart));
+
+        return new MyATN
+        {
+            grammarType = MyATNType.Lexer,
+            maxTokenType = 2,
+            allStates = states.ToArray(),
+            start = [commentStart, wsStart],
+            ruleToStopState = [commentStop, wsStop],
+            ruleToTokenType = [1, 2],
+            modeToStartState = [modeStart]
+        };
+    }
 
     private static MyATN BuildNestedNonGreedyAtn()
     {
