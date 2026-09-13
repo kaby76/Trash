@@ -428,6 +428,43 @@ public partial class LexerAtnSimulator
         var next = _enableDfa
             ? NewDfaConfigSet()
             : new HashSet<LexerConfig>(LexerConfigEq.Instance);
+        bool hasNonGreedyWildcard = false;
+        foreach (var candidate in configs)
+        {
+            if (candidate.NonGreedyDecision < 0) continue;
+            foreach (var transition in candidate.State.transitions)
+            {
+                if (transition is MyWildcardTransition)
+                {
+                    hasNonGreedyWildcard = true;
+                    break;
+                }
+            }
+            if (hasNonGreedyWildcard) break;
+        }
+        HashSet<(int OuterRule, int Decision, int Context, int Branch)>
+            explicitMatches = null;
+        if (hasNonGreedyWildcard)
+        {
+            explicitMatches = new();
+            foreach (var candidate in configs)
+            {
+                if (candidate.NonGreedyDecision < 0) continue;
+                foreach (var transition in candidate.State.transitions)
+                {
+                    if (transition is not MyWildcardTransition &&
+                        CharMatches(transition, ch))
+                    {
+                        explicitMatches.Add((
+                            candidate.OuterRule,
+                            candidate.NonGreedyDecision,
+                            candidate.NonGreedyContext.Id,
+                            candidate.NonGreedyBranch));
+                        break;
+                    }
+                }
+            }
+        }
         foreach (var c in configs)
         {
             for (int transitionIndex = 0;
@@ -437,9 +474,12 @@ public partial class LexerAtnSimulator
                 var tr = c.State.transitions[transitionIndex];
                 if (tr is MyWildcardTransition &&
                     c.NonGreedyDecision >= 0 &&
-                    c.NonGreedyBranch > 0 &&
-                    PreferredNonGreedyBranchMatches(
-                        c.NonGreedyDecision, ch, c.OuterRule))
+                    ((c.NonGreedyBranch > 0 &&
+                      PreferredNonGreedyBranchMatches(
+                          c.NonGreedyDecision, ch, c.OuterRule)) ||
+                     (explicitMatches != null && explicitMatches.Contains((
+                          c.OuterRule, c.NonGreedyDecision,
+                          c.NonGreedyContext.Id, c.NonGreedyBranch)))))
                     continue;
                 if (CharMatches(tr, ch))
                     next.Add(new LexerConfig(
