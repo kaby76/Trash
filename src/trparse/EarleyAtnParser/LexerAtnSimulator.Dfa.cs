@@ -280,6 +280,29 @@ public partial class LexerAtnSimulator
 
     private void PruneAfterNonGreedyAccept(HashSet<LexerConfig> configs)
     {
+        var completedCalls = configs
+            .Where(config => config.CompletedInnerRule &&
+                config.NonGreedyDecision >= 0 &&
+                config.NonGreedyContext.Id == config.Stack.Id)
+            .Select(config => (
+                config.OuterRule,
+                config.NonGreedyDecision,
+                config.NonGreedyContext.Id,
+                config.NonGreedyBranch,
+                config.Stack.Id))
+            .ToHashSet();
+        if (completedCalls.Count != 0)
+        {
+            configs.RemoveWhere(config =>
+                !config.CompletedInnerRule &&
+                completedCalls.Contains((
+                    config.OuterRule,
+                    config.NonGreedyDecision,
+                    config.NonGreedyContext.Id,
+                    config.NonGreedyBranch,
+                    config.Stack.Id)));
+        }
+
         var accepts = _nonGreedyAcceptWork;
         accepts.Clear();
         foreach (var config in configs)
