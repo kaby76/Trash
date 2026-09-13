@@ -133,6 +133,21 @@ public class ArtifactBundleTests
     }
 
     [Fact]
+    public void RelativeNamesPreserveDirectoryBelowDeclaredInputRoot()
+    {
+        var inputs = new[]
+        {
+            Path.Combine("..", "examples", "cmu", "one.acmetest"),
+            Path.Combine("..", "examples", "cmu", "two.acmetest")
+        };
+
+        var names = ArtifactBundle.RelativeInputNames(inputs);
+
+        Assert.Equal("cmu/one.acmetest", names[inputs[0]]);
+        Assert.Equal("cmu/two.acmetest", names[inputs[1]]);
+    }
+
+    [Fact]
     public void ExplicitBaseRejectsOutsideInput()
     {
         var root = Path.Combine(Path.GetTempPath(), "trash-bundle-root");
@@ -154,13 +169,13 @@ public class ArtifactBundleTests
     }
 
     [Fact]
-    public void CollidingInputStemsRetainTheirSourceExtensions()
+    public void ArtifactBaseNamesRetainSourceExtensions()
     {
         var names = ArtifactBundle.ArtifactBaseNames(
             ["examples/pkg1.adb", "examples/pkg1.ads", "examples/other.adb"]);
 
         Assert.Equal("examples/pkg1.adb", names["examples/pkg1.adb"]);
         Assert.Equal("examples/pkg1.ads", names["examples/pkg1.ads"]);
-        Assert.Equal("examples/other", names["examples/other.adb"]);
+        Assert.Equal("examples/other.adb", names["examples/other.adb"]);
     }
 }

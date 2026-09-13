@@ -106,17 +106,20 @@ members:
 For example, parsing `examples/a.g4` and `examples/nested/b.g4` can produce:
 
 ```text
-a.pt
-a.errors
-nested/b.pt
-nested/b.errors
+a.g4.pt
+a.g4.errors
+nested/b.g4.pt
+nested/b.g4.errors
 ```
 
-Input hierarchy below the inputs' common directory is preserved. The
-`parse --base-directory DIR` option selects that root explicitly. Artifact
-names always use `/` separators and must be relative, traversal-free paths.
-When removing source extensions would make two names collide, Trash retains
-enough of the original names to keep every artifact distinct.
+For relative input names, the leading directory supplied to `parse` is the
+automatic bundle root, so `../examples/cmu/a.acmetest` becomes
+`cmu/a.acmetest.pt`. Absolute input names use their common directory as the
+automatic root. The `parse --base-directory DIR` option selects the root
+explicitly. Artifact names always use `/` separators and must be relative,
+traversal-free paths.
+The input's source extension is retained so bundle output has the same names
+as generated-target output (for example, `a.g4.tree` and `a.g4.errors`).
 
 Parse-tree commands such as `xpath`, `xquery`, `foldlit`, `rename`, `sort`,
 `unfold`, `unfoldlit`, and `combine` replace the contents of the corresponding

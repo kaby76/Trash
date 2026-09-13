@@ -133,6 +133,67 @@ public class TreeOutput
     public StringBuilder OutputTreeAntlrStyle(UnvParseTreeNode tree)
     {
         sb.Append(prefix);
+        AntlrToStringTree(tree);
+        return sb;
+    }
+
+    private void AntlrToStringTree(UnvParseTreeNode tree)
+    {
+        if (tree is not UnvParseTreeElement element)
+            return;
+
+        // The DOM represents a terminal as an element named for its token type
+        // with a text child. ANTLR's Trees.ToStringTree() prints only the token
+        // text, not that wrapper element.
+        if (element.RuleIndex < 0)
+        {
+            var text = "<EOF>";
+            if (element.LocalName != "EOF")
+            {
+                text = "";
+                for (var i = 0; i < element.ChildNodes.Length; i++)
+                {
+                    if (element.ChildNodes.item(i) is UnvParseTreeText child)
+                    {
+                        text = child.Data;
+                        break;
+                    }
+                }
+            }
+            sb.Append(EscapeAntlrWhitespace(text));
+            return;
+        }
+
+        var childCount = 0;
+        for (var i = 0; i < element.ChildNodes.Length; i++)
+            if (element.ChildNodes.item(i) is UnvParseTreeElement)
+                childCount++;
+
+        if (childCount == 0)
+        {
+            sb.Append(element.LocalName);
+            return;
+        }
+
+        sb.Append('(').Append(element.LocalName);
+        for (var i = 0; i < element.ChildNodes.Length; i++)
+        {
+            if (element.ChildNodes.item(i) is not UnvParseTreeElement child)
+                continue;
+            sb.Append(' ');
+            AntlrToStringTree(child);
+        }
+        sb.Append(')');
+    }
+
+    private static string EscapeAntlrWhitespace(string text) =>
+        text.Replace("\t", "\\t", StringComparison.Ordinal)
+            .Replace("\n", "\\n", StringComparison.Ordinal)
+            .Replace("\r", "\\r", StringComparison.Ordinal);
+
+    public StringBuilder OutputTreeAntlrStyleWithTokenTypes(UnvParseTreeNode tree)
+    {
+        sb.Append(prefix);
         AntlrParenthesizedAST(tree);
         return sb;
     }

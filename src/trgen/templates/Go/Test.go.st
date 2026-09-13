@@ -6,6 +6,7 @@ import (
     "os"
     "io"
     "path/filepath"
+    "strings"
     "time"
     "strconv"
     "bufio"
@@ -190,10 +191,10 @@ func DoParse(str antlr.CharStream, input_name string, row_number int) {
     out_name := input_name
     if output_dir != "" {
         absPath, _ := filepath.Abs(input_name)
-        vol := filepath.VolumeName(absPath)
-        rel := absPath[len(vol):]
-        for len(rel) > 0 && (rel[0] == '/' || rel[0] == filepath.Separator) {
-            rel = rel[1:]
+        root, _ := filepath.Abs("../<example_dir_unix>")
+        rel, err := filepath.Rel(root, absPath)
+        if err != nil || rel == ".." || strings.HasPrefix(rel, ".." + string(filepath.Separator)) || filepath.IsAbs(rel) {
+            rel = filepath.Base(absPath)
         }
         out_name = filepath.Join(output_dir, rel)
         os.MkdirAll(filepath.Dir(out_name), 0755)

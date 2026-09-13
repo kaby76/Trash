@@ -33,7 +33,7 @@ consume them without needing the generated target-language source.
 
 ## Current version
 
-Release 3.4.0.
+Release 3.5.0.
 
 ## License
 

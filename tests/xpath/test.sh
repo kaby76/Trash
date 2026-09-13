@@ -14,11 +14,13 @@ dotnet trash gen -t CSharp
 cd Generated-CSharp
 make
 echo "1 + 2 + 3" | dotnet trash parse -t gen | dotnet trash xpath ' //INT' | dotnet trash tree > ../output
+dotnet trash parse -t gen ../one.expr ../two.expr \
+    | dotnet trash xpath 'count(doc("*")//INT)' > ../doc-output
 cd ..
 #rm -rf Generated-CSharp
 
 # Diff result.
-for i in output Gold/output
+for i in output doc-output Gold/output Gold/doc-output
 do
 	dos2unix $i
 done

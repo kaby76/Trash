@@ -65,8 +65,10 @@ void DoParse(antlr4::CharStream* str, std::string input_name, int row_number)
     std::string out_name = input_name;
     if (!output_dir.empty()) {
         auto abs = std::filesystem::absolute(input_name);
-        auto root = abs.root_path();
+        auto root = std::filesystem::absolute("../<example_dir_unix>");
         auto rootless = std::filesystem::relative(abs, root);
+        if (rootless.empty() || *rootless.begin() == "..")
+            rootless = abs.filename();
         out_name = (std::filesystem::path(output_dir) / rootless).string();
         std::filesystem::create_directories(std::filesystem::path(out_name).parent_path());
     }
@@ -301,4 +303,3 @@ int main(int argc, const char * argv[])
     }   
     return TryParse(args);
 }
-

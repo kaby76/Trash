@@ -187,7 +187,10 @@ function DoParse(str, input_name, row_number) {
     var out_name = input_name;
     if (output_dir) {
         const absPath = path.resolve(input_name);
-        const rootless = absPath.slice(path.parse(absPath).root.length);
+        const root = path.resolve('../<example_dir_unix>');
+        let rootless = path.relative(root, absPath);
+        if (rootless === '..' || rootless.startsWith('..' + path.sep) || path.isAbsolute(rootless))
+            rootless = path.basename(absPath);
         out_name = path.join(output_dir, rootless);
         fs.mkdirsSync(path.dirname(out_name));
     }

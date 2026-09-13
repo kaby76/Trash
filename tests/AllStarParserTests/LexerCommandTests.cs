@@ -109,6 +109,26 @@ public class LexerCommandTests
     }
 
     [Fact]
+    public void NonGreedyLexerLoopStopsAtFirstRepeatedTerminator()
+    {
+        var tokens = new LexerAtnSimulator(BuildLineCommentAtn())
+            .Tokenize("// first\n\n");
+
+        Assert.Equal("// first\n", tokens[0].Text);
+        Assert.Equal("\n", tokens[1].Text);
+    }
+
+    [Fact]
+    public void RecursiveNonGreedyLexerRuleConsumesOuterTerminator()
+    {
+        var tokens = new LexerAtnSimulator(BuildRecursiveCommentAtn())
+            .Tokenize("(* outer (* middle (* inner *) *) *)x");
+
+        Assert.Equal("(* outer (* middle (* inner *) *) *)", tokens[0].Text);
+        Assert.Equal("x", tokens[1].Text);
+    }
+
+    [Fact]
     public void NonGreedyLexerLoopPreservesHigherPriorityEscapedDelimiter()
     {
         var lexerInterp = Path.Combine(
@@ -183,6 +203,121 @@ public class LexerCommandTests
         new RuleSpec(1, '>', 7, new(MyLexerActionType.PopMode, 0, 0)),
         new RuleSpec(2, 'y', 8),
         new RuleSpec(2, ']', 9, new(MyLexerActionType.Mode, 0, 0)));
+
+    private static MyATN BuildLineCommentAtn()
+    {
+        var states = new List<MyATNState>();
+        MyATNState New(MyStateType type, int rule)
+        {
+            var state = State(type, rule, states.Count);
+            states.Add(state);
+            return state;
+        }
+
+        var modeStart = New(MyStateType.TokenStart, -1);
+
+        // LINE_COMMENT : '//' .*? '\n' ;
+        var commentStart = New(MyStateType.RuleStart, 0);
+        var secondSlash = New(MyStateType.Basic, 0);
+        var decision = New(MyStateType.StarLoopEntry, 0);
+        decision.nonGreedy = true;
+        var suffix = New(MyStateType.Basic, 0);
+        var loopBody = New(MyStateType.Basic, 0);
+        var loopBack = New(MyStateType.StarLoopBack, 0);
+        var commentStop = New(MyStateType.RuleStop, 0);
+        commentStart.AddTransition(new MyAtomTransition(secondSlash, '/'));
+        secondSlash.AddTransition(new MyAtomTransition(decision, '/'));
+        decision.AddTransition(new MyEpsilonTransition(suffix));
+        decision.AddTransition(new MyEpsilonTransition(loopBody));
+        suffix.AddTransition(new MyAtomTransition(commentStop, '\n'));
+        loopBody.AddTransition(new MyWildcardTransition(loopBack));
+        loopBack.AddTransition(new MyEpsilonTransition(decision));
+
+        // WS : '\n' ;
+        var wsStart = New(MyStateType.RuleStart, 1);
+        var wsStop = New(MyStateType.RuleStop, 1);
+        wsStart.AddTransition(new MyAtomTransition(wsStop, '\n'));
+
+        modeStart.AddTransition(new MyEpsilonTransition(commentStart));
+        modeStart.AddTransition(new MyEpsilonTransition(wsStart));
+
+        return new MyATN
+        {
+            grammarType = MyATNType.Lexer,
+            maxTokenType = 2,
+            allStates = states.ToArray(),
+            start = [commentStart, wsStart],
+            ruleToStopState = [commentStop, wsStop],
+            ruleToTokenType = [1, 2],
+            modeToStartState = [modeStart]
+        };
+    }
+
+    private static MyATN BuildRecursiveCommentAtn()
+    {
+        var states = new List<MyATNState>();
+        MyATNState New(MyStateType type, int rule)
+        {
+            var state = State(type, rule, states.Count);
+            states.Add(state);
+            return state;
+        }
+
+        var modeStart = New(MyStateType.TokenStart, -1);
+
+        // COMMENT : '(*' (COMMENT | .)*? '*)' ;
+        var commentStart = New(MyStateType.RuleStart, 0);
+        var afterOpen = New(MyStateType.Basic, 0);
+        var loop = New(MyStateType.StarLoopEntry, 0);
+        loop.nonGreedy = true;
+        var close = New(MyStateType.Basic, 0);
+        var body = New(MyStateType.Basic, 0);
+        var loopBack = New(MyStateType.StarLoopBack, 0);
+        var commentStop = New(MyStateType.RuleStop, 0);
+        commentStart.AddTransition(new MyRuleTransition(afterOpen, 1, 0));
+        afterOpen.AddTransition(new MyEpsilonTransition(loop));
+        loop.AddTransition(new MyEpsilonTransition(close));
+        loop.AddTransition(new MyEpsilonTransition(body));
+        close.AddTransition(new MyRuleTransition(commentStop, 2, 0));
+        body.AddTransition(new MyRuleTransition(loopBack, 0, 0));
+        body.AddTransition(new MyWildcardTransition(loopBack));
+        loopBack.AddTransition(new MyEpsilonTransition(loop));
+
+        // OPEN_COMMENT : '(*' ;
+        var openStart = New(MyStateType.RuleStart, 1);
+        var openStar = New(MyStateType.Basic, 1);
+        var openStop = New(MyStateType.RuleStop, 1);
+        openStart.AddTransition(new MyAtomTransition(openStar, '('));
+        openStar.AddTransition(new MyAtomTransition(openStop, '*'));
+
+        // CLOSE_COMMENT : '*)' ;
+        var closeStart = New(MyStateType.RuleStart, 2);
+        var closeParen = New(MyStateType.Basic, 2);
+        var closeStop = New(MyStateType.RuleStop, 2);
+        closeStart.AddTransition(new MyAtomTransition(closeParen, '*'));
+        closeParen.AddTransition(new MyAtomTransition(closeStop, ')'));
+
+        // TEXT : . ;
+        var textStart = New(MyStateType.RuleStart, 3);
+        var textStop = New(MyStateType.RuleStop, 3);
+        textStart.AddTransition(new MyWildcardTransition(textStop));
+
+        modeStart.AddTransition(new MyEpsilonTransition(commentStart));
+        modeStart.AddTransition(new MyEpsilonTransition(openStart));
+        modeStart.AddTransition(new MyEpsilonTransition(closeStart));
+        modeStart.AddTransition(new MyEpsilonTransition(textStart));
+
+        return new MyATN
+        {
+            grammarType = MyATNType.Lexer,
+            maxTokenType = 4,
+            allStates = states.ToArray(),
+            start = [commentStart, openStart, closeStart, textStart],
+            ruleToStopState = [commentStop, openStop, closeStop, textStop],
+            ruleToTokenType = [1, 2, 3, 4],
+            modeToStartState = [modeStart]
+        };
+    }
 
     private static MyATN BuildNestedNonGreedyAtn()
     {

@@ -1248,6 +1248,18 @@ public class ParserAtnFactory
         if (s.Length == 0) return -1;
         if (s[0] != '\\') return s[0];
         if (s.Length < 2) return -1;
+        if (s[1] == 'u' && s.Length >= 4 && s[2] == '{' && s[^1] == '}')
+        {
+            var digits = s.AsSpan(3, s.Length - 4);
+            if (digits.Length is < 1 or > 6)
+                throw new FormatException("A braced Unicode escape must contain 1 to 6 hexadecimal digits.");
+            int value = int.Parse(
+                digits, System.Globalization.NumberStyles.HexNumber,
+                System.Globalization.CultureInfo.InvariantCulture);
+            if (value > 0x10FFFF)
+                throw new FormatException($"Unicode escape U+{value:X} is outside the Unicode range.");
+            return value;
+        }
         return s[1] switch
         {
             'n' => '\n', 'r' => '\r', 't' => '\t', 'b' => '\b',
