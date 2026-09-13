@@ -72,6 +72,9 @@ class Command
 
         AdapterDocument LoadDocFile(string path)
         {
+            if (path == "*")
+                return AdapterDocument.Build(data.SelectMany(prs => prs.Nodes));
+
             var data2 = ParsingResultIO.Read(path).Results;
             return AdapterDocument.Build(data2.SelectMany(prs => prs.Nodes));
         }
