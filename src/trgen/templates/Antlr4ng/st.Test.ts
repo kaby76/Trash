@@ -24,7 +24,7 @@ import { readSync } from 'fs';
 import { writeSync } from 'fs';
 import { closeSync } from 'fs';
 import { readFile } from 'fs/promises'
-import { join as pathJoin, dirname as pathDirname, resolve as pathResolve, parse as pathParse } from 'path';
+import { join as pathJoin, dirname as pathDirname, resolve as pathResolve, relative as pathRelative, sep as pathSep, isAbsolute as pathIsAbsolute, basename as pathBasename } from 'path';
 import { isToken } from 'antlr4ng';
 import { BinaryCharStream } from './BinaryCharStream.js';
 import { ErrorListener } from './ErrorListener.js';
@@ -190,7 +190,10 @@ function DoParse(str: CharStream, input_name: string, row_number: number) {
     let out_name = input_name;
     if (output_dir) {
         const absPath = pathResolve(input_name);
-        const rootless = absPath.slice(pathParse(absPath).root.length);
+        const root = pathResolve('../<example_dir_unix>');
+        let rootless = pathRelative(root, absPath);
+        if (rootless === '..' || rootless.startsWith('..' + pathSep) || pathIsAbsolute(rootless))
+            rootless = pathBasename(absPath);
         out_name = pathJoin(output_dir, rootless);
         mkdirSync(pathDirname(out_name), { recursive: true });
     }

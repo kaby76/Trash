@@ -73,6 +73,10 @@ internal static class NativeTreeTestSupport
         MinimumTokensPerSecond: 50,
         NativeTreeDirectoryName: "native", TreeStyle: NativeTreeStyle.Block);
 
+    public static readonly NativeTreeGrammar Yini = new(
+        "YINI", "yini", "YiniParser.interp", "YiniLexer.interp", "*.yini",
+        MinimumSuccessfulFiles: 1, MinimumTokensPerSecond: 50);
+
     public static IEnumerable<object[]> Cases(NativeTreeGrammar grammar) =>
         grammar.InputFiles().Select(path => new object[] { path });
 
@@ -176,57 +180,10 @@ internal static class NativeTreeTestSupport
     {
         var output = new StringBuilder();
         foreach (var node in result.Nodes)
-        {
-            RenderNode(output, node);
-            output.AppendLine();
-        }
+            output.AppendLine(new TreeOutput(result.Lexer, result.Parser)
+                .OutputTreeAntlrStyle(node).ToString());
         return output.ToString();
     }
-
-    // DomBuilder represents a terminal as an element named for its token type with
-    // one text child. ANTLR's Trees.ToStringTree instead renders only the token text.
-    // It also renders a childless rule as its rule name rather than "(rule)".
-    private static void RenderNode(StringBuilder output, UnvParseTreeNode node)
-    {
-        if (node is not UnvParseTreeElement element)
-            return;
-
-        if (element.RuleIndex < 0)
-        {
-            var text = element.LocalName == "EOF"
-                ? "<EOF>"
-                : Enumerable.Range(0, element.ChildNodes.Length)
-                    .Select(i => element.ChildNodes.item(i))
-                    .OfType<UnvParseTreeText>()
-                    .Select(child => child.Data)
-                    .FirstOrDefault() ?? string.Empty;
-            output.Append(EscapeWhitespace(text));
-            return;
-        }
-
-        var children = Enumerable.Range(0, element.ChildNodes.Length)
-            .Select(i => element.ChildNodes.item(i))
-            .OfType<UnvParseTreeElement>()
-            .ToList();
-        if (children.Count == 0)
-        {
-            output.Append(element.LocalName);
-            return;
-        }
-
-        output.Append('(').Append(element.LocalName);
-        foreach (var child in children)
-        {
-            output.Append(' ');
-            RenderNode(output, child);
-        }
-        output.Append(')');
-    }
-
-    private static string EscapeWhitespace(string text) =>
-        text.Replace("\t", "\\t", StringComparison.Ordinal)
-            .Replace("\n", "\\n", StringComparison.Ordinal)
-            .Replace("\r", "\\r", StringComparison.Ordinal);
 
     private static string NormalizeTree(string tree) =>
         tree.Replace("\r\n", "\n", StringComparison.Ordinal).TrimEnd('\n', '\r');

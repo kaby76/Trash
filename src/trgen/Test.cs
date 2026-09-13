@@ -95,12 +95,14 @@ namespace Trash
         {
             this.ignore_string = null;
 
-            // Check for existence of .trgen-ignore file.
-            // If there is one, read and create pattern of what to ignore.
-            if (File.Exists(config.ignore_list_of_files))
+            // Use the closest .trgen-ignore from the current directory up to
+            // and including the filesystem root.
+            var ignoreFile = FindIgnoreFile(
+                config.ignore_list_of_files, Environment.CurrentDirectory);
+            if (ignoreFile != null)
             {
                 var ignore = new StringBuilder();
-                var lines = File.ReadAllLines(config.ignore_list_of_files);
+                var lines = File.ReadAllLines(ignoreFile);
                 var ignore_lines = lines.Where(l => !l.StartsWith("//")).ToList();
                 this.ignore_string = string.Join("|", ignore_lines);
             }
@@ -117,6 +119,30 @@ namespace Trash
                 }
             }
             
+        }
+
+        public static string FindIgnoreFile(string fileName, string startDirectory)
+        {
+            if (string.IsNullOrWhiteSpace(fileName) ||
+                string.IsNullOrWhiteSpace(startDirectory))
+                return null;
+
+            if (Path.IsPathRooted(fileName))
+            {
+                var absoluteFile = Path.GetFullPath(fileName);
+                return File.Exists(absoluteFile) ? absoluteFile : null;
+            }
+
+            for (var directory = new DirectoryInfo(Path.GetFullPath(startDirectory));
+                 directory != null;
+                 directory = directory.Parent)
+            {
+                var candidate = Path.Combine(directory.FullName, fileName);
+                if (File.Exists(candidate))
+                    return candidate;
+            }
+
+            return null;
         }
     }
 }

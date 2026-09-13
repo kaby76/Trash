@@ -154,6 +154,20 @@
     <Content Include="../grammars-v4/cmake/native/CMakeLists.tree"
              CopyToOutputDirectory="PreserveNewest"
              Link="TestData/cmake/native/CMakeLists.tree" />
+
+    <!-- YINI string-literal lexer regression and native Java tree -->
+    <Content Include="../grammars-v4/yini/interp/YiniParser.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/yini/interp/YiniParser.interp" />
+    <Content Include="../grammars-v4/yini/interp/YiniLexer.interp"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/yini/interp/YiniLexer.interp" />
+    <Content Include="../grammars-v4/yini/examples/Strings.yini"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/yini/examples/Strings.yini" />
+    <Content Include="../grammars-v4/yini/examples/Strings.yini.tree"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/yini/examples/Strings.yini.tree" />
   </ItemGroup>
 
 </Project>

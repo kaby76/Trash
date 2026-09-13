@@ -662,15 +662,15 @@ public class LexerAtnFactory : ParserAtnFactory
         if (idx >= s.Length) return (0, 0);
         if (s[idx] != '\\') return (s[idx], 1);
         if (idx + 1 >= s.Length) return (s[idx], 1);
+        if (s[idx + 1] == 'u')
+            return DecodeUnicodeEscape(s, idx);
         int c = s[idx + 1] switch
         {
             'n' => '\n', 'r' => '\r', 't' => '\t', 'b' => '\b',
             'f' => '\f', '\\' => '\\', '\'' => '\'', '"' => '"',
-            'u' when idx + 5 < s.Length => int.Parse(s.Substring(idx + 2, 4), System.Globalization.NumberStyles.HexNumber),
             _ => s[idx + 1]
         };
-        int len = (s[idx + 1] == 'u' && idx + 5 < s.Length) ? 6 : 2;
-        return (c, len);
+        return (c, 2);
     }
 
     private static (int ch, int len) NextCharInSet(string s, int idx)
@@ -678,15 +678,45 @@ public class LexerAtnFactory : ParserAtnFactory
         if (idx >= s.Length) return (0, 0);
         if (s[idx] != '\\') return (s[idx], 1);
         if (idx + 1 >= s.Length) return (s[idx], 1);
+        if (s[idx + 1] == 'u')
+            return DecodeUnicodeEscape(s, idx);
         int c = s[idx + 1] switch
         {
             'n' => '\n', 'r' => '\r', 't' => '\t', 'b' => '\b',
             'f' => '\f', '\\' => '\\', ']' => ']', '-' => '-',
-            'u' when idx + 5 < s.Length => int.Parse(s.Substring(idx + 2, 4), System.Globalization.NumberStyles.HexNumber),
             _ => s[idx + 1]
         };
-        int len = (s[idx + 1] == 'u' && idx + 5 < s.Length) ? 6 : 2;
-        return (c, len);
+        return (c, 2);
+    }
+
+    private static (int ch, int len) DecodeUnicodeEscape(string s, int idx)
+    {
+        int digitsStart = idx + 2;
+        if (digitsStart < s.Length && s[digitsStart] == '{')
+        {
+            int close = s.IndexOf('}', digitsStart + 1);
+            if (close < 0)
+                throw new FormatException("Unterminated braced Unicode escape.");
+
+            int digitCount = close - digitsStart - 1;
+            if (digitCount is < 1 or > 6)
+                throw new FormatException("A braced Unicode escape must contain 1 to 6 hexadecimal digits.");
+
+            int value = int.Parse(
+                s.AsSpan(digitsStart + 1, digitCount),
+                System.Globalization.NumberStyles.HexNumber,
+                System.Globalization.CultureInfo.InvariantCulture);
+            if (value > 0x10FFFF)
+                throw new FormatException($"Unicode escape U+{value:X} is outside the Unicode range.");
+            return (value, close - idx + 1);
+        }
+
+        if (digitsStart + 4 > s.Length)
+            throw new FormatException("A Unicode escape must contain four hexadecimal digits.");
+        return (int.Parse(
+            s.AsSpan(digitsStart, 4),
+            System.Globalization.NumberStyles.HexNumber,
+            System.Globalization.CultureInfo.InvariantCulture), 6);
     }
 
     // =========================================================================

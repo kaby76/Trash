@@ -13,6 +13,8 @@ public partial class LexerAtnSimulator
     private readonly LexContextCache _contextCache;
     private readonly Stack<LexerConfig> _closureWork = new();
     private readonly Dictionary<int, IMyLexerAction[]> _actionSets;
+    private readonly Dictionary<(int Decision, int Character, int OuterRule), bool>
+        _preferredNonGreedyMatches = new();
     private string _input;
     private const int DEFAULT_CHANNEL = 0;
     private const int EOF = -1;
@@ -430,9 +432,15 @@ public partial class LexerAtnSimulator
         {
             for (int transitionIndex = 0;
                  transitionIndex < c.State.transitions.Count;
-                 transitionIndex++)
+                transitionIndex++)
             {
                 var tr = c.State.transitions[transitionIndex];
+                if (tr is MyWildcardTransition &&
+                    c.NonGreedyDecision >= 0 &&
+                    c.NonGreedyBranch > 0 &&
+                    PreferredNonGreedyBranchMatches(
+                        c.NonGreedyDecision, ch, c.OuterRule))
+                    continue;
                 if (CharMatches(tr, ch))
                     next.Add(new LexerConfig(
                         tr.target, c.Stack, c.Actions, c.OuterRule,
@@ -443,6 +451,61 @@ public partial class LexerAtnSimulator
             }
         }
         return next;
+    }
+
+    private bool PreferredNonGreedyBranchMatches(
+        int decision, int ch, int outerRule)
+    {
+        var key = (decision, ch, outerRule);
+        if (_preferredNonGreedyMatches.TryGetValue(key, out bool cached))
+            return cached;
+
+        var decisionState = _atn.allStates[decision];
+        if (decisionState.transitions.Count == 0)
+            return _preferredNonGreedyMatches[key] = false;
+
+        var work = new Stack<MyATNState>();
+        var visited = new HashSet<int>();
+        work.Push(decisionState.transitions[0].target);
+        while (work.Count != 0)
+        {
+            var state = work.Pop();
+            if (!visited.Add(state.stateNumber)) continue;
+            foreach (var transition in state.transitions)
+            {
+                if (CharMatches(transition, ch) &&
+                    CanReachRuleStopWithoutConsuming(
+                        transition.target, outerRule))
+                    return _preferredNonGreedyMatches[key] = true;
+                if (transition is MyEpsilonTransition or MyActionTransition or
+                    MyPredicateTransition or MyPrecedencePredicateTransition)
+                    work.Push(transition.target);
+            }
+        }
+        return _preferredNonGreedyMatches[key] = false;
+    }
+
+    private static bool CanReachRuleStopWithoutConsuming(
+        MyATNState initial, int outerRule)
+    {
+        var work = new Stack<MyATNState>();
+        var visited = new HashSet<int>();
+        work.Push(initial);
+        while (work.Count != 0)
+        {
+            var state = work.Pop();
+            if (!visited.Add(state.stateNumber)) continue;
+            if (state.stateType == MyStateType.RuleStop &&
+                state.ruleIndex == outerRule)
+                return true;
+            foreach (var transition in state.transitions)
+            {
+                if (transition is MyEpsilonTransition or MyActionTransition or
+                    MyPredicateTransition or MyPrecedencePredicateTransition)
+                    work.Push(transition.target);
+            }
+        }
+        return false;
     }
 
     private static bool CharMatches(MyTransition tr, int ch) => tr switch
@@ -469,11 +532,14 @@ public partial class LexerAtnSimulator
             if (c.State.stateType == MyStateType.RuleStop && !c.Stack.IsEmpty)
             {
                 var (ret, rest) = c.Stack.Pop();
+                bool exitedNonGreedyOwner = c.CompletedInnerRule &&
+                    c.NonGreedyDecision >= 0 &&
+                    c.Stack.Id != c.NonGreedyContext.Id;
                 var next = new LexerConfig(
                     ret, rest, c.Actions, c.OuterRule,
-                    c.NonGreedyDecision,
-                    c.NonGreedyContext,
-                    c.NonGreedyBranch,
+                    exitedNonGreedyOwner ? -1 : c.NonGreedyDecision,
+                    exitedNonGreedyOwner ? LexStack.Empty : c.NonGreedyContext,
+                    exitedNonGreedyOwner ? -1 : c.NonGreedyBranch,
                     true);
                 if (configs.Add(next)) work.Push(next);
                 continue;

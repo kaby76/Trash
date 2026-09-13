@@ -19,7 +19,7 @@ This tool is part of Trash, Transformations for Antlr Shell.
 
 ## Current version
 
-Release 3.4.0.
+Release 3.5.0.
 
 ## License
 

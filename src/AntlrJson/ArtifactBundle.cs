@@ -88,7 +88,8 @@ public static class ArtifactBundle
             name => name,
             name => Path.GetFullPath(name, explicitBase ?? Environment.CurrentDirectory),
             StringComparer.Ordinal);
-        var root = explicitBase ?? CommonDirectory(fullPaths.Values);
+        var declaredRoot = explicitBase == null ? CommonDeclaredRoot(names) : null;
+        var root = explicitBase ?? declaredRoot ?? CommonDirectory(fullPaths.Values);
         root = Path.GetFullPath(root);
 
         var result = new Dictionary<string, string>(StringComparer.Ordinal);
@@ -101,6 +102,41 @@ public static class ArtifactBundle
         }
         return result;
     }
+
+    private static string CommonDeclaredRoot(IEnumerable<string> inputNames)
+    {
+        var names = inputNames.ToArray();
+        if (names.Length == 0 || names.Any(Path.IsPathRooted))
+            return null;
+
+        var roots = names.Select(DeclaredRoot).Distinct(PathComparer).ToArray();
+        return roots.Length == 1 ? roots[0] : null;
+    }
+
+    private static string DeclaredRoot(string inputName)
+    {
+        var parts = inputName.Replace('\\', '/')
+            .Split('/', StringSplitOptions.RemoveEmptyEntries);
+        var directoryCount = Math.Max(0, parts.Length - 1);
+        var firstDirectory = -1;
+        for (var index = 0; index < directoryCount; index++)
+        {
+            if (parts[index] != "." && parts[index] != "..")
+            {
+                firstDirectory = index;
+                break;
+            }
+        }
+
+        var rootParts = firstDirectory >= 0
+            ? parts.Take(firstDirectory + 1)
+            : parts.Take(directoryCount);
+        var declared = string.Join(Path.DirectorySeparatorChar, rootParts);
+        return Path.GetFullPath(string.IsNullOrEmpty(declared) ? "." : declared);
+    }
+
+    private static StringComparer PathComparer =>
+        OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal;
 
     public static string ChangeExtension(string memberName, string extension)
     {
@@ -117,33 +153,10 @@ public static class ArtifactBundle
         var names = memberNames.Select(ValidateMemberName)
             .Distinct(StringComparer.Ordinal)
             .ToArray();
-        var result = names.ToDictionary(
-            name => name,
-            name => ChangeExtension(name, ""),
+        // Retain the source extension so every parser target uses the same
+        // artifact names: input.scss -> input.scss.pt/.tree/.errors.
+        return names.ToDictionary(name => name, name => name,
             StringComparer.Ordinal);
-
-        // Prefer the traditional extension-free artifact name. If two inputs
-        // share that name (pkg.adb and pkg.ads), retain their source extensions.
-        // Repeat because a retained name can itself collide with another stem.
-        while (true)
-        {
-            var collisions = result.GroupBy(pair => pair.Value, StringComparer.Ordinal)
-                .Where(group => group.Count() > 1)
-                .SelectMany(group => group.Select(pair => pair.Key))
-                .ToArray();
-            if (collisions.Length == 0)
-                return result;
-
-            var changed = false;
-            foreach (var name in collisions)
-            {
-                if (result[name] == name) continue;
-                result[name] = name;
-                changed = true;
-            }
-            if (!changed)
-                throw new InvalidDataException("Unable to create unique artifact base names.");
-        }
     }
 
     public static byte[] SerializeParsingResult(ParsingResultSet result, bool indented = false)

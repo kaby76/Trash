@@ -206,12 +206,12 @@ Future\<void> DoParse(CharStream str, String input_name, int row_number) async
     String out_name = input_name;
     if (output_dir != "") {
         String absPath = File(input_name).absolute.path;
-        // Strip drive letter (e.g. "C:") then leading separators (/ or \).
-        // Use char codes to avoid backslash literals in the template.
-        int si = 0;
-        if (absPath.length >= 2 && absPath.codeUnitAt(1) == 58) si = 2; // 58 = ':'
-        while (si \< absPath.length && (absPath.codeUnitAt(si) == 47 || absPath.codeUnitAt(si) == 92)) si++; // 47='/' 92='\'
-        String rootless = absPath.substring(si);
+        String root = Directory('../<example_dir_unix>').absolute.path;
+        String rootPrefix = root.endsWith(Platform.pathSeparator)
+            ? root : root + Platform.pathSeparator;
+        String rootless = absPath.startsWith(rootPrefix)
+            ? absPath.substring(rootPrefix.length)
+            : absPath.split(Platform.pathSeparator).last;
         out_name = output_dir + '/' + rootless;
         await Directory(File(out_name).parent.path).create(recursive: true);
     }

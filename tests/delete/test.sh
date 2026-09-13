@@ -12,10 +12,10 @@ rm -rf Generated
 mkdir Generated
 
 # Test.
-dotnet trash parse Expression.g4 | dotnet trash xquery 'delete node //parserRuleSpec[RULE_REF/text()="a"]' > o.pt
-cat o.pt | dotnet trash text --bundle | dotnet trash sponge -c -o Generated
-cat o.pt | dotnet trash tree > Generated/delete.tree
-rm o.pt
+dotnet trash parse Expression.g4 | dotnet trash xquery 'delete node //parserRuleSpec[RULE_REF/text()="a"]' > o.tar
+cat o.tar | dotnet trash tree --bundle | dotnet trash sponge -c -o Generated
+cat o.tar | dotnet trash text --bundle | dotnet trash sponge -c -o Generated
+rm o.tar
 
 # Diff.
 for i in "$where/Generated/*"
