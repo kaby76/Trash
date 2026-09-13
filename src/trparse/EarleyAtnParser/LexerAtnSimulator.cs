@@ -447,7 +447,7 @@ public partial class LexerAtnSimulator
                         NextNonGreedyDecision(c),
                         NextNonGreedyContext(c),
                         NextNonGreedyBranch(c, transitionIndex),
-                        false));
+                        -1));
             }
         }
         return next;
@@ -540,7 +540,7 @@ public partial class LexerAtnSimulator
                     exitedNonGreedyOwner ? -1 : c.NonGreedyDecision,
                     exitedNonGreedyOwner ? LexStack.Empty : c.NonGreedyContext,
                     exitedNonGreedyOwner ? -1 : c.NonGreedyBranch,
-                    true);
+                    c.State.ruleIndex);
                 if (configs.Add(next)) work.Push(next);
                 continue;
             }
@@ -562,7 +562,7 @@ public partial class LexerAtnSimulator
                             NextNonGreedyDecision(c),
                             NextNonGreedyContext(c),
                             NextNonGreedyBranch(c, transitionIndex),
-                            c.CompletedInnerRule);
+                            c.CompletedRule);
                         if (configs.Add(next)) work.Push(next);
                         break;
 
@@ -578,7 +578,7 @@ public partial class LexerAtnSimulator
                             NextNonGreedyDecision(c),
                             NextNonGreedyContext(c),
                             NextNonGreedyBranch(c, transitionIndex),
-                            c.CompletedInnerRule);
+                            c.CompletedRule);
                         if (configs.Add(next)) work.Push(next);
                         break;
 
@@ -591,7 +591,7 @@ public partial class LexerAtnSimulator
                             NextNonGreedyDecision(c),
                             NextNonGreedyContext(c),
                             NextNonGreedyBranch(c, transitionIndex),
-                            false);
+                            c.CompletedRule);
                         if (configs.Add(next)) work.Push(next);
                         break;
                 }
@@ -638,15 +638,16 @@ public partial class LexerAtnSimulator
         public readonly int NonGreedyDecision;
         public readonly LexStack NonGreedyContext;
         public readonly int NonGreedyBranch;
-        // True when the most recently consumed character completed any
-        // referenced rule. This preserves a higher-priority fragment path
-        // when a wildcard path can accept at the same position.
-        public readonly bool CompletedInnerRule;
+        // Rule completed by the most recently consumed character, or -1.
+        // A recursive completion preserves the explicit recursive alternative
+        // over wildcard interpretations which can accept at the same position.
+        public readonly int CompletedRule;
+        public bool CompletedInnerRule => CompletedRule >= 0;
         public LexerConfig(MyATNState state, LexStack stack, int actions,
                            int outerRule, int nonGreedyDecision,
                            LexStack nonGreedyContext,
                            int nonGreedyBranch,
-                           bool completedInnerRule)
+                           int completedRule)
         {
             State = state;
             Stack = stack;
@@ -655,7 +656,7 @@ public partial class LexerAtnSimulator
             NonGreedyDecision = nonGreedyDecision;
             NonGreedyContext = nonGreedyContext;
             NonGreedyBranch = nonGreedyBranch;
-            CompletedInnerRule = completedInnerRule;
+            CompletedRule = completedRule;
         }
     }
 
@@ -671,7 +672,7 @@ public partial class LexerAtnSimulator
                x.NonGreedyDecision == y.NonGreedyDecision &&
                x.NonGreedyContext.Id == y.NonGreedyContext.Id &&
                x.NonGreedyBranch == y.NonGreedyBranch &&
-               x.CompletedInnerRule == y.CompletedInnerRule;
+               x.CompletedRule == y.CompletedRule;
 
         public int GetHashCode(LexerConfig c)
         {
@@ -682,7 +683,7 @@ public partial class LexerAtnSimulator
                 hash = hash * 31 + c.NonGreedyDecision;
                 hash = hash * 31 + c.NonGreedyContext.GetHashCode();
                 hash = hash * 31 + c.NonGreedyBranch;
-                hash = hash * 31 + (c.CompletedInnerRule ? 1 : 0);
+                hash = hash * 31 + c.CompletedRule;
                 return hash;
             }
         }

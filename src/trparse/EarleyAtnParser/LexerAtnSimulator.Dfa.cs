@@ -209,7 +209,7 @@ public partial class LexerAtnSimulator
             var uncachedConfigs = new HashSet<LexerConfig>(LexerConfigEq.Instance)
             {
                 new LexerConfig(_atn.modeToStartState[mode], LexStack.Empty,
-                    0, -1, -1, LexStack.Empty, -1, false)
+                    0, -1, -1, LexStack.Empty, -1, -1)
             };
             EpsClosure(uncachedConfigs);
             return new DfaState(uncachedConfigs);
@@ -220,7 +220,7 @@ public partial class LexerAtnSimulator
         var configs = NewDfaConfigSet();
         configs.Add(new LexerConfig(
             _atn.modeToStartState[mode], LexStack.Empty,
-            0, -1, -1, LexStack.Empty, -1, false));
+            0, -1, -1, LexStack.Empty, -1, -1));
         EpsClosure(configs);
         cached = InternDfaState(configs);
         _modeStartStates[mode] = cached;
@@ -280,27 +280,15 @@ public partial class LexerAtnSimulator
 
     private void PruneAfterNonGreedyAccept(HashSet<LexerConfig> configs)
     {
-        var completedCalls = configs
-            .Where(config => config.CompletedInnerRule &&
-                config.NonGreedyDecision >= 0 &&
-                config.NonGreedyContext.Id == config.Stack.Id)
-            .Select(config => (
-                config.OuterRule,
-                config.NonGreedyDecision,
-                config.NonGreedyContext.Id,
-                config.NonGreedyBranch,
-                config.Stack.Id))
+        var completedRecursiveRules = configs
+            .Where(config => config.CompletedRule == config.OuterRule)
+            .Select(config => config.OuterRule)
             .ToHashSet();
-        if (completedCalls.Count != 0)
+        if (completedRecursiveRules.Count != 0)
         {
             configs.RemoveWhere(config =>
-                !config.CompletedInnerRule &&
-                completedCalls.Contains((
-                    config.OuterRule,
-                    config.NonGreedyDecision,
-                    config.NonGreedyContext.Id,
-                    config.NonGreedyBranch,
-                    config.Stack.Id)));
+                config.CompletedRule != config.OuterRule &&
+                completedRecursiveRules.Contains(config.OuterRule));
         }
 
         var accepts = _nonGreedyAcceptWork;
@@ -355,7 +343,7 @@ public partial class LexerAtnSimulator
             x.NonGreedyDecision == y.NonGreedyDecision &&
             x.NonGreedyContext.Id == y.NonGreedyContext.Id &&
             x.NonGreedyBranch == y.NonGreedyBranch &&
-            x.CompletedInnerRule == y.CompletedInnerRule;
+            x.CompletedRule == y.CompletedRule;
 
         public int GetHashCode(LexerConfig config)
         {
@@ -368,7 +356,7 @@ public partial class LexerAtnSimulator
                 hash = hash * 31 + config.NonGreedyDecision;
                 hash = hash * 31 + config.NonGreedyContext.Id;
                 hash = hash * 31 + config.NonGreedyBranch;
-                hash = hash * 31 + (config.CompletedInnerRule ? 1 : 0);
+                hash = hash * 31 + config.CompletedRule;
                 return hash;
             }
         }
