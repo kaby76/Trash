@@ -11,9 +11,12 @@ use antlr4_runtime::{
 };
 
 mod lexer_base;
-mod r#gen;
+<if(ophirust_has_parser_base)>mod parser_base;
+<endif>mod r#gen;
 use r#gen::<ophirust_lexer_name>;
 use r#gen::<ophirust_parser_name>;
+<if(ophirust_has_parser_base)>use r#gen::<ophirust_parser_name>TypedHooks;
+<endif>
 
 // Shared state for counting and recording syntax errors.
 // Uses Arc\<Mutex\<...>> because add_error_listener requires Send + 'static.
@@ -112,7 +115,10 @@ fn parse_input(
     let lex_start = Instant::now();
     let token_stream = CommonTokenStream::new(lexer);
     let lex_elapsed = lex_start.elapsed();
-    let mut parser = <ophirust_parser_name>::new(token_stream);
+    <if(ophirust_has_parser_base)>let mut parser = <ophirust_parser_name>::with_hooks(
+        token_stream,
+        <ophirust_parser_name>TypedHooks::new(parser_base::ParserBase::new()),
+    );<else>let mut parser = <ophirust_parser_name>::new(token_stream);<endif>
     parser.remove_error_listeners();
     parser.add_error_listener(CountingErrorListener {
         quiet: flags.quiet,
