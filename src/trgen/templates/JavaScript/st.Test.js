@@ -55,6 +55,8 @@ var show_tokens = false;
 var show_trace = false;
 var error_code = 0;
 var quiet = false;
+var perf = false;
+var per_file = false;
 var enc = '<file_encoding>';
 var binary = <binary>;
 var string_instance = 0;
@@ -112,6 +114,12 @@ function main() {
             case '-q':
                 quiet = true;
                 break;
+            case '--perf':
+                perf = true;
+                break;
+            case '--per-file':
+                per_file = true;
+                break;
             case '-trace':
                 show_trace = true;
                 break;
@@ -139,6 +147,9 @@ function main() {
         timer.stop();
         var t = timer.time().m * 60 + timer.time().s + timer.time().ms / 1000;
         if (!quiet) {
+            if (!perf) {
+                console.error(prefix + 'TT: ' + t);
+            } else {
             var warm_tokens = total_tokens - first_file_tokens;
             var warm_seconds = total_parse_seconds - first_file_parse_seconds;
             var warm_tps = (inputs.length > 1 && warm_seconds > 0)
@@ -151,9 +162,10 @@ function main() {
             console.error(prefix + 'PT: ' + total_parse_seconds);
             console.error(prefix + 'OT: ' + (t - total_parse_seconds));
             console.error(prefix + 'TT: ' + t);
-            console.error(prefix + 'TPS: ' + Math.round(total_tokens / total_parse_seconds));
-            console.error(prefix + 'Post-warmup TPS: ' + warm_tps);
+            console.error(prefix + 'PR: ' + Math.round(total_tokens / total_parse_seconds));
+            console.error(prefix + 'Post-warmup PR: ' + warm_tps);
             console.error(prefix + 'Post-warmup speed up: ' + speedup);
+            }
         }
     }
     process.exitCode = error_code;
@@ -247,8 +259,8 @@ function DoParse(str, input_name, row_number) {
             console.error(tree.toStringTree(parser.ruleNames));
         }
     }
-    if (! quiet) {
-        console.error(prefix + 'JavaScript ' + row_number + ' ' + input_name + ' ' + result + ' ' + t + ' s ' + token_count + ' tokens ' + Math.round(token_count / t) + ' tps');
+    if (! quiet && per_file) {
+        console.error(prefix + 'JavaScript ' + row_number + ' ' + input_name + ' ' + result + ' ' + t + ' s ' + token_count + ' tokens ' + Math.round(token_count / t) + ' pr');
     }
     if (tee) {
         fs.closeSync(output);

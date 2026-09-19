@@ -49,14 +49,15 @@ simplify and eliminate bugs created when adding new grammars.
 
 ## Output measurements
 
-The generated driver prints timing and throughput information to stderr after each parse
-and again as a summary after all files have been parsed.
+The generated driver writes only total elapsed time (`TT`) to stderr by default.
+Use `--perf` for the complete aggregate summary and `--per-file` for one
+performance line per input file. The options are independent and may be combined.
 
 ### Per-file output
 
-Each parsed file produces one line in the form:
+With `--per-file`, each parsed file produces one line in the form:
 
-    <target> <index> <filename> <result> <time> s <tokens> tokens <tps> tps
+    <target> <index> <filename> <result> <time> s <tokens> tokens <pr> pr
 
 | Field | Description |
 |---|---|
@@ -66,24 +67,24 @@ Each parsed file produces one line in the form:
 | `<result>` | `success` or `fail` |
 | `<time>` | Parse-only wall-clock time in seconds (excludes lexer/parser construction and I/O) |
 | `<tokens>` | Number of tokens in the token stream |
-| `<tps>` | Tokens per second for this file (`tokens / time`) |
+| `<pr>` | Tokens per second for this file (`tokens / time`) |
 
 ### Summary output
 
-After all files are parsed, six summary lines are printed:
+With `--perf`, six summary lines are printed after all files are parsed:
 
 | Label | Description |
 |---|---|
 | `PT` | **Parse time** — sum of the parse-only time across all input files |
 | `OT` | **Overhead time** — `TT − PT`; time spent on file I/O, lexer/parser construction, and post-parse work |
 | `TT` | **Total time** — overall wall-clock time for the entire run |
-| `TPS` | **Tokens per second** — `total tokens / PT`; pure parse throughput across all files |
-| `Post-warmup TPS` | TPS computed from files 2…N only, excluding the first (warm-up) run; `n.a.` if only one file was parsed |
-| `Post-warmup speed up` | Ratio of Post-warmup TPS to first-file TPS, showing the JIT/runtime warm-up benefit; `n.a.` if only one file was parsed |
+| `PR` | **Parse rate** in tokens per second — `total tokens / PT`; pure parse throughput across all files |
+| `Post-warmup PR` | Parse rate computed from files 2…N only, excluding the first (warm-up) run; `n.a.` if only one file was parsed |
+| `Post-warmup speed up` | Ratio of Post-warmup PR to first-file PR, showing the JIT/runtime warm-up benefit; `n.a.` if only one file was parsed |
 
 ## Current version
 
-Release 3.5.0.
+Release 3.6.0.
 
 ## Ignore file
 

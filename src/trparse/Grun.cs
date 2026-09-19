@@ -302,6 +302,11 @@ public class Grun
         if (config.Quiet) return;
         if (config.InterpTimings && _interpTimings.Files > 0)
             System.Console.Error.WriteLine(_interpTimings.Format());
+        if (!config.PerformanceSummary)
+        {
+            System.Console.Error.WriteLine("TT: " + overallSeconds);
+            return;
+        }
         var warmTokens = _totalTokens - _firstFileTokens;
         var warmSeconds = _totalParseSeconds - _firstFileParseSeconds;
         var warmTps = (_fileCount > 1 && warmSeconds > 0)
@@ -314,8 +319,8 @@ public class Grun
         System.Console.Error.WriteLine("PT: " + _totalParseSeconds);
         System.Console.Error.WriteLine("OT: " + (overallSeconds - _totalParseSeconds));
         System.Console.Error.WriteLine("TT: " + overallSeconds);
-        System.Console.Error.WriteLine("TPS: " + (_totalParseSeconds > 0 ? (long)(_totalTokens / _totalParseSeconds) : 0));
-        System.Console.Error.WriteLine("Post-warmup TPS: " + warmTps);
+        System.Console.Error.WriteLine("PR: " + (_totalParseSeconds > 0 ? (long)(_totalTokens / _totalParseSeconds) : 0));
+        System.Console.Error.WriteLine("Post-warmup PR: " + warmTps);
         System.Console.Error.WriteLine("Post-warmup speed up: " + speedup);
     }
 
@@ -386,11 +391,11 @@ public class Grun
             DateTime interpAfter = DateTime.Now;
             double interpParseSeconds = (interpAfter - interpBefore).TotalSeconds;
             data.Add(rs);
-            if (!config.Quiet)
+            if (!config.Quiet && config.PerFilePerformance)
             {
-                long tps = interpParseSeconds > 0 ? (long)(interpTokenCount / interpParseSeconds) : 0L;
+                long pr = interpParseSeconds > 0 ? (long)(interpTokenCount / interpParseSeconds) : 0L;
                 System.Console.Error.WriteLine(prefix + interpLabel + " " + row_number + " " + input_name + " success "
-                    + interpParseSeconds + " s " + interpTokenCount + " tokens " + tps + " tps");
+                    + interpParseSeconds + " s " + interpTokenCount + " tokens " + pr + " pr");
             }
             UpdateStats(interpParseSeconds, interpTokenCount);
             return (0, interpParseSeconds, interpTokenCount);
@@ -611,11 +616,11 @@ public class Grun
         long tokenCount = commontokstream != null ? (long)commontokstream.Size : 0L;
         var r5 = type.GetProperty("Input").GetValue(null, new object[0]);
 
-        if (!config.Quiet)
+        if (!config.Quiet && config.PerFilePerformance)
         {
-            long tps = parseSeconds > 0 ? (long)(tokenCount / parseSeconds) : 0L;
+            long pr = parseSeconds > 0 ? (long)(tokenCount / parseSeconds) : 0L;
             System.Console.Error.WriteLine(prefix + "CSharp " + row_number + " " + input_name + " " + result + " "
-                + parseSeconds + " s " + tokenCount + " tokens " + tps + " tps");
+                + parseSeconds + " s " + tokenCount + " tokens " + pr + " pr");
         }
 
         {

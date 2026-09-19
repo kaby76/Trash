@@ -569,7 +569,7 @@ namespace Trash
             }
         }
 
-        public static string version = "3.5.0";
+        public static string version = "3.6.0";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1880,6 +1880,8 @@ namespace Trash
 	    t.Add("ophirust_parser_name", ophirust_parser_name);
 	    t.Add("ophirust_parser_module", ToSnakeCase(ophirust_parser_name));
 	    t.Add("ophirust_start_symbol", test.start_rule.TrimEnd('_'));
+	    t.Add("ophirust_has_parser_base",
+	        File.Exists(Path.Combine(Environment.CurrentDirectory, "OphiRust", "src", "parser_base.rs")));
             t.Add("name_space", test.package.Replace("/", "."));
             t.Add("package_name", test.package.Replace(".", "/"));
             t.Add("group_parsing", test.parsing_type == "group");

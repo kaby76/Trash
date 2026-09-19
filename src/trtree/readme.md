@@ -24,7 +24,7 @@ the previous ANTLR-like form, which includes terminal token-type nodes.
 
 ## Current version
 
-Release 3.5.0.
+Release 3.6.0.
 
 ## License
 

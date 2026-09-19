@@ -67,6 +67,8 @@ var show_trace = false
 var string_instance = 0
 var prefix = ""
 var quiet = false
+var perf = false
+var per_file = false
 var tee = false
 var output_dir = ""
 var binary = <binary>
@@ -103,6 +105,10 @@ func main() {
             }
         } else if os.Args[i] == "-q" {
             quiet = true
+        } else if os.Args[i] == "--perf" {
+            perf = true
+        } else if os.Args[i] == "--per-file" {
+            per_file = true
         } else if os.Args[i] == "-trace" {
             show_trace = true
         } else if os.Args[i][0] == '-' {
@@ -126,6 +132,9 @@ func main() {
         elapsed := time.Since(start)
         if ! quiet {
             overall_seconds := elapsed.Seconds()
+            if !perf {
+                fmt.Fprintf(os.Stderr, "%sTT: %.3f\n", prefix, overall_seconds)
+            } else {
             warm_tokens := total_tokens - first_file_tokens
             warm_seconds := total_parse_seconds - first_file_parse_seconds
             warm_tps := "n.a."
@@ -143,9 +152,10 @@ func main() {
             fmt.Fprintf(os.Stderr, "%sPT: %.3f\n", prefix, total_parse_seconds)
             fmt.Fprintf(os.Stderr, "%sOT: %.3f\n", prefix, overall_seconds - total_parse_seconds)
             fmt.Fprintf(os.Stderr, "%sTT: %.3f\n", prefix, overall_seconds)
-            fmt.Fprintf(os.Stderr, "%sTPS: %.0f\n", prefix, float64(total_tokens)/total_parse_seconds)
-            fmt.Fprintf(os.Stderr, "%sPost-warmup TPS: %s\n", prefix, warm_tps)
+            fmt.Fprintf(os.Stderr, "%sPR: %.0f\n", prefix, float64(total_tokens)/total_parse_seconds)
+            fmt.Fprintf(os.Stderr, "%sPost-warmup PR: %s\n", prefix, warm_tps)
             fmt.Fprintf(os.Stderr, "%sPost-warmup speed up: %s\n", prefix, speedup)
+            }
         }
     }
     if error_code != 0 {
@@ -271,13 +281,13 @@ func DoParse(str antlr.CharStream, input_name string, row_number int) {
     if tee {
         output.Close()
     }
-    if ! quiet {
+    if ! quiet && per_file {
         fmt.Fprintf(os.Stderr, "%s", prefix)
         fmt.Fprintf(os.Stderr, "Go ")
         fmt.Fprintf(os.Stderr, "%d ", row_number)
         fmt.Fprintf(os.Stderr, "%s ", input_name)
         fmt.Fprintf(os.Stderr, "%s ", result)
-        fmt.Fprintf(os.Stderr, "%.3f s %d tokens %.0f tps", parse_seconds, token_count, float64(token_count)/parse_seconds)
+        fmt.Fprintf(os.Stderr, "%.3f s %d tokens %.0f pr", parse_seconds, token_count, float64(token_count)/parse_seconds)
         fmt.Fprintln(os.Stderr)
     }
 }

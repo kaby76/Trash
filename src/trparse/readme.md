@@ -135,6 +135,8 @@ reports zero LL(1) bypasses.
         --lexer-overlaps
                        Write detailed observed overlaps (implies --lexer-stats).
         --parser-stats Write ALL(*) prediction and parser-work statistics to stderr.
+        --perf         Write the complete aggregate performance summary to stderr.
+        --per-file     Write one performance line per input file to stderr.
         --no-shared-parser-dfa
                        Disable learned parser-DFA reuse across input files.
         --parser-dfa-cache-states <n>
@@ -154,6 +156,7 @@ reports zero LL(1) bypasses.
     dotnet trash parse -i "1+2+3"
     dotnet trash parse Foobar.g -t ANTLRv2
     dotnet trash parse --allstar -L interp --no-output input.txt
+    dotnet trash parse --perf --per-file --allstar -L interp --no-output input.txt
     dotnet trash parse --allstar --parser-stats -L interp --no-output input.txt
     echo "1+2+3" | dotnet trash parse | dotnet trash tree
     mkdir out; dotnet trash parse MyParser.g4 MyLexer.g4 | dotnet trash sponge -o out
@@ -164,7 +167,7 @@ reports zero LL(1) bypasses.
 
 ## Current version
 
-Release 3.5.0.
+Release 3.6.0.
 
 ## License
 

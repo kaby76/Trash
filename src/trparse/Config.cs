@@ -39,6 +39,14 @@ public class Config
     [Option('q', "quiet", Required = false, Default = false, HelpText = "Do not output anything; only set error code.")]
     public bool Quiet { get; set; }
 
+    [Option("perf", Required = false,
+        HelpText = "Write the complete aggregate performance summary to stderr.")]
+    public bool PerformanceSummary { get; set; }
+
+    [Option("per-file", Required = false,
+        HelpText = "Write one performance line per input file to stderr.")]
+    public bool PerFilePerformance { get; set; }
+
     [Option('t', "type", Required = false, HelpText = "Override type of parse. Use 'gen' to force the local Generated-CSharp parser regardless of file extension. Other values: ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton.")]
     public string Type { get; set; }
 
@@ -46,7 +54,7 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "3.5.0";
+    public string Version { get; set; } = "3.6.0";
 
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }
