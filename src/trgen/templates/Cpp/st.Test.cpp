@@ -54,6 +54,8 @@ int error_code = 0;
 int string_instance = 0;
 std::string prefix;
 bool quiet = false;
+bool perf = false;
+bool per_file = false;
 std::string file_encoding = "<file_encoding>";
 long total_tokens = 0;
 double total_parse_seconds = 0;
@@ -142,9 +144,9 @@ void DoParse(antlr4::CharStream* str, std::string input_name, int row_number)
             std::cerr \<\< tree->toStringTree(parser) \<\< std::endl;
         }
     }
-    if (!quiet)
+    if (!quiet && per_file)
     {
-        std::cerr \<\< prefix \<\< "Cpp " \<\< row_number \<\< " " \<\< input_name \<\< " " \<\< result \<\< " " \<\< parse_seconds \<\< " s " \<\< token_count \<\< " tokens " \<\< (long)(token_count / parse_seconds) \<\< " tps" \<\< std::endl;
+        std::cerr \<\< prefix \<\< "Cpp " \<\< row_number \<\< " " \<\< input_name \<\< " " \<\< result \<\< " " \<\< parse_seconds \<\< " s " \<\< token_count \<\< " tokens " \<\< (long)(token_count / parse_seconds) \<\< " pr" \<\< std::endl;
     }
     if (tee)
     {
@@ -227,6 +229,14 @@ int TryParse(std::vector\<std::string>& args)
         {
             quiet = true;
         }
+        else if (args[i] == "--perf")
+        {
+            perf = true;
+        }
+        else if (args[i] == "--per-file")
+        {
+            per_file = true;
+        }
         else if (args[i] == "-trace")
         {
             show_trace = true;
@@ -272,6 +282,10 @@ int TryParse(std::vector\<std::string>& args)
         auto duration = std::chrono::duration_cast\<std::chrono::microseconds>(after - before);
         if (!quiet) {
             double overall_seconds = duration.count() / 1000000.0;
+            if (!perf) {
+                std::cerr \<\< prefix \<\< "TT: " \<\< overall_seconds \<\< std::endl;
+            }
+            else {
             long warm_tokens = total_tokens - first_file_tokens;
             double warm_seconds = total_parse_seconds - first_file_parse_seconds;
             std::string warm_tps = (inputs.size() > 1 && warm_seconds > 0)
@@ -286,9 +300,10 @@ int TryParse(std::vector\<std::string>& args)
             std::cerr \<\< prefix \<\< "PT: " \<\< total_parse_seconds \<\< std::endl;
             std::cerr \<\< prefix \<\< "OT: " \<\< (overall_seconds - total_parse_seconds) \<\< std::endl;
             std::cerr \<\< prefix \<\< "TT: " \<\< overall_seconds \<\< std::endl;
-            std::cerr \<\< prefix \<\< "TPS: " \<\< (long)(total_tokens / total_parse_seconds) \<\< std::endl;
-            std::cerr \<\< prefix \<\< "Post-warmup TPS: " \<\< warm_tps \<\< std::endl;
+            std::cerr \<\< prefix \<\< "PR: " \<\< (long)(total_tokens / total_parse_seconds) \<\< std::endl;
+            std::cerr \<\< prefix \<\< "Post-warmup PR: " \<\< warm_tps \<\< std::endl;
             std::cerr \<\< prefix \<\< "Post-warmup speed up: " \<\< speedup_ss.str() \<\< std::endl;
+            }
         }
     }
     return error_code;

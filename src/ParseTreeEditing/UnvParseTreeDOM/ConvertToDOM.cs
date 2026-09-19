@@ -49,9 +49,122 @@ namespace ParseTreeEditing.UnvParseTreeDOM
 
         public UnvParseTreeElement BottomUpConvert(IParseTree tree, UnvParseTreeElement parent, Parser parser, Lexer lexer, CommonTokenStream tokstream)
         {
-            ICharStream charstream = (ICharStream)lexer.InputStream;
             if (tree is TerminalNodeImpl)
+                return ConvertTerminal(tree, parent, parser, lexer, tokstream);
+
+            var root = CreateRuleElement(tree, parent, parser);
+            var stack = new Stack<ConversionFrame>();
+            stack.Push(new ConversionFrame(tree, root));
+            while (stack.Count > 0)
             {
+                var frame = stack.Peek();
+                if (frame.NextChild < frame.Tree.ChildCount)
+                {
+                    var child = frame.Tree.GetChild(frame.NextChild++);
+                    if (child is TerminalNodeImpl)
+                    {
+                        ConvertTerminal(child, frame.Element, parser, lexer, tokstream);
+                    }
+                    else
+                    {
+                        var childElement = CreateRuleElement(child, frame.Element, parser);
+                        stack.Push(new ConversionFrame(child, childElement));
+                    }
+                    continue;
+                }
+
+                FinalizeRuleElement(frame.Element);
+                stack.Pop();
+            }
+            return root;
+        }
+
+        private sealed class ConversionFrame
+        {
+            public readonly IParseTree Tree;
+            public readonly UnvParseTreeElement Element;
+            public int NextChild;
+
+            public ConversionFrame(IParseTree tree, UnvParseTreeElement element)
+            {
+                Tree = tree;
+                Element = element;
+            }
+        }
+
+        private UnvParseTreeElement CreateRuleElement(IParseTree tree, UnvParseTreeElement parent, Parser parser)
+        {
+            var new_node = new UnvParseTreeElement();
+            var t = tree as ParserRuleContext;
+            var t2 = tree as ObserverParserRuleContext;
+            if (t2 != null) t2.Subscribe(new_node);
+            new_node.NodeType = NodeConstants.ELEMENT_NODE;
+            new_node.LocalName = parser.RuleNames[(tree as RuleContext).RuleIndex];
+            new_node.ChildNodes = new UnvParseTreeNodeList();
+            new_node.RuleIndex = t.RuleIndex;
+            new_node.Attributes = new AntlrNamedNodeMap();
+            if (parent != null) parent.ChildNodes.Add(new_node);
+            return new_node;
+        }
+
+        private void FinalizeRuleElement(UnvParseTreeElement new_node)
+        {
+            if (_include_line_column)
+            {
+                var child2 = new_node.Children.FirstOrDefault();
+                if (child2 != null)
+                {
+                    for (int i = 0; i < child2.ChildNodes.Length; ++i)
+                    {
+                        Node a = child2.ChildNodes.item(i);
+                        if (a is UnvParseTreeAttr b)
+                        {
+                            if (b.Name as string == "Line" || b.Name as string == "Column")
+                            {
+                                var attr = new UnvParseTreeAttr();
+                                attr.NodeType = NodeConstants.ATTRIBUTE_NODE;
+                                attr.Name = b.Name;
+                                attr.LocalName = b.LocalName;
+                                attr.StringValue = b.StringValue;
+                                attr.ParentNode = new_node;
+                                attr.OwnerElement = new_node;
+                                new_node.ChildNodes.Insert(0, attr);
+                            }
+                        }
+                        else if (a is UnvParseTreeText b1)
+                        {
+                            for (int j = 0; j < b1.ChildNodes.Length; ++j)
+                            {
+                                var c = b1.ChildNodes.item(j) as UnvParseTreeAttr;
+                                if (c != null && (c.Name as string == "Line" || c.Name as string == "Column"))
+                                {
+                                    var attr = new UnvParseTreeAttr();
+                                    attr.NodeType = NodeConstants.ATTRIBUTE_NODE;
+                                    attr.Name = c.Name;
+                                    attr.LocalName = c.LocalName;
+                                    attr.StringValue = c.StringValue;
+                                    attr.ParentNode = new_node;
+                                    attr.OwnerElement = new_node;
+                                    new_node.ChildNodes.Insert(0, attr);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            for (int i = 1; i < new_node.ChildNodes.Length; ++i)
+            {
+                var previous = new_node.ChildNodes.item(i - 1);
+                var current = new_node.ChildNodes.item(i);
+                current.PreviousSibling = previous;
+                previous.NextSibling = current;
+            }
+        }
+
+        private UnvParseTreeElement ConvertTerminal(IParseTree tree, UnvParseTreeElement parent, Parser parser, Lexer lexer, CommonTokenStream tokstream)
+        {
+            ICharStream charstream = (ICharStream)lexer.InputStream;
                 TerminalNodeImpl t = tree as TerminalNodeImpl;
                 var new_node = new UnvParseTreeElement();
                 Interval interval = t.SourceInterval;
@@ -239,85 +352,6 @@ namespace ParseTreeEditing.UnvParseTreeDOM
                 }
 
                 return new_node;
-            }
-            else
-            {
-                var new_node = new UnvParseTreeElement();
-                var t = tree as ParserRuleContext;
-                var t2 = tree as ObserverParserRuleContext;
-                if (t2 != null) t2.Subscribe(new_node);
-                new_node.NodeType = NodeConstants.ELEMENT_NODE;
-                var name = parser.RuleNames[(tree as RuleContext).RuleIndex];
-                new_node.LocalName = name;
-                var nl = new UnvParseTreeNodeList();
-                new_node.ChildNodes = nl;
-                new_node.RuleIndex = t.RuleIndex;
-                var map = new AntlrNamedNodeMap();
-                new_node.Attributes = map;
-                if (parent != null) parent.ChildNodes.Add(new_node);
-                for (int i = 0; i < tree.ChildCount; ++i)
-                {
-                    var child = tree.GetChild(i);
-                    BottomUpConvert(child, new_node, parser, lexer, tokstream);
-                }
-                //                Node prev = null;
-                if (_include_line_column)
-                {
-                   var child2 = new_node.Children.FirstOrDefault();
-                    if (child2 != null)
-                    {
-                        for (int i = 0; i < child2.ChildNodes.Length; ++i)
-                        {
-                            Node a = child2.ChildNodes.item(i);
-                            if (a is UnvParseTreeAttr b)
-                            {
-                                if (b.Name as string == "Line" || b.Name as string == "Column")
-                                {
-                                    var attr = new UnvParseTreeAttr();
-                                    attr.NodeType = NodeConstants.ATTRIBUTE_NODE;
-                                    attr.Name = b.Name;
-                                    attr.LocalName = b.LocalName;
-                                    attr.StringValue = b.StringValue;
-                                    attr.ParentNode = new_node;
-                                    attr.OwnerElement = new_node;
-                                    new_node.ChildNodes.Insert(0, attr);
-                                }
-                            }
-                            else if (a is UnvParseTreeText b1)
-                            {
-                                for (int j = 0; j < b1.ChildNodes.Length; ++j)
-                                {
-                                    var c = b1.ChildNodes.item(j) as UnvParseTreeAttr;
-                                    if (c != null && (c.Name as string == "Line" || c.Name as string == "Column"))
-                                    {
-                                        var attr = new UnvParseTreeAttr();
-                                        attr.NodeType = NodeConstants.ATTRIBUTE_NODE;
-                                        attr.Name = c.Name;
-                                        attr.LocalName = c.LocalName;
-                                        attr.StringValue = c.StringValue;
-                                        attr.ParentNode = new_node;
-                                        attr.OwnerElement = new_node;
-                                        new_node.ChildNodes.Insert(0, attr);
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-
-                for (int i = 0; i < new_node.ChildNodes.Length; ++i)
-                {
-                    Node curr = new_node.ChildNodes.item(i);
-                    if (i > 0)
-                    {
-                        var pre = new_node.ChildNodes.item(i - 1);
-                        var x = new_node.ChildNodes.item(i);
-                        x.PreviousSibling = pre;
-                        pre.NextSibling = x;
-                    }
-                }
-                return new_node;
-            }
         }
     }
 }
