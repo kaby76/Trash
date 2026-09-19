@@ -84,7 +84,7 @@ With `--perf`, six summary lines are printed after all files are parsed:
 
 ## Current version
 
-Release 3.6.0.
+Release 3.7.0.
 
 ## Ignore file
 

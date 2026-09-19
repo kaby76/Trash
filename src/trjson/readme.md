@@ -18,7 +18,7 @@ Read a parse tree from stdin and write a JSON represenation of it.
 
 ## Current version
 
-Release 3.6.0.
+Release 3.7.0.
 
 ## License
 
