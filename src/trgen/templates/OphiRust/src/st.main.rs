@@ -27,8 +27,6 @@ struct ListenerState {
 
 struct CountingErrorListener {
     quiet: bool,
-    perf: bool,
-    per_file: bool,
     state: Arc\<Mutex\<ListenerState>>,
 }
 
@@ -58,6 +56,8 @@ struct Flags {
     show_trace: bool,
     tee: bool,
     quiet: bool,
+    perf: bool,
+    per_file: bool,
     output_dir: Option\<String>,
 }
 
