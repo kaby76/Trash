@@ -120,6 +120,20 @@ the DOT corpus did not show a reliable improvement. All production decisions
 currently retain adaptive ALL(*) prediction; `--parser-stats` consequently
 reports zero LL(1) bypasses.
 
+### Indirect left recursion
+
+Use `--indirect-left-recursion` for interp grammars in which a rule can invoke
+itself through one or more other rules. The option selects the ALL(*) interp
+path and enables fixed-point, seed-growing rule evaluation. Parse events retain
+every grammar-rule invocation, so tree construction produces the original
+indirectly recursive rule nesting and grows it left-associatively:
+
+    dotnet trash parse --indirect-left-recursion -L interp input.txt
+
+This opt-in path is intended for grammars that ANTLR normally rejects during
+code generation. It cannot currently be combined with
+`--context-aware-lexing`.
+
 ## Usage
 
     dotnet trash parse (<string> | <options>)*
@@ -129,6 +143,8 @@ reports zero LL(1) bypasses.
         --pinterp      Path to parser .interp file (Earley ATN-based parsing).
         --linterp      Path to lexer .interp file  (Earley ATN-based parsing).
         --allstar      Use the ALL(*) interpreter instead of Earley.
+        --indirect-left-recursion
+                       Allow mutually/indirectly left-recursive interp rules.
         --context-aware-lexing
                        Prefer lexer tokens valid in the current ALL(*) parser context.
         --lexer-stats  Write observed interp lexer-overlap statistics to stderr.

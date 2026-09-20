@@ -28,8 +28,14 @@ public static class InterpRunner
         ParserStatistics parserStatistics = null,
         ParserPredictionCache predictionCache = null,
         InterpRuntimeCache runtimeCache = null,
-        LexerAtnSimulator.LexerDfaCache lexerDfaCache = null)
+        LexerAtnSimulator.LexerDfaCache lexerDfaCache = null,
+        bool indirectLeftRecursion = false)
     {
+        if (indirectLeftRecursion && contextAwareLexing)
+            throw new ArgumentException(
+                "--indirect-left-recursion cannot currently be combined with " +
+                "--context-aware-lexing.");
+
         timings ??= new InterpRunTimings();
         timings.Files = 1;
         var timer = new System.Diagnostics.Stopwatch();
@@ -96,6 +102,17 @@ public static class InterpRunner
         var parserVocab = runtime.ParserVocabulary;
         var lexerVocab = runtime.LexerVocabulary;
         int startRule = runtime.StartRule;
+        if (!indirectLeftRecursion &&
+            LeftRecursionDetector.TryFindCycle(parserAtn, out var cycle))
+        {
+            string description = string.Join(" -> ", cycle.Select(rule =>
+                rule >= 0 && rule < parserInterp.RuleNames.Length
+                    ? parserInterp.RuleNames[rule]
+                    : $"rule {rule}"));
+            throw new InvalidOperationException(
+                $"Indirect left recursion detected: {description}. " +
+                "Re-run trparse with --indirect-left-recursion.");
+        }
         var statistics = lexerStats || lexerOverlaps
             ? new LexerStatistics()
             : null;
@@ -127,9 +144,12 @@ public static class InterpRunner
             timer.Stop();
             timings.TokenReconciliation = timer.Elapsed;
             timer.Restart();
-            events = AllStarParser.Parse(
-                parserAtn, rawTokens, startRule, parserStatistics,
-                predictionCache);
+            events = indirectLeftRecursion
+                ? IndirectLeftRecursiveParser.Parse(
+                    parserAtn, rawTokens, startRule, parserStatistics)
+                : AllStarParser.Parse(
+                    parserAtn, rawTokens, startRule, parserStatistics,
+                    predictionCache);
             timer.Stop();
             timings.Parsing = timer.Elapsed;
         }

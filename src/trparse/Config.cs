@@ -74,6 +74,10 @@ public class Config
     [Option("allstar", Required = false, HelpText = "Use ALL(*) parser instead of Earley when --pinterp / --linterp are specified.")]
     public bool AllStar { get; set; }
 
+    [Option("indirect-left-recursion", Required = false,
+        HelpText = "Allow indirect left recursion in ALL(*) interp grammars. Uses fixed-point rule evaluation and reconstructs the grammar-rule parse tree.")]
+    public bool IndirectLeftRecursion { get; set; }
+
     [Option("context-aware-lexing", Required = false,
         HelpText = "For ALL(*) interp parsing, prefer lexer tokens valid in the current parser context; fall back to normal ANTLR lexing when none match.")]
     public bool ContextAwareLexing { get; set; }

@@ -361,7 +361,8 @@ public class Grun
             AntlrJson.ParsingResultSet rs;
             long interpTokenCount;
             string interpLabel;
-            if (config.AllStar || config.ContextAwareLexing)
+            if (config.AllStar || config.ContextAwareLexing ||
+                config.IndirectLeftRecursion)
             {
                 AllStarAtnParser.AllStarParser.Trace = config.Verbose;
                 var interpTimings = config.InterpTimings
@@ -375,7 +376,8 @@ public class Grun
                     config.LineNumbers, config.ContextAwareLexing,
                     config.LexerStats, config.LexerOverlaps, interpTimings,
                     parserStatistics, _parserPredictionCache,
-                    _interpRuntimeCache, _lexerDfaCache);
+                    _interpRuntimeCache, _lexerDfaCache,
+                    config.IndirectLeftRecursion);
                 if (interpTimings != null)
                     _interpTimings.Add(interpTimings);
                 interpLabel = "ALL(*)";
