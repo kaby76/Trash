@@ -1,4 +1,0 @@
-a: "a", b, c.
-b: "b", c, d.
-c: "c", []. {it should block here, since nothing matches}
-d: "d".

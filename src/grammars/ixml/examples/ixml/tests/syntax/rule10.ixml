@@ -1,2 +1,0 @@
-a: "(" num ")". {missing commas}
-num: "1".

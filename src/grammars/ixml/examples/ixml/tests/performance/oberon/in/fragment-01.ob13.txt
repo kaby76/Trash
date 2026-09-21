@@ -1,4 +1,0 @@
-MODULE ORP;
-BEGIN 
-  f(x);
-END ORP.

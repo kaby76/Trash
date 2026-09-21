@@ -1,4 +1,0 @@
-test: foo, bar.
-foo: -".".
-bar: ".".
-

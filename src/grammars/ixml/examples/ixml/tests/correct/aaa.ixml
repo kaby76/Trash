@@ -1,3 +1,0 @@
-{Input is "a a a"; output is two spaces}
-data: a, " ", a, " ", a.
--a: -"a".
