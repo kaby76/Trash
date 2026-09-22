@@ -18,9 +18,25 @@ bash run-example.sh
 
 The final grammar is written to `xxx/ixml.g4`.
 
+## Convert another iXML grammar
+
+`convert-ixml-to-antlr4.sh` accepts one iXML pathname and writes the generated
+ANTLR4 combined grammar to standard output:
+
+```bash
+bash /path/to/Trash/examples/ixml-to-antlr4/convert-ixml-to-antlr4.sh \
+    /path/to/MyGrammar.ixml > MyGrammar.g4
+```
+
+The converter may be invoked from any working directory. It locates all five
+`.xq` transformation files relative to its own location. Temporary parse-result
+bundles are created under `$TMPDIR` (or `/tmp`) and removed automatically.
+The ANTLR grammar name is derived from the input basename; characters that are
+not legal in an identifier are replaced with underscores.
+
 ## How it works
 
-1. `dotnet trash parse -t ixml ixml.ixml` parses the iXML grammar file
+1. `dotnet trash parse -t ixml INPUT.ixml` parses the iXML grammar file
    using the built-in ixml parser and emits a JSON parse tree (`ixml.pt`).
 
 2. **Pass 1** (`ixml-to-antlr4.xq`) — structural syntax transforms:
