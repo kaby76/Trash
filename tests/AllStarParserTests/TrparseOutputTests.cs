@@ -6,6 +6,67 @@ namespace AllStarParserTests;
 
 public sealed class TrparseOutputTests
 {
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void NamedStartRuleOverridesInterpDefault(bool allstar)
+    {
+        var startInfo = new ProcessStartInfo("dotnet")
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false
+        };
+        startInfo.ArgumentList.Add(typeof(Trash.Program).Assembly.Location);
+        if (allstar) startInfo.ArgumentList.Add("--allstar");
+        startInfo.ArgumentList.Add("--no-output");
+        startInfo.ArgumentList.Add("--start-rule");
+        startInfo.ArgumentList.Add("elements");
+        startInfo.ArgumentList.Add("-L");
+        startInfo.ArgumentList.Add(Path.Combine(
+            AppContext.BaseDirectory, "TestData", "interp"));
+        startInfo.ArgumentList.Add("-i");
+        startInfo.ArgumentList.Add("x");
+
+        using var process = Process.Start(startInfo);
+        Assert.NotNull(process);
+        Assert.Equal(string.Empty, process.StandardOutput.ReadToEnd());
+        var stderr = process.StandardError.ReadToEnd();
+        Assert.True(process.WaitForExit(30_000));
+        Assert.Equal(0, process.ExitCode);
+        Assert.Contains("TT:", stderr);
+    }
+
+    [Fact]
+    public void UnknownStartRuleReportsAvailableNames()
+    {
+        var startInfo = new ProcessStartInfo("dotnet")
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false
+        };
+        startInfo.ArgumentList.Add(typeof(Trash.Program).Assembly.Location);
+        startInfo.ArgumentList.Add("--allstar");
+        startInfo.ArgumentList.Add("--no-output");
+        startInfo.ArgumentList.Add("--start-rule");
+        startInfo.ArgumentList.Add("missing");
+        startInfo.ArgumentList.Add("-L");
+        startInfo.ArgumentList.Add(Path.Combine(
+            AppContext.BaseDirectory, "TestData", "interp"));
+        startInfo.ArgumentList.Add("-i");
+        startInfo.ArgumentList.Add("x");
+
+        using var process = Process.Start(startInfo);
+        Assert.NotNull(process);
+        _ = process.StandardOutput.ReadToEnd();
+        var stderr = process.StandardError.ReadToEnd();
+        Assert.True(process.WaitForExit(30_000));
+        Assert.NotEqual(0, process.ExitCode);
+        Assert.Contains("Start rule 'missing' was not found", stderr);
+        Assert.Contains("rulelist, rule_, elements", stderr);
+    }
+
     [Fact]
     public void NoOutputParsesAndReportsDiagnosticsWithoutWritingStdout()
     {

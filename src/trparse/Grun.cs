@@ -377,7 +377,7 @@ public class Grun
                     config.LexerStats, config.LexerOverlaps, interpTimings,
                     parserStatistics, _parserPredictionCache,
                     _interpRuntimeCache, _lexerDfaCache,
-                    config.IndirectLeftRecursion);
+                    config.IndirectLeftRecursion, config.StartRule);
                 if (interpTimings != null)
                     _interpTimings.Add(interpTimings);
                 interpLabel = "ALL(*)";
@@ -387,7 +387,7 @@ public class Grun
                 (rs, interpTokenCount) = EarleyAtnParser.InterpRunner.Run(
                     resolvedPInterp, resolvedLInterp, txt, input_name,
                     config.LineNumbers, config.LexerStats, config.LexerOverlaps,
-                    _interpRuntimeCache, _lexerDfaCache);
+                    _interpRuntimeCache, _lexerDfaCache, config.StartRule);
                 interpLabel = "Earley";
             }
             DateTime interpAfter = DateTime.Now;
@@ -402,6 +402,10 @@ public class Grun
             UpdateStats(interpParseSeconds, interpTokenCount);
             return (0, interpParseSeconds, interpTokenCount);
         }
+
+        if (!string.IsNullOrEmpty(config.StartRule))
+            throw new ArgumentException(
+                "--start-rule requires interpreted parsing with parser and lexer .interp files.");
 
         Type type = null;
         if (parser_type == null || parser_type == "")

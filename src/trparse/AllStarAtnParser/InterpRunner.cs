@@ -29,7 +29,8 @@ public static class InterpRunner
         ParserPredictionCache predictionCache = null,
         InterpRuntimeCache runtimeCache = null,
         LexerAtnSimulator.LexerDfaCache lexerDfaCache = null,
-        bool indirectLeftRecursion = false)
+        bool indirectLeftRecursion = false,
+        string startRuleName = null)
     {
         if (indirectLeftRecursion && contextAwareLexing)
             throw new ArgumentException(
@@ -82,8 +83,8 @@ public static class InterpRunner
                 loadedLexerInterp.LiteralNames, loadedLexerInterp.SymbolicNames);
             var loadedParserVocab = new Antlr4.Runtime.Vocabulary(
                 loadedParserInterp.LiteralNames, loadedParserInterp.SymbolicNames);
-            int loadedStartRule = ResolveStartRule(
-                loadedParserAtn, loadedParserInterp);
+            int loadedStartRule = StartRuleResolver.Resolve(
+                loadedParserAtn, loadedParserInterp, null);
             timer.Stop();
             timings.Initialization = timer.Elapsed;
 
@@ -101,7 +102,9 @@ public static class InterpRunner
         var lexerAtn = runtime.LexerAtn;
         var parserVocab = runtime.ParserVocabulary;
         var lexerVocab = runtime.LexerVocabulary;
-        int startRule = runtime.StartRule;
+        int startRule = string.IsNullOrEmpty(startRuleName)
+            ? runtime.StartRule
+            : StartRuleResolver.Resolve(parserAtn, parserInterp, startRuleName);
         if (!indirectLeftRecursion &&
             LeftRecursionDetector.TryFindCycle(parserAtn, out var cycle))
         {
@@ -224,16 +227,6 @@ public static class InterpRunner
         timings.ResultConstruction = timer.Elapsed;
 
         return (result, tokenCount);
-    }
-
-    private static int ResolveStartRule(MyATN parserAtn, ParsedInterp parserInterp)
-    {
-        if (parserInterp.StartStateNumber < 0) return 0;
-        for (int rule = 0; rule < parserAtn.start.Length; rule++)
-            if (parserAtn.start[rule].stateNumber == parserInterp.StartStateNumber)
-                return rule;
-        throw new InvalidOperationException(
-            $"Start state {parserInterp.StartStateNumber} not found in deserialized parser ATN.");
     }
 
     internal static void PrintLexerStatistics(

@@ -20,7 +20,8 @@ public static class EarleyParser
     /// ParseEvent list, or null if the input is rejected by the grammar.
     /// </summary>
     public static List<ParseEvent> Parse(
-        MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex)
+        MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex,
+        bool allowImplicitEof = false)
     {
         if (atn == null) throw new ArgumentNullException(nameof(atn));
         if (startRuleIndex < 0 || startRuleIndex >= atn.start.Length)
@@ -82,6 +83,16 @@ public static class EarleyParser
                 break;
             }
         }
+
+        // A selected subrule need not contain an explicit EOF transition.
+        // In that case its stop state is reached just before the EOF token.
+        if (accept == null && allowImplicitEof && n > 0)
+            foreach (var it in chart[n - 1])
+                if (it.CallStack.IsEmpty && atn.stop.Contains(it.State))
+                {
+                    accept = it;
+                    break;
+                }
 
         if (accept == null) return null;
 

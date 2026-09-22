@@ -68,6 +68,10 @@ public class Config
     [Option("linterp", Required = false, HelpText = "Path to lexer .interp file for ATN-based parsing.")]
     public string LInterp { get; set; }
 
+    [Option("start-rule", Required = false,
+        HelpText = "Parser rule name to use as the start rule for interp parsing (overrides the .interp default).")]
+    public string StartRule { get; set; }
+
     [Option('L', "lib", Required = false, HelpText = "Directory to search for .interp files (resolves relative --pinterp / --linterp paths).")]
     public string Lib { get; set; }
 
