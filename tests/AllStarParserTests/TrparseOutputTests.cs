@@ -7,6 +7,47 @@ namespace AllStarParserTests;
 public sealed class TrparseOutputTests
 {
     [Theory]
+    [InlineData(".g4p", false)]
+    [InlineData(".g4+", false)]
+    [InlineData(".g4", true)]
+    public void G4PlusParsesGrammarFiles(string extension, bool specifyParserType)
+    {
+        var file = Path.Combine(Path.GetTempPath(),
+            "G4PlusSmoke-" + Guid.NewGuid().ToString("N") + extension);
+        try
+        {
+            File.WriteAllText(file,
+                "grammar G4PlusSmoke; root : 'x' EOF;\n");
+            var startInfo = new ProcessStartInfo("dotnet")
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false
+            };
+            startInfo.ArgumentList.Add(typeof(Trash.Program).Assembly.Location);
+            startInfo.ArgumentList.Add("--no-output");
+            if (specifyParserType)
+            {
+                startInfo.ArgumentList.Add("-t");
+                startInfo.ArgumentList.Add("G4Plus");
+            }
+            startInfo.ArgumentList.Add(file);
+
+            using var process = Process.Start(startInfo);
+            Assert.NotNull(process);
+            Assert.Equal(string.Empty, process.StandardOutput.ReadToEnd());
+            var stderr = process.StandardError.ReadToEnd();
+            Assert.True(process.WaitForExit(30_000));
+            Assert.True(process.ExitCode == 0, stderr);
+            Assert.Contains("TT:", stderr);
+        }
+        finally
+        {
+            File.Delete(file);
+        }
+    }
+
+    [Theory]
     [InlineData(false)]
     [InlineData(true)]
     public void NamedStartRuleOverridesInterpDefault(bool allstar)

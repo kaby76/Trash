@@ -19,6 +19,7 @@ listed in the [Supported grammars](#supported-grammars) table below.
 You can force the type of parse with the `--type` command-line option.
 Accepted values:
 
+* `G4Plus` — Trash's ANTLR4 grammar fork (`.g4p`, `.g4+`)
 * `ANTLRv4` — ANTLRv4 (`.g4`)
 * `ANTLRv3` — ANTLRv3 (`.g3`)
 * `ANTLRv2` — ANTLRv2 (`.g2`)
@@ -41,6 +42,7 @@ Accepted values:
 
 | Grammar | File suffix | `--type` value |
 |---------|-------------|----------------|
+| G4Plus | `.g4p`, `.g4+` | `G4Plus` |
 | ANTLRv4 | `.g4` | `ANTLRv4` |
 | ANTLRv3 | `.g3` | `ANTLRv3` |
 | ANTLRv2 | `.g2` | `ANTLRv2` |

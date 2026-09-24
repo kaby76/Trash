@@ -418,6 +418,7 @@ public class Grun
             parser_type = extension switch
             {
                 ".g4" => "ANTLRv4",
+                ".g4p" or ".g4+" => "G4Plus",
                 ".g3" => "ANTLRv3",
                 ".g2" => "ANTLRv2",
                 ".peg" => "pegen_v3_10",
@@ -440,6 +441,7 @@ public class Grun
             var subdir = parser_type switch
             {
                 "ANTLRv4" => "antlr4",
+                "G4Plus" => "g4plus",
                 "ANTLRv3" => "antlr3",
                 "ANTLRv2" => "antlr2",
                 "pegen_v3_10" => "pegen",
@@ -542,6 +544,7 @@ public class Grun
             var subdir = parser_type switch
             {
                 "ANTLRv4" => "antlr4",
+                "G4Plus" => "g4plus",
                 "ANTLRv3" => "antlr3",
                 "ANTLRv2" => "antlr2",
                 "pegen_v3_10" => "pegen",
@@ -560,7 +563,7 @@ public class Grun
                 "Princeton" => "princeton",
                 "ixml" => "ixml",
                 _ => throw new Exception(
-                    "Unknown built-in parser type. Supported: ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton, ixml, gen.")
+                    "Unknown built-in parser type. Supported: G4Plus, ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton, ixml, gen.")
             };
             // Get this assembly.
             System.Reflection.Assembly a = this.GetType().Assembly;
