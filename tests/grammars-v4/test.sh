@@ -6,7 +6,7 @@ for desc in `find . -name desc.xml`
 do
 	dirname=`dirname $desc`
 	pushd $dirname
-	for target in Antlr4ng Cpp CSharp Dart Go Java JavaScript Python3 TypeScript
+	for target in Antlr4ng Cpp CSharp Dart Go Java JavaScript TypeScript
 	do
 		dotnet trash gen -t $target
 		# If a target is not available, exit code should zero, but Generated directory won't exist.
