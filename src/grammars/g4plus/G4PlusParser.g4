@@ -242,7 +242,7 @@ lexerAltList
     ;
 
 lexerAlt
-    : lexerElements lexerCommands?
+    : lexerElements exclusion? lexerCommands?
     |
     // explicitly allow empty alts
     ;
@@ -293,9 +293,22 @@ altList
     ;
 
 alternative
-    : elementOptions? element+
+    : elementOptions? element+ exclusion?
     |
     // explicitly allow empty alts
+    ;
+
+// G4Plus set difference. The parenthesized form keeps OR in the exclusion
+// list distinct from the surrounding rule's alternatives.
+exclusion
+    : MINUS (exclusionOperand | LPAREN exclusionOperand (OR exclusionOperand)* RPAREN)
+    ;
+
+exclusionOperand
+    : identifier
+    | STRING_LITERAL
+    | characterRange
+    | LEXER_CHAR_SET
     ;
 
 element

@@ -491,6 +491,26 @@ public interface IG4PlusParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitAlternative([NotNull] G4PlusParser.AlternativeContext context);
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="G4PlusParser.exclusion"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterExclusion([NotNull] G4PlusParser.ExclusionContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="G4PlusParser.exclusion"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitExclusion([NotNull] G4PlusParser.ExclusionContext context);
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="G4PlusParser.exclusionOperand"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void EnterExclusionOperand([NotNull] G4PlusParser.ExclusionOperandContext context);
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="G4PlusParser.exclusionOperand"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	void ExitExclusionOperand([NotNull] G4PlusParser.ExclusionOperandContext context);
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4PlusParser.element"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

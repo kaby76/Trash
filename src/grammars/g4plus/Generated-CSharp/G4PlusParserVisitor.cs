@@ -308,6 +308,18 @@ public interface IG4PlusParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitAlternative([NotNull] G4PlusParser.AlternativeContext context);
 	/// <summary>
+	/// Visit a parse tree produced by <see cref="G4PlusParser.exclusion"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExclusion([NotNull] G4PlusParser.ExclusionContext context);
+	/// <summary>
+	/// Visit a parse tree produced by <see cref="G4PlusParser.exclusionOperand"/>.
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	/// <return>The visitor result.</return>
+	Result VisitExclusionOperand([NotNull] G4PlusParser.ExclusionOperandContext context);
+	/// <summary>
 	/// Visit a parse tree produced by <see cref="G4PlusParser.element"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>

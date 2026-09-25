@@ -317,6 +317,12 @@ OR
     : '|'
     ;
 
+// G4Plus set difference: match the left-hand expression, except for
+// strings matched by the right-hand expression.
+MINUS
+    : '-'
+    ;
+
 DOLLAR
     : '$'
     ;

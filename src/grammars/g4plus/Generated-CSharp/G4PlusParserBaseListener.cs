@@ -588,6 +588,30 @@ public partial class G4PlusParserBaseListener : IG4PlusParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitAlternative([NotNull] G4PlusParser.AlternativeContext context) { }
 	/// <summary>
+	/// Enter a parse tree produced by <see cref="G4PlusParser.exclusion"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterExclusion([NotNull] G4PlusParser.ExclusionContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="G4PlusParser.exclusion"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitExclusion([NotNull] G4PlusParser.ExclusionContext context) { }
+	/// <summary>
+	/// Enter a parse tree produced by <see cref="G4PlusParser.exclusionOperand"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void EnterExclusionOperand([NotNull] G4PlusParser.ExclusionOperandContext context) { }
+	/// <summary>
+	/// Exit a parse tree produced by <see cref="G4PlusParser.exclusionOperand"/>.
+	/// <para>The default implementation does nothing.</para>
+	/// </summary>
+	/// <param name="context">The parse tree.</param>
+	public virtual void ExitExclusionOperand([NotNull] G4PlusParser.ExclusionOperandContext context) { }
+	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4PlusParser.element"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>

@@ -14,7 +14,7 @@ $(& antlr4 -v $version G4PlusLexer.g4 -encoding utf-8 -Dlanguage=CSharp  ; $comp
 if($compile_exit_code -ne 0){
     exit $compile_exit_code
 }
-$(& antlr4 -v $version G4PlusParser.g4 -encoding utf-8 -Dlanguage=CSharp  ; $compile_exit_code = $LASTEXITCODE) | Write-Host
+$(& antlr4 -v $version G4PlusParser.g4 -encoding utf-8 -Dlanguage=CSharp -visitor ; $compile_exit_code = $LASTEXITCODE) | Write-Host
 if($compile_exit_code -ne 0){
     exit $compile_exit_code
 }

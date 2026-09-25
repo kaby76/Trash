@@ -1,0 +1,17 @@
+// Illustrative subset of the JLS identifier rules. This file demonstrates
+// G4Plus syntax; G4Plus set-difference matching is not implemented yet.
+lexer grammar JlsIdentifiers;
+
+fragment IdentifierChars : [a-zA-Z_][a-zA-Z_0-9]*;
+
+ReservedKeyword : 'if' | 'class';
+BooleanLiteral : 'true' | 'false';
+NullLiteral : 'null';
+
+Identifier
+    : IdentifierChars - (ReservedKeyword | BooleanLiteral | NullLiteral)
+    ;
+
+TypeIdentifier
+    : Identifier - ('permits' | 'record' | 'sealed' | 'var' | 'yield')
+    ;
