@@ -146,12 +146,6 @@ public interface IG4PlusParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitRuleSpec([NotNull] G4PlusParser.RuleSpecContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4PlusParser.parserRuleSpec"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitParserRuleSpec([NotNull] G4PlusParser.ParserRuleSpecContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="G4PlusParser.exceptionGroup"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -229,48 +223,6 @@ public interface IG4PlusParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitLabeledAlt([NotNull] G4PlusParser.LabeledAltContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4PlusParser.lexerRuleSpec"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLexerRuleSpec([NotNull] G4PlusParser.LexerRuleSpecContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4PlusParser.lexerRuleBlock"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLexerRuleBlock([NotNull] G4PlusParser.LexerRuleBlockContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4PlusParser.lexerAltList"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLexerAltList([NotNull] G4PlusParser.LexerAltListContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4PlusParser.lexerAlt"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLexerAlt([NotNull] G4PlusParser.LexerAltContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4PlusParser.lexerElements"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLexerElements([NotNull] G4PlusParser.LexerElementsContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4PlusParser.lexerElement"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLexerElement([NotNull] G4PlusParser.LexerElementContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4PlusParser.lexerBlock"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLexerBlock([NotNull] G4PlusParser.LexerBlockContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="G4PlusParser.lexerCommands"/>.
 	/// </summary>
@@ -362,12 +314,6 @@ public interface IG4PlusParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitEbnfSuffix([NotNull] G4PlusParser.EbnfSuffixContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4PlusParser.lexerAtom"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLexerAtom([NotNull] G4PlusParser.LexerAtomContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="G4PlusParser.atom"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -404,23 +350,17 @@ public interface IG4PlusParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitBlock([NotNull] G4PlusParser.BlockContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4PlusParser.ruleref"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitRuleref([NotNull] G4PlusParser.RulerefContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="G4PlusParser.characterRange"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitCharacterRange([NotNull] G4PlusParser.CharacterRangeContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4PlusParser.terminalDef"/>.
+	/// Visit a parse tree produced by <see cref="G4PlusParser.symbolRef"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
-	Result VisitTerminalDef([NotNull] G4PlusParser.TerminalDefContext context);
+	Result VisitSymbolRef([NotNull] G4PlusParser.SymbolRefContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="G4PlusParser.elementOptions"/>.
 	/// </summary>

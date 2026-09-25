@@ -25,87 +25,58 @@
  (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
  THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 */
-//package org.antlr.parser.antlr4;
 
-#include "antlr4-runtime.h"
 #include "LexerAdaptor.h"
 #include "G4PlusLexer.h"
-#include <cctype>
 
-LexerAdaptor::LexerAdaptor(antlr4::CharStream* input) : antlr4::Lexer(input)
-{
-}
-
-int LexerAdaptor::getCurrentRuleType() {
-    return this->_currentRuleType;
-}
-
-void LexerAdaptor::setCurrentRuleType(int ruleType) {
-    this->_currentRuleType = ruleType;
-}
+LexerAdaptor::LexerAdaptor(antlr4::CharStream* input) : antlr4::Lexer(input) {}
 
 void LexerAdaptor::handleBeginArgument() {
-    if (this->inLexerRule()) {
-        this->pushMode(G4PlusLexer::LexerCharSet);
-        this->more();
+    bool followsReference = previousTokenType == G4PlusLexer::ID;
+    if (inRuleBody && (lexerGrammar || !followsReference)) {
+        pushMode(G4PlusLexer::LexerCharSet);
+        more();
     } else {
-        this->pushMode(G4PlusLexer::Argument);
+        pushMode(G4PlusLexer::Argument);
     }
 }
 
 void LexerAdaptor::handleEndArgument() {
-    this->popMode();
-    if (this->modeStack.size() > 0) {
-        this->setType(G4PlusLexer::ARGUMENT_CONTENT);
+    popMode();
+    if (!modeStack.empty()) {
+        setType(G4PlusLexer::ARGUMENT_CONTENT);
     }
 }
 
 antlr4::Token* LexerAdaptor::emit() {
-    if ((this->type == G4PlusLexer::OPTIONS || this->type == G4PlusLexer::TOKENS || this->type == G4PlusLexer::CHANNELS)
-          && getCurrentRuleType() == antlr4::Token::INVALID_TYPE) { // enter prequel construct ending with an RBRACE
-        setCurrentRuleType(PREQUEL_CONSTRUCT);
-    } else if (this->type == G4PlusLexer::OPTIONS && getCurrentRuleType() == G4PlusLexer::TOKEN_REF)
-    {
-        setCurrentRuleType(OPTIONS_CONSTRUCT);
-    } else if (this->type == G4PlusLexer::RBRACE && getCurrentRuleType() == PREQUEL_CONSTRUCT) { // exit prequel construct
-        setCurrentRuleType(antlr4::Token::INVALID_TYPE);
-    } else if (this->type == G4PlusLexer::RBRACE && getCurrentRuleType() == OPTIONS_CONSTRUCT)
-    { // exit options
-        setCurrentRuleType(G4PlusLexer::TOKEN_REF);
-    } else if (this->type == G4PlusLexer::AT && getCurrentRuleType() == antlr4::Token::INVALID_TYPE) { // enter action
-        setCurrentRuleType(G4PlusLexer::AT);
-    } else if (this->type == G4PlusLexer::SEMI && getCurrentRuleType() == OPTIONS_CONSTRUCT)
-    { // ';' in options { .... }. Don't change anything.
-    } else if (this->type == G4PlusLexer::ACTION && getCurrentRuleType() == G4PlusLexer::AT) { // exit action
-        // Exit action.
-            setCurrentRuleType(antlr4::Token::INVALID_TYPE);
-    } else if (this->type == G4PlusLexer::ID) {
-        auto firstChar = _input->getText(antlr4::misc::Interval(this->tokenStartCharIndex, this->tokenStartCharIndex));
-        if (std::isupper(firstChar[0])) {
-            this->type = G4PlusLexer::TOKEN_REF;
-        } else {
-            this->type = G4PlusLexer::RULE_REF;
-        }
-
-        if (getCurrentRuleType() == antlr4::Token::INVALID_TYPE) { // if outside of rule def
-            setCurrentRuleType(this->type); // set to inside lexer or parser rule
-        }
-    } else if (this->type == G4PlusLexer::SEMI) { // exit rule def
-        setCurrentRuleType(antlr4::Token::INVALID_TYPE);
+    int tokenType = type;
+    if (!headerComplete && tokenType == G4PlusLexer::LEXER) {
+        sawLexerKeyword = true;
+    } else if (!headerComplete && tokenType == G4PlusLexer::GRAMMAR) {
+        lexerGrammar = sawLexerKeyword;
+    } else if (tokenType == G4PlusLexer::OPTIONS || tokenType == G4PlusLexer::TOKENS || tokenType == G4PlusLexer::CHANNELS) {
+        braceDepth++;
+    } else if (tokenType == G4PlusLexer::RBRACE && braceDepth > 0) {
+        braceDepth--;
+    } else if (tokenType == G4PlusLexer::COLON && headerComplete && braceDepth == 0) {
+        inRuleBody = true;
+    } else if (tokenType == G4PlusLexer::SEMI && braceDepth == 0) {
+        headerComplete = true;
+        inRuleBody = false;
     }
-
+    if (tokenType != G4PlusLexer::WS && tokenType != G4PlusLexer::DOC_COMMENT
+        && tokenType != G4PlusLexer::BLOCK_COMMENT && tokenType != G4PlusLexer::LINE_COMMENT) {
+        previousTokenType = tokenType;
+    }
     return Lexer::emit();
 }
 
-bool LexerAdaptor::inLexerRule() {
-    return getCurrentRuleType() == G4PlusLexer::TOKEN_REF;
-}
-
-bool LexerAdaptor::inParserRule() { // not used, but added for clarity
-    return getCurrentRuleType() == G4PlusLexer::RULE_REF;
-}
-
 void LexerAdaptor::reset() {
-    setCurrentRuleType(antlr4::Token::INVALID_TYPE);
+    lexerGrammar = false;
+    sawLexerKeyword = false;
+    headerComplete = false;
+    inRuleBody = false;
+    braceDepth = 0;
+    previousTokenType = antlr4::Token::INVALID_TYPE;
     Lexer::reset();
-}   
+}

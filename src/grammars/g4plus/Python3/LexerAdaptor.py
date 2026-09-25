@@ -26,148 +26,59 @@
 # THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 # --------------------------------------------------------------------------------
 
-from antlr4 import *
-import sys
-from typing import TextIO
-# NB!!!!!!!!!:
-# Python3 is a terrible language. You cannot import G4PlusLexer
-# because Python3 cannot handle circular imports. So, we hardwire a
-# bunch of constants directly in this damn code. If someone can
-# figure out how to pound Python into submision and just work
-# please fix.
-# Cannot import lexer so use parser instead.
+from antlr4 import Lexer, Token
 from G4PlusParser import G4PlusParser
+import sys
+
 
 class LexerAdaptor(Lexer):
-    # Constants (mirroring the Java static final ints)
-    PREQUEL_CONSTRUCT = -10
-    OPTIONS_CONSTRUCT = -11
-
-    def __init__(self, input: InputStream, output: TextIO = sys.stdout):
+    def __init__(self, input, output=sys.stdout):
         super().__init__(input, output)
-        # Track whether we are in a parser rule, lexer rule, or outside any rule.
-        # Token.INVALID_TYPE indicates we are outside any rule context.
-        self._currentRuleType = Token.INVALID_TYPE
-
-    def getCurrentRuleType(self):
-        return self._currentRuleType
-
-    def setCurrentRuleType(self, ruleType):
-        self._currentRuleType = ruleType
+        self.lexerGrammar = False
+        self.sawLexerKeyword = False
+        self.headerComplete = False
+        self.inRuleBody = False
+        self.braceDepth = 0
+        self.previousTokenType = Token.INVALID_TYPE
 
     def handleBeginArgument(self):
-        """
-        Decide how to handle a '[' token. If inside a lexer rule, it may be a character set;
-        otherwise, it's a normal argument list and we switch to Argument mode.
-        """
-        if self.inLexerRule():
-            self.pushMode(2); # NB!!!!!!!!!: hardwire G4PlusParser.LexerCharSet)
+        followsReference = self.previousTokenType == G4PlusParser.ID
+        if self.inRuleBody and (self.lexerGrammar or not followsReference):
+            # LexerCharSet is mode 2. Importing G4PlusLexer creates a circular import.
+            self.pushMode(2)
             self.more()
         else:
-            self.pushMode(1); # NB!!!!!!!!!: hardwire G4PlusLexer.Argument)
+            self.pushMode(1)
 
     def handleEndArgument(self):
-        """
-        Upon finding a matching ']', pop out of Argument mode. If we still have a mode stack
-        (i.e., nested contexts), set the type to ARGUMENT_CONTENT.
-        """
         self.popMode()
-        if len(self._modeStack) > 0:
+        if self._modeStack:
             self.type = G4PlusParser.ARGUMENT_CONTENT
 
     def emit(self):
-        """
-        Custom emit logic to update _currentRuleType based on tokens like OPTIONS, TOKENS,
-        CHANNELS, RBRACE, AT, SEMI, ID, etc.
-        """
-        if (
-            (self._type == G4PlusParser.OPTIONS
-             or self._type == G4PlusParser.TOKENS
-             or self._type == G4PlusParser.CHANNELS)
-            and self.getCurrentRuleType() == Token.INVALID_TYPE
-        ):
-            # Enter prequel construct block, which ends when we see a '}'
-            self.setCurrentRuleType(self.PREQUEL_CONSTRUCT)
-
-        elif (
-            self._type == G4PlusParser.OPTIONS
-            and self.getCurrentRuleType() == G4PlusParser.TOKEN_REF
-        ):
-            # We encountered OPTIONS inside a lexer rule, treat it specially
-            self.setCurrentRuleType(self.OPTIONS_CONSTRUCT)
-
-        elif (
-            self._type == G4PlusParser.RBRACE
-            and self.getCurrentRuleType() == self.PREQUEL_CONSTRUCT
-        ):
-            # Exiting a prequel construct block
-            self.setCurrentRuleType(Token.INVALID_TYPE)
-
-        elif (
-            self._type == G4PlusParser.RBRACE
-            and self.getCurrentRuleType() == self.OPTIONS_CONSTRUCT
-        ):
-            # Exiting an options block back into a lexer rule
-            self.setCurrentRuleType(G4PlusParser.TOKEN_REF)
-
-        elif (
-            self._type == G4PlusParser.AT
-            and self.getCurrentRuleType() == Token.INVALID_TYPE
-        ):
-            # Entering an action block
-            self.setCurrentRuleType(G4PlusParser.AT)
-
-        elif (
-            self._type == G4PlusParser.SEMI
-            and self.getCurrentRuleType() == self.OPTIONS_CONSTRUCT
-        ):
-            # A semicolon inside an options {...} block, do nothing special
-            pass
-
-        elif (
-            self._type == G4PlusParser.ACTION
-            and self.getCurrentRuleType() == G4PlusParser.AT
-        ):
-            # Exiting an action block
-            self.setCurrentRuleType(Token.INVALID_TYPE)
-
-        elif self._type == G4PlusParser.ID:
-            # Distinguish between TOKEN_REF (uppercase ID) vs. RULE_REF (lowercase ID)
-            # If the input is only a single char, getText(...) should still return that char
-            # You may need to import Interval or adapt how text is retrieved for your runtime
-            from antlr4 import InputStream
-
-            firstChar = self._input.getText(self._tokenStartCharIndex, self._tokenStartCharIndex)
-            if firstChar and firstChar[0].isupper():
-                self._type = G4PlusParser.TOKEN_REF
-            else:
-                self._type = G4PlusParser.RULE_REF
-
-            # If we were outside a rule, now we're inside a rule of the indicated type
-            if self.getCurrentRuleType() == Token.INVALID_TYPE:
-                self.setCurrentRuleType(self._type)
-
-        elif self._type == G4PlusParser.SEMI:
-            # The ';' token indicates the end of a rule definition
-            self.setCurrentRuleType(Token.INVALID_TYPE)
-
+        tokenType = self._type
+        if not self.headerComplete and tokenType == G4PlusParser.LEXER:
+            self.sawLexerKeyword = True
+        elif not self.headerComplete and tokenType == G4PlusParser.GRAMMAR:
+            self.lexerGrammar = self.sawLexerKeyword
+        elif tokenType in (G4PlusParser.OPTIONS, G4PlusParser.TOKENS, G4PlusParser.CHANNELS):
+            self.braceDepth += 1
+        elif tokenType == G4PlusParser.RBRACE and self.braceDepth > 0:
+            self.braceDepth -= 1
+        elif tokenType == G4PlusParser.COLON and self.headerComplete and self.braceDepth == 0:
+            self.inRuleBody = True
+        elif tokenType == G4PlusParser.SEMI and self.braceDepth == 0:
+            self.headerComplete = True
+            self.inRuleBody = False
+        if self._channel == Token.DEFAULT_CHANNEL:
+            self.previousTokenType = tokenType
         return super().emit()
 
-    def inLexerRule(self):
-        """
-        True if we are currently inside a lexer rule (TOKEN_REF).
-        """
-        return self.getCurrentRuleType() == G4PlusParser.TOKEN_REF
-
-    def inParserRule(self):
-        """
-        True if we are currently inside a parser rule (RULE_REF).
-        """
-        return self.getCurrentRuleType() == G4PlusParser.RULE_REF
-
     def reset(self):
-        """
-        Override reset to also reset the current rule type to INVALID_TYPE.
-        """
-        self.setCurrentRuleType(Token.INVALID_TYPE)
+        self.lexerGrammar = False
+        self.sawLexerKeyword = False
+        self.headerComplete = False
+        self.inRuleBody = False
+        self.braceDepth = 0
+        self.previousTokenType = Token.INVALID_TYPE
         super().reset()

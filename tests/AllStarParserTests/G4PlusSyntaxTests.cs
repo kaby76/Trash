@@ -6,6 +6,77 @@ namespace AllStarParserTests;
 
 public sealed class G4PlusSyntaxTests
 {
+    [Theory]
+    [InlineData("lexer grammar L; fragment lowercase : [a-z]+; Uppercase : lowercase -> skip;", "lexergrammar", "lowercase", "Uppercase")]
+    [InlineData("parser grammar P; fragment Uppercase : [A-Z]+; lowercase : Uppercase EOF;", "parsergrammar", "Uppercase", "lowercase")]
+    [InlineData("grammar C; Uppercase : [A-Z]+; lowercase : Uppercase EOF;", "grammar", "Uppercase", "lowercase")]
+    public void RuleNamesAndBodiesDoNotDependOnCase(
+        string grammar, string grammarType, string firstRule, string secondRule)
+    {
+        var tree = Parse(grammar, out var syntaxErrors);
+
+        Assert.Equal(0, syntaxErrors);
+        Assert.Equal(grammarType, tree.grammarDecl().grammarType().GetText());
+        Assert.Equal(new[] { firstRule, secondRule },
+            tree.rules().ruleSpec().Select(rule => rule.identifier().GetText()).ToArray());
+        Assert.Contains(Descendants<G4PlusParser.AtomContext>(tree),
+            atom => atom.LEXER_CHAR_SET() != null);
+    }
+
+    [Fact]
+    public void BracketsAreContextualRatherThanSelectedByGrammarKind()
+    {
+        const string grammar = """
+            parser grammar P;
+            Uppercase[int n] : [A-Z] lowercase[n];
+            lowercase[int n] : [a-z];
+            """;
+
+        var tree = Parse(grammar, out var syntaxErrors);
+
+        Assert.Equal(0, syntaxErrors);
+        Assert.Equal(2, tree.rules().ruleSpec().Length);
+        Assert.Equal(3, Descendants<G4PlusParser.ArgActionBlockContext>(tree).Count());
+        Assert.Equal(2, Descendants<G4PlusParser.AtomContext>(tree)
+            .Count(atom => atom.LEXER_CHAR_SET() != null));
+    }
+
+    [Fact]
+    public void LexerModeRulesUseTheSameRuleSyntax()
+    {
+        const string grammar = """
+            lexer grammar L;
+            mode inside;
+            lowercase : [a-z]+ -> skip;
+            Uppercase : lowercase;
+            """;
+
+        var tree = Parse(grammar, out var syntaxErrors);
+
+        Assert.Equal(0, syntaxErrors);
+        Assert.Empty(tree.rules().ruleSpec());
+        Assert.Equal(new[] { "lowercase", "Uppercase" },
+            tree.modeSpec()[0].ruleSpec().Select(rule => rule.identifier().GetText()).ToArray());
+    }
+
+    [Fact]
+    public void ReferencesAndExclusionsAreCaseNeutral()
+    {
+        const string grammar = """
+            parser grammar P;
+            Uppercase : lowercase - (Other | other);
+            lowercase : ~(Uppercase | other);
+            """;
+
+        var tree = Parse(grammar, out var syntaxErrors);
+
+        Assert.Equal(0, syntaxErrors);
+        Assert.Equal(new[] { "Other", "other" },
+            Descendants<G4PlusParser.ExclusionOperandContext>(tree)
+                .Select(operand => operand.GetText()).ToArray());
+        Assert.Equal(2, Descendants<G4PlusParser.SetElementContext>(tree).Count());
+    }
+
     [Fact]
     public void JlsIdentifierExclusionsAreRepresentedInParseTree()
     {

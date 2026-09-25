@@ -68,10 +68,8 @@ tokens {
     ARG_OR_CHARSET,
     ASSIGN,
     LEXER_CHAR_SET,
-    RULE_REF,
     SEMPRED,
     STRING_LITERAL,
-    TOKEN_REF,
     UNICODE_ESC,
     UNICODE_EXTENDED_ESC,
     WS,
@@ -180,8 +178,7 @@ fragment NESTED_ACTION
 //
 // 'options', 'tokens', and 'channels' are considered keywords
 // but only when followed by '{', and considered as a single token.
-// Otherwise, the symbols are tokenized as RULE_REF and allowed as
-// an identifier in a labeledElement.
+// Otherwise, the symbols are tokenized as ID and can be rule names.
 OPTIONS
     : 'options' WS* '{'
     ;
@@ -397,7 +394,7 @@ ARGUMENT_CONTENT
     : .
     ;
 
-// -------------------------
+// Brackets that begin a character-set atom are selected by LexerAdaptor.
 mode LexerCharSet;
 
 LEXER_CHAR_SET_BODY

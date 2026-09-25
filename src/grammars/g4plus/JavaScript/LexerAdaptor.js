@@ -1,46 +1,20 @@
 import antlr4 from 'antlr4';
 import G4PlusLexer from './G4PlusLexer.js';
 
-export default class LexerAdaptor extends antlr4.Lexer
-{
-
-    constructor(input)
-    {
+export default class LexerAdaptor extends antlr4.Lexer {
+    constructor(input) {
         super(input);
-        /**
-         *  Generic type for OPTIONS, TOKENS and CHANNELS
-         */
-        this.PREQUEL_CONSTRUCT = -10;
-        this.OPTIONS_CONSTRUCT = -11;
-
-        /**
-         * Track whether we are inside of a rule and whether it is lexical parser. _currentRuleType==Token.INVALID_TYPE
-         * means that we are outside of a rule. At the first sign of a rule name reference and _currentRuleType==invalid, we
-         * can assume that we are starting a parser rule. Similarly, seeing a token reference when not already in rule means
-         * starting a token rule. The terminating ';' of a rule, flips this back to invalid type.
-         *
-         * This is not perfect logic but works. For example, "grammar T;" means that we start and stop a lexical rule for
-         * the "T;". Dangerous but works.
-         *
-         * The whole point of this state information is to distinguish between [..arg actions..] and [charsets]. Char sets
-         * can only occur in lexical rules and arg actions cannot occur.
-         */
-        this._currentRuleType = antlr4.Token.INVALID_TYPE;
+        this.lexerGrammar = false;
+        this.sawLexerKeyword = false;
+        this.headerComplete = false;
+        this.inRuleBody = false;
+        this.braceDepth = 0;
+        this.previousTokenType = antlr4.Token.INVALID_TYPE;
     }
 
-    getCurrentRuleType()
-    {
-        return this._currentRuleType;
-    }
-
-    setCurrentRuleType(ruleType)
-    {
-        this._currentRuleType = ruleType;
-    }
-
-    handleBeginArgument()
-    {
-        if (this.inLexerRule()) {
+    handleBeginArgument() {
+        const followsReference = this.previousTokenType === G4PlusLexer.ID;
+        if (this.inRuleBody && (this.lexerGrammar || !followsReference)) {
             this.pushMode(G4PlusLexer.LexerCharSet);
             this.more();
         } else {
@@ -48,60 +22,42 @@ export default class LexerAdaptor extends antlr4.Lexer
         }
     }
 
-    handleEndArgument()
-    {
+    handleEndArgument() {
         this.popMode();
         if (this._modeStack.length > 0) {
             this._type = G4PlusLexer.ARGUMENT_CONTENT;
         }
     }
 
-    emit()
-    {
-        if ((this._type == G4PlusLexer.OPTIONS || this._type == G4PlusLexer.TOKENS || this._type == G4PlusLexer.CHANNELS)
-            && this.getCurrentRuleType() == antlr4.Token.INVALID_TYPE) { // enter prequel construct ending with an RBRACE
-            this.setCurrentRuleType(this.PREQUEL_CONSTRUCT);
-        } else if (this._type == G4PlusLexer.OPTIONS && this.getCurrentRuleType() == G4PlusLexer.TOKEN_REF) {
-            this.setCurrentRuleType(this.OPTIONS_CONSTRUCT);
-        } else if (this._type == G4PlusLexer.RBRACE && this.getCurrentRuleType() == this.PREQUEL_CONSTRUCT) { // exit prequel construct
-            this.setCurrentRuleType(antlr4.Token.INVALID_TYPE);
-        } else if (this._type == G4PlusLexer.RBRACE && this.getCurrentRuleType() == this.OPTIONS_CONSTRUCT) { // exit options
-            this.setCurrentRuleType(G4PlusLexer.TOKEN_REF);
-        } else if (this._type == G4PlusLexer.AT && this.getCurrentRuleType() == antlr4.Token.INVALID_TYPE) { // enter action
-            this.setCurrentRuleType(G4PlusLexer.AT);
-        } else if (this._type == G4PlusLexer.SEMI && this.getCurrentRuleType() == this.OPTIONS_CONSTRUCT) { // ';' in options { .... }. Don't change anything.
-        } else if (this._type == G4PlusLexer.ACTION && this.getCurrentRuleType() == G4PlusLexer.AT) { // exit action
-            this.setCurrentRuleType(antlr4.Token.INVALID_TYPE);
-        } else if (this._type == G4PlusLexer.ID) {
-            var firstChar = this._input.getText(this._tokenStartCharIndex, this._tokenStartCharIndex);
-            var c = firstChar.charAt(0);
-            if (c == c.toUpperCase()) {
-                this._type = G4PlusLexer.TOKEN_REF;
-            } else {
-                this._type = G4PlusLexer.RULE_REF;
-            }
-
-            if (this.getCurrentRuleType() == antlr4.Token.INVALID_TYPE) { // if outside of rule def
-                this.setCurrentRuleType(this._type); // set to inside lexer or parser rule
-            }
-        } else if (this._type == G4PlusLexer.SEMI) { // exit rule def
-            this.setCurrentRuleType(antlr4.Token.INVALID_TYPE);
+    emit() {
+        const type = this._type;
+        if (!this.headerComplete && type === G4PlusLexer.LEXER) {
+            this.sawLexerKeyword = true;
+        } else if (!this.headerComplete && type === G4PlusLexer.GRAMMAR) {
+            this.lexerGrammar = this.sawLexerKeyword;
+        } else if (type === G4PlusLexer.OPTIONS || type === G4PlusLexer.TOKENS || type === G4PlusLexer.CHANNELS) {
+            this.braceDepth++;
+        } else if (type === G4PlusLexer.RBRACE && this.braceDepth > 0) {
+            this.braceDepth--;
+        } else if (type === G4PlusLexer.COLON && this.headerComplete && this.braceDepth === 0) {
+            this.inRuleBody = true;
+        } else if (type === G4PlusLexer.SEMI && this.braceDepth === 0) {
+            this.headerComplete = true;
+            this.inRuleBody = false;
         }
-
+        if (this._channel === antlr4.Token.DEFAULT_CHANNEL) {
+            this.previousTokenType = type;
+        }
         return super.emit();
     }
 
-    inLexerRule() {
-        return this.getCurrentRuleType() == G4PlusLexer.TOKEN_REF;
-    }
-
-    inParserRule() { // not used, but added for clarity
-        return this.getCurrentRuleType() == G4PlusLexer.RULE_REF;
-    }
-
-    reset()
-    {
-        this.setCurrentRuleType(antlr4.Token.INVALID_TYPE);
+    reset() {
+        this.lexerGrammar = false;
+        this.sawLexerKeyword = false;
+        this.headerComplete = false;
+        this.inRuleBody = false;
+        this.braceDepth = 0;
+        this.previousTokenType = antlr4.Token.INVALID_TYPE;
         super.reset();
     }
 }

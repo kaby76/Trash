@@ -264,18 +264,6 @@ public partial class G4PlusParserBaseListener : IG4PlusParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitRuleSpec([NotNull] G4PlusParser.RuleSpecContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4PlusParser.parserRuleSpec"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterParserRuleSpec([NotNull] G4PlusParser.ParserRuleSpecContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4PlusParser.parserRuleSpec"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitParserRuleSpec([NotNull] G4PlusParser.ParserRuleSpecContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4PlusParser.exceptionGroup"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -431,90 +419,6 @@ public partial class G4PlusParserBaseListener : IG4PlusParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitLabeledAlt([NotNull] G4PlusParser.LabeledAltContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4PlusParser.lexerRuleSpec"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLexerRuleSpec([NotNull] G4PlusParser.LexerRuleSpecContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4PlusParser.lexerRuleSpec"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLexerRuleSpec([NotNull] G4PlusParser.LexerRuleSpecContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4PlusParser.lexerRuleBlock"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLexerRuleBlock([NotNull] G4PlusParser.LexerRuleBlockContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4PlusParser.lexerRuleBlock"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLexerRuleBlock([NotNull] G4PlusParser.LexerRuleBlockContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4PlusParser.lexerAltList"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLexerAltList([NotNull] G4PlusParser.LexerAltListContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4PlusParser.lexerAltList"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLexerAltList([NotNull] G4PlusParser.LexerAltListContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4PlusParser.lexerAlt"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLexerAlt([NotNull] G4PlusParser.LexerAltContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4PlusParser.lexerAlt"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLexerAlt([NotNull] G4PlusParser.LexerAltContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4PlusParser.lexerElements"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLexerElements([NotNull] G4PlusParser.LexerElementsContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4PlusParser.lexerElements"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLexerElements([NotNull] G4PlusParser.LexerElementsContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4PlusParser.lexerElement"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLexerElement([NotNull] G4PlusParser.LexerElementContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4PlusParser.lexerElement"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLexerElement([NotNull] G4PlusParser.LexerElementContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4PlusParser.lexerBlock"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLexerBlock([NotNull] G4PlusParser.LexerBlockContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4PlusParser.lexerBlock"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLexerBlock([NotNull] G4PlusParser.LexerBlockContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4PlusParser.lexerCommands"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -696,18 +600,6 @@ public partial class G4PlusParserBaseListener : IG4PlusParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitEbnfSuffix([NotNull] G4PlusParser.EbnfSuffixContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4PlusParser.lexerAtom"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLexerAtom([NotNull] G4PlusParser.LexerAtomContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4PlusParser.lexerAtom"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLexerAtom([NotNull] G4PlusParser.LexerAtomContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4PlusParser.atom"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -780,18 +672,6 @@ public partial class G4PlusParserBaseListener : IG4PlusParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitBlock([NotNull] G4PlusParser.BlockContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4PlusParser.ruleref"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterRuleref([NotNull] G4PlusParser.RulerefContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4PlusParser.ruleref"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitRuleref([NotNull] G4PlusParser.RulerefContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4PlusParser.characterRange"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -804,17 +684,17 @@ public partial class G4PlusParserBaseListener : IG4PlusParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitCharacterRange([NotNull] G4PlusParser.CharacterRangeContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4PlusParser.terminalDef"/>.
+	/// Enter a parse tree produced by <see cref="G4PlusParser.symbolRef"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void EnterTerminalDef([NotNull] G4PlusParser.TerminalDefContext context) { }
+	public virtual void EnterSymbolRef([NotNull] G4PlusParser.SymbolRefContext context) { }
 	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4PlusParser.terminalDef"/>.
+	/// Exit a parse tree produced by <see cref="G4PlusParser.symbolRef"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
-	public virtual void ExitTerminalDef([NotNull] G4PlusParser.TerminalDefContext context) { }
+	public virtual void ExitSymbolRef([NotNull] G4PlusParser.SymbolRefContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4PlusParser.elementOptions"/>.
 	/// <para>The default implementation does nothing.</para>

@@ -34,18 +34,18 @@ public partial class G4PlusLexer : LexerAdaptor {
 	protected static PredictionContextCache sharedContextCache = new PredictionContextCache();
 	public const int
 		ACTION=1, ARG_ACTION=2, ARG_OR_CHARSET=3, ASSIGN=4, LEXER_CHAR_SET=5, 
-		RULE_REF=6, SEMPRED=7, STRING_LITERAL=8, TOKEN_REF=9, UNICODE_ESC=10, 
-		UNICODE_EXTENDED_ESC=11, WS=12, ALT=13, BLOCK=14, CLOSURE=15, ELEMENT_OPTIONS=16, 
-		EPSILON=17, LEXER_ACTION_CALL=18, LEXER_ALT_ACTION=19, OPTIONAL=20, POSITIVE_CLOSURE=21, 
-		RULE=22, RULEMODIFIERS=23, RULES=24, SET=25, WILDCARD=26, DOC_COMMENT=27, 
-		BLOCK_COMMENT=28, LINE_COMMENT=29, INT=30, UNTERMINATED_STRING_LITERAL=31, 
-		BEGIN_ARGUMENT=32, OPTIONS=33, TOKENS=34, CHANNELS=35, IMPORT=36, FRAGMENT=37, 
-		LEXER=38, PARSER=39, GRAMMAR=40, PROTECTED=41, PUBLIC=42, PRIVATE=43, 
-		RETURNS=44, LOCALS=45, THROWS=46, CATCH=47, FINALLY=48, MODE=49, COLON=50, 
-		COLONCOLON=51, COMMA=52, SEMI=53, LPAREN=54, RPAREN=55, RBRACE=56, RARROW=57, 
-		LT=58, GT=59, QUESTION=60, STAR=61, PLUS_ASSIGN=62, PLUS=63, OR=64, MINUS=65, 
-		DOLLAR=66, RANGE=67, DOT=68, AT=69, POUND=70, NOT=71, ID=72, END_ARGUMENT=73, 
-		UNTERMINATED_ARGUMENT=74, ARGUMENT_CONTENT=75, UNTERMINATED_CHAR_SET=76;
+		SEMPRED=6, STRING_LITERAL=7, UNICODE_ESC=8, UNICODE_EXTENDED_ESC=9, WS=10, 
+		ALT=11, BLOCK=12, CLOSURE=13, ELEMENT_OPTIONS=14, EPSILON=15, LEXER_ACTION_CALL=16, 
+		LEXER_ALT_ACTION=17, OPTIONAL=18, POSITIVE_CLOSURE=19, RULE=20, RULEMODIFIERS=21, 
+		RULES=22, SET=23, WILDCARD=24, DOC_COMMENT=25, BLOCK_COMMENT=26, LINE_COMMENT=27, 
+		INT=28, UNTERMINATED_STRING_LITERAL=29, BEGIN_ARGUMENT=30, OPTIONS=31, 
+		TOKENS=32, CHANNELS=33, IMPORT=34, FRAGMENT=35, LEXER=36, PARSER=37, GRAMMAR=38, 
+		PROTECTED=39, PUBLIC=40, PRIVATE=41, RETURNS=42, LOCALS=43, THROWS=44, 
+		CATCH=45, FINALLY=46, MODE=47, COLON=48, COLONCOLON=49, COMMA=50, SEMI=51, 
+		LPAREN=52, RPAREN=53, RBRACE=54, RARROW=55, LT=56, GT=57, QUESTION=58, 
+		STAR=59, PLUS_ASSIGN=60, PLUS=61, OR=62, MINUS=63, DOLLAR=64, RANGE=65, 
+		DOT=66, AT=67, POUND=68, NOT=69, ID=70, END_ARGUMENT=71, UNTERMINATED_ARGUMENT=72, 
+		ARGUMENT_CONTENT=73, UNTERMINATED_CHAR_SET=74;
 	public const int
 		OFF_CHANNEL=2, COMMENT=3;
 	public const int
@@ -86,17 +86,17 @@ public partial class G4PlusLexer : LexerAdaptor {
 	private static readonly string[] _LiteralNames = {
 		null, null, null, null, "'='", null, null, null, null, null, null, null, 
 		null, null, null, null, null, null, null, null, null, null, null, null, 
-		null, null, null, null, null, null, null, null, "'['", null, null, null, 
-		"'import'", "'fragment'", "'lexer'", "'parser'", "'grammar'", "'protected'", 
-		"'public'", "'private'", "'returns'", "'locals'", "'throws'", "'catch'", 
-		"'finally'", "'mode'", "':'", "'::'", "','", "';'", "'('", "')'", "'}'", 
-		"'->'", "'<'", "'>'", "'?'", "'*'", "'+='", "'+'", "'|'", "'-'", "'$'", 
-		"'..'", "'.'", "'@'", "'#'", "'~'"
+		null, null, null, null, null, null, "'['", null, null, null, "'import'", 
+		"'fragment'", "'lexer'", "'parser'", "'grammar'", "'protected'", "'public'", 
+		"'private'", "'returns'", "'locals'", "'throws'", "'catch'", "'finally'", 
+		"'mode'", "':'", "'::'", "','", "';'", "'('", "')'", "'}'", "'->'", "'<'", 
+		"'>'", "'?'", "'*'", "'+='", "'+'", "'|'", "'-'", "'$'", "'..'", "'.'", 
+		"'@'", "'#'", "'~'"
 	};
 	private static readonly string[] _SymbolicNames = {
 		null, "ACTION", "ARG_ACTION", "ARG_OR_CHARSET", "ASSIGN", "LEXER_CHAR_SET", 
-		"RULE_REF", "SEMPRED", "STRING_LITERAL", "TOKEN_REF", "UNICODE_ESC", "UNICODE_EXTENDED_ESC", 
-		"WS", "ALT", "BLOCK", "CLOSURE", "ELEMENT_OPTIONS", "EPSILON", "LEXER_ACTION_CALL", 
+		"SEMPRED", "STRING_LITERAL", "UNICODE_ESC", "UNICODE_EXTENDED_ESC", "WS", 
+		"ALT", "BLOCK", "CLOSURE", "ELEMENT_OPTIONS", "EPSILON", "LEXER_ACTION_CALL", 
 		"LEXER_ALT_ACTION", "OPTIONAL", "POSITIVE_CLOSURE", "RULE", "RULEMODIFIERS", 
 		"RULES", "SET", "WILDCARD", "DOC_COMMENT", "BLOCK_COMMENT", "LINE_COMMENT", 
 		"INT", "UNTERMINATED_STRING_LITERAL", "BEGIN_ARGUMENT", "OPTIONS", "TOKENS", 
@@ -152,7 +152,7 @@ public partial class G4PlusLexer : LexerAdaptor {
 	}
 
 	private static int[] _serializedATN = {
-		4,0,76,576,6,-1,6,-1,6,-1,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,
+		4,0,74,576,6,-1,6,-1,6,-1,2,0,7,0,2,1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,
 		7,5,2,6,7,6,2,7,7,7,2,8,7,8,2,9,7,9,2,10,7,10,2,11,7,11,2,12,7,12,2,13,
 		7,13,2,14,7,14,2,15,7,15,2,16,7,16,2,17,7,17,2,18,7,18,2,19,7,19,2,20,
 		7,20,2,21,7,21,2,22,7,22,2,23,7,23,2,24,7,24,2,25,7,25,2,26,7,26,2,27,
@@ -194,12 +194,12 @@ public partial class G4PlusLexer : LexerAdaptor {
 		539,8,64,10,64,12,64,542,9,64,1,64,1,64,1,65,1,65,1,65,1,65,1,65,1,65,
 		5,65,552,8,65,10,65,12,65,555,9,65,1,65,1,65,1,65,1,65,1,66,1,66,1,66,
 		5,66,564,8,66,10,66,12,66,567,9,66,1,66,1,66,1,67,1,67,3,67,573,8,67,1,
-		68,1,68,7,148,164,230,249,540,553,565,0,69,3,27,5,28,7,29,9,30,11,8,13,
-		31,15,32,17,1,19,0,21,33,23,34,25,35,27,36,29,37,31,38,33,39,35,40,37,
-		41,39,42,41,43,43,44,45,45,47,46,49,47,51,48,53,49,55,50,57,51,59,52,61,
-		53,63,54,65,55,67,56,69,57,71,58,73,59,75,4,77,60,79,61,81,62,83,63,85,
-		64,87,65,89,66,91,67,93,68,95,69,97,70,99,71,101,72,103,12,105,0,107,0,
-		109,0,111,0,113,73,115,74,117,75,119,0,121,5,123,76,125,0,127,0,129,0,
+		68,1,68,7,148,164,230,249,540,553,565,0,69,3,25,5,26,7,27,9,28,11,7,13,
+		29,15,30,17,1,19,0,21,31,23,32,25,33,27,34,29,35,31,36,33,37,35,38,37,
+		39,39,40,41,41,43,42,45,43,47,44,49,45,51,46,53,47,55,48,57,49,59,50,61,
+		51,63,52,65,53,67,54,69,55,71,56,73,57,75,4,77,58,79,59,81,60,83,61,85,
+		62,87,63,89,64,91,65,93,66,95,67,97,68,99,69,101,70,103,10,105,0,107,0,
+		109,0,111,0,113,71,115,72,117,73,119,0,121,5,123,74,125,0,127,0,129,0,
 		131,0,133,0,135,0,137,0,139,0,3,0,1,2,12,2,0,10,10,13,13,1,0,49,57,1,0,
 		48,57,4,0,10,10,13,13,39,39,92,92,5,0,34,34,39,39,92,92,96,96,123,123,
 		3,0,9,10,12,13,32,32,1,0,92,93,8,0,34,34,39,39,92,92,98,98,102,102,110,
@@ -346,7 +346,7 @@ public partial class G4PlusLexer : LexerAdaptor {
 		3,139,68,0,571,573,7,10,0,0,572,570,1,0,0,0,572,571,1,0,0,0,573,138,1,
 		0,0,0,574,575,7,11,0,0,575,140,1,0,0,0,37,0,1,2,148,154,164,170,180,190,
 		193,198,200,208,210,230,241,247,249,265,280,297,459,465,499,501,518,527,
-		529,531,533,538,540,551,553,563,565,572,8,0,3,0,1,6,0,0,2,0,7,75,0,5,1,
+		529,531,533,538,540,551,553,563,565,572,8,0,3,0,1,6,0,0,2,0,7,73,0,5,1,
 		0,1,55,1,4,0,0,3,0,0
 	};
 

@@ -143,7 +143,7 @@ argActionBlock
     ;
 
 modeSpec
-    : MODE identifier SEMI lexerRuleSpec*
+    : MODE identifier SEMI ruleSpec*
     ;
 
 rules
@@ -151,12 +151,7 @@ rules
     ;
 
 ruleSpec
-    : parserRuleSpec
-    | lexerRuleSpec
-    ;
-
-parserRuleSpec
-    : ruleModifiers? RULE_REF argActionBlock? ruleReturns? throwsSpec? localsSpec? rulePrequel* COLON ruleBlock SEMI
+    : ruleModifiers? identifier argActionBlock? ruleReturns? throwsSpec? localsSpec? rulePrequel* COLON ruleBlock SEMI
         exceptionGroup
     ;
 
@@ -200,12 +195,8 @@ ruleModifiers
     : ruleModifier+
     ;
 
-// An individual access modifier for a rule. The 'fragment' modifier
-// is an internal indication for lexer rules that they do not match
-// from the input but are like subroutines for other lexer rules to
-// reuse for certain lexical patterns. The other modifiers are passed
-// to the code generation templates and may be ignored by the template
-// if they are of no use in that language.
+// Modifiers are accepted on every rule. Restrictions such as whether
+// 'fragment' is meaningful for parser rules are checked separately.
 
 ruleModifier
     : PUBLIC
@@ -224,44 +215,6 @@ ruleAltList
 
 labeledAlt
     : alternative (POUND identifier)?
-    ;
-
-// --------------------
-// Lexer rules
-
-lexerRuleSpec
-    : FRAGMENT? TOKEN_REF optionsSpec? COLON lexerRuleBlock SEMI
-    ;
-
-lexerRuleBlock
-    : lexerAltList
-    ;
-
-lexerAltList
-    : lexerAlt (OR lexerAlt)*
-    ;
-
-lexerAlt
-    : lexerElements exclusion? lexerCommands?
-    |
-    // explicitly allow empty alts
-    ;
-
-lexerElements
-    : lexerElement+
-    |
-    ;
-
-lexerElement
-    : lexerAtom ebnfSuffix?
-    | lexerBlock ebnfSuffix?
-    | actionBlock QUESTION?
-    ;
-
-// but preds can be anywhere
-
-lexerBlock
-    : LPAREN lexerAltList RPAREN
     ;
 
 // E.g., channel(HIDDEN), skip, more, mode(INSIDE), push(INSIDE), pop
@@ -293,9 +246,7 @@ altList
     ;
 
 alternative
-    : elementOptions? element+ exclusion?
-    |
-    // explicitly allow empty alts
+    : elementOptions? element* exclusion? lexerCommands?
     ;
 
 // G4Plus set difference. The parenthesized form keeps OR in the exclusion
@@ -308,6 +259,7 @@ exclusionOperand
     : identifier
     | STRING_LITERAL
     | characterRange
+    | argActionBlock
     | LEXER_CHAR_SET
     ;
 
@@ -348,18 +300,12 @@ ebnfSuffix
     | PLUS QUESTION?
     ;
 
-lexerAtom
-    : characterRange
-    | terminalDef
-    | notSet
-    | LEXER_CHAR_SET
-    | wildcard
-    ;
-
 atom
-    : terminalDef
-    | ruleref
+    : characterRange
+    | symbolRef
     | notSet
+    | argActionBlock
+    | LEXER_CHAR_SET
     | wildcard
     ;
 
@@ -379,9 +325,10 @@ blockSet
     ;
 
 setElement
-    : TOKEN_REF elementOptions?
+    : identifier elementOptions?
     | STRING_LITERAL elementOptions?
     | characterRange
+    | argActionBlock
     | LEXER_CHAR_SET
     ;
 
@@ -391,20 +338,14 @@ block
     : LPAREN (optionsSpec? ruleAction* COLON)? altList RPAREN
     ;
 
-// ----------------
-// Parser rule ref
-ruleref
-    : RULE_REF argActionBlock? elementOptions?
-    ;
-
 // ---------------
 // Character Range
 characterRange
     : STRING_LITERAL RANGE STRING_LITERAL
     ;
 
-terminalDef
-    : TOKEN_REF elementOptions?
+symbolRef
+    : identifier argActionBlock? elementOptions?
     | STRING_LITERAL elementOptions?
     ;
 
@@ -420,8 +361,7 @@ elementOption
     ;
 
 identifier
-    : RULE_REF
-    | TOKEN_REF
+    : ID
     ;
 
 qualifiedIdentifier

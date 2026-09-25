@@ -27,146 +27,74 @@
 */
 
 import 'package:antlr4/antlr4.dart';
-import 'dart:io';
-import 'dart:core';
-import 'dart:convert';
-import 'dart:collection';
 import 'G4PlusLexer.dart';
 
-abstract class LexerAdaptor extends Lexer
-{
-    static const int PREQUEL_CONSTRUCT = -10;
-    static const int OPTIONS_CONSTRUCT = -11;
+abstract class LexerAdaptor extends Lexer {
+    bool lexerGrammar = false;
+    bool sawLexerKeyword = false;
+    bool headerComplete = false;
+    bool inRuleBody = false;
+    int braceDepth = 0;
+    int previousTokenType = Token.INVALID_TYPE;
 
-    // I copy a reference to the stream, so It can be used as a Char Stream, not as a IISStream
-    final CharStream stream;
+    LexerAdaptor(CharStream input) : super(input);
 
-    LexerAdaptor(CharStream input)
-         : stream = input, super(input)
-    {
-        CurrentRuleType = Token.INVALID_TYPE;
-    }
-
-    /**
-     * Track whether we are inside of a rule and whether it is lexical parser. _currentRuleType==TokenConstants.InvalidType
-     * means that we are outside of a rule. At the first sign of a rule name reference and _currentRuleType==invalid, we
-     * can assume that we are starting a parser rule. Similarly, seeing a token reference when not already in rule means
-     * starting a token rule. The terminating ';' of a rule, flips this back to invalid type.
-     *
-     * This is not perfect logic but works. For example, "grammar T;" means that we start and stop a lexical rule for
-     * the "T;". Dangerous but works.
-     *
-     * The whole point of this state information is to distinguish between [..arg actions..] and [charsets]. Char sets
-     * can only occur in lexical rules and arg actions cannot occur.
-     */
-    int CurrentRuleType = Token.INVALID_TYPE;
-
-    void handleBeginArgument()
-    {
-        if (InLexerRule)
-        {
+    void handleBeginArgument() {
+        bool followsReference = previousTokenType == G4PlusLexer.TOKEN_ID;
+        if (inRuleBody && (lexerGrammar || !followsReference)) {
             pushMode(G4PlusLexer.LexerCharSet);
             more();
-        }
-        else
-        {
+        } else {
             pushMode(G4PlusLexer.Argument);
         }
     }
 
-    void handleEndArgument()
-    {
+    void handleEndArgument() {
         popMode();
-        bool notempty = true;
-        var zzz = mode_;
+        // Keep nested closing brackets as argument content.
+        bool nested = true;
+        var currentMode = mode_;
         try {
-            var xxx = popMode();
-            pushMode(xxx);
-        } catch (error, stackTrace) {
-            notempty = false;
+            var previousMode = popMode();
+            pushMode(previousMode);
+        } catch (_) {
+            nested = false;
         }
-        mode_ = zzz;
-        if (notempty)
-        {
+        mode_ = currentMode;
+        if (nested) {
             type = G4PlusLexer.TOKEN_ARGUMENT_CONTENT;
         }
     }
 
-    bool get InLexerRule
-    {
-        return CurrentRuleType == G4PlusLexer.TOKEN_TOKEN_REF;
-    }
-
-    bool isUpperCase(String ch) {
-        return ch.length == 1 && ch == ch.toUpperCase() && ch != ch.toLowerCase();
-    }
-
-    bool isLowerCase(String ch) {
-        return ch.length == 1 && ch == ch.toLowerCase() && ch != ch.toUpperCase();
-    }
-
-    @override Token emit()
-    {
-        if ((type == G4PlusLexer.TOKEN_OPTIONS || type == G4PlusLexer.TOKEN_TOKENS || type == G4PlusLexer.TOKEN_CHANNELS) && CurrentRuleType == Token.INVALID_TYPE)
-        {
-            // enter prequel construct ending with an RBRACE
-            CurrentRuleType = PREQUEL_CONSTRUCT;
+    @override Token emit() {
+        int tokenType = type;
+        if (!headerComplete && tokenType == G4PlusLexer.TOKEN_LEXER) {
+            sawLexerKeyword = true;
+        } else if (!headerComplete && tokenType == G4PlusLexer.TOKEN_GRAMMAR) {
+            lexerGrammar = sawLexerKeyword;
+        } else if (tokenType == G4PlusLexer.TOKEN_OPTIONS || tokenType == G4PlusLexer.TOKEN_TOKENS || tokenType == G4PlusLexer.TOKEN_CHANNELS) {
+            braceDepth++;
+        } else if (tokenType == G4PlusLexer.TOKEN_RBRACE && braceDepth > 0) {
+            braceDepth--;
+        } else if (tokenType == G4PlusLexer.TOKEN_COLON && headerComplete && braceDepth == 0) {
+            inRuleBody = true;
+        } else if (tokenType == G4PlusLexer.TOKEN_SEMI && braceDepth == 0) {
+            headerComplete = true;
+            inRuleBody = false;
         }
-        else if (type == G4PlusLexer.TOKEN_OPTIONS && CurrentRuleType == G4PlusLexer.TOKEN_TOKEN_REF)
-        {
-            CurrentRuleType = OPTIONS_CONSTRUCT;
+        if (channel == Token.DEFAULT_CHANNEL) {
+            previousTokenType = tokenType;
         }
-        else if (type == G4PlusLexer.TOKEN_RBRACE && CurrentRuleType == PREQUEL_CONSTRUCT)
-        {
-            // exit prequel construct
-            CurrentRuleType = Token.INVALID_TYPE;
-        }
-        else if (type == G4PlusLexer.TOKEN_RBRACE && CurrentRuleType == OPTIONS_CONSTRUCT)
-        { // exit options
-            CurrentRuleType = G4PlusLexer.TOKEN_TOKEN_REF;
-        }
-        else if (type == G4PlusLexer.TOKEN_AT && CurrentRuleType == Token.INVALID_TYPE)
-        {
-            // enter action
-            CurrentRuleType = G4PlusLexer.TOKEN_AT;
-        }
-        else if (type == G4PlusLexer.TOKEN_SEMI && CurrentRuleType == OPTIONS_CONSTRUCT)
-        { // ';' in options { .... }. Don't change anything.
-        }
-        else if (type == G4PlusLexer.TOKEN_ACTION && CurrentRuleType == G4PlusLexer.TOKEN_AT)
-        {
-            // Exit action
-            CurrentRuleType = Token.INVALID_TYPE;
-        }
-        else if (type == G4PlusLexer.TOKEN_ID)
-        {
-            var firstChar = stream.getText(Interval.of(tokenStartCharIndex, tokenStartCharIndex))[0];
-            if (isUpperCase(firstChar))
-            {
-                type = G4PlusLexer.TOKEN_TOKEN_REF;
-            }
-            if (isLowerCase(firstChar))
-            {
-                type = G4PlusLexer.TOKEN_RULE_REF;
-            }
-
-            if (CurrentRuleType == Token.INVALID_TYPE)
-            {
-                // if outside of rule def
-                CurrentRuleType = type; // set to inside lexer or parser rule
-            }
-        }
-        else if (type == G4PlusLexer.TOKEN_SEMI)
-        {
-            CurrentRuleType = Token.INVALID_TYPE;
-        }
-
         return super.emit();
     }
 
-    @override void reset([bool resetInput = false])
-    {
-        CurrentRuleType = Token.INVALID_TYPE;
-        super.reset(true);
+    @override void reset([bool resetInput = false]) {
+        lexerGrammar = false;
+        sawLexerKeyword = false;
+        headerComplete = false;
+        inRuleBody = false;
+        braceDepth = 0;
+        previousTokenType = Token.INVALID_TYPE;
+        super.reset(resetInput);
     }
 }

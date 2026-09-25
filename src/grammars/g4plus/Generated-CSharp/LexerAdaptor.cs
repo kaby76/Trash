@@ -28,52 +28,31 @@
 
 using System;
 using System.IO;
-using System.Reflection;
 using Antlr4.Runtime;
-using Antlr4.Runtime.Misc;
 
 public abstract class LexerAdaptor : Lexer
 {
-    private static readonly int PREQUEL_CONSTRUCT = -10;
-    private static readonly int OPTIONS_CONSTRUCT = -11;
-
-    // I copy a reference to the stream, so It can be used as a Char Stream, not as a IISStream
-    readonly ICharStream stream;
-
-    // Tokens are read only so I hack my way
-    readonly FieldInfo tokenInput = typeof(CommonToken).GetField("_type", BindingFlags.NonPublic | BindingFlags.Instance);
+    private bool _lexerGrammar;
+    private bool _sawLexerKeyword;
+    private bool _headerComplete;
+    private bool _inRuleBody;
+    private int _braceDepth;
+    private int _previousTokenType = TokenConstants.InvalidType;
 
     protected LexerAdaptor(ICharStream input)
          : base(input, Console.Out, Console.Error)
     {
-        CurrentRuleType = TokenConstants.InvalidType;
-        stream = input;
     }
 
     protected LexerAdaptor(ICharStream input, TextWriter output, TextWriter errorOutput)
          : base(input, output, errorOutput)
     {
-        CurrentRuleType = TokenConstants.InvalidType;
-        stream = input;
     }
-
-    /**
-     * Track whether we are inside of a rule and whether it is lexical parser. _currentRuleType==TokenConstants.InvalidType
-     * means that we are outside of a rule. At the first sign of a rule name reference and _currentRuleType==invalid, we
-     * can assume that we are starting a parser rule. Similarly, seeing a token reference when not already in rule means
-     * starting a token rule. The terminating ';' of a rule, flips this back to invalid type.
-     *
-     * This is not perfect logic but works. For example, "grammar T;" means that we start and stop a lexical rule for
-     * the "T;". Dangerous but works.
-     *
-     * The whole point of this state information is to distinguish between [..arg actions..] and [charsets]. Char sets
-     * can only occur in lexical rules and arg actions cannot occur.
-     */
-    private int CurrentRuleType { get; set; } = TokenConstants.InvalidType;
 
     protected void handleBeginArgument()
     {
-        if (InLexerRule)
+        var followsReference = _previousTokenType == G4PlusLexer.ID;
+        if (_inRuleBody && (_lexerGrammar || !followsReference))
         {
             PushMode(G4PlusLexer.LexerCharSet);
             More();
@@ -93,73 +72,37 @@ public abstract class LexerAdaptor : Lexer
         }
     }
 
-    private bool InLexerRule
-    {
-        get { return CurrentRuleType == G4PlusLexer.TOKEN_REF; }
-    }
-
     public override IToken Emit()
     {
-        if ((Type == G4PlusLexer.OPTIONS || Type == G4PlusLexer.TOKENS || Type == G4PlusLexer.CHANNELS) && CurrentRuleType == TokenConstants.InvalidType)
+        if (!_headerComplete && Type == G4PlusLexer.LEXER)
+            _sawLexerKeyword = true;
+        else if (!_headerComplete && Type == G4PlusLexer.GRAMMAR)
+            _lexerGrammar = _sawLexerKeyword;
+        else if (Type == G4PlusLexer.OPTIONS || Type == G4PlusLexer.TOKENS || Type == G4PlusLexer.CHANNELS)
+            _braceDepth++;
+        else if (Type == G4PlusLexer.RBRACE && _braceDepth > 0)
+            _braceDepth--;
+        else if (Type == G4PlusLexer.COLON && _headerComplete && _braceDepth == 0)
+            _inRuleBody = true;
+        else if (Type == G4PlusLexer.SEMI && _braceDepth == 0)
         {
-            // enter prequel construct ending with an RBRACE
-            CurrentRuleType = PREQUEL_CONSTRUCT;
-        }
-        else if (Type == G4PlusLexer.OPTIONS && CurrentRuleType == G4PlusLexer.TOKEN_REF)
-        {
-            CurrentRuleType = OPTIONS_CONSTRUCT;
-        }
-        else if (Type == G4PlusLexer.RBRACE && CurrentRuleType == PREQUEL_CONSTRUCT)
-        {
-            // exit prequel construct
-            CurrentRuleType = TokenConstants.InvalidType;
-        }
-        else if (Type == G4PlusLexer.RBRACE && CurrentRuleType == OPTIONS_CONSTRUCT)
-        { // exit options
-            CurrentRuleType = G4PlusLexer.TOKEN_REF;
-        }
-        else if (Type == G4PlusLexer.AT && CurrentRuleType == TokenConstants.InvalidType)
-        {
-            // enter action
-            CurrentRuleType = G4PlusLexer.AT;
-        }
-        else if (Type == G4PlusLexer.SEMI && CurrentRuleType == OPTIONS_CONSTRUCT)
-        { // ';' in options { .... }. Don't change anything.
-        }
-        else if (Type == G4PlusLexer.ACTION && CurrentRuleType == G4PlusLexer.AT)
-        {
-            // Exit action
-            CurrentRuleType = TokenConstants.InvalidType;
-        }
-        else if (Type == G4PlusLexer.ID)
-        {
-            var firstChar = stream.GetText(Interval.Of(TokenStartCharIndex, TokenStartCharIndex))[0];
-            if (char.IsUpper(firstChar))
-            {
-                Type = G4PlusLexer.TOKEN_REF;
-            }
-            if (char.IsLower(firstChar))
-            {
-                Type = G4PlusLexer.RULE_REF;
-            }
-
-            if (CurrentRuleType == TokenConstants.InvalidType)
-            {
-                // if outside of rule def
-                CurrentRuleType = Type; // set to inside lexer or parser rule
-            }
-        }
-        else if (Type == G4PlusLexer.SEMI)
-        {
-            CurrentRuleType = TokenConstants.InvalidType;
+            _headerComplete = true;
+            _inRuleBody = false;
         }
 
+        if (Channel == TokenConstants.DefaultChannel)
+            _previousTokenType = Type;
         return base.Emit();
     }
 
     public override void Reset()
     {
-        CurrentRuleType = TokenConstants.InvalidType;
+        _lexerGrammar = false;
+        _sawLexerKeyword = false;
+        _headerComplete = false;
+        _inRuleBody = false;
+        _braceDepth = 0;
+        _previousTokenType = TokenConstants.InvalidType;
         base.Reset();
     }
 }
