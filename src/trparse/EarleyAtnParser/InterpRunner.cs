@@ -29,7 +29,8 @@ public static class InterpRunner
         bool lexerStats = false,
         bool lexerOverlaps = false,
         AllStarAtnParser.InterpRuntimeCache runtimeCache = null,
-        LexerAtnSimulator.LexerDfaCache lexerDfaCache = null)
+        LexerAtnSimulator.LexerDfaCache lexerDfaCache = null,
+        string startRuleName = null)
     {
         // Get options to lexer from process args.
         var args = Environment.GetCommandLineArgs().ToList();
@@ -50,8 +51,8 @@ public static class InterpRunner
                 loadedParserInterp.AtnData);
             var loadedLexerAtn = AtnDeserializer.Deserialize(
                 loadedLexerInterp.AtnData);
-            int loadedStartRule = ResolveStartRule(
-                loadedParserAtn, loadedParserInterp);
+            int loadedStartRule = StartRuleResolver.Resolve(
+                loadedParserAtn, loadedParserInterp, null);
             runtime = new AllStarAtnParser.InterpRuntimeCache.RuntimeData(
                 loadedParserInterp, loadedLexerInterp,
                 loadedParserAtn, loadedLexerAtn,
@@ -97,9 +98,12 @@ public static class InterpRunner
                     $"[@{tok.TokenIndex},{tok.StartIndex}:{tok.StopIndex}='{text}',<{typeName}>{channel},{tok.Line}:{tok.Column}]");
             }
         }
-        int startRule = runtime.StartRule;
+        int startRule = string.IsNullOrEmpty(startRuleName)
+            ? runtime.StartRule
+            : StartRuleResolver.Resolve(parserAtn, parserInterp, startRuleName);
 
-        var events = EarleyParser.Parse(parserAtn, rawTokens, startRule);
+        var events = EarleyParser.Parse(parserAtn, rawTokens, startRule,
+            allowImplicitEof: !string.IsNullOrEmpty(startRuleName));
         if (events == null)
             throw new InvalidOperationException($"Earley parse failed for '{fileName}': input rejected by grammar.");
 
@@ -140,16 +144,6 @@ public static class InterpRunner
             Parser   = myParser,
             Lexer    = myLexer
         }, tokenCount);
-    }
-
-    private static int ResolveStartRule(MyATN parserAtn, ParsedInterp parserInterp)
-    {
-        if (parserInterp.StartStateNumber < 0) return 0;
-        for (int rule = 0; rule < parserAtn.start.Length; rule++)
-            if (parserAtn.start[rule].stateNumber == parserInterp.StartStateNumber)
-                return rule;
-        throw new InvalidOperationException(
-            $"Start state {parserInterp.StartStateNumber} not found in deserialized parser ATN.");
     }
 
     private static IDictionary<string, int> BuildTokenTypeMap(string[] symbolicNames)

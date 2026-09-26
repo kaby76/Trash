@@ -1,4 +1,0 @@
-a: b, c.
-b: c, d.
-c: 'unterminated. {unterminated string}
-d: .

@@ -1,1 +1,0 @@
-<module name='ORP'><DeclarationSequence/><StatementSequence><ProcedureCall><designator ident='f'/><ActualParameters><designator ident='x'/></ActualParameters></ProcedureCall></StatementSequence><END_MODULE name='ORP'/></module>

@@ -19,6 +19,7 @@ listed in the [Supported grammars](#supported-grammars) table below.
 You can force the type of parse with the `--type` command-line option.
 Accepted values:
 
+* `G4Plus` — Trash's ANTLR4 grammar fork (`.g4p`, `.g4+`)
 * `ANTLRv4` — ANTLRv4 (`.g4`)
 * `ANTLRv3` — ANTLRv3 (`.g3`)
 * `ANTLRv2` — ANTLRv2 (`.g2`)
@@ -41,6 +42,7 @@ Accepted values:
 
 | Grammar | File suffix | `--type` value |
 |---------|-------------|----------------|
+| G4Plus | `.g4p`, `.g4+` | `G4Plus` |
 | ANTLRv4 | `.g4` | `ANTLRv4` |
 | ANTLRv3 | `.g3` | `ANTLRv3` |
 | ANTLRv2 | `.g2` | `ANTLRv2` |
@@ -120,6 +122,20 @@ the DOT corpus did not show a reliable improvement. All production decisions
 currently retain adaptive ALL(*) prediction; `--parser-stats` consequently
 reports zero LL(1) bypasses.
 
+### Indirect left recursion
+
+Use `--indirect-left-recursion` for interp grammars in which a rule can invoke
+itself through one or more other rules. The option selects the ALL(*) interp
+path and enables fixed-point, seed-growing rule evaluation. Parse events retain
+every grammar-rule invocation, so tree construction produces the original
+indirectly recursive rule nesting and grows it left-associatively:
+
+    dotnet trash parse --indirect-left-recursion -L interp input.txt
+
+This opt-in path is intended for grammars that ANTLR normally rejects during
+code generation. It cannot currently be combined with
+`--context-aware-lexing`.
+
 ## Usage
 
     dotnet trash parse (<string> | <options>)*
@@ -129,6 +145,8 @@ reports zero LL(1) bypasses.
         --pinterp      Path to parser .interp file (Earley ATN-based parsing).
         --linterp      Path to lexer .interp file  (Earley ATN-based parsing).
         --allstar      Use the ALL(*) interpreter instead of Earley.
+        --indirect-left-recursion
+                       Allow mutually/indirectly left-recursive interp rules.
         --context-aware-lexing
                        Prefer lexer tokens valid in the current ALL(*) parser context.
         --lexer-stats  Write observed interp lexer-overlap statistics to stderr.
@@ -167,7 +185,7 @@ reports zero LL(1) bypasses.
 
 ## Current version
 
-Release 3.6.0.
+Release 3.7.0.
 
 ## License
 

@@ -361,7 +361,8 @@ public class Grun
             AntlrJson.ParsingResultSet rs;
             long interpTokenCount;
             string interpLabel;
-            if (config.AllStar || config.ContextAwareLexing)
+            if (config.AllStar || config.ContextAwareLexing ||
+                config.IndirectLeftRecursion)
             {
                 AllStarAtnParser.AllStarParser.Trace = config.Verbose;
                 var interpTimings = config.InterpTimings
@@ -375,7 +376,8 @@ public class Grun
                     config.LineNumbers, config.ContextAwareLexing,
                     config.LexerStats, config.LexerOverlaps, interpTimings,
                     parserStatistics, _parserPredictionCache,
-                    _interpRuntimeCache, _lexerDfaCache);
+                    _interpRuntimeCache, _lexerDfaCache,
+                    config.IndirectLeftRecursion, config.StartRule);
                 if (interpTimings != null)
                     _interpTimings.Add(interpTimings);
                 interpLabel = "ALL(*)";
@@ -385,7 +387,7 @@ public class Grun
                 (rs, interpTokenCount) = EarleyAtnParser.InterpRunner.Run(
                     resolvedPInterp, resolvedLInterp, txt, input_name,
                     config.LineNumbers, config.LexerStats, config.LexerOverlaps,
-                    _interpRuntimeCache, _lexerDfaCache);
+                    _interpRuntimeCache, _lexerDfaCache, config.StartRule);
                 interpLabel = "Earley";
             }
             DateTime interpAfter = DateTime.Now;
@@ -401,6 +403,10 @@ public class Grun
             return (0, interpParseSeconds, interpTokenCount);
         }
 
+        if (!string.IsNullOrEmpty(config.StartRule))
+            throw new ArgumentException(
+                "--start-rule requires interpreted parsing with parser and lexer .interp files.");
+
         Type type = null;
         if (parser_type == null || parser_type == "")
         {
@@ -412,6 +418,7 @@ public class Grun
             parser_type = extension switch
             {
                 ".g4" => "ANTLRv4",
+                ".g4p" or ".g4+" => "G4Plus",
                 ".g3" => "ANTLRv3",
                 ".g2" => "ANTLRv2",
                 ".peg" => "pegen_v3_10",
@@ -434,6 +441,7 @@ public class Grun
             var subdir = parser_type switch
             {
                 "ANTLRv4" => "antlr4",
+                "G4Plus" => "g4plus",
                 "ANTLRv3" => "antlr3",
                 "ANTLRv2" => "antlr2",
                 "pegen_v3_10" => "pegen",
@@ -536,6 +544,7 @@ public class Grun
             var subdir = parser_type switch
             {
                 "ANTLRv4" => "antlr4",
+                "G4Plus" => "g4plus",
                 "ANTLRv3" => "antlr3",
                 "ANTLRv2" => "antlr2",
                 "pegen_v3_10" => "pegen",
@@ -554,7 +563,7 @@ public class Grun
                 "Princeton" => "princeton",
                 "ixml" => "ixml",
                 _ => throw new Exception(
-                    "Unknown built-in parser type. Supported: ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton, ixml, gen.")
+                    "Unknown built-in parser type. Supported: G4Plus, ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton, ixml, gen.")
             };
             // Get this assembly.
             System.Reflection.Assembly a = this.GetType().Assembly;

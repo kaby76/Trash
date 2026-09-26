@@ -28,8 +28,15 @@ public static class InterpRunner
         ParserStatistics parserStatistics = null,
         ParserPredictionCache predictionCache = null,
         InterpRuntimeCache runtimeCache = null,
-        LexerAtnSimulator.LexerDfaCache lexerDfaCache = null)
+        LexerAtnSimulator.LexerDfaCache lexerDfaCache = null,
+        bool indirectLeftRecursion = false,
+        string startRuleName = null)
     {
+        if (indirectLeftRecursion && contextAwareLexing)
+            throw new ArgumentException(
+                "--indirect-left-recursion cannot currently be combined with " +
+                "--context-aware-lexing.");
+
         timings ??= new InterpRunTimings();
         timings.Files = 1;
         var timer = new System.Diagnostics.Stopwatch();
@@ -76,8 +83,8 @@ public static class InterpRunner
                 loadedLexerInterp.LiteralNames, loadedLexerInterp.SymbolicNames);
             var loadedParserVocab = new Antlr4.Runtime.Vocabulary(
                 loadedParserInterp.LiteralNames, loadedParserInterp.SymbolicNames);
-            int loadedStartRule = ResolveStartRule(
-                loadedParserAtn, loadedParserInterp);
+            int loadedStartRule = StartRuleResolver.Resolve(
+                loadedParserAtn, loadedParserInterp, null);
             timer.Stop();
             timings.Initialization = timer.Elapsed;
 
@@ -95,7 +102,20 @@ public static class InterpRunner
         var lexerAtn = runtime.LexerAtn;
         var parserVocab = runtime.ParserVocabulary;
         var lexerVocab = runtime.LexerVocabulary;
-        int startRule = runtime.StartRule;
+        int startRule = string.IsNullOrEmpty(startRuleName)
+            ? runtime.StartRule
+            : StartRuleResolver.Resolve(parserAtn, parserInterp, startRuleName);
+        if (!indirectLeftRecursion &&
+            LeftRecursionDetector.TryFindCycle(parserAtn, out var cycle))
+        {
+            string description = string.Join(" -> ", cycle.Select(rule =>
+                rule >= 0 && rule < parserInterp.RuleNames.Length
+                    ? parserInterp.RuleNames[rule]
+                    : $"rule {rule}"));
+            throw new InvalidOperationException(
+                $"Indirect left recursion detected: {description}. " +
+                "Re-run trparse with --indirect-left-recursion.");
+        }
         var statistics = lexerStats || lexerOverlaps
             ? new LexerStatistics()
             : null;
@@ -127,9 +147,12 @@ public static class InterpRunner
             timer.Stop();
             timings.TokenReconciliation = timer.Elapsed;
             timer.Restart();
-            events = AllStarParser.Parse(
-                parserAtn, rawTokens, startRule, parserStatistics,
-                predictionCache);
+            events = indirectLeftRecursion
+                ? IndirectLeftRecursiveParser.Parse(
+                    parserAtn, rawTokens, startRule, parserStatistics)
+                : AllStarParser.Parse(
+                    parserAtn, rawTokens, startRule, parserStatistics,
+                    predictionCache);
             timer.Stop();
             timings.Parsing = timer.Elapsed;
         }
@@ -204,16 +227,6 @@ public static class InterpRunner
         timings.ResultConstruction = timer.Elapsed;
 
         return (result, tokenCount);
-    }
-
-    private static int ResolveStartRule(MyATN parserAtn, ParsedInterp parserInterp)
-    {
-        if (parserInterp.StartStateNumber < 0) return 0;
-        for (int rule = 0; rule < parserAtn.start.Length; rule++)
-            if (parserAtn.start[rule].stateNumber == parserInterp.StartStateNumber)
-                return rule;
-        throw new InvalidOperationException(
-            $"Start state {parserInterp.StartStateNumber} not found in deserialized parser ATN.");
     }
 
     internal static void PrintLexerStatistics(

@@ -18,9 +18,15 @@
  *   - '.' is omitted from NAME (see ixmlLexer.g4) and '#' uses
  *     HEX_MODE so hex letters never merge into surrounding NAMEs.
  */
+
+// $antlr-format alignColons hanging, alignSemicolons hanging, alignTrailingComments true, allowShortBlocksOnASingleLine true
+// $antlr-format allowShortRulesOnASingleLine false, columnLimit 150, maxEmptyLinesToKeep 1, minEmptyLines 1, reflowComments false, useTab false
+
 parser grammar ixmlParser;
 
-options { tokenVocab = ixmlLexer; }
+options {
+    tokenVocab = ixmlLexer;
+}
 
 // ── Parser rules ─────────────────────────────────────────────────────────────
 
@@ -33,17 +39,17 @@ prolog
     ;
 
 version
-    :  'ixml' rs  'version' rs string_ s  '.'
+    : 'ixml' rs 'version' rs string_ s '.'
     ;
 
 rule_
-    : (mark s)? name s ASSIGN s alts  '.'
+    : (mark s)? name s ASSIGN s alts '.'
     ;
 
 mark
-    :  '@'
-    |  '^'
-    |  '-'
+    : '@'
+    | '^'
+    | '-'
     ;
 
 alts
@@ -65,21 +71,21 @@ factor
     : terminal_
     | nonterminal
     | insertion
-    |  '(' s alts  ')' s
+    | '(' s alts ')' s
     ;
 
 repeat0
-    : factor  '*' s
-    | factor  '**' s sep
+    : factor '*' s
+    | factor '**' s sep
     ;
 
 repeat1
-    : factor  '+' s
-    | factor  '++' s sep
+    : factor '+' s
+    | factor '++' s sep
     ;
 
 option
-    : factor  '?' s
+    : factor '?' s
     ;
 
 sep
@@ -92,8 +98,8 @@ nonterminal
 
 name
     : NAME
-    |  'ixml'
-    |  'version'
+    | 'ixml'
+    | 'version'
     | CODE
     ;
 
@@ -112,8 +118,8 @@ quoted
     ;
 
 tmark
-    :  '^'
-    |  '-'
+    : '^'
+    | '-'
     ;
 
 string_
@@ -149,11 +155,11 @@ inclusion
     ;
 
 exclusion
-    : (tmark s)?  '~' s set_
+    : (tmark s)? '~' s set_
     ;
 
 set_
-    :  '[' s (member s (ALT_SEP s member s)*)?  ']' s
+    : '[' s (member s (ALT_SEP s member s)*)? ']' s
     ;
 
 member
@@ -164,7 +170,7 @@ member
     ;
 
 range_
-    : from_ s  '-' s to_
+    : from_ s '-' s to_
     ;
 
 from_
@@ -193,7 +199,7 @@ code
     ;
 
 insertion
-    :  '+' s (string_ | HASH hex) s
+    : '+' s (string_ | HASH hex) s
     ;
 
 // These rules mirror iXML spec names. Their content is handled by

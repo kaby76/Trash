@@ -6,6 +6,108 @@ namespace AllStarParserTests;
 
 public sealed class TrparseOutputTests
 {
+    [Theory]
+    [InlineData(".g4p", false)]
+    [InlineData(".g4+", false)]
+    [InlineData(".g4", true)]
+    public void G4PlusParsesGrammarFiles(string extension, bool specifyParserType)
+    {
+        var file = Path.Combine(Path.GetTempPath(),
+            "G4PlusSmoke-" + Guid.NewGuid().ToString("N") + extension);
+        try
+        {
+            File.WriteAllText(file,
+                "grammar G4PlusSmoke; root : 'x' EOF;\n");
+            var startInfo = new ProcessStartInfo("dotnet")
+            {
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false
+            };
+            startInfo.ArgumentList.Add(typeof(Trash.Program).Assembly.Location);
+            startInfo.ArgumentList.Add("--no-output");
+            if (specifyParserType)
+            {
+                startInfo.ArgumentList.Add("-t");
+                startInfo.ArgumentList.Add("G4Plus");
+            }
+            startInfo.ArgumentList.Add(file);
+
+            using var process = Process.Start(startInfo);
+            Assert.NotNull(process);
+            Assert.Equal(string.Empty, process.StandardOutput.ReadToEnd());
+            var stderr = process.StandardError.ReadToEnd();
+            Assert.True(process.WaitForExit(30_000));
+            Assert.True(process.ExitCode == 0, stderr);
+            Assert.Contains("TT:", stderr);
+        }
+        finally
+        {
+            File.Delete(file);
+        }
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void NamedStartRuleOverridesInterpDefault(bool allstar)
+    {
+        var startInfo = new ProcessStartInfo("dotnet")
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false
+        };
+        startInfo.ArgumentList.Add(typeof(Trash.Program).Assembly.Location);
+        if (allstar) startInfo.ArgumentList.Add("--allstar");
+        startInfo.ArgumentList.Add("--no-output");
+        startInfo.ArgumentList.Add("--start-rule");
+        startInfo.ArgumentList.Add("elements");
+        startInfo.ArgumentList.Add("-L");
+        startInfo.ArgumentList.Add(Path.Combine(
+            AppContext.BaseDirectory, "TestData", "interp"));
+        startInfo.ArgumentList.Add("-i");
+        startInfo.ArgumentList.Add("x");
+
+        using var process = Process.Start(startInfo);
+        Assert.NotNull(process);
+        Assert.Equal(string.Empty, process.StandardOutput.ReadToEnd());
+        var stderr = process.StandardError.ReadToEnd();
+        Assert.True(process.WaitForExit(30_000));
+        Assert.Equal(0, process.ExitCode);
+        Assert.Contains("TT:", stderr);
+    }
+
+    [Fact]
+    public void UnknownStartRuleReportsAvailableNames()
+    {
+        var startInfo = new ProcessStartInfo("dotnet")
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false
+        };
+        startInfo.ArgumentList.Add(typeof(Trash.Program).Assembly.Location);
+        startInfo.ArgumentList.Add("--allstar");
+        startInfo.ArgumentList.Add("--no-output");
+        startInfo.ArgumentList.Add("--start-rule");
+        startInfo.ArgumentList.Add("missing");
+        startInfo.ArgumentList.Add("-L");
+        startInfo.ArgumentList.Add(Path.Combine(
+            AppContext.BaseDirectory, "TestData", "interp"));
+        startInfo.ArgumentList.Add("-i");
+        startInfo.ArgumentList.Add("x");
+
+        using var process = Process.Start(startInfo);
+        Assert.NotNull(process);
+        _ = process.StandardOutput.ReadToEnd();
+        var stderr = process.StandardError.ReadToEnd();
+        Assert.True(process.WaitForExit(30_000));
+        Assert.NotEqual(0, process.ExitCode);
+        Assert.Contains("Start rule 'missing' was not found", stderr);
+        Assert.Contains("rulelist, rule_, elements", stderr);
+    }
+
     [Fact]
     public void NoOutputParsesAndReportsDiagnosticsWithoutWritingStdout()
     {

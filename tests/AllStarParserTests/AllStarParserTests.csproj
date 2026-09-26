@@ -8,6 +8,29 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <!-- Existing ANTLR4 grammars used by G4Plus compatibility tests. -->
+    <Content Include="../../src/grammars/*/*.g4"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/g4plus/src/grammars/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Content Include="../../examples/context-aware-lexing/Decaf.g4"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/g4plus/examples/context-aware-lexing/Decaf.g4" />
+    <Content Include="../../examples/java-antlr/Java*.g4"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/g4plus/examples/java-antlr/%(Filename)%(Extension)" />
+    <Content Include="../grammars-v4/*/*.g4"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/g4plus/tests/grammars-v4/%(RecursiveDir)%(Filename)%(Extension)" />
+    <Content Include="../grammars-v4/csharp/CSharp/CSharpPreprocessorParser.g4"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/g4plus/tests/grammars-v4/csharp/CSharp/CSharpPreprocessorParser.g4" />
+
+    <Content Include="TestData/indirect-left-recursion/*.interp"
+             CopyToOutputDirectory="Always"
+             Link="TestData/indirect-left-recursion/%(Filename)%(Extension)" />
+    <Content Include="TestData/indirect-left-recursion/input.txt"
+             CopyToOutputDirectory="Always"
+             Link="TestData/indirect-left-recursion/input.txt" />
     <Content Include="TestData/context-aware/*.interp"
              CopyToOutputDirectory="Always"
              Link="TestData/context-aware/%(Filename)%(Extension)" />

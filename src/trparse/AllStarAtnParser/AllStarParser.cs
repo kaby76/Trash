@@ -156,6 +156,8 @@ public static class AllStarParser
         private readonly ParserStatistics _statistics;
         private readonly ushort[][] _ll1Tables;
         private readonly List<ParseEvent> _events;
+        private readonly HashSet<(int Rule, int Position, int Precedence)>
+            _activeRuleCalls = new();
 
         public int Pos { get; private set; } // current on-channel token position
 
@@ -219,6 +221,14 @@ public static class AllStarParser
                 if (depth > _statistics.MaximumRuleDepth)
                     _statistics.MaximumRuleDepth = depth;
             }
+            var activeCall = (ruleIndex, Pos, precedence);
+            if (!_activeRuleCalls.Add(activeCall))
+                throw new InvalidOperationException(
+                    $"Indirect left recursion detected while entering parser " +
+                    $"rule {ruleIndex} at token position {Pos}. Re-run trparse " +
+                    $"with --indirect-left-recursion.");
+            try
+            {
             bool isRecursion = _atn.start[ruleIndex].isPrecedenceRule;
             AddEvent(isRecursion
                 ? ParseEventKind.EnterRecursionRule
@@ -349,6 +359,11 @@ public static class AllStarParser
                 ? ParseEventKind.ExitRecursionRule
                 : ParseEventKind.ExitRule, ruleIndex);
             return true;
+            }
+            finally
+            {
+                _activeRuleCalls.Remove(activeCall);
+            }
         }
 
         private bool ConsumeToken(int stateNumber, MyTransition tr)

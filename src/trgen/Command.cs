@@ -158,14 +158,27 @@ namespace Trash
                         evaluator.Evaluate(new XPathParser("/grammarSpec/grammarDecl/identifier/(TOKEN_REF | RULE_REF)/text()").Parse(), adapterDoc)
                             .OfType<AdapterText>().Select(at => at.Source.Data).ToList();
                     List<string> ss =
-                        evaluator.Evaluate(new XPathParser("/grammarSpec/rules/ruleSpec/parserRuleSpec[ruleBlock//TOKEN_REF/text()='EOF']/RULE_REF/text()").Parse(), adapterDoc)
+                        evaluator.Evaluate(new XPathParser("/grammarSpec/rules/ruleSpec/parserRuleSpec[ruleBlock//terminalDef/TOKEN_REF/text()='EOF']/RULE_REF/text()").Parse(), adapterDoc)
+                            .OfType<AdapterText>().Select(at => at.Source.Data).ToList();
+                    List<string> parser_rules =
+                        evaluator.Evaluate(new XPathParser("/grammarSpec/rules/ruleSpec/parserRuleSpec/RULE_REF/text()").Parse(), adapterDoc)
                             .OfType<AdapterText>().Select(at => at.Source.Data).ToList();
 
                     var is_parser_grammar = is_par.Count() != 0;
                     var is_lexer_grammar = is_lex.Count() != 0;
                     var is_combined = !is_parser_grammar && !is_lexer_grammar;
                     var grammar_name = name_.First();
-                    var start_symbol = ss.FirstOrDefault();
+                    if (!string.IsNullOrEmpty(test.start_rule) &&
+                        parser_rules.Count > 0 && !parser_rules.Contains(test.start_rule))
+                        throw new InvalidOperationException(
+                            $"Start rule '{test.start_rule}' was not found in grammar '{sgfn}'. " +
+                            "Available parser rules: " + string.Join(", ", parser_rules));
+                    if (ss.Count > 1 && string.IsNullOrEmpty(test.start_rule))
+                        throw new InvalidOperationException(
+                            $"Grammar '{sgfn}' has multiple EOF-terminated parser start rules: " +
+                            string.Join(", ", ss) + ". Use --start-rule to select one.");
+                    var start_symbol = !string.IsNullOrEmpty(test.start_rule)
+                        ? test.start_rule : ss.FirstOrDefault();
 
                     if (!(is_combined && !is_parser_grammar && !is_lexer_grammar
                           || !is_combined && is_parser_grammar && !is_lexer_grammar
@@ -569,7 +582,7 @@ namespace Trash
             }
         }
 
-        public static string version = "3.6.0";
+        public static string version = "3.7.0";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();

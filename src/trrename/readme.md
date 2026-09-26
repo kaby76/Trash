@@ -27,7 +27,7 @@ make sure to enclose the argument as it contains semi-colons.
 
 ## Current version
 
-Release 3.6.0.
+Release 3.7.0.
 
 ## License
 

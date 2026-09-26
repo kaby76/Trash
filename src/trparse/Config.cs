@@ -47,14 +47,14 @@ public class Config
         HelpText = "Write one performance line per input file to stderr.")]
     public bool PerFilePerformance { get; set; }
 
-    [Option('t', "type", Required = false, HelpText = "Override type of parse. Use 'gen' to force the local Generated-CSharp parser regardless of file extension. Other values: ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton.")]
+    [Option('t', "type", Required = false, HelpText = "Override type of parse. Use 'gen' to force the local Generated-CSharp parser regardless of file extension. Other values: G4Plus, ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton.")]
     public string Type { get; set; }
 
     [Option('v', "verbose", Required = false)]
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "3.6.0";
+    public string Version { get; set; } = "3.7.0";
 
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }
@@ -68,11 +68,19 @@ public class Config
     [Option("linterp", Required = false, HelpText = "Path to lexer .interp file for ATN-based parsing.")]
     public string LInterp { get; set; }
 
+    [Option("start-rule", Required = false,
+        HelpText = "Parser rule name to use as the start rule for interp parsing (overrides the .interp default).")]
+    public string StartRule { get; set; }
+
     [Option('L', "lib", Required = false, HelpText = "Directory to search for .interp files (resolves relative --pinterp / --linterp paths).")]
     public string Lib { get; set; }
 
     [Option("allstar", Required = false, HelpText = "Use ALL(*) parser instead of Earley when --pinterp / --linterp are specified.")]
     public bool AllStar { get; set; }
+
+    [Option("indirect-left-recursion", Required = false,
+        HelpText = "Allow indirect left recursion in ALL(*) interp grammars. Uses fixed-point rule evaluation and reconstructs the grammar-rule parse tree.")]
+    public bool IndirectLeftRecursion { get; set; }
 
     [Option("context-aware-lexing", Required = false,
         HelpText = "For ALL(*) interp parsing, prefer lexer tokens valid in the current parser context; fall back to normal ANTLR lexing when none match.")]

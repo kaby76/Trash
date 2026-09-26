@@ -1,6 +1,0 @@
-a: b, c.
-b: "b". {here is a comment
-{with a nested comment
-b: "c".
-}}
-c: .

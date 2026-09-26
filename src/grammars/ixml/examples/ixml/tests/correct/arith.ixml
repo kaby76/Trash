@@ -1,8 +1,0 @@
-expr: open, -arith, close.
-open: "(".
-close: ")".
-arith: left, -op, right.
-op: @plus.
-plus: "+".
-left: "a".
-right:"b".

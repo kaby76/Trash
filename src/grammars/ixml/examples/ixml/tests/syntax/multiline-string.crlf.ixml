@@ -1,5 +1,0 @@
-{ multi-line strings are not allowed.}
-S = "this
-     is not
-     an ixml grammar.".
-     
