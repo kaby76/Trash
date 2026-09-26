@@ -15,7 +15,7 @@ namespace trinterp;
 public class Command
 {
     public string Help() =>
-        "trinterp: Generate .interp and .tokens files from ANTLRv4, G4Plus, or basic REx grammar parse trees.\n" +
+        "trinterp: Generate .interp and .tokens files from ANTLRv4, G4Plus, basic REx, or basic iXML grammar parse trees.\n" +
         "Usage: dotnet trash parse grammar.g4 | dotnet trash interp [options]\n";
 
     public void Execute(Config config)
