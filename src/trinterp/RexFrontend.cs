@@ -162,6 +162,8 @@ public sealed class RexFrontend : IGrammarFrontend
         var hex = value[2..];
         if (!int.TryParse(hex, System.Globalization.NumberStyles.HexNumber, null, out int code) || code > 0x10ffff || code < 0)
             throw new InvalidOperationException($"Invalid REx character code '{value}'.");
+        if (code > 0xffff)
+            throw new NotSupportedException($"REx character code '{value}' is outside the BMP; the interpreter lexer consumes UTF-16 code units and does not support supplementary character codes.");
         return "\\u{" + hex + "}";
     }
 }

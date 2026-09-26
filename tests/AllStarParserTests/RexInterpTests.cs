@@ -102,6 +102,18 @@ public sealed class RexInterpTests
     }
 
     [Theory]
+    [InlineData("#x1F600")]
+    [InlineData("\\u1F600")]
+    [InlineData("[\\u1F600]")]
+    [InlineData("[\\uFFFF-\\u10000]")]
+    public void SupplementaryCodesFailDuringCompilation(string expression)
+    {
+        var error = Assert.Throws<NotSupportedException>(() => Model(
+            "Start ::= X End\n<?TOKENS?>\nX ::= " + expression + "\nEnd ::= $"));
+        Assert.Contains("outside the BMP", error.Message);
+    }
+
+    [Theory]
     [InlineData("Start ::= Missing", "Undefined")]
     [InlineData("Start ::= 'a' / 'b'", "operator")]
     [InlineData("Start ::= A\n<?TOKENS?>\nA ::= 'a' - 'b'", "operator")]

@@ -31,6 +31,8 @@ references, sequences, `|`, parentheses, `?`, `*`, `+`, either style of quoted
 literal, positive character classes/ranges, and hexadecimal character codes.
 For class escapes use `\u0041` or `\u0041-\u005A`; the existing built-in REx
 grammar does not recognize `#x` escapes inside classes. Standalone `#x41` works.
+Hexadecimal character codes and range endpoints above U+FFFF are rejected:
+the interpreter currently consumes UTF-16 code units, not Unicode scalar values.
 
 Whitespace in input must be specified explicitly in syntax. These examples
 intentionally use inputs without whitespace. REx whitespace directives, ordered

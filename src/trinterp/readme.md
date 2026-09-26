@@ -79,10 +79,12 @@ the grammar has no unique explicit EOF rule. See
 [`examples/rex-interp`](../../examples/rex-interp/README.md) for runnable examples
 and the supported subset. Whitespace must be explicit. Advanced REx lexer and
 disambiguation semantics are not implemented.
+Hexadecimal character codes and character-class range endpoints above U+FFFF
+are rejected because the interpreter lexer reads UTF-16 code units.
 
 ## Current version
 
-Release 3.7.0.
+Release 4.0.0.
 
 ## License
 
