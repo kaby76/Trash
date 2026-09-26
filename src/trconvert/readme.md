@@ -93,7 +93,7 @@ _Output_
 
 ## Current version
 
-Release 3.7.0.
+Release 4.0.0.
 
 ## License
 

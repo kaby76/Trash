@@ -29,6 +29,14 @@ left if their union is to be excluded. This is currently grammar syntax only:
 the generated G4Plus parser records the clause, but ANTLR4 and Trash's
 interpreter do not yet enforce set-difference matching semantics.
 
+## Table generation
+
+`dotnet trash parse Lexer.g4p Parser.g4p | dotnet trash interp -o interp`
+compiles supported G4Plus syntax into lexer/parser tables. See
+[`examples/g4plus-interp`](../../../examples/g4plus-interp/README.md) for a runnable
+example. Exclusions, imports, and scannerless parser character sets currently
+produce compilation errors; they are never silently discarded.
+
 ## License
 [BSD](https://opensource.org/license/bsd-3-clause)
 

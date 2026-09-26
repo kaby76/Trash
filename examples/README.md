@@ -8,6 +8,9 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`context-aware-lexing/`](context-aware-lexing/) | Parse a Decaf array declaration whose overlapping integer tokens require parser-directed lexical selection |
 | [`first/`](first/) | Compute nullable parser rules and grammar-theoretic FIRST sets with an XQuery4 fixed-point analysis |
 | [`g4plus-exclusion/`](g4plus-exclusion/) | Parse JLS-style identifier rules using G4Plus's set-difference syntax (syntax only) |
+| [`g4plus-interp/`](g4plus-interp/) | Generate tables from case-neutral G4Plus lexer/parser grammars and verify a left-recursive expression tree with AllStar |
+| [`rex-interp/`](rex-interp/) | Generate tables from basic REx arithmetic and list grammars, verify parse trees, and check rejection of invalid input |
+| [`ixml-interp/`](ixml-interp/) | Compile basic scannerless iXML directly to interpreter tables, with arithmetic and separated-list tree checks |
 | [`ixml-to-antlr4/`](ixml-to-antlr4/) | Convert an iXML grammar to Antlr4 syntax using a five-pass XQuery Update pipeline (structural syntax, encoded characters, character sets, inline-set extraction, separator quantifiers) |
 | [`java-antlr/`](java-antlr/) | Generate a Java-target Antlr4 parser for the Java grammar, build, and run |
 | [`lark-to-antlr4/`](lark-to-antlr4/) | Convert a Lark grammar to Antlr4 syntax using a multi-pass XQuery Update pipeline |

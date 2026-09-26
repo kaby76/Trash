@@ -1,0 +1,6 @@
+lexer grammar ArithmeticLexer;
+
+fragment digit : [0-9];
+number : digit+;
+plus : '+';
+space : [ \t\r\n]+ -> skip;

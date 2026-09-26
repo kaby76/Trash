@@ -58,6 +58,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/trparse/trparse.csproj" />
+    <ProjectReference Include="../../src/trinterp/trinterp.csproj" />
   </ItemGroup>
 
   <!-- Copy ABNF interp files and example inputs to the test output directory. -->
