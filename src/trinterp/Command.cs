@@ -5,8 +5,6 @@ using System.Linq;
 using System.Text.Json;
 using AntlrJson;
 using ParseTreeEditing.UnvParseTreeDOM;
-using XQuery.Engine;
-using XPathParser = XQuery.Parser.XPathParser;
 
 namespace trinterp;
 
@@ -17,7 +15,7 @@ namespace trinterp;
 public class Command
 {
     public string Help() =>
-        "trinterp: Generate .interp and .tokens files from an ANTLRv4 grammar parse tree.\n" +
+        "trinterp: Generate .interp and .tokens files from ANTLRv4 or G4Plus grammar parse trees.\n" +
         "Usage: dotnet trash parse grammar.g4 | dotnet trash interp [options]\n";
 
     public void Execute(Config config)
@@ -48,8 +46,7 @@ public class Command
             try { model = new GrammarParser().Parse(root, fileName); }
             catch (Exception ex)
             {
-                Console.Error.WriteLine($"[trinterp] Failed to parse grammar model for {fileName}: {ex.Message}");
-                continue;
+                throw new InvalidOperationException($"[trinterp] Failed to parse grammar model for {fileName}: {ex.Message}", ex);
             }
             models.Add(model);
             if (model.ImplicitLexer != null) models.Add(model.ImplicitLexer);
@@ -64,7 +61,7 @@ public class Command
                 }
                 else
                 {
-                    var eofRules = FindEofTerminatedRules(root);
+                    var eofRules = FindEofTerminatedRules(model);
                     if (eofRules.Count == 0)
                         throw new Exception(
                             $"[trinterp] No EOF-terminated parser rule found in {model.Name}. " +
@@ -83,45 +80,10 @@ public class Command
             }
         }
 
-        // Collect the string-literal vocabulary from every lexer model in this batch.
-        // When a parser grammar is paired with a separate lexer grammar (e.g. CParser +
-        // CLexer), the parser has no StringLiteralToType of its own; merging the lexer's
-        // vocabulary lets TokenLabel show 'while' instead of While.
-        var batchLiterals = new Dictionary<string, int>();
-        foreach (var m in models)
-            if (m.IsLexer)
-                foreach (var kv in m.StringLiteralToType)
-                    if (!batchLiterals.ContainsKey(kv.Key))
-                        batchLiterals[kv.Key] = kv.Value;
-
-        // Collect the token name→type vocabulary from every lexer model in this batch.
-        var batchTokenNames = new Dictionary<string, int>();
-        foreach (var m in models)
-            if (m.IsLexer)
-                foreach (var kv in m.TokenNameToType)
-                    if (!batchTokenNames.ContainsKey(kv.Key) || batchTokenNames[kv.Key] == 0)
-                        batchTokenNames[kv.Key] = kv.Value;
-
-        // Pass 2: apply shared vocabulary to parser models then emit.
+        // Bind and validate the entire batch before writing any tables.
+        GrammarBinding.Bind(models);
         foreach (var model in models)
         {
-            if (!model.IsLexer)
-            {
-                // Merge string literal vocabulary (for display labels).
-                if (batchLiterals.Count > 0)
-                    foreach (var kv in batchLiterals)
-                        if (!model.StringLiteralToType.ContainsKey(kv.Key))
-                            model.StringLiteralToType[kv.Key] = kv.Value;
-
-                // Merge token name→type so ResolveTokenType returns correct types
-                // (parser grammar uses 0 as placeholder until lexer vocab is available).
-                if (batchTokenNames.Count > 0)
-                    foreach (var kv in batchTokenNames)
-                        if (!model.TokenNameToType.ContainsKey(kv.Key) ||
-                            model.TokenNameToType[kv.Key] == 0)
-                            model.TokenNameToType[kv.Key] = kv.Value;
-            }
-
             int? startRuleIdx = startRuleIndices.TryGetValue(model, out var sri) ? sri : (int?)null;
             EmitGrammar(model, config, outDir, optimize, startRuleIdx);
         }
@@ -141,8 +103,7 @@ public class Command
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"[trinterp] ATN construction failed for {grammar.Name}: {ex.Message}");
-            return;
+            throw new InvalidOperationException($"[trinterp] ATN construction failed for {grammar.Name}: {ex.Message}", ex);
         }
 
         // ---- Build location map (needed for --state-map, --atn, --atn-combined) ----
@@ -160,8 +121,7 @@ public class Command
         }
         catch (Exception ex)
         {
-            Console.Error.WriteLine($"[trinterp] Formatting failed for {grammar.Name}: {ex.Message}");
-            return;
+            throw new InvalidOperationException($"[trinterp] Formatting failed for {grammar.Name}: {ex.Message}", ex);
         }
 
         if (config.StateMap)
@@ -200,31 +160,15 @@ public class Command
     }
 
     /// <summary>
-    /// Uses the XPath4 engine to find parser rules whose body explicitly references EOF.
+    /// Finds parser rules whose compiled body explicitly references EOF.
     /// An "EOF-terminated" rule is one that contains at least one terminalDef whose
     /// TOKEN_REF child has the text "EOF".  Returns the list of matching rule names.
     /// </summary>
-    private static List<string> FindEofTerminatedRules(UnvParseTreeElement root)
+    public static List<string> FindEofTerminatedRules(GrammarModel model)
     {
-        var adapterDoc = AdapterDocument.Build(new UnvParseTreeNode[] { root });
-        // Find parserRuleSpec nodes that contain a terminalDef/TOKEN_REF whose
-        // normalised text is "EOF".
-        const string xpathExpr =
-            "//parserRuleSpec[.//terminalDef/TOKEN_REF[normalize-space(.) = 'EOF']]";
-        var exprNode = new XPathParser(xpathExpr).Parse();
-        var evaluator = new XPathEvaluator();
-        var results = evaluator.Evaluate(exprNode, adapterDoc);
-
-        var names = new List<string>();
-        foreach (var item in results)
-        {
-            if (item is AdapterElement ae)
-            {
-                var ruleRef = GrammarParser.ChildTerminal(ae.Source, "RULE_REF");
-                if (ruleRef != null)
-                    names.Add(GrammarParser.GetText(ruleRef).Trim());
-            }
-        }
-        return names;
+        return model.Rules.Where(r => !r.IsLexerRule && r.BodyNode != null &&
+            r.BodyNode.DescendantsAndSelf().Any(n => n.LocalName == "terminalDef" &&
+                GrammarParser.GetText(GrammarParser.ChildTerminal(n, "TOKEN_REF")).Trim() == "EOF"))
+            .Select(r => r.Name).ToList();
     }
 }

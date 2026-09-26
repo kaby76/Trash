@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ParseTreeEditing.UnvParseTreeDOM;
 using static trinterp.GrammarParser;
 
 namespace trinterp;
@@ -126,12 +125,12 @@ public class ParserAtnFactory
     /// <summary>
     /// Returns the top-level element nodes for a labeledAlt or alternative node.
     /// </summary>
-    private static List<UnvParseTreeElement> GetAltElementNodes(UnvParseTreeElement altOrLabeled)
+    private static List<GrammarNode> GetAltElementNodes(GrammarNode altOrLabeled)
     {
         var altNode = altOrLabeled.LocalName == "labeledAlt"
             ? Child(altOrLabeled, "alternative")
             : altOrLabeled;
-        if (altNode == null) return new List<UnvParseTreeElement>();
+        if (altNode == null) return new List<GrammarNode>();
         return Children(altNode)
             .Where(c => !IsTerminal(c) && c.LocalName == "element")
             .ToList();
@@ -141,7 +140,7 @@ public class ParserAtnFactory
     /// True if element is a direct (possibly labeled) atom ruleref to ruleName,
     /// without any ebnfSuffix on the element.
     /// </summary>
-    private static bool IsDirectSelfRef(UnvParseTreeElement element, string ruleName)
+    private static bool IsDirectSelfRef(GrammarNode element, string ruleName)
     {
         // Reject ebnfSuffix (name*, name+, name?)
         if (Children(element).Any(c => !IsTerminal(c) && c.LocalName == "ebnfSuffix"))
@@ -165,7 +164,7 @@ public class ParserAtnFactory
     /// True if the last non-epsilon top-level element (excluding the first element)
     /// is also a direct self-reference — the ANTLR4 "binary" pattern.
     /// </summary>
-    private static bool IsBinaryAlt(List<UnvParseTreeElement> allElements, string ruleName)
+    private static bool IsBinaryAlt(List<GrammarNode> allElements, string ruleName)
     {
         for (int i = allElements.Count - 1; i >= 1; i--)
         {
@@ -179,7 +178,7 @@ public class ParserAtnFactory
     /// True if the last non-epsilon element of a primary (non-LR) alt is a direct self-ref.
     /// E.g. `'!' expression` → true; `'{' zelist '}'` → false.
     /// </summary>
-    private static bool PrimaryAltEndsWithSelfRef(List<UnvParseTreeElement> elements, string ruleName)
+    private static bool PrimaryAltEndsWithSelfRef(List<GrammarNode> elements, string ruleName)
     {
         for (int i = elements.Count - 1; i >= 0; i--)
         {
@@ -195,7 +194,7 @@ public class ParserAtnFactory
     /// the rightmost self-ref uses WalkSelfRefWithPrec(trailingPrec).
     /// </summary>
     private AtnHandle WalkPrimaryAltTrailingSelfRef(
-        List<UnvParseTreeElement> elements, string ruleName, int trailingPrec)
+        List<GrammarNode> elements, string ruleName, int trailingPrec)
     {
         int rightmostIdx = -1;
         for (int i = elements.Count - 1; i >= 0; i--)
@@ -217,11 +216,11 @@ public class ParserAtnFactory
     }
 
     /// <summary>Element is epsilon-like (action or sempred).</summary>
-    private static bool IsEpsilonElement(UnvParseTreeElement element)
+    private static bool IsEpsilonElement(GrammarNode element)
         => Child(element, "actionBlock") != null;
 
     /// <summary>True if the alt carries assoc=right in its elementOptions.</summary>
-    private static bool IsAltRightAssoc(UnvParseTreeElement altOrLabeled)
+    private static bool IsAltRightAssoc(GrammarNode altOrLabeled)
     {
         var altNode = altOrLabeled.LocalName == "labeledAlt"
             ? Child(altOrLabeled, "alternative")
@@ -258,7 +257,7 @@ public class ParserAtnFactory
         if (altList == null) return;
 
         // Collect outer alts with their 1-based original indices.
-        var allAlts = new List<(UnvParseTreeElement node, int origIndex)>();
+        var allAlts = new List<(GrammarNode node, int origIndex)>();
         int idx = 1;
         foreach (var child in Children(altList))
         {
@@ -269,8 +268,8 @@ public class ParserAtnFactory
         int numAlts = allAlts.Count;
 
         // Classify: primary (non-LR) vs operator (LR).
-        var primaryAlts  = new List<(UnvParseTreeElement node, int origIndex)>();
-        var operatorAlts = new List<(UnvParseTreeElement node, int origIndex)>();
+        var primaryAlts  = new List<(GrammarNode node, int origIndex)>();
+        var operatorAlts = new List<(GrammarNode node, int origIndex)>();
         foreach (var alt in allAlts)
         {
             var elems = GetAltElementNodes(alt.node);
@@ -387,7 +386,7 @@ public class ParserAtnFactory
     /// all other rule refs to the same rule get precedence 0 (via normal MakeRuleRef).
     /// </summary>
     private AtnHandle WalkLrOperatorBody(
-        List<UnvParseTreeElement> elements, string ruleName, bool isBinary, int nextPrec)
+        List<GrammarNode> elements, string ruleName, bool isBinary, int nextPrec)
     {
         if (elements.Count == 0) return null;
 
@@ -420,7 +419,7 @@ public class ParserAtnFactory
     /// Builds a RuleTransition to the self-ref rule with the given precedence,
     /// bypassing the default prec=0 in MakeRuleRef.
     /// </summary>
-    private AtnHandle WalkSelfRefWithPrec(UnvParseTreeElement element, int prec)
+    private AtnHandle WalkSelfRefWithPrec(GrammarNode element, int prec)
     {
         var labeled    = Child(element, "labeledElement");
         var atom       = labeled != null ? Child(labeled, "atom") : Child(element, "atom");
@@ -451,7 +450,7 @@ public class ParserAtnFactory
     // Body walking (ruleBlock / ruleAltList / labeledAlt / alternative / element)
     // =========================================================================
 
-    protected virtual AtnHandle WalkRuleBody(UnvParseTreeElement bodyNode)
+    protected virtual AtnHandle WalkRuleBody(GrammarNode bodyNode)
     {
         // bodyNode is "ruleBlock" which contains "ruleAltList"
         var altList = Child(bodyNode, "ruleAltList");
@@ -461,7 +460,7 @@ public class ParserAtnFactory
         return WalkAltList(altList);
     }
 
-    protected AtnHandle WalkAltList(UnvParseTreeElement altListNode)
+    protected AtnHandle WalkAltList(GrammarNode altListNode)
     {
         // ruleAltList : labeledAlt (OR labeledAlt)*
         // altList     : alternative (OR alternative)*
@@ -483,14 +482,14 @@ public class ParserAtnFactory
         return MakeBlock(altListNode, alts, null);
     }
 
-    private AtnHandle WalkLabeledAlt(UnvParseTreeElement labeledAlt)
+    private AtnHandle WalkLabeledAlt(GrammarNode labeledAlt)
     {
         // labeledAlt : alternative (POUND identifier)?
         var alt = Child(labeledAlt, "alternative");
         return alt != null ? WalkAlternative(alt) : MakeEpsilonHandle();
     }
 
-    protected AtnHandle WalkAlternative(UnvParseTreeElement altNode)
+    protected AtnHandle WalkAlternative(GrammarNode altNode)
     {
         // alternative : elementOptions? element+  |  (empty)
         SetSrc(altNode);
@@ -508,7 +507,7 @@ public class ParserAtnFactory
         return ElemList(elements);
     }
 
-    protected virtual AtnHandle WalkElement(UnvParseTreeElement element)
+    protected virtual AtnHandle WalkElement(GrammarNode element)
     {
         // element : labeledElement (ebnfSuffix |)
         //         | atom (ebnfSuffix |)
@@ -529,9 +528,9 @@ public class ParserAtnFactory
 
         // labeled element wraps an atom or block
         var labeledElement = Child(element, "labeledElement");
-        UnvParseTreeElement atomOrBlock = labeledElement != null
-            ? (Child(labeledElement, "atom") ?? (UnvParseTreeElement)Child(labeledElement, "block"))
-            : (Child(element, "atom") ?? (UnvParseTreeElement)Child(element, "block"));
+        GrammarNode atomOrBlock = labeledElement != null
+            ? (Child(labeledElement, "atom") ?? (GrammarNode)Child(labeledElement, "block"))
+            : (Child(element, "atom") ?? (GrammarNode)Child(element, "block"));
 
         // atom or block
         AtnHandle h = null;
@@ -581,7 +580,7 @@ public class ParserAtnFactory
         return new AtnHandle(start, end);
     }
 
-    private AtnHandle WalkEbnf(UnvParseTreeElement ebnf)
+    private AtnHandle WalkEbnf(GrammarNode ebnf)
     {
         // ebnf : block blockSuffix?
         var block = Child(ebnf, "block");
@@ -591,7 +590,7 @@ public class ParserAtnFactory
         return WalkBlock(block, ebnfSuffix);
     }
 
-    protected AtnHandle WalkBlock(UnvParseTreeElement blockNode, UnvParseTreeElement ebnfSuffix)
+    protected AtnHandle WalkBlock(GrammarNode blockNode, GrammarNode ebnfSuffix)
     {
         // block : LPAREN (optionsSpec? ruleAction* COLON)? altList RPAREN
         SetSrc(blockNode);
@@ -613,7 +612,7 @@ public class ParserAtnFactory
         return MakeBlock(blockNode, alts, ebnfSuffix);
     }
 
-    protected virtual AtnHandle WalkAtom(UnvParseTreeElement atom)
+    protected virtual AtnHandle WalkAtom(GrammarNode atom)
     {
         // atom : terminalDef | ruleref | notSet | wildcard
         var terminal = Child(atom, "terminalDef");
@@ -631,7 +630,7 @@ public class ParserAtnFactory
         return MakeEpsilonHandle();
     }
 
-    protected AtnHandle WalkTerminalDef(UnvParseTreeElement terminalDef, UnvParseTreeElement ctx)
+    protected AtnHandle WalkTerminalDef(GrammarNode terminalDef, GrammarNode ctx)
     {
         // terminalDef : TOKEN_REF elementOptions? | STRING_LITERAL elementOptions?
         var tokenRef = ChildTerminal(terminalDef, "TOKEN_REF");
@@ -651,7 +650,7 @@ public class ParserAtnFactory
         return MakeEpsilonHandle();
     }
 
-    protected AtnHandle WalkRuleRef(UnvParseTreeElement ruleref)
+    protected AtnHandle WalkRuleRef(GrammarNode ruleref)
     {
         // ruleref : RULE_REF argActionBlock? elementOptions?
         var nameNode = ChildTerminal(ruleref, "RULE_REF");
@@ -661,7 +660,7 @@ public class ParserAtnFactory
         return MakeRuleRef(name);
     }
 
-    protected AtnHandle WalkNotSet(UnvParseTreeElement notSet)
+    protected AtnHandle WalkNotSet(GrammarNode notSet)
     {
         // notSet : NOT setElement | NOT blockSet
         var setElement = Child(notSet, "setElement");
@@ -676,7 +675,7 @@ public class ParserAtnFactory
         return MakeNotSet(set);
     }
 
-    private void AddSetElement(IntervalSet set, UnvParseTreeElement se)
+    private void AddSetElement(IntervalSet set, GrammarNode se)
     {
         var tokenRef = ChildTerminal(se, "TOKEN_REF");
         if (tokenRef != null)
@@ -709,7 +708,7 @@ public class ParserAtnFactory
     // Block construction (from alternatives)
     // =========================================================================
 
-    protected AtnHandle MakeBlock(UnvParseTreeElement blkCtx, List<AtnHandle> alts, UnvParseTreeElement ebnfSuffix)
+    protected AtnHandle MakeBlock(GrammarNode blkCtx, List<AtnHandle> alts, GrammarNode ebnfSuffix)
     {
         if (alts.Count == 0) return MakeEpsilonHandle();
 
@@ -828,7 +827,7 @@ public class ParserAtnFactory
         return new AtnHandle(setLeft, setRight);
     }
 
-    protected AtnHandle ApplySuffix(UnvParseTreeElement ctx, UnvParseTreeElement suffix, AtnHandle blk)
+    protected AtnHandle ApplySuffix(GrammarNode ctx, GrammarNode suffix, AtnHandle blk)
     {
         var suffixText = GetText(suffix).Trim();
         if (suffixText.StartsWith("?")) return MakeOptional(suffix, blk, IsNonGreedy(suffixText));
@@ -855,7 +854,7 @@ public class ParserAtnFactory
         return new AtnHandle(start, end);
     }
 
-    protected AtnHandle MakeOptional(UnvParseTreeElement ctx, AtnHandle blk, bool nonGreedy)
+    protected AtnHandle MakeOptional(GrammarNode ctx, AtnHandle blk, bool nonGreedy)
     {
         var blkStart = (BlockStartState)blk.Left;
         if (nonGreedy) blkStart.nonGreedy = true;
@@ -864,7 +863,7 @@ public class ParserAtnFactory
         return blk;
     }
 
-    protected AtnHandle MakeStar(UnvParseTreeElement ctx, AtnHandle blk, bool nonGreedy)
+    protected AtnHandle MakeStar(GrammarNode ctx, AtnHandle blk, bool nonGreedy)
     {
         var blkStart = (StarBlockStartState)blk.Left;
         var blkEnd = (BlockEndState)blk.Right;
@@ -893,7 +892,7 @@ public class ParserAtnFactory
         return new AtnHandle(entry, end);
     }
 
-    protected AtnHandle MakePlus(UnvParseTreeElement ctx, AtnHandle blk, bool nonGreedy)
+    protected AtnHandle MakePlus(GrammarNode ctx, AtnHandle blk, bool nonGreedy)
     {
         var blkStart = (PlusBlockStartState)blk.Left;
         var blkEnd = (BlockEndState)blk.Right;
@@ -987,7 +986,7 @@ public class ParserAtnFactory
         return new AtnHandle(left, right);
     }
 
-    protected AtnHandle MakeAction(UnvParseTreeElement actionBlock)
+    protected AtnHandle MakeAction(GrammarNode actionBlock)
     {
         var text = GetText(actionBlock).Trim();
         // Strip outer braces for the text we store.
@@ -1008,7 +1007,7 @@ public class ParserAtnFactory
         return new AtnHandle(left, right);
     }
 
-    protected AtnHandle MakeSemPred(UnvParseTreeElement element, UnvParseTreeElement actionBlock)
+    protected AtnHandle MakeSemPred(GrammarNode element, GrammarNode actionBlock)
     {
         var text = GetText(actionBlock).Trim();
         // Strip braces: {expr}? → expr
@@ -1172,7 +1171,7 @@ public class ParserAtnFactory
     /// Walks into the first reachable terminal if <paramref name="node"/> is a non-terminal.
     /// Clears any previously set end location.
     /// </summary>
-    protected void SetSrc(UnvParseTreeElement node)
+    protected void SetSrc(GrammarNode node)
     {
         var (line, col) = SourceOf(node);
         _srcLine    = line;
@@ -1183,11 +1182,11 @@ public class ParserAtnFactory
 
     /// <summary>
     /// Set both start and exclusive-end source location from a terminal token node.
-    /// Call this instead of <see cref="SetSrc(UnvParseTreeElement)"/> when creating "match" states
+    /// Call this instead of <see cref="SetSrc(GrammarNode)"/> when creating "match" states
     /// so that <see cref="StateLocationMap"/> can compute post-transition locations for the
     /// successor state via <c>DirectPostLocs</c>.
     /// </summary>
-    protected void SetSrcRange(UnvParseTreeElement terminal, int textLength)
+    protected void SetSrcRange(GrammarNode terminal, int textLength)
     {
         var line    = SafeGetLine(terminal);
         var col     = SafeGetColumn(terminal);
@@ -1214,7 +1213,7 @@ public class ParserAtnFactory
     /// from the end of <paramref name="endTerminal"/> (its column + <paramref name="endTextLength"/>).
     /// Use for multi-token grammar elements like character ranges (<c>'a'..'z'</c>).
     /// </summary>
-    protected void SetSrcRange(UnvParseTreeElement startTerminal, UnvParseTreeElement endTerminal, int endTextLength)
+    protected void SetSrcRange(GrammarNode startTerminal, GrammarNode endTerminal, int endTextLength)
     {
         var startLine = SafeGetLine(startTerminal);
         var startCol  = SafeGetColumn(startTerminal);

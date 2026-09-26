@@ -1,5 +1,4 @@
 using System.Collections.Generic;
-using ParseTreeEditing.UnvParseTreeDOM;
 
 namespace trinterp;
 
@@ -8,12 +7,13 @@ public enum GrammarKind { Lexer, Parser, Combined }
 /// <summary>Describes one rule in the grammar.</summary>
 public class RuleModel
 {
+    public bool IsLexerRule;
     public string Name;
     public int Index;           // 0-based position among all rules
-    public bool IsFragment;     // lexer fragment rules
+    public bool IsFragment;     // fragment modifier (parser restrictions are separate)
     public int TokenType;       // lexer only: the token type for this rule
     public string ModeName;     // lexer only: which mode the rule lives in
-    public UnvParseTreeElement BodyNode; // parse tree node of the rule body
+    public GrammarNode BodyNode; // owned compiler representation of the rule body
     public string ImplicitLiteral; // for T__N rules created from string literals in combined grammars
     /// <summary>1-based line of the rule name token in the .g4 source, or -1 if unavailable.</summary>
     public int SourceLine = -1;
@@ -69,6 +69,7 @@ public class LexerActionInfo
 /// </summary>
 public class GrammarModel
 {
+    public bool IsG4Plus;
     public string Name;
     public GrammarKind Kind;
     public string FileName;

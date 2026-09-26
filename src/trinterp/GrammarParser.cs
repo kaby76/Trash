@@ -6,19 +6,29 @@ using ParseTreeEditing.UnvParseTreeDOM;
 namespace trinterp;
 
 /// <summary>
-/// Builds a <see cref="GrammarModel"/> by walking an ANTLRv4 parse tree produced
-/// by trparse (using the ANTLRv4Lexer/ANTLRv4Parser grammars at
-/// Trash/src/grammars/antlr4).
+/// Builds a <see cref="GrammarModel"/> from compiler syntax lowered by a grammar front end.
 /// </summary>
 public class GrammarParser
 {
+    public GrammarModel Parse(UnvParseTreeElement root, string fileName)
+    {
+        var syntax = GrammarNode.FromDom(root);
+        bool g4plus = GrammarFrontends.IsG4Plus(syntax, fileName);
+        IGrammarFrontend frontend = g4plus ? new G4PlusFrontend() : new Antlr4Frontend();
+        syntax = frontend.Lower(syntax);
+        var model = Parse(syntax, fileName, g4plus);
+        model.IsG4Plus = g4plus;
+        if (model.ImplicitLexer != null) model.ImplicitLexer.IsG4Plus = g4plus;
+        return model;
+    }
     // Pre-defined token types that appear in every grammar.
     private const int TokenEOF = -1;
     private const int TokenMinUser = 1; // first assignable type
 
-    public GrammarModel Parse(UnvParseTreeElement root, string fileName)
+    public GrammarModel Parse(GrammarNode root, string fileName, bool g4plus = false)
     {
-        // root.LocalName == "grammarSpec"
+        if (root.LocalName != "grammarSpec")
+            throw new InvalidOperationException("Expected an ANTLRv4 or G4Plus grammar tree.");
         var model = new GrammarModel { FileName = fileName };
 
         // --- grammar declaration ---
@@ -31,6 +41,11 @@ public class GrammarParser
         // --- prequel constructs (options, channels, tokens, actions) ---
         foreach (var pre in Children(root, "prequelConstruct"))
             ProcessPrequel(model, pre);
+
+        // A G4Plus combined grammar has only parser rules. With an explicit
+        // vocabulary it uses that lexer; otherwise synthesize literal tokens.
+        if (g4plus && model.Kind == GrammarKind.Combined && model.TokenVocab != null)
+            model.Kind = GrammarKind.Parser;
 
         // --- rules ---
         var rulesNode = Child(root, "rules");
@@ -65,7 +80,7 @@ public class GrammarParser
     // Prequel constructs
     // -------------------------------------------------------------------------
 
-    private void ProcessPrequel(GrammarModel model, UnvParseTreeElement pre)
+    private void ProcessPrequel(GrammarModel model, GrammarNode pre)
     {
         var optionsSpec = Child(pre, "optionsSpec");
         if (optionsSpec != null) { ProcessOptions(model, optionsSpec); return; }
@@ -80,7 +95,7 @@ public class GrammarParser
         if (action != null) { ProcessNamedAction(model, action); return; }
     }
 
-    private void ProcessOptions(GrammarModel model, UnvParseTreeElement optionsSpec)
+    private void ProcessOptions(GrammarModel model, GrammarNode optionsSpec)
     {
         foreach (var option in Children(optionsSpec, "option"))
         {
@@ -97,7 +112,7 @@ public class GrammarParser
         }
     }
 
-    private void ProcessChannels(GrammarModel model, UnvParseTreeElement channelsSpec)
+    private void ProcessChannels(GrammarModel model, GrammarNode channelsSpec)
     {
         var idList = Child(channelsSpec, "idList");
         if (idList == null) return;
@@ -105,7 +120,7 @@ public class GrammarParser
             model.ExtraChannelNames.Add(GetText(id).Trim());
     }
 
-    private void ProcessTokensSpec(GrammarModel model, UnvParseTreeElement tokensSpec)
+    private void ProcessTokensSpec(GrammarModel model, GrammarNode tokensSpec)
     {
         var idList = Child(tokensSpec, "idList");
         if (idList == null) return;
@@ -117,7 +132,7 @@ public class GrammarParser
         }
     }
 
-    private void ProcessNamedAction(GrammarModel model, UnvParseTreeElement action)
+    private void ProcessNamedAction(GrammarModel model, GrammarNode action)
     {
         // action_ : AT (actionScopeName COLONCOLON)? identifier actionBlock
         string scope = null;
@@ -146,7 +161,7 @@ public class GrammarParser
         }
     }
 
-    private void ProcessModeSpec(GrammarModel model, UnvParseTreeElement modeSpec)
+    private void ProcessModeSpec(GrammarModel model, GrammarNode modeSpec)
     {
         // modeSpec : MODE identifier SEMI lexerRuleSpec*
         var idNode = Child(modeSpec, "identifier");
@@ -162,7 +177,7 @@ public class GrammarParser
     // Rule collection
     // -------------------------------------------------------------------------
 
-    private void AddParserRule(GrammarModel model, UnvParseTreeElement parserRuleSpec, string modeName)
+    private void AddParserRule(GrammarModel model, GrammarNode parserRuleSpec, string modeName)
     {
         // parserRuleSpec : ruleModifiers? RULE_REF ... COLON ruleBlock SEMI ...
         var nameNode = ChildTerminal(parserRuleSpec, "RULE_REF");
@@ -174,7 +189,7 @@ public class GrammarParser
         {
             Name = name,
             Index = model.Rules.Count,
-            IsFragment = false,
+            IsFragment = parserRuleSpec.DescendantsAndSelf().Any(n => n.LocalName == "FRAGMENT"),
             TokenType = 0,
             ModeName = modeName,
             BodyNode = ruleBlock,
@@ -202,7 +217,7 @@ public class GrammarParser
         model.Rules.Add(rule);
     }
 
-    private void AddLexerRule(GrammarModel model, UnvParseTreeElement lexerRuleSpec, string modeName)
+    private void AddLexerRule(GrammarModel model, GrammarNode lexerRuleSpec, string modeName)
     {
         // lexerRuleSpec : FRAGMENT? TOKEN_REF optionsSpec? COLON lexerRuleBlock SEMI
         bool isFragment = Children(lexerRuleSpec).Any(c => IsTerminal(c) && GetText(c).Trim() == "fragment");
@@ -230,6 +245,7 @@ public class GrammarParser
         {
             Name = name,
             Index = model.Rules.Count,
+            IsLexerRule = true,
             IsFragment = isFragment,
             TokenType = 0, // assigned later
             ModeName = modeName ?? "DEFAULT_MODE",
@@ -277,7 +293,7 @@ public class GrammarParser
                 var namedBodyLiterals = new System.Collections.Generic.HashSet<string>();
                 foreach (var rule in model.Rules)
                 {
-                    if (rule.IsFragment || !IsUpperFirst(rule.Name) || rule.BodyNode == null) continue;
+                    if (rule.IsFragment || !rule.IsLexerRule || rule.BodyNode == null) continue;
                     if (rule.HasRuleOptions) continue;
                     var l2 = new System.Collections.Generic.List<string>();
                     var s2 = new System.Collections.Generic.HashSet<string>();
@@ -288,7 +304,7 @@ public class GrammarParser
                 // Assign T__ types to unnamed parser-rule literals (in appearance order).
                 var seenLits = new System.Collections.Generic.HashSet<string>();
                 var orderedLits = new System.Collections.Generic.List<string>();
-                foreach (var rule in model.Rules.Where(r => !IsUpperFirst(r.Name)))
+                foreach (var rule in model.Rules.Where(r => !r.IsLexerRule))
                     CollectStringLiterals(rule.BodyNode, seenLits, orderedLits);
                 foreach (var lit in orderedLits)
                     if (!namedBodyLiterals.Contains(lit) && !model.StringLiteralToType.ContainsKey(lit))
@@ -299,7 +315,7 @@ public class GrammarParser
             // matching ANTLR4's numbering where T__N types are lower than named rule types).
             foreach (var rule in model.Rules)
             {
-                if (!rule.IsFragment && IsUpperFirst(rule.Name))
+                if (!rule.IsFragment && rule.IsLexerRule)
                 {
                     if (!model.TokenNameToType.ContainsKey(rule.Name))
                         model.TokenNameToType[rule.Name] = nextType++;
@@ -344,8 +360,8 @@ public class GrammarParser
     private void SplitCombined(GrammarModel model)
     {
         // Separate lexer rules (TOKEN_REF) from parser rules (RULE_REF).
-        var lexerRules = model.Rules.Where(r => IsUpperFirst(r.Name)).ToList();
-        var parserRules = model.Rules.Where(r => !IsUpperFirst(r.Name)).ToList();
+        var lexerRules = model.Rules.Where(r => r.IsLexerRule).ToList();
+        var parserRules = model.Rules.Where(r => !r.IsLexerRule).ToList();
 
         // Re-index parser rules.
         for (int i = 0; i < parserRules.Count; i++) parserRules[i].Index = i;
@@ -392,6 +408,7 @@ public class GrammarParser
             tImplicit.Add(new RuleModel
             {
                 Name = name,
+                IsLexerRule = true,
                 IsFragment = false,
                 TokenType = kv.Value,
                 ModeName = "DEFAULT_MODE",
@@ -431,7 +448,7 @@ public class GrammarParser
     // Parse-tree helpers
     // -------------------------------------------------------------------------
 
-    private static GrammarKind ParseKind(UnvParseTreeElement grammarType)
+    private static GrammarKind ParseKind(GrammarNode grammarType)
     {
         // Look at terminal children by token-type name to avoid including
         // hidden-channel tokens (block comments) that appear before the
@@ -452,7 +469,7 @@ public class GrammarParser
     ///       HexLiteral : '0' [xX] ... ;  → false (multiple atoms)
     /// This matches ANTLR4's criterion for assigning a literal alias to a token.
     /// </summary>
-    private static bool IsExactlySingleLiteralBody(UnvParseTreeElement bodyNode)
+    private static bool IsExactlySingleLiteralBody(GrammarNode bodyNode)
     {
         if (bodyNode == null) return false;
 
@@ -496,7 +513,7 @@ public class GrammarParser
         return ChildTerminal(pTerminalDef, "STRING_LITERAL") != null;
     }
 
-    private static void CollectStringLiterals(UnvParseTreeElement node, System.Collections.Generic.HashSet<string> seen, System.Collections.Generic.List<string> ordered)
+    private static void CollectStringLiterals(GrammarNode node, System.Collections.Generic.HashSet<string> seen, System.Collections.Generic.List<string> ordered)
     {
         if (node == null) return;
         foreach (var child in Children(node))
@@ -519,7 +536,7 @@ public class GrammarParser
     /// happen to have only one unique literal but use it multiple times (e.g.
     /// StringLiteral : ... '"' ... '"' ...).
     /// </summary>
-    private static int CountStringLiteralOccurrences(UnvParseTreeElement node)
+    private static int CountStringLiteralOccurrences(GrammarNode node)
     {
         if (node == null) return 0;
         int count = 0;
@@ -533,34 +550,34 @@ public class GrammarParser
         return count;
     }
 
-    public static string GetText(UnvParseTreeElement node) => node?.GetText() ?? "";
+    public static string GetText(GrammarNode node) => node?.GetText() ?? "";
 
-    public static bool IsTerminal(UnvParseTreeElement node) => node.IsTerminal();
+    public static bool IsTerminal(GrammarNode node) => node.IsTerminal();
 
     public static bool IsUpperFirst(string name) =>
         !string.IsNullOrEmpty(name) && char.IsUpper(name[0]);
 
     /// <summary>Returns the first child element with the given LocalName.</summary>
-    public static UnvParseTreeElement Child(UnvParseTreeElement node, string localName) =>
+    public static GrammarNode Child(GrammarNode node, string localName) =>
         node?.GetChildren(localName).FirstOrDefault();
 
     /// <summary>Returns all child elements (rule and terminal) in order.</summary>
-    public static IEnumerable<UnvParseTreeElement> Children(UnvParseTreeElement node) =>
-        node?.Children ?? Enumerable.Empty<UnvParseTreeElement>();
+    public static IEnumerable<GrammarNode> Children(GrammarNode node) =>
+        node?.Children ?? Enumerable.Empty<GrammarNode>();
 
     /// <summary>Returns all child elements with the given LocalName.</summary>
-    public static IEnumerable<UnvParseTreeElement> Children(UnvParseTreeElement node, string localName) =>
-        node?.GetChildren(localName) ?? Enumerable.Empty<UnvParseTreeElement>();
+    public static IEnumerable<GrammarNode> Children(GrammarNode node, string localName) =>
+        node?.GetChildren(localName) ?? Enumerable.Empty<GrammarNode>();
 
     /// <summary>Returns the first terminal child with the given token-type name.</summary>
-    public static UnvParseTreeElement ChildTerminal(UnvParseTreeElement node, string tokenTypeName) =>
+    public static GrammarNode ChildTerminal(GrammarNode node, string tokenTypeName) =>
         node?.Children.FirstOrDefault(c => c.IsTerminal() && c.LocalName == tokenTypeName);
 
     /// <summary>
     /// Returns the 1-based line of a terminal node, or -1 if line information was not
     /// included in the parse (i.e. <c>dotnet trash parse</c> was not invoked with -l / --line).
     /// </summary>
-    public static int SafeGetLine(UnvParseTreeElement node)
+    public static int SafeGetLine(GrammarNode node)
     {
         if (node == null) return -1;
         try { return node.GetLine(); }
@@ -571,7 +588,7 @@ public class GrammarParser
     /// Returns the 0-based column of a terminal node, or -1 if column information was
     /// not included in the parse.
     /// </summary>
-    public static int SafeGetColumn(UnvParseTreeElement node)
+    public static int SafeGetColumn(GrammarNode node)
     {
         if (node == null) return -1;
         try { return node.GetColumn(); }
@@ -583,7 +600,7 @@ public class GrammarParser
     /// <paramref name="node"/>. Works for both terminal and non-terminal elements.
     /// Returns (-1, -1) when line information was not included in the parse.
     /// </summary>
-    public static (int line, int col) SourceOf(UnvParseTreeElement node)
+    public static (int line, int col) SourceOf(GrammarNode node)
     {
         if (node == null) return (-1, -1);
         if (node.IsTerminal()) return (SafeGetLine(node), SafeGetColumn(node));
