@@ -6,7 +6,7 @@ Generate ANTLR4 `.interp` files from a grammar parse tree
 
 ## Description
 
-Reads ANTLRv4 or G4Plus grammar parse trees from stdin (as produced by `dotnet trash parse`) and
+Reads ANTLRv4, G4Plus, or basic REx grammar parse trees from stdin (as produced by `dotnet trash parse`) and
 writes `.interp` and `.tokens` files to the output directory. Supports both
 lexer and parser grammars, as well as combined grammars (which produce a lexer
 and parser `.interp` pair).
@@ -66,6 +66,19 @@ The backend owns `GrammarNode` rule bodies instead of DOM nodes. Input front end
 lower to a common block/alternative/element representation before vocabulary
 binding and ATN construction. Future EBNF front ends can feed that representation
 without changing the serializer or duplicating the ATN builders.
+
+## Basic REx interpretation
+
+    dotnet trash parse Arithmetic.rex | dotnet trash interp -o interp
+    dotnet trash parse --allstar -L interp -i '1+2*3'
+
+The REx front end lowers syntax and lexical productions to the shared compiler
+model. Filenames determine output grammar names. Lexical helpers become fragments;
+lexical declarations of `$` supply named EOF references. Use `--start-rule` when
+the grammar has no unique explicit EOF rule. See
+[`examples/rex-interp`](../../examples/rex-interp/README.md) for runnable examples
+and the supported subset. Whitespace must be explicit. Advanced REx lexer and
+disambiguation semantics are not implemented.
 
 ## Current version
 

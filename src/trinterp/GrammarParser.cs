@@ -13,8 +13,9 @@ public class GrammarParser
     public GrammarModel Parse(UnvParseTreeElement root, string fileName)
     {
         var syntax = GrammarNode.FromDom(root);
+        bool rex = syntax.LocalName == "grammar_";
         bool g4plus = GrammarFrontends.IsG4Plus(syntax, fileName);
-        IGrammarFrontend frontend = g4plus ? new G4PlusFrontend() : new Antlr4Frontend();
+        IGrammarFrontend frontend = rex ? new RexFrontend(fileName) : g4plus ? new G4PlusFrontend() : new Antlr4Frontend();
         syntax = frontend.Lower(syntax);
         var model = Parse(syntax, fileName, g4plus);
         model.IsG4Plus = g4plus;
