@@ -10,6 +10,7 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`g4plus-exclusion/`](g4plus-exclusion/) | Parse JLS-style identifier rules using G4Plus's set-difference syntax (syntax only) |
 | [`g4plus-interp/`](g4plus-interp/) | Generate tables from case-neutral G4Plus lexer/parser grammars and verify a left-recursive expression tree with AllStar |
 | [`rex-interp/`](rex-interp/) | Generate tables from basic REx arithmetic and list grammars, verify parse trees, and check rejection of invalid input |
+| [`rex-sort/`](rex-sort/) | Sort REx syntax and lexical rules alphabetically using XQuery4 while preserving their parse-tree content |
 | [`ixml-interp/`](ixml-interp/) | Compile basic scannerless iXML directly to interpreter tables, with arithmetic and separated-list tree checks |
 | [`ixml-to-antlr4/`](ixml-to-antlr4/) | Convert an iXML grammar to Antlr4 syntax using a five-pass XQuery Update pipeline (structural syntax, encoded characters, character sets, inline-set extraction, separator quantifiers) |
 | [`java-antlr/`](java-antlr/) | Generate a Java-target Antlr4 parser for the Java grammar, build, and run |
