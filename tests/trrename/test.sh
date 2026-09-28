@@ -7,7 +7,8 @@ parse='../../src/trparse/bin/Release/net10.0/trparse.dll'
 rename='../../src/trrename/bin/Release/net10.0/trrename.dll'
 text='../../src/trtext/bin/Release/net10.0/trtext.dll'
 scratch="$(mktemp -d /tmp/trrename-test-XXXXXXXX)"
-trap 'case "$scratch" in /tmp/trrename-test-*) rm -rf -- "$scratch" ;; esac' EXIT
+map_file="$(mktemp ./trrename-map-XXXXXXXX)"
+trap 'rm -f -- "$map_file"; case "$scratch" in /tmp/trrename-test-*) rm -rf -- "$scratch" ;; esac' EXIT
 
 dotnet "$parse" Expression.g4 >"$scratch/input.tar" 2>"$scratch/parse.log"
 dotnet "$rename" -r 'e,exp;a,atom;INT,Int;MUL,OpMul;DIV,OpDiv;ADD,OpAdd;SUB,OpSub' \
@@ -32,8 +33,8 @@ tar -xOf "$scratch/noncascading.tar" Expression.g4 >"$scratch/noncascading.g4"
 grep -q '^a : a ' "$scratch/noncascading.g4"
 grep -q '^b : INT' "$scratch/noncascading.g4"
 
-printf 'e,exp\na,atom\n' >"$scratch/map.csv"
-dotnet "$rename" -R "$(cygpath -w "$scratch/map.csv")" <"$scratch/input.tar" \
+printf 'e,exp\na,atom\n' >"$map_file"
+dotnet "$rename" -R "$map_file" <"$scratch/input.tar" \
     | dotnet "$text" --bundle >"$scratch/mapfile.tar"
 tar -xOf "$scratch/mapfile.tar" Expression.g4 | grep -q '^atom : INT'
 
