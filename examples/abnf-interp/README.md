@@ -4,6 +4,9 @@ Demonstrates generating Antlr `.interp` files from the
 [ABNF grammar](https://github.com/antlr/grammars-v4/tree/master/abnf)
 and using them to parse ABNF/BNF files without a code-generation step.
 
+For compiling a grammar *written in ABNF* directly to interpreter tables,
+see [`abnf-frontend/`](../abnf-frontend/).
+
 Grammar and example files sourced from
 [antlr/grammars-v4](https://github.com/antlr/grammars-v4).
 

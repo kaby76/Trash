@@ -10,7 +10,7 @@
 		<AssemblyName>trinterp</AssemblyName>
 		<PackageId>trinterp</PackageId>
 		<Description>
-			<![CDATA[Reads an Antlr4 grammar parse tree from stdin and writes .interp files.
+			<![CDATA[Reads supported grammar parse trees from stdin and writes .interp files.
 This program is part of the Trash toolkit.
 ]]>
 		</Description>

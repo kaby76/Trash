@@ -15,7 +15,8 @@ public class GrammarParser
         var syntax = GrammarNode.FromDom(root);
         bool rex = syntax.LocalName == "grammar_";
         bool g4plus = GrammarFrontends.IsG4Plus(syntax, fileName);
-        IGrammarFrontend frontend = syntax.LocalName == "ixml" ? new IxmlFrontend(fileName)
+        IGrammarFrontend frontend = syntax.LocalName == "rulelist" ? new AbnfFrontend(fileName)
+            : syntax.LocalName == "ixml" ? new IxmlFrontend(fileName)
             : rex ? new RexFrontend(fileName) : g4plus ? new G4PlusFrontend() : new Antlr4Frontend();
         syntax = frontend.Lower(syntax);
         var model = Parse(syntax, fileName, g4plus);

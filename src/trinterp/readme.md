@@ -6,7 +6,7 @@ Generate ANTLR4 `.interp` files from a grammar parse tree
 
 ## Description
 
-Reads ANTLRv4, G4Plus, or basic REx grammar parse trees from stdin (as produced by `dotnet trash parse`) and
+Reads ANTLRv4, G4Plus, basic REx, iXML, or ABNF grammar parse trees from stdin (as produced by `dotnet trash parse`) and
 writes `.interp` and `.tokens` files to the output directory. Supports both
 lexer and parser grammars, as well as combined grammars (which produce a lexer
 and parser `.interp` pair).
@@ -81,6 +81,26 @@ and the supported subset. Whitespace must be explicit. Advanced REx lexer and
 disambiguation semantics are not implemented.
 Hexadecimal character codes and character-class range endpoints above U+FFFF
 are rejected because the interpreter lexer reads UTF-16 code units.
+
+## Basic ABNF interpretation
+
+    dotnet trash parse -t ABNF Message.abnf | dotnet trash interp -o interp
+    dotnet trash parse --allstar -L interp input.txt
+
+The ABNF front end supports the core [RFC 5234](https://www.rfc-editor.org/rfc/rfc5234)
+forms: rule definitions and incremental `=/` alternatives, case-insensitive
+rule names and quoted strings, concatenation and alternatives, groups and
+options, `n`, `*m`, `n*`, and `n*m` repetition, `%b`/`%d`/`%x` numeric values,
+and the 16 RFC core rules. It uses one-character lexer tokens to preserve
+ABNF's character-level matching. The first declared rule is the default entry;
+a synthesized `abnf_start` rule requires EOF. Use `--start-rule` to select a
+different entry rule when compiling.
+
+Prose values are not executable and are rejected. Repetition bounds above 256,
+surrogate code points, and code points above U+FFFF are not supported. The
+built-in ABNF grammar currently does not accept the later `%s` and `%i` quoted
+string forms. See the runnable
+[`examples/abnf-frontend`](../../examples/abnf-frontend/README.md).
 
 ## Current version
 

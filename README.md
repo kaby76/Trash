@@ -23,6 +23,8 @@ parser. Grammar front ends currently support:
 * A basic subset of [Invisible XML (iXML)](https://invisiblexml.org/1.0/)
   (`.ixml`), compiled with character-level tokenization to preserve scannerless
   matching.
+* A basic subset of [ABNF](https://www.rfc-editor.org/rfc/rfc5234) (`.abnf`),
+  compiled with character-level tokenization and RFC core rules.
 
 For example, from the [REx example directory](examples/rex-interp/):
 
@@ -32,8 +34,8 @@ dotnet trash parse --allstar -L interp -i '1+2*3' | dotnet trash tree -a
 ```
 
 Support for a notation does not imply support for all of its semantics.
-The [G4Plus](examples/g4plus-interp/), [REx](examples/rex-interp/), and
-[iXML](examples/ixml-interp/) examples document the supported subsets and current
+The [G4Plus](examples/g4plus-interp/), [REx](examples/rex-interp/),
+[iXML](examples/ixml-interp/), and [ABNF](examples/abnf-frontend/) examples document the supported subsets and current
 limitations. In particular, iXML interpretation produces Trash parse trees,
 not iXML's prescribed XML output, and the interpreter does not execute arbitrary
 target-language actions or semantic predicates.
