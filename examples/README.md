@@ -5,6 +5,7 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | Directory | Description |
 |-----------|-------------|
 | [`abnf-interp/`](abnf-interp/) | Parse ABNF/BNF files using generated `.interp` files (no code generation step) |
+| [`antlr4-sort/`](antlr4-sort/) | Sort all ANTLR4 parser rules alphabetically with XQuery4, including EOF-terminated start rules |
 | [`context-aware-lexing/`](context-aware-lexing/) | Parse a Decaf array declaration whose overlapping integer tokens require parser-directed lexical selection |
 | [`first/`](first/) | Compute nullable parser rules and grammar-theoretic FIRST sets with an XQuery4 fixed-point analysis |
 | [`g4plus-exclusion/`](g4plus-exclusion/) | Parse JLS-style identifier rules using G4Plus's set-difference syntax (syntax only) |
