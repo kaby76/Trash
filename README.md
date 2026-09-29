@@ -25,6 +25,8 @@ parser. Grammar front ends currently support:
   matching.
 * A basic subset of [ABNF](https://www.rfc-editor.org/rfc/rfc5234) (`.abnf`),
   compiled with character-level tokenization and RFC core rules.
+* A basic subset of [Bison grammar files](https://www.gnu.org/software/bison/manual/html_node/Grammar-File.html)
+  (`.y`), paired with a separate ANTLR4 or G4Plus lexer grammar.
 
 For example, from the [REx example directory](examples/rex-interp/):
 
@@ -35,7 +37,8 @@ dotnet trash parse --allstar -L interp -i '1+2*3' | dotnet trash tree -a
 
 Support for a notation does not imply support for all of its semantics.
 The [G4Plus](examples/g4plus-interp/), [REx](examples/rex-interp/),
-[iXML](examples/ixml-interp/), and [ABNF](examples/abnf-frontend/) examples document the supported subsets and current
+[iXML](examples/ixml-interp/), [ABNF](examples/abnf-frontend/), and
+[Bison](examples/bison-frontend/) examples document the supported subsets and current
 limitations. In particular, iXML interpretation produces Trash parse trees,
 not iXML's prescribed XML output, and the interpreter does not execute arbitrary
 target-language actions or semantic predicates.

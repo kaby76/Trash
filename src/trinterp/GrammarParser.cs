@@ -14,13 +14,16 @@ public class GrammarParser
     {
         var syntax = GrammarNode.FromDom(root);
         bool rex = syntax.LocalName == "grammar_";
+        bool bison = syntax.LocalName == "input_";
         bool g4plus = GrammarFrontends.IsG4Plus(syntax, fileName);
         IGrammarFrontend frontend = syntax.LocalName == "rulelist" ? new AbnfFrontend(fileName)
             : syntax.LocalName == "ixml" ? new IxmlFrontend(fileName)
+            : bison ? new BisonFrontend(fileName)
             : rex ? new RexFrontend(fileName) : g4plus ? new G4PlusFrontend() : new Antlr4Frontend();
         syntax = frontend.Lower(syntax);
         var model = Parse(syntax, fileName, g4plus);
-        model.IsG4Plus = g4plus;
+        // Bison's named terminals and literals must be resolved by a supplied lexer.
+        model.IsG4Plus = g4plus || bison;
         if (model.ImplicitLexer != null) model.ImplicitLexer.IsG4Plus = g4plus;
         return model;
     }

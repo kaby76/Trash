@@ -6,7 +6,7 @@ Generate ANTLR4 `.interp` files from a grammar parse tree
 
 ## Description
 
-Reads ANTLRv4, G4Plus, basic REx, iXML, or ABNF grammar parse trees from stdin (as produced by `dotnet trash parse`) and
+Reads ANTLRv4, G4Plus, basic REx, iXML, ABNF, or Bison grammar parse trees from stdin (as produced by `dotnet trash parse`) and
 writes `.interp` and `.tokens` files to the output directory. Supports both
 lexer and parser grammars, as well as combined grammars (which produce a lexer
 and parser `.interp` pair).
@@ -101,6 +101,28 @@ surrogate code points, and code points above U+FFFF are not supported. The
 built-in ABNF grammar currently does not accept the later `%s` and `%i` quoted
 string forms. See the runnable
 [`examples/abnf-frontend`](../../examples/abnf-frontend/README.md).
+
+## Basic Bison interpretation
+
+    dotnet trash parse Message.y MessageLexer.g4 | dotnet trash interp -o interp
+    dotnet trash parse --allstar -L interp --pinterp Bison_Message.interp --linterp MessageLexer.interp input.txt
+
+Bison `.y` files describe parser productions but depend on a separate scanner.
+Pass exactly one ANTLR4 `.g4` or G4Plus `.g4p` lexer grammar in the same parse
+batch. Its token names must match Bison's named terminals; a Bison character
+or string literal must match a single-literal lexer token rule, unless declared
+as a `%token` string alias. Select the generated parser and lexer `.interp`
+files explicitly when parsing, since their grammar names need not match.
+
+The basic front end supports alternatives, empty productions (`%empty` or an
+empty right-hand side), `%token` aliases, and `%start` (otherwise the first
+production starts the parse). It creates a `bison_start` rule with EOF.
+Semantic actions, prologue/epilogue code, type declarations, and named
+references are not executed. Precedence declarations, `%prec`, predicates,
+GLR dynamic precedence/merging, and Bison error recovery are not implemented;
+the forms that appear in productions are rejected rather than silently
+changing their meaning. Lex/Flex `.l` files are not compiled. See the runnable
+[`examples/bison-frontend`](../../examples/bison-frontend/README.md).
 
 ## Current version
 
