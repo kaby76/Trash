@@ -22,6 +22,7 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`rule-names/`](rule-names/) | Construct XML containing one element for every parser-rule name selected from an ANTLR4 grammar parse tree |
 | [`ungroup/`](ungroup/) | Expand a plain grouped alternative `(X \| Y) B` into distributed top-level alternatives `X B \| Y B` using an XQuery Update script with an external variable parameter |
 | [`strip-leading-attrs/`](strip-leading-attrs/) | Remove hidden-channel token attributes before `lexer`/`parser` in `grammarDecl` using an XQuery element constructor |
+| [`tree-sitter-to-w3c-ebnf/`](tree-sitter-to-w3c-ebnf/) | Convert Tree-sitter `grammar.json` rules to structural W3C EBNF with XQuery4, explicitly marking unsupported constructs |
 | [`xpath31-to-antlr4/`](xpath31-to-antlr4/) | Parse the XPath 3.1 EBNF grammar using generated `.interp` files built from the XPath 3.1 meta-grammar (work in progress) |
 
 Each example directory contains a `run-example.sh` and its own `README.md`.

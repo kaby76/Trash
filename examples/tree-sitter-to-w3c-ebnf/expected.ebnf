@@ -1,0 +1,4 @@
+/* Generated from Tree-sitter grammar.json. See README for lossy constructs. */
+r_source_file ::= (r_item (r_item)*)
+r_item ::= (";" | ("x")+ | /* empty */)
+r_pattern_item ::= TS_PATTERN
