@@ -6,7 +6,7 @@ Generate ANTLR4 `.interp` files from a grammar parse tree
 
 ## Description
 
-Reads ANTLRv4, G4Plus, basic REx, iXML, ABNF, or Bison grammar parse trees from stdin (as produced by `dotnet trash parse`) and
+Reads ANTLRv4, G4X, basic REx, iXML, ABNF, or Bison grammar parse trees from stdin (as produced by `dotnet trash parse`) and
 writes `.interp` and `.tokens` files to the output directory. Supports both
 lexer and parser grammars, as well as combined grammars (which produce a lexer
 and parser `.interp` pair).
@@ -31,23 +31,23 @@ consume them without needing the generated target-language source.
     dotnet trash parse CLexer.g4 CParser.g4 | dotnet trash interp -o out/
     dotnet trash parse Heavy.g4 | dotnet trash interp --actions-in-interp -o out/
 
-## G4Plus interpretation
+## G4X interpretation
 
-    dotnet trash parse Lexer.g4p Parser.g4p | dotnet trash interp -o interp
+    dotnet trash parse Lexer.g4x Parser.g4x | dotnet trash interp -o interp
     dotnet trash parse --allstar -L interp input.txt
 
-G4Plus `.g4p` and `.g4+` grammars use the same ATN serialization as ANTLRv4.
+G4X `.g4x` and `.g4x` grammars use the same ATN serialization as ANTLRv4.
 Rule names are case-neutral: lexer grammar declarations define lexer rules;
 parser and combined grammar declarations define parser rules. Combined grammars
 generate an implicit lexer for string literals, without reclassifying uppercase
 rule names. For whitespace handling or other named tokens, supply a separate
 lexer grammar and select it with `options { tokenVocab=Lexer; }`. A combined
-G4Plus grammar with `tokenVocab` uses that lexer instead of an implicit lexer.
+G4X grammar with `tokenVocab` uses that lexer instead of an implicit lexer.
 
 Vocabularies are bound to the selected lexer in the input batch. If that lexer
 is absent, a `.tokens` file beside the grammar source is used. A parser without
 `tokenVocab` may use the sole lexer in a batch; multiple lexers require explicit
-selection. Undefined and ambiguous G4Plus symbols are errors. `--start-rule`
+selection. Undefined and ambiguous G4X symbols are errors. `--start-rule`
 overrides discovery of the single rule explicitly referencing EOF.
 
 This implementation supports alternatives, references, literals, lexer character
@@ -108,7 +108,7 @@ string forms. See the runnable
     dotnet trash parse --allstar -L interp --pinterp Bison_Message.interp --linterp MessageLexer.interp input.txt
 
 Bison `.y` files describe parser productions but depend on a separate scanner.
-Pass exactly one ANTLR4 `.g4` or G4Plus `.g4p` lexer grammar in the same parse
+Pass exactly one ANTLR4 `.g4` or G4X `.g4x` lexer grammar in the same parse
 batch. Its token names must match Bison's named terminals; a Bison character
 or string literal must match a single-literal lexer token rule, unless declared
 as a `%token` string alias. Select the generated parser and lexer `.interp`

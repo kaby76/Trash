@@ -10,7 +10,7 @@ namespace trinterp;
 
 /// <summary>
 /// Lower the context-free part of a Bison grammar to a parser grammar. A
-/// separate ANTLR4/G4Plus lexer supplies the named and literal token types.
+/// separate ANTLR4/G4X lexer supplies the named and literal token types.
 /// </summary>
 public sealed class BisonFrontend : IGrammarFrontend
 {

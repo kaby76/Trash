@@ -25,23 +25,23 @@ public sealed class BisonFrontendTests
         return new GrammarParser().Parse(new ConvertToDOM().BottomUpConvert(tree, null, parser, lexer, tokens), "Sample.y");
     }
 
-    private static GrammarModel LexerModel(bool g4plus = false)
+    private static GrammarModel LexerModel(bool g4x = false)
     {
-        Lexer lexer = g4plus ? new G4PlusLexer(new AntlrInputStream(LexerGrammar))
+        Lexer lexer = g4x ? new G4XLexer(new AntlrInputStream(LexerGrammar))
             : new ANTLRv4Lexer(new AntlrInputStream(LexerGrammar));
         var tokens = new CommonTokenStream(lexer);
-        Parser parser = g4plus ? new G4PlusParser(tokens) : new ANTLRv4Parser(tokens);
-        Antlr4.Runtime.Tree.IParseTree tree = g4plus ? ((G4PlusParser)parser).grammarSpec()
+        Parser parser = g4x ? new G4XParser(tokens) : new ANTLRv4Parser(tokens);
+        Antlr4.Runtime.Tree.IParseTree tree = g4x ? ((G4XParser)parser).grammarSpec()
             : ((ANTLRv4Parser)parser).grammarSpec();
         Assert.Equal(0, parser.NumberOfSyntaxErrors);
         return new GrammarParser().Parse(new ConvertToDOM().BottomUpConvert(tree, null, parser, lexer, tokens),
-            g4plus ? "Scan.g4p" : "Scan.g4");
+            g4x ? "Scan.g4x" : "Scan.g4");
     }
 
-    private static string Parse(string grammar, string input, bool g4plus = false)
+    private static string Parse(string grammar, string input, bool g4x = false)
     {
         var parser = BisonModel(grammar);
-        var lexer = LexerModel(g4plus);
+        var lexer = LexerModel(g4x);
         GrammarBinding.Bind([parser, lexer]);
         var directory = Directory.CreateTempSubdirectory("BisonFrontend-").FullName;
         try
@@ -74,10 +74,10 @@ public sealed class BisonFrontendTests
     }
 
     [Fact]
-    public void G4PlusLexerCanAlsoSupplyBisonTokens()
+    public void G4XLexerCanAlsoSupplyBisonTokens()
     {
         const string grammar = "%token NAME \"name\"\n%%\nmessage: \"name\" '!' ;\n%%\n";
-        Assert.Equal("(bison_start (message Ada !) <EOF>)", Parse(grammar, "Ada!", g4plus: true));
+        Assert.Equal("(bison_start (message Ada !) <EOF>)", Parse(grammar, "Ada!", g4x: true));
     }
 
     [Theory]

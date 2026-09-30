@@ -14,19 +14,21 @@ lexer and parser ATNs, together with `.tokens` vocabularies. These tables can be
 loaded by `dotnet trash parse` without generating or compiling a target-language
 parser. Grammar front ends currently support:
 
-* [ANTLR4](https://github.com/antlr/antlr4/blob/master/doc/grammars.md) (`.g4`).
-* [G4Plus](src/trinterp/readme.md#g4plus-interpretation) (`.g4p` or `.g4+`),
-  Trash's extension of ANTLR4 notation. Rule kind is determined by the grammar
-  declaration rather than the capitalization of rule names.
-* A basic subset of [REx EBNF](https://github.com/GuntherRademacher/rex-parser-generator/blob/main/docs/ebnf-notation.md)
-  (`.rex`), the notation of the [REx parser generator](https://github.com/GuntherRademacher/rex-parser-generator).
-* A basic subset of [Invisible XML (iXML)](https://invisiblexml.org/1.0/)
-  (`.ixml`), compiled with character-level tokenization to preserve scannerless
-  matching.
-* A basic subset of [ABNF](https://www.rfc-editor.org/rfc/rfc5234) (`.abnf`),
+* [ABNF](https://www.rfc-editor.org/rfc/rfc5234) (`.abnf`) — a basic subset,
   compiled with character-level tokenization and RFC core rules.
-* A basic subset of [Bison grammar files](https://www.gnu.org/software/bison/manual/html_node/Grammar-File.html)
-  (`.y`), paired with a separate ANTLR4 or G4Plus lexer grammar.
+* [ANTLR4](https://github.com/antlr/antlr4/blob/master/doc/grammars.md) (`.g4`) —
+  ANTLR4 grammar syntax.
+* [ANTLR4 Experimental (G4X)](src/trinterp/readme.md#g4x-interpretation)
+  (`.g4x`, `.g4x`) — experimental ANTLR4 grammar syntax for new features,
+  including unconstrained rule names. Rule kind is determined by the grammar
+  declaration rather than capitalization.
+* [Bison](https://www.gnu.org/software/bison/manual/html_node/Grammar-File.html)
+  (`.y`) — a basic subset, paired with a separate ANTLR4 or G4X lexer grammar.
+* [Invisible XML (iXML)](https://invisiblexml.org/1.0/) (`.ixml`) — a basic
+  subset compiled with character-level tokenization to preserve scannerless matching.
+* [REx](https://github.com/GuntherRademacher/rex-parser-generator/blob/main/docs/ebnf-notation.md)
+  (`.rex`) — a basic subset of the EBNF notation used by the
+  [REx parser generator](https://github.com/GuntherRademacher/rex-parser-generator).
 
 For example, from the [REx example directory](examples/rex-interp/):
 
@@ -36,9 +38,10 @@ dotnet trash parse --allstar -L interp -i '1+2*3' | dotnet trash tree -a
 ```
 
 Support for a notation does not imply support for all of its semantics.
-The [G4Plus](examples/g4plus-interp/), [REx](examples/rex-interp/),
-[iXML](examples/ixml-interp/), [ABNF](examples/abnf-frontend/), and
-[Bison](examples/bison-frontend/) examples document the supported subsets and current
+The [ABNF](examples/abnf-frontend/),
+[ANTLR4 Experimental (G4X)](examples/g4x-interp/),
+[Bison](examples/bison-frontend/), [iXML](examples/ixml-interp/), and
+[REx](examples/rex-interp/) examples document the supported subsets and current
 limitations. In particular, iXML interpretation produces Trash parse trees,
 not iXML's prescribed XML output, and the interpreter does not execute arbitrary
 target-language actions or semantic predicates.

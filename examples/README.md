@@ -10,8 +10,8 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`bison-frontend/`](bison-frontend/) | Compile Bison productions with a separate ANTLR4 lexer and parse input with AllStar |
 | [`context-aware-lexing/`](context-aware-lexing/) | Parse a Decaf array declaration whose overlapping integer tokens require parser-directed lexical selection |
 | [`first/`](first/) | Compute nullable parser rules and grammar-theoretic FIRST sets with an XQuery4 fixed-point analysis |
-| [`g4plus-exclusion/`](g4plus-exclusion/) | Parse JLS-style identifier rules using G4Plus's set-difference syntax (syntax only) |
-| [`g4plus-interp/`](g4plus-interp/) | Generate tables from case-neutral G4Plus lexer/parser grammars and verify a left-recursive expression tree with AllStar |
+| [`g4x-exclusion/`](g4x-exclusion/) | Parse JLS-style identifier rules using G4X's set-difference syntax (syntax only) |
+| [`g4x-interp/`](g4x-interp/) | Generate tables from case-neutral G4X lexer/parser grammars and verify a left-recursive expression tree with AllStar |
 | [`rex-interp/`](rex-interp/) | Generate tables from basic REx arithmetic and list grammars, verify parse trees, and check rejection of invalid input |
 | [`rex-sort/`](rex-sort/) | Sort REx syntax and lexical rules alphabetically using XQuery4 while preserving their parse-tree content |
 | [`ixml-interp/`](ixml-interp/) | Compile basic scannerless iXML directly to interpreter tables, with arithmetic and separated-list tree checks |

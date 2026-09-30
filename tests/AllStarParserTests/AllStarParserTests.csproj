@@ -8,22 +8,22 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <!-- Existing ANTLR4 grammars used by G4Plus compatibility tests. -->
+    <!-- Existing ANTLR4 grammars used by G4X compatibility tests. -->
     <Content Include="../../src/grammars/*/*.g4"
              CopyToOutputDirectory="PreserveNewest"
-             Link="TestData/g4plus/src/grammars/%(RecursiveDir)%(Filename)%(Extension)" />
+             Link="TestData/g4x/src/grammars/%(RecursiveDir)%(Filename)%(Extension)" />
     <Content Include="../../examples/context-aware-lexing/Decaf.g4"
              CopyToOutputDirectory="PreserveNewest"
-             Link="TestData/g4plus/examples/context-aware-lexing/Decaf.g4" />
+             Link="TestData/g4x/examples/context-aware-lexing/Decaf.g4" />
     <Content Include="../../examples/java-antlr/Java*.g4"
              CopyToOutputDirectory="PreserveNewest"
-             Link="TestData/g4plus/examples/java-antlr/%(Filename)%(Extension)" />
+             Link="TestData/g4x/examples/java-antlr/%(Filename)%(Extension)" />
     <Content Include="../grammars-v4/*/*.g4"
              CopyToOutputDirectory="PreserveNewest"
-             Link="TestData/g4plus/tests/grammars-v4/%(RecursiveDir)%(Filename)%(Extension)" />
+             Link="TestData/g4x/tests/grammars-v4/%(RecursiveDir)%(Filename)%(Extension)" />
     <Content Include="../grammars-v4/csharp/CSharp/CSharpPreprocessorParser.g4"
              CopyToOutputDirectory="PreserveNewest"
-             Link="TestData/g4plus/tests/grammars-v4/csharp/CSharp/CSharpPreprocessorParser.g4" />
+             Link="TestData/g4x/tests/grammars-v4/csharp/CSharp/CSharpPreprocessorParser.g4" />
 
     <Content Include="TestData/indirect-left-recursion/*.interp"
              CopyToOutputDirectory="Always"

@@ -39,12 +39,12 @@ public static class GrammarBinding
                 throw new InvalidOperationException($"Duplicate rules in '{model.Name}'.");
             foreach (var rule in model.Rules)
             {
-                if (model.IsG4Plus && !model.IsLexer && model.TokenNameToType.ContainsKey(rule.Name))
+                if (model.IsG4X && !model.IsLexer && model.TokenNameToType.ContainsKey(rule.Name))
                     throw new InvalidOperationException($"Ambiguous symbol '{rule.Name}' in '{model.Name}': both a parser rule and a token.");
                 if (rule.BodyNode == null) continue;
                 foreach (var node in rule.BodyNode.DescendantsAndSelf())
                 {
-                    if (model.IsG4Plus && model.IsLexer && node.LocalName == "lexerCommand")
+                    if (model.IsG4X && model.IsLexer && node.LocalName == "lexerCommand")
                         ValidateCommand(model, node);
                     if (node.LocalName == "ruleref")
                     {
@@ -52,7 +52,7 @@ public static class GrammarBinding
                         if (model.GetRule(name) == null)
                             throw new InvalidOperationException($"Undefined rule '{name}' in '{model.Name}.{rule.Name}'.");
                     }
-                    if (!model.IsG4Plus || model.IsLexer || node.LocalName is not ("terminalDef" or "setElement")) continue;
+                    if (!model.IsG4X || model.IsLexer || node.LocalName is not ("terminalDef" or "setElement")) continue;
                     foreach (var token in node.Children.Where(c => c.Terminal))
                     {
                         if (token.LocalName == "TOKEN_REF" &&

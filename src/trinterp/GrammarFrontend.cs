@@ -27,9 +27,8 @@ public sealed class Antlr4Frontend : IGrammarFrontend
 
 public static class GrammarFrontends
 {
-    public static bool IsG4Plus(GrammarNode syntax, string fileName) =>
+    public static bool IsG4X(GrammarNode syntax, string fileName) =>
         syntax.DescendantsAndSelf().Any(n => n.LocalName == "symbolRef" ||
             (n.LocalName == "ruleSpec" && GrammarParser.Child(n, "identifier") != null)) ||
-        fileName.EndsWith(".g4p", StringComparison.OrdinalIgnoreCase) ||
-        fileName.EndsWith(".g4+", StringComparison.OrdinalIgnoreCase);
+        fileName.EndsWith(".g4x", StringComparison.OrdinalIgnoreCase);
 }

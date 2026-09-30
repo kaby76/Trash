@@ -69,7 +69,7 @@ public class LexerActionInfo
 /// </summary>
 public class GrammarModel
 {
-    public bool IsG4Plus;
+    public bool IsG4X;
     public string Name;
     public GrammarKind Kind;
     public string FileName;

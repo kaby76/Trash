@@ -20,6 +20,6 @@ input must contain the word `name`.
 
 The `.y` file does not define a scanner, and Trash does not compile Lex/Flex
 `.l` files. An [ANTLR4](https://github.com/antlr/antlr4/blob/master/doc/lexer-rules.md)
-or G4Plus lexer grammar can supply the tokens instead. See the
+or G4X lexer grammar can supply the tokens instead. See the
 [Bison front-end documentation](../../src/trinterp/readme.md#basic-bison-interpretation)
 for supported forms and limitations.

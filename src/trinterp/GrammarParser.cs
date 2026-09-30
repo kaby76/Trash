@@ -15,26 +15,26 @@ public class GrammarParser
         var syntax = GrammarNode.FromDom(root);
         bool rex = syntax.LocalName == "grammar_";
         bool bison = syntax.LocalName == "input_";
-        bool g4plus = GrammarFrontends.IsG4Plus(syntax, fileName);
+        bool g4x = GrammarFrontends.IsG4X(syntax, fileName);
         IGrammarFrontend frontend = syntax.LocalName == "rulelist" ? new AbnfFrontend(fileName)
             : syntax.LocalName == "ixml" ? new IxmlFrontend(fileName)
             : bison ? new BisonFrontend(fileName)
-            : rex ? new RexFrontend(fileName) : g4plus ? new G4PlusFrontend() : new Antlr4Frontend();
+            : rex ? new RexFrontend(fileName) : g4x ? new G4XFrontend() : new Antlr4Frontend();
         syntax = frontend.Lower(syntax);
-        var model = Parse(syntax, fileName, g4plus);
+        var model = Parse(syntax, fileName, g4x);
         // Bison's named terminals and literals must be resolved by a supplied lexer.
-        model.IsG4Plus = g4plus || bison;
-        if (model.ImplicitLexer != null) model.ImplicitLexer.IsG4Plus = g4plus;
+        model.IsG4X = g4x || bison;
+        if (model.ImplicitLexer != null) model.ImplicitLexer.IsG4X = g4x;
         return model;
     }
     // Pre-defined token types that appear in every grammar.
     private const int TokenEOF = -1;
     private const int TokenMinUser = 1; // first assignable type
 
-    public GrammarModel Parse(GrammarNode root, string fileName, bool g4plus = false)
+    public GrammarModel Parse(GrammarNode root, string fileName, bool g4x = false)
     {
         if (root.LocalName != "grammarSpec")
-            throw new InvalidOperationException("Expected an ANTLRv4 or G4Plus grammar tree.");
+            throw new InvalidOperationException("Expected an ANTLRv4 or G4X grammar tree.");
         var model = new GrammarModel { FileName = fileName };
 
         // --- grammar declaration ---
@@ -48,9 +48,9 @@ public class GrammarParser
         foreach (var pre in Children(root, "prequelConstruct"))
             ProcessPrequel(model, pre);
 
-        // A G4Plus combined grammar has only parser rules. With an explicit
+        // A G4X combined grammar has only parser rules. With an explicit
         // vocabulary it uses that lexer; otherwise synthesize literal tokens.
-        if (g4plus && model.Kind == GrammarKind.Combined && model.TokenVocab != null)
+        if (g4x && model.Kind == GrammarKind.Combined && model.TokenVocab != null)
             model.Kind = GrammarKind.Parser;
 
         // --- rules ---
