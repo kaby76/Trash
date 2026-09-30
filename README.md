@@ -29,6 +29,9 @@ parser. Grammar front ends currently support:
 * [REx](https://github.com/GuntherRademacher/rex-parser-generator/blob/main/docs/ebnf-notation.md)
   (`.rex`) — a basic subset of the EBNF notation used by the
   [REx parser generator](https://github.com/GuntherRademacher/rex-parser-generator).
+* [W3C EBNF](https://www.w3.org/TR/xml/#sec-notation) (`.ebnf`) — a basic
+  subset, compiled with character-level tokenization to preserve scannerless
+  matching.
 
 For example, from the [REx example directory](examples/rex-interp/):
 
@@ -40,8 +43,9 @@ dotnet trash parse --allstar -L interp -i '1+2*3' | dotnet trash tree -a
 Support for a notation does not imply support for all of its semantics.
 The [ABNF](examples/abnf-frontend/),
 [ANTLR4 Experimental (G4X)](examples/g4x-interp/),
-[Bison](examples/bison-frontend/), [iXML](examples/ixml-interp/), and
-[REx](examples/rex-interp/) examples document the supported subsets and current
+[Bison](examples/bison-frontend/), [iXML](examples/ixml-interp/),
+[REx](examples/rex-interp/), and
+[W3C EBNF](examples/w3cebnf-frontend/) examples document the supported subsets and current
 limitations. In particular, iXML interpretation produces Trash parse trees,
 not iXML's prescribed XML output, and the interpreter does not execute arbitrary
 target-language actions or semantic predicates.

@@ -6,7 +6,7 @@ Generate ANTLR4 `.interp` files from a grammar parse tree
 
 ## Description
 
-Reads ANTLRv4, G4X, basic REx, iXML, ABNF, or Bison grammar parse trees from stdin (as produced by `dotnet trash parse`) and
+Reads ANTLRv4, G4X, basic REx, iXML, ABNF, Bison, or W3C EBNF grammar parse trees from stdin (as produced by `dotnet trash parse`) and
 writes `.interp` and `.tokens` files to the output directory. Supports both
 lexer and parser grammars, as well as combined grammars (which produce a lexer
 and parser `.interp` pair).
@@ -123,6 +123,24 @@ GLR dynamic precedence/merging, and Bison error recovery are not implemented;
 the forms that appear in productions are rejected rather than silently
 changing their meaning. Lex/Flex `.l` files are not compiled. See the runnable
 [`examples/bison-frontend`](../../examples/bison-frontend/README.md).
+
+## Basic W3C EBNF interpretation
+
+    dotnet trash parse -t W3CEBNF Message.ebnf | dotnet trash interp -o interp
+    dotnet trash parse --allstar -L interp input.txt
+
+The W3C EBNF front end supports strings, `#x` characters, character sets and
+ranges (including complemented sets), references, grouping, alternatives,
+empty sequences, and `?`, `*`, `+` suffixes. It uses a disjoint one-character
+lexer so that maximal-munch token selection does not change scannerless EBNF
+semantics. The first production is the default entry; a synthesized
+`w3c_start` rule enforces EOF. Whitespace is significant unless included in
+the EBNF itself.
+
+Production difference (`-`) and validity constraints are rejected instead of
+silently approximated. Character codes are limited to non-surrogate BMP code
+points because the interpreter lexer currently consumes UTF-16 code units.
+See [`examples/w3cebnf-frontend`](../../examples/w3cebnf-frontend/README.md).
 
 ## Current version
 

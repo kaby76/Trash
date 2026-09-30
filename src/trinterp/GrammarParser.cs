@@ -13,11 +13,15 @@ public class GrammarParser
     public GrammarModel Parse(UnvParseTreeElement root, string fileName)
     {
         var syntax = GrammarNode.FromDom(root);
-        bool rex = syntax.LocalName == "grammar_";
+        bool w3cEbnf = syntax.LocalName == "grammar_" &&
+            (fileName.EndsWith(".ebnf", StringComparison.OrdinalIgnoreCase) ||
+             Children(syntax, "production").Any());
+        bool rex = syntax.LocalName == "grammar_" && !w3cEbnf;
         bool bison = syntax.LocalName == "input_";
         bool g4x = GrammarFrontends.IsG4X(syntax, fileName);
         IGrammarFrontend frontend = syntax.LocalName == "rulelist" ? new AbnfFrontend(fileName)
             : syntax.LocalName == "ixml" ? new IxmlFrontend(fileName)
+            : w3cEbnf ? new W3CebnfFrontend(fileName)
             : bison ? new BisonFrontend(fileName)
             : rex ? new RexFrontend(fileName) : g4x ? new G4XFrontend() : new Antlr4Frontend();
         syntax = frontend.Lower(syntax);
