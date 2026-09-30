@@ -51,7 +51,7 @@ jobs:
     - name: Install Dotnet
       uses: actions/setup-dotnet@v4.1.0
       with:
-        dotnet-version: '8.0.x'
+        dotnet-version: '10.0.x'
     - name: Test Dotnet
       run: |
         dotnet --version
@@ -128,6 +128,9 @@ jobs:
         git checkout 27676950c547854a62c826345b22b57b8b8c8a98
         npm i
         npm run build
+    - name: Interpreter and grammar frontend regression tests
+      timeout-minutes: 15
+      run: dotnet test tests/AllStarParserTests/AllStarParserTests.csproj -c Release --filter 'Category!=Performance' --blame-hang-timeout 5m
     - name: Test
       run: |
         cd src/xquery4

@@ -7,17 +7,16 @@ namespace AllStarParserTests;
 public sealed class TrparseOutputTests
 {
     [Theory]
-    [InlineData(".g4p", false)]
-    [InlineData(".g4+", false)]
+    [InlineData(".g4x", false)]
     [InlineData(".g4", true)]
-    public void G4PlusParsesGrammarFiles(string extension, bool specifyParserType)
+    public void G4XParsesGrammarFiles(string extension, bool specifyParserType)
     {
         var file = Path.Combine(Path.GetTempPath(),
-            "G4PlusSmoke-" + Guid.NewGuid().ToString("N") + extension);
+            "G4XSmoke-" + Guid.NewGuid().ToString("N") + extension);
         try
         {
             File.WriteAllText(file,
-                "grammar G4PlusSmoke; root : 'x' EOF;\n");
+                "grammar G4XSmoke; root : 'x' EOF;\n");
             var startInfo = new ProcessStartInfo("dotnet")
             {
                 RedirectStandardOutput = true,
@@ -29,7 +28,7 @@ public sealed class TrparseOutputTests
             if (specifyParserType)
             {
                 startInfo.ArgumentList.Add("-t");
-                startInfo.ArgumentList.Add("G4Plus");
+                startInfo.ArgumentList.Add("G4X");
             }
             startInfo.ArgumentList.Add(file);
 

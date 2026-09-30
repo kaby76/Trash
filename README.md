@@ -2,21 +2,69 @@
 
 [![Build](https://github.com/kaby76/Trash/actions/workflows/main.yml/badge.svg?branch=main&event=push)](https://github.com/kaby76/Trash/actions/workflows/main.yml?query=branch%3Amain+event%3Apush)
 
-Trash is a collection of command-line tools to analyze and transform
-Antlr4 grammars and parse trees. The toolkit can:
-* Generate a parser application for an Antlr4 grammar for any target and any OS;
-* Generate and parse input for an Antlr4 grammar that is independent of Antlr4 and runtime;
-* Use XPath4, XQuery4, and the XQuery Update Facility languages to search and modify parse trees, including "off-channel" content such as comments.
-* Chain together output from different applications to form complex queries and refactorings.
+## Introduction
 
-With the [grammars-v4 collection of Antlr4 grammars](https://github.com/antlr/grammars-v4),
-one can write applications that parse popular programming languages quickly and easily.
+Trash is a command-line toolkit for generating parsers, parsing input, and
+analyzing and transforming grammars and parse trees. It supports two workflows:
+generate interpreter tables and parse directly with Trash, or generate an
+ANTLR4 parser application for a supported target language.
 
-Each app in `Trash` is implemented as a sub-packaged [Dotnet Tool](https://docs.microsoft.com/en-us/dotnet/core/tools/global-tools) console application, and can be used on Windows, Linux, or Mac.
-No prerequisites are required other than installing the
-[NET SDK](https://dotnet.microsoft.com/), and the toolchains
-for any other targets you want to use. All commands are executed through the top-level Dotnet application
-"trash", e.g., "dotnet trash parse --help".
+`dotnet trash interp` compiles grammar parse trees into `.interp` files containing
+lexer and parser ATNs, together with `.tokens` vocabularies. These tables can be
+loaded by `dotnet trash parse` without generating or compiling a target-language
+parser. Grammar front ends currently support:
+
+* [ABNF](https://www.rfc-editor.org/rfc/rfc5234) (`.abnf`) — a basic subset,
+  compiled with character-level tokenization and RFC core rules.
+* [ANTLR4](https://github.com/antlr/antlr4/blob/master/doc/grammars.md) (`.g4`) —
+  ANTLR4 grammar syntax.
+* [ANTLR4 Experimental (G4X)](src/trinterp/readme.md#g4x-interpretation)
+  (`.g4x`, `.g4x`) — experimental ANTLR4 grammar syntax for new features,
+  including unconstrained rule names. Rule kind is determined by the grammar
+  declaration rather than capitalization.
+* [Bison](https://www.gnu.org/software/bison/manual/html_node/Grammar-File.html)
+  (`.y`) — a basic subset, paired with a separate ANTLR4 or G4X lexer grammar.
+* [Invisible XML (iXML)](https://invisiblexml.org/1.0/) (`.ixml`) — a basic
+  subset compiled with character-level tokenization to preserve scannerless matching.
+* [REx](https://github.com/GuntherRademacher/rex-parser-generator/blob/main/docs/ebnf-notation.md)
+  (`.rex`) — a basic subset of the EBNF notation used by the
+  [REx parser generator](https://github.com/GuntherRademacher/rex-parser-generator).
+* [W3C EBNF](https://www.w3.org/TR/xml/#sec-notation) (`.ebnf`) — a basic
+  subset, compiled with character-level tokenization to preserve scannerless
+  matching.
+
+For example, from the [REx example directory](examples/rex-interp/):
+
+```sh
+dotnet trash parse Arithmetic.rex | dotnet trash interp -o interp
+dotnet trash parse --allstar -L interp -i '1+2*3' | dotnet trash tree -a
+```
+
+Support for a notation does not imply support for all of its semantics.
+The [ABNF](examples/abnf-frontend/),
+[ANTLR4 Experimental (G4X)](examples/g4x-interp/),
+[Bison](examples/bison-frontend/), [iXML](examples/ixml-interp/),
+[REx](examples/rex-interp/), and
+[W3C EBNF](examples/w3cebnf-frontend/) examples document the supported subsets and current
+limitations. In particular, iXML interpretation produces Trash parse trees,
+not iXML's prescribed XML output, and the interpreter does not execute arbitrary
+target-language actions or semantic predicates.
+
+For generated applications, `dotnet trash gen` supplies ANTLR4 driver and build
+templates for supported targets. The [grammars-v4 collection](https://github.com/antlr/grammars-v4)
+provides grammars for many programming languages and data formats.
+
+Trash also provides XPath 4.0 and XQuery 4.0 expression processing, including
+XQuery Update operations, to query and edit parse trees. Preserved off-channel
+tokens, such as whitespace and comments, can participate in source-preserving
+transformations. Commands compose through shell pipelines using PAX/tar bundles
+of parse trees, diagnostics, and other artifacts; text-rendering commands can
+instead output source text, trees, XML, or Graphviz DOT.
+
+Trash runs on Windows, Linux, and macOS as a .NET tool. Invoke its commands as
+`dotnet trash <command>`, for example `dotnet trash parse --help`.
+Interpreted parsing needs no separate target-language toolchain; generating and
+building parser applications requires the tools for the selected target.
 
 ## Installation
 ### Requirements

@@ -6,7 +6,7 @@ Generate ANTLR4 `.interp` files from a grammar parse tree
 
 ## Description
 
-Reads an Antlr4 grammar parse tree from stdin (as produced by `dotnet trash parse`) and
+Reads ANTLRv4, G4X, basic REx, iXML, ABNF, Bison, or W3C EBNF grammar parse trees from stdin (as produced by `dotnet trash parse`) and
 writes `.interp` and `.tokens` files to the output directory. Supports both
 lexer and parser grammars, as well as combined grammars (which produce a lexer
 and parser `.interp` pair).
@@ -31,9 +31,120 @@ consume them without needing the generated target-language source.
     dotnet trash parse CLexer.g4 CParser.g4 | dotnet trash interp -o out/
     dotnet trash parse Heavy.g4 | dotnet trash interp --actions-in-interp -o out/
 
+## G4X interpretation
+
+    dotnet trash parse Lexer.g4x Parser.g4x | dotnet trash interp -o interp
+    dotnet trash parse --allstar -L interp input.txt
+
+G4X `.g4x` and `.g4x` grammars use the same ATN serialization as ANTLRv4.
+Rule names are case-neutral: lexer grammar declarations define lexer rules;
+parser and combined grammar declarations define parser rules. Combined grammars
+generate an implicit lexer for string literals, without reclassifying uppercase
+rule names. For whitespace handling or other named tokens, supply a separate
+lexer grammar and select it with `options { tokenVocab=Lexer; }`. A combined
+G4X grammar with `tokenVocab` uses that lexer instead of an implicit lexer.
+
+Vocabularies are bound to the selected lexer in the input batch. If that lexer
+is absent, a `.tokens` file beside the grammar source is used. A parser without
+`tokenVocab` may use the sole lexer in a batch; multiple lexers require explicit
+selection. Undefined and ambiguous G4X symbols are errors. `--start-rule`
+overrides discovery of the single rule explicitly referencing EOF.
+
+This implementation supports alternatives, references, literals, lexer character
+sets/ranges, repetitions (including nongreedy repetitions), modes, lexer commands,
+and the existing left-recursion transformation. It preserves actions/predicates
+for the existing serialization machinery; it does not add target-language action
+or predicate execution. The `more` command is serialized, but the existing
+interpreter lexer still rejects execution of that action. Named rule references
+inside lexer character sets also require future set expansion. Set difference,
+imports, and character sets/ranges in
+parser rules (which require scannerless compilation) currently produce explicit
+errors. Parsing those constructs as grammar syntax does not imply they can yet
+be compiled into an ANTLR ATN.
+
+The backend owns `GrammarNode` rule bodies instead of DOM nodes. Input front ends
+lower to a common block/alternative/element representation before vocabulary
+binding and ATN construction. Future EBNF front ends can feed that representation
+without changing the serializer or duplicating the ATN builders.
+
+## Basic REx interpretation
+
+    dotnet trash parse Arithmetic.rex | dotnet trash interp -o interp
+    dotnet trash parse --allstar -L interp -i '1+2*3'
+
+The REx front end lowers syntax and lexical productions to the shared compiler
+model. Filenames determine output grammar names. Lexical helpers become fragments;
+lexical declarations of `$` supply named EOF references. Use `--start-rule` when
+the grammar has no unique explicit EOF rule. See
+[`examples/rex-interp`](../../examples/rex-interp/README.md) for runnable examples
+and the supported subset. Whitespace must be explicit. Advanced REx lexer and
+disambiguation semantics are not implemented.
+Hexadecimal character codes and character-class range endpoints above U+FFFF
+are rejected because the interpreter lexer reads UTF-16 code units.
+
+## Basic ABNF interpretation
+
+    dotnet trash parse -t ABNF Message.abnf | dotnet trash interp -o interp
+    dotnet trash parse --allstar -L interp input.txt
+
+The ABNF front end supports the core [RFC 5234](https://www.rfc-editor.org/rfc/rfc5234)
+forms: rule definitions and incremental `=/` alternatives, case-insensitive
+rule names and quoted strings, concatenation and alternatives, groups and
+options, `n`, `*m`, `n*`, and `n*m` repetition, `%b`/`%d`/`%x` numeric values,
+and the 16 RFC core rules. It uses one-character lexer tokens to preserve
+ABNF's character-level matching. The first declared rule is the default entry;
+a synthesized `abnf_start` rule requires EOF. Use `--start-rule` to select a
+different entry rule when compiling.
+
+Prose values are not executable and are rejected. Repetition bounds above 256,
+surrogate code points, and code points above U+FFFF are not supported. The
+built-in ABNF grammar currently does not accept the later `%s` and `%i` quoted
+string forms. See the runnable
+[`examples/abnf-frontend`](../../examples/abnf-frontend/README.md).
+
+## Basic Bison interpretation
+
+    dotnet trash parse Message.y MessageLexer.g4 | dotnet trash interp -o interp
+    dotnet trash parse --allstar -L interp --pinterp Bison_Message.interp --linterp MessageLexer.interp input.txt
+
+Bison `.y` files describe parser productions but depend on a separate scanner.
+Pass exactly one ANTLR4 `.g4` or G4X `.g4x` lexer grammar in the same parse
+batch. Its token names must match Bison's named terminals; a Bison character
+or string literal must match a single-literal lexer token rule, unless declared
+as a `%token` string alias. Select the generated parser and lexer `.interp`
+files explicitly when parsing, since their grammar names need not match.
+
+The basic front end supports alternatives, empty productions (`%empty` or an
+empty right-hand side), `%token` aliases, and `%start` (otherwise the first
+production starts the parse). It creates a `bison_start` rule with EOF.
+Semantic actions, prologue/epilogue code, type declarations, and named
+references are not executed. Precedence declarations, `%prec`, predicates,
+GLR dynamic precedence/merging, and Bison error recovery are not implemented;
+the forms that appear in productions are rejected rather than silently
+changing their meaning. Lex/Flex `.l` files are not compiled. See the runnable
+[`examples/bison-frontend`](../../examples/bison-frontend/README.md).
+
+## Basic W3C EBNF interpretation
+
+    dotnet trash parse -t W3CEBNF Message.ebnf | dotnet trash interp -o interp
+    dotnet trash parse --allstar -L interp input.txt
+
+The W3C EBNF front end supports strings, `#x` characters, character sets and
+ranges (including complemented sets), references, grouping, alternatives,
+empty sequences, and `?`, `*`, `+` suffixes. It uses a disjoint one-character
+lexer so that maximal-munch token selection does not change scannerless EBNF
+semantics. The first production is the default entry; a synthesized
+`w3c_start` rule enforces EOF. Whitespace is significant unless included in
+the EBNF itself.
+
+Production difference (`-`) and validity constraints are rejected instead of
+silently approximated. Character codes are limited to non-surrogate BMP code
+points because the interpreter lexer currently consumes UTF-16 code units.
+See [`examples/w3cebnf-frontend`](../../examples/w3cebnf-frontend/README.md).
+
 ## Current version
 
-Release 3.7.0.
+Release 4.0.0.
 
 ## License
 

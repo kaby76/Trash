@@ -1,0 +1,2 @@
+message ::= "hello" #x20 name "!" #xA
+name ::= "Ada" | "Bob" | [A-Z] [a-z]+

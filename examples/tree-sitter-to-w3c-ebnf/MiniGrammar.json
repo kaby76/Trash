@@ -1,0 +1,29 @@
+{
+  "name": "mini",
+  "rules": {
+    "source_file": {
+      "type": "SEQ",
+      "members": [
+        { "type": "SYMBOL", "name": "item" },
+        { "type": "REPEAT", "content": { "type": "SYMBOL", "name": "item" } }
+      ]
+    },
+    "item": {
+      "type": "CHOICE",
+      "members": [
+        { "type": "STRING", "value": ";" },
+        { "type": "REPEAT1", "content": { "type": "STRING", "value": "x" } },
+        { "type": "BLANK" }
+      ]
+    },
+    "pattern_item": {
+      "type": "PREC_LEFT",
+      "value": 1,
+      "content": {
+        "type": "FIELD",
+        "name": "body",
+        "content": { "type": "PATTERN", "value": "[a-z]+" }
+      }
+    }
+  }
+}

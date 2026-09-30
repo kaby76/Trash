@@ -18,7 +18,7 @@ Reads a parsing result set for a grammar and outputs the rules that are nullable
 
 ## Current version
 
-Release 3.7.0.
+Release 4.0.0.
 
 ## License
 

@@ -1,0 +1,4 @@
+message = greeting SP name "!" LF
+greeting = "hello"
+name = "Ada"
+name =/ "Bob"

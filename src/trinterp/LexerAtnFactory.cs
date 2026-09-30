@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using ParseTreeEditing.UnvParseTreeDOM;
 using static trinterp.GrammarParser;
 
 namespace trinterp;
@@ -87,7 +86,7 @@ public class LexerAtnFactory : ParserAtnFactory
     // Rule body: lexerRuleBlock → lexerAltList
     // =========================================================================
 
-    protected override AtnHandle WalkRuleBody(UnvParseTreeElement bodyNode)
+    protected override AtnHandle WalkRuleBody(GrammarNode bodyNode)
     {
         // Implicit T__N rule (no parse tree body, just a string literal to match char-by-char).
         if (bodyNode == null && _currentRule?.ImplicitLiteral != null)
@@ -100,7 +99,7 @@ public class LexerAtnFactory : ParserAtnFactory
         return WalkLexerAltList(altList);
     }
 
-    private AtnHandle WalkLexerAltList(UnvParseTreeElement altListNode)
+    private AtnHandle WalkLexerAltList(GrammarNode altListNode)
     {
         // Mirror ANTLR4's BlockSetTransformer: if every alternative is a single
         // characterRange or STRING_LITERAL atom (no LEXER_CHAR_SET, no ruleref,
@@ -127,7 +126,7 @@ public class LexerAtnFactory : ParserAtnFactory
     /// no commands, no suffix), merges them into one set handle (matching ANTLR4's
     /// BlockSetTransformer). Returns null if fewer than 2 alts or any alt is not eligible.
     /// </summary>
-    private AtnHandle TryBuildBlockSet(UnvParseTreeElement altListNode)
+    private AtnHandle TryBuildBlockSet(GrammarNode altListNode)
     {
         var altChildren = Children(altListNode).Where(c => !IsTerminal(c) && c.LocalName == "lexerAlt").ToList();
         // BlockSetTransformer only collapses blocks with 2+ alternatives.
@@ -196,7 +195,7 @@ public class LexerAtnFactory : ParserAtnFactory
         return new AtnHandle(setLeft, setRight);
     }
 
-    private AtnHandle WalkLexerAlt(UnvParseTreeElement lexerAlt)
+    private AtnHandle WalkLexerAlt(GrammarNode lexerAlt)
     {
         // lexerAlt : lexerElements lexerCommands?
         var elements = Child(lexerAlt, "lexerElements");
@@ -223,7 +222,7 @@ public class LexerAtnFactory : ParserAtnFactory
         return h;
     }
 
-    private AtnHandle WalkLexerElements(UnvParseTreeElement lexerElements)
+    private AtnHandle WalkLexerElements(GrammarNode lexerElements)
     {
         var handles = new List<AtnHandle>();
         foreach (var child in Children(lexerElements))
@@ -236,7 +235,7 @@ public class LexerAtnFactory : ParserAtnFactory
         return ElemList(handles);
     }
 
-    private AtnHandle WalkLexerElement(UnvParseTreeElement lexerElement)
+    private AtnHandle WalkLexerElement(GrammarNode lexerElement)
     {
         // lexerElement : labeledLexerElement ebnfSuffix?
         //              | lexerAtom ebnfSuffix?
@@ -278,7 +277,7 @@ public class LexerAtnFactory : ParserAtnFactory
         return h ?? MakeEpsilonHandle();
     }
 
-    private AtnHandle WalkLexerAtom(UnvParseTreeElement lexerAtom)
+    private AtnHandle WalkLexerAtom(GrammarNode lexerAtom)
     {
         // lexerAtom : characterRange
         //           | terminalDef
@@ -309,7 +308,7 @@ public class LexerAtnFactory : ParserAtnFactory
         return MakeEpsilonHandle();
     }
 
-    private AtnHandle WalkLexerTerminalDef(UnvParseTreeElement terminalDef)
+    private AtnHandle WalkLexerTerminalDef(GrammarNode terminalDef)
     {
         // In lexer rules: STRING_LITERAL → char sequence; TOKEN_REF 'EOF' → AtomTransition(-1)
         var tokenRef = ChildTerminal(terminalDef, "TOKEN_REF");
@@ -329,7 +328,7 @@ public class LexerAtnFactory : ParserAtnFactory
         return MakeEpsilonHandle();
     }
 
-    private AtnHandle WalkLexerBlock(UnvParseTreeElement lexerBlock, UnvParseTreeElement ebnfSuffix = null)
+    private AtnHandle WalkLexerBlock(GrammarNode lexerBlock, GrammarNode ebnfSuffix = null)
     {
         // lexerBlock : LPAREN lexerAltList RPAREN
         var altList = Child(lexerBlock, "lexerAltList");
@@ -355,7 +354,7 @@ public class LexerAtnFactory : ParserAtnFactory
         return MakeBlock(lexerBlock, alts, ebnfSuffix);
     }
 
-    private AtnHandle WalkCharacterRange(UnvParseTreeElement characterRange)
+    private AtnHandle WalkCharacterRange(GrammarNode characterRange)
     {
         // characterRange : STRING_LITERAL RANGE STRING_LITERAL
         var literals = Children(characterRange)
@@ -379,7 +378,7 @@ public class LexerAtnFactory : ParserAtnFactory
         return new AtnHandle(left, right);
     }
 
-    private AtnHandle WalkLexerNotSet(UnvParseTreeElement notSet)
+    private AtnHandle WalkLexerNotSet(GrammarNode notSet)
     {
         // notSet : NOT setElement | NOT blockSet
         // In lexer: elements are character-based (char ranges, char sets, string literals)
@@ -395,7 +394,7 @@ public class LexerAtnFactory : ParserAtnFactory
         return MakeNotSet(set);
     }
 
-    private void AddLexerSetElement(IntervalSet set, UnvParseTreeElement se)
+    private void AddLexerSetElement(IntervalSet set, GrammarNode se)
     {
         var charRange = Child(se, "characterRange");
         if (charRange != null)
@@ -460,7 +459,7 @@ public class LexerAtnFactory : ParserAtnFactory
     // Lexer commands: skip, more, popMode, mode(x), pushMode(x), type(x), channel(x)
     // =========================================================================
 
-    private List<AtnHandle> WalkLexerCommands(UnvParseTreeElement lexerCommands)
+    private List<AtnHandle> WalkLexerCommands(GrammarNode lexerCommands)
     {
         // lexerCommands : RARROW lexerCommand (COMMA lexerCommand)*
         var result = new List<AtnHandle>();
@@ -472,7 +471,7 @@ public class LexerAtnFactory : ParserAtnFactory
         return result;
     }
 
-    private AtnHandle WalkLexerCommand(UnvParseTreeElement lexerCommand)
+    private AtnHandle WalkLexerCommand(GrammarNode lexerCommand)
     {
         // lexerCommand : lexerCommandName LPAREN lexerCommandExpr RPAREN
         //              | lexerCommandName
@@ -532,7 +531,7 @@ public class LexerAtnFactory : ParserAtnFactory
     // Inline action block (not a lexer command, but inline { } in lexer rule)
     // =========================================================================
 
-    private AtnHandle MakeLexerCustomAction(UnvParseTreeElement actionBlock)
+    private AtnHandle MakeLexerCustomAction(GrammarNode actionBlock)
     {
         var ruleIndex = _currentRule?.Index ?? -1;
         var actionIndex = _currentRule?.Actions.Count ?? 0;

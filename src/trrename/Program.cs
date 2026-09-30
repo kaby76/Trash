@@ -26,7 +26,7 @@ public class Program
 
     void DisplayHelp<T>(ParserResult<T> result, IEnumerable<Error> errs)
     {
-        HelpText helpText = null;
+        HelpText? helpText = null;
         if (errs.IsVersion()) //check if error is version request
             helpText = HelpText.AutoBuild(result);
         else

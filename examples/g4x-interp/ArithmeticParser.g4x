@@ -1,0 +1,5 @@
+parser grammar ArithmeticParser;
+options { tokenVocab=ArithmeticLexer; }
+
+Start : Expression EOF;
+Expression : Expression plus number | number;

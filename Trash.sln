@@ -1,4 +1,4 @@
-﻿
+﻿﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 18
 VisualStudioVersion = 18.7.12002.237
@@ -123,7 +123,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "bison", "src\grammars\bison
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "antlr4", "src\grammars\antlr4\Generated-CSharp\antlr4.csproj", "{10E16031-A17A-463D-AE5E-E11B50756821}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "g4plus", "src\grammars\g4plus\Generated-CSharp\g4plus.csproj", "{F5DCB23E-153D-4C72-A5AC-71DA94B1370B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "g4x", "src\grammars\g4x\Generated-CSharp\g4x.csproj", "{F5DCB23E-153D-4C72-A5AC-71DA94B1370B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "antlr3", "src\grammars\antlr3\Generated-CSharp\antlr3.csproj", "{1E125B38-9FEC-4EFA-9CD6-C007F8579E0F}"
 EndProject
