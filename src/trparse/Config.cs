@@ -72,10 +72,10 @@ public class Config
         HelpText = "Parser rule name to use as the start rule for interp parsing (overrides the .interp default).")]
     public string StartRule { get; set; }
 
-    [Option('L', "lib", Required = false, HelpText = "Directory to search for .interp files (resolves relative --pinterp / --linterp paths).")]
+    [Option('L', "lib", Required = false, HelpText = "Directory to search for .interp files (resolves relative --pinterp / --linterp paths). Without -L, --allstar reads a PAX/tar interpreter bundle from stdin.")]
     public string Lib { get; set; }
 
-    [Option("allstar", Required = false, HelpText = "Use ALL(*) parser instead of Earley when --pinterp / --linterp are specified.")]
+    [Option("allstar", Required = false, HelpText = "Use ALL(*) interpreter parsing. Without -L, read .interp files from a PAX/tar bundle on stdin.")]
     public bool AllStar { get; set; }
 
     [Option("indirect-left-recursion", Required = false,

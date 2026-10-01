@@ -15,6 +15,7 @@ The expected tree is:
 (Start (Expression (Expression (Expression 1) + 2) + 3) <EOF>)
 ```
 
-This example leaves `interp/` and `result.tree` for inspection. The test fails
-if generation, parsing, or the tree comparison fails. G4X exclusions and
+The example streams tables and the tree between commands without writing them
+to this directory. The test fails if generation, parsing, or the tree
+comparison fails. G4X exclusions and
 scannerless parser character sets are not yet supported by table generation.

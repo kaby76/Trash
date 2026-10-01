@@ -1,13 +1,13 @@
 # Basic REx interpretation
 
 Run `bash run-example.sh` with the rebuilt Trash tools installed. The script
-generates `.interp`/`.tokens` files from two REx grammars, parses three inputs,
+streams `.interp`/`.tokens` files from two REx grammars, parses three inputs,
 checks their ANTLR-style trees, and checks rejection of incomplete arithmetic.
 It requires no generated target-language parser.
 
 ```sh
-dotnet trash parse Arithmetic.rex | dotnet trash interp -o interp-arithmetic
-dotnet trash parse --allstar -L interp-arithmetic -i '1+2*3' | dotnet trash tree -a
+dotnet trash parse Arithmetic.rex | dotnet trash interp |
+  dotnet trash parse --allstar -i '1+2*3' | dotnet trash tree -a
 ```
 
 Expected output:

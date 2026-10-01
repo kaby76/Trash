@@ -2,13 +2,11 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-dotnet trash parse ArithmeticLexer.g4x ArithmeticParser.g4x |
-    dotnet trash interp -o interp
-dotnet trash parse --allstar -L interp input.txt |
-    dotnet trash tree -a > result.tree
-
 expected='(Start (Expression (Expression (Expression 1) + 2) + 3) <EOF>)'
-actual=$(cat result.tree)
+actual=$(dotnet trash parse ArithmeticLexer.g4x ArithmeticParser.g4x |
+    dotnet trash interp |
+    dotnet trash parse --allstar input.txt |
+    dotnet trash tree -a)
 if [[ "$actual" != "$expected" ]]; then
     printf 'Unexpected tree:\n%s\n' "$actual" >&2
     exit 1

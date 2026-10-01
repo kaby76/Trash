@@ -10,7 +10,8 @@ namespace trinterp;
 
 /// <summary>
 /// Reads a <see cref="AntlrJson.ParsingResultSet[]"/> from stdin (or a file),
-/// builds the ATN for each grammar parse tree, and writes .interp / .tokens files.
+/// builds the ATN for each grammar parse tree, and writes generated files to
+/// either an explicit directory or a PAX/tar bundle on stdout.
 /// </summary>
 public class Command
 {
@@ -21,13 +22,32 @@ public class Command
     public void Execute(Config config)
     {
         var sets = ParsingResultIO.Read(config.File).Results;
+        bool bundleOutput = config.OutputDirectory == null;
+        var outDir = bundleOutput
+            ? Directory.CreateTempSubdirectory("trinterp-").FullName
+            : config.OutputDirectory;
+        try
+        {
+            Compile(config, sets, outDir);
+            if (bundleOutput)
+            {
+                var artifacts = Directory.GetFiles(outDir, "*", SearchOption.AllDirectories)
+                    .OrderBy(path => path, StringComparer.Ordinal)
+                    .Select(path => new Artifact(
+                        ArtifactBundle.ValidateMemberName(Path.GetRelativePath(outDir, path).Replace('\\', '/')),
+                        File.ReadAllBytes(path)));
+                ArtifactBundle.Write(Console.OpenStandardOutput(), artifacts);
+            }
+        }
+        finally
+        {
+            if (bundleOutput) Directory.Delete(outDir, recursive: true);
+        }
+    }
 
-        if (sets == null || sets.Length == 0) return;
-
-        // ---- Prepare output directory ----
-        var outDir = config.OutputDirectory ?? ".";
+    private static void Compile(Config config, ParsingResultSet[] sets, string outDir)
+    {
         Directory.CreateDirectory(outDir);
-
         var optimizeNames = new List<string>(config.Optimize ?? Array.Empty<string>());
         var optimize = optimizeNames.Count > 0
             ? OptimizeOptions.FromNames(optimizeNames)

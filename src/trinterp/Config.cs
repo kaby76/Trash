@@ -5,8 +5,8 @@ namespace trinterp;
 
 public class Config
 {
-    [Option('o', "output-directory", Required = false, HelpText = "Output directory for .interp and .tokens files.")]
-    public string OutputDirectory { get; set; } = ".";
+    [Option('o', "output-directory", Required = false, HelpText = "Write generated files to this directory instead of a PAX/tar bundle on stdout.")]
+    public string OutputDirectory { get; set; }
 
     [Option('f', "file", Required = false, HelpText = "Read parse tree data from file instead of stdin.")]
     public string File { get; set; }
@@ -14,10 +14,10 @@ public class Config
     [Option("actions-in-interp", Required = false, HelpText = "Append grammar actions and semantic predicates as strings to the .interp file.")]
     public bool ActionsInInterp { get; set; }
 
-    [Option("atn", Required = false, HelpText = "Write one Graphviz .dot file per rule (<ruleName>.dot) to the output directory.")]
+    [Option("atn", Required = false, HelpText = "Include one Graphviz .dot file per rule (<grammarName>.<ruleName>.dot) in the output.")]
     public bool Atn { get; set; }
 
-    [Option("atn-combined", Required = false, HelpText = "Write a single Graphviz .dot file (<grammarName>.atn.dot) containing all rules.")]
+    [Option("atn-combined", Required = false, HelpText = "Include one Graphviz .dot file (<grammarName>.atn.dot) containing all rules.")]
     public bool AtnCombined { get; set; }
 
     [Option("state-map", Required = false, HelpText = "Append a state-map section to the .interp file mapping each ATN state number to its rule and .g4 line/column. Requires dotnet trash parse -l.")]

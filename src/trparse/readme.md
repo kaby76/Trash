@@ -76,6 +76,21 @@ The output is the same `ParsingResultSet` JSON format as all other `trparse`
 modes, so every downstream Trash Toolkit tool (`trtree`, `trxgrep`, etc.)
 works without modification.
 
+### Piped ALL(*) interpretation
+
+Without `-L`, `--allstar` reads a PAX/tar bundle containing root-level
+`.interp` files from stdin. The bundle is the default output of `trinterp`:
+
+    dotnet trash parse Arithmetic.rex | dotnet trash interp |
+        dotnet trash parse --allstar -i '1+2*3' | dotnet trash tree -a
+
+Provide the input text with `-i`, positional files, or `--xf`; `-x` cannot
+share stdin with the table bundle. The interpreter files are staged in a
+temporary directory for the parse and removed afterward. If the bundle has
+more than one parser/lexer pair, select one with `--pinterp` and `--linterp`.
+Supplying `-L` retains the existing directory-based behavior and does not
+consume a table bundle from stdin.
+
 ### Context-aware lexing
 
 The ALL(*) interpreter can lex lazily using the parser's valid-lookahead set.
