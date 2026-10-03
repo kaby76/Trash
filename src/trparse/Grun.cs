@@ -82,8 +82,20 @@ public class Grun
     {
         int result = 0;
         DateTime overallBefore = DateTime.Now;
+        InterpBundle stagedTables = null;
+        string originalLib = config.Lib;
         try
         {
+            if (config.AllStar && string.IsNullOrEmpty(config.Lib))
+            {
+                if (config.ReadFileNameStdin ||
+                    (config.Input == null && string.IsNullOrEmpty(config.ReadFileNameFile) &&
+                     (config.Files == null || !config.Files.Any())))
+                    throw new ArgumentException(
+                        "--allstar without -L reads interpreter tables from stdin; specify inputs with -i, positional files, or --xf (not -x or stdin text).");
+                stagedTables = InterpBundle.Open(Console.OpenStandardInput());
+                config.Lib = stagedTables.DirectoryPath;
+            }
             var data = new List<AntlrJson.ParsingResultSet>();
             string txt = config.Input;
             if (config.ReadFileNameStdin)
@@ -224,6 +236,11 @@ public class Grun
             result = 1;
             System.Console.Out.WriteLine();
         }
+        finally
+        {
+            config.Lib = originalLib;
+            stagedTables?.Dispose();
+        }
 
         return result;
     }
@@ -361,6 +378,8 @@ public class Grun
             AntlrJson.ParsingResultSet rs;
             long interpTokenCount;
             string interpLabel;
+            if (!string.IsNullOrEmpty(config.XQueryHooks) && !config.AllStar)
+                throw new ArgumentException("--xquery-hooks requires --allstar.");
             if (config.AllStar || config.ContextAwareLexing ||
                 config.IndirectLeftRecursion)
             {
@@ -377,7 +396,8 @@ public class Grun
                     config.LexerStats, config.LexerOverlaps, interpTimings,
                     parserStatistics, _parserPredictionCache,
                     _interpRuntimeCache, _lexerDfaCache,
-                    config.IndirectLeftRecursion, config.StartRule);
+                    config.IndirectLeftRecursion, config.StartRule,
+                    config.XQueryHooks);
                 if (interpTimings != null)
                     _interpTimings.Add(interpTimings);
                 interpLabel = "ALL(*)";

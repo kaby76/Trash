@@ -7,7 +7,8 @@ Generate ANTLR4 `.interp` files from a grammar parse tree
 ## Description
 
 Reads ANTLRv4, G4X, basic REx, iXML, ABNF, Bison, or W3C EBNF grammar parse trees from stdin (as produced by `dotnet trash parse`) and
-writes `.interp` and `.tokens` files to the output directory. Supports both
+writes generated `.interp`, `.tokens`, and optional ATN `.dot` files as a PAX/tar
+bundle on stdout. Specify `-o` to write them to a directory instead. Supports both
 lexer and parser grammars, as well as combined grammars (which produce a lexer
 and parser `.interp` pair).
 
@@ -21,7 +22,7 @@ consume them without needing the generated target-language source.
 
 ## Options
 
-    -o, --output-directory  Output directory (default: current directory)
+    -o, --output-directory  Write generated files to a directory instead of stdout
     -f, --file              Read parse tree from file instead of stdin
     --actions-in-interp     Append actions and predicates as strings to .interp
     -v, --verbose           Verbose output
@@ -30,6 +31,8 @@ consume them without needing the generated target-language source.
 
     dotnet trash parse CLexer.g4 CParser.g4 | dotnet trash interp -o out/
     dotnet trash parse Heavy.g4 | dotnet trash interp --actions-in-interp -o out/
+    dotnet trash parse Arithmetic.rex | dotnet trash interp |
+        dotnet trash parse --allstar -i '1+2*3' | dotnet trash tree -a
 
 ## G4X interpretation
 
@@ -144,7 +147,7 @@ See [`examples/w3cebnf-frontend`](../../examples/w3cebnf-frontend/README.md).
 
 ## Current version
 
-Release 4.0.0.
+Release 4.1.0.
 
 ## License
 

@@ -114,7 +114,8 @@ public static class AllStarParser
         LexerStatistics lexerStatistics = null,
         ParserStatistics parserStatistics = null,
         ParserPredictionCache predictionCache = null,
-        LexerAtnSimulator.LexerDfaCache lexerDfaCache = null)
+        LexerAtnSimulator.LexerDfaCache lexerDfaCache = null,
+        XQueryHooks hooks = null)
     {
         if (parserAtn == null) throw new ArgumentNullException(nameof(parserAtn));
         if (lexerAtn == null) throw new ArgumentNullException(nameof(lexerAtn));
@@ -128,7 +129,7 @@ public static class AllStarParser
         var instance = new ParserInstance(
             parserAtn, lexerAtn, input, allTokens, metadata,
             events, lexerStatistics, parserStatistics, predictionCache,
-            lexerDfaCache);
+            lexerDfaCache, hooks);
         bool success = instance.ParseRule(startRuleIndex, PredictionContext.EMPTY);
         instance.CaptureStatistics();
         if (!success)
@@ -156,6 +157,7 @@ public static class AllStarParser
         private readonly ParserStatistics _statistics;
         private readonly ushort[][] _ll1Tables;
         private readonly List<ParseEvent> _events;
+        private readonly XQueryHooks _hooks;
         private readonly HashSet<(int Rule, int Position, int Precedence)>
             _activeRuleCalls = new();
 
@@ -189,7 +191,8 @@ public static class AllStarParser
                               LexerStatistics lexerStatistics,
                               ParserStatistics parserStatistics = null,
                               ParserPredictionCache predictionCache = null,
-                              LexerAtnSimulator.LexerDfaCache lexerDfaCache = null)
+                              LexerAtnSimulator.LexerDfaCache lexerDfaCache = null,
+                              XQueryHooks hooks = null)
         {
             _atn = parserAtn;
             _allTokens = allTokens;
@@ -198,12 +201,15 @@ public static class AllStarParser
             _tokenTypes = Array.Empty<int>();
             _metadata = metadata;
             _events = events;
+            _hooks = hooks;
             _statistics = parserStatistics;
             _ll1Tables = null;
             _sim = new AllStarSimulator(
                 parserAtn, parserStatistics, predictionCache);
-            _lexer = new LexerAtnSimulator(
-                lexerAtn, lexerStatistics, lexerDfaCache);
+            _lexer = hooks == null
+                ? new LexerAtnSimulator(lexerAtn, lexerStatistics, lexerDfaCache)
+                : new LexerAtnSimulator(lexerAtn, lexerStatistics,
+                    enableDfa: false, predicateEvaluator: hooks.EvaluateLexerPredicate);
             _lexer.SetInput(input);
             _lexerCursor = new LexerAtnSimulator.Cursor();
             _input = input;
@@ -233,6 +239,7 @@ public static class AllStarParser
             AddEvent(isRecursion
                 ? ParseEventKind.EnterRecursionRule
                 : ParseEventKind.EnterRule, ruleIndex);
+            _hooks?.OnRuleEnter(ruleIndex, _events, _allTokens);
             var state = _metadata.SkipEpsilon(_atn.start[ruleIndex]);
 
             while (true)
@@ -355,6 +362,7 @@ public static class AllStarParser
                 }
             }
 
+            _hooks?.OnRuleExit(ruleIndex, _events, _allTokens);
             AddEvent(isRecursion
                 ? ParseEventKind.ExitRecursionRule
                 : ParseEventKind.ExitRule, ruleIndex);

@@ -12,7 +12,8 @@ ANTLR4 parser application for a supported target language.
 `dotnet trash interp` compiles grammar parse trees into `.interp` files containing
 lexer and parser ATNs, together with `.tokens` vocabularies. These tables can be
 loaded by `dotnet trash parse` without generating or compiling a target-language
-parser. Grammar front ends currently support:
+parser. By default, `interp` bundles the tables on stdout for the next command;
+use `-o` to write them to a directory. Grammar front ends currently support:
 
 * [ABNF](https://www.rfc-editor.org/rfc/rfc5234) (`.abnf`) — a basic subset,
   compiled with character-level tokenization and RFC core rules.
@@ -36,8 +37,8 @@ parser. Grammar front ends currently support:
 For example, from the [REx example directory](examples/rex-interp/):
 
 ```sh
-dotnet trash parse Arithmetic.rex | dotnet trash interp -o interp
-dotnet trash parse --allstar -L interp -i '1+2*3' | dotnet trash tree -a
+dotnet trash parse Arithmetic.rex | dotnet trash interp |
+  dotnet trash parse --allstar -i '1+2*3' | dotnet trash tree -a
 ```
 
 Support for a notation does not imply support for all of its semantics.

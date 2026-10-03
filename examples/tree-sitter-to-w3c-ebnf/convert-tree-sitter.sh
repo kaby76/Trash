@@ -10,11 +10,7 @@ fi
 here="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 root="$(cd -- "$here/../.." && pwd)"
 input="$(cd -- "$(dirname -- "$1")" && pwd)/$(basename -- "$1")"
-scratch="$(mktemp -d)"
-trap 'rm -f -- "$scratch"/*; rmdir -- "$scratch"' EXIT
-
 dotnet "$root/src/trparse/bin/Release/net10.0/trparse.dll" "$here/JSON.g4" \
-  | dotnet "$root/src/trinterp/bin/Release/net10.0/trinterp.dll" -o "$scratch"
-
-dotnet "$root/src/trparse/bin/Release/net10.0/trparse.dll" --allstar -L "$scratch" "$input" \
+  | dotnet "$root/src/trinterp/bin/Release/net10.0/trinterp.dll" \
+  | dotnet "$root/src/trparse/bin/Release/net10.0/trparse.dll" --allstar "$input" \
   | dotnet "$root/src/trxquery/bin/Release/net10.0/trxquery.dll" -q "$here/convert.xq"

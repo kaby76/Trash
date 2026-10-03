@@ -56,7 +56,7 @@ public class LexerCommandTests
         innerStart.AddTransition(new MyAtomTransition(innerAction, 'z'));
         innerAction.AddTransition(new MyActionTransition(innerStop, 1, 0, false));
 
-        var atn = new MyATN
+        var atn = new Atn.MyATN
         {
             grammarType = MyATNType.Lexer,
             modeToStartState = [modeStart],
@@ -192,7 +192,7 @@ public class LexerCommandTests
         Assert.Equal(missesAfterFirstRun, simulator.DfaEdgeCacheMisses);
     }
 
-    private static MyATN BuildCommandAtn() => BuildAtn(
+    private static Atn.MyATN BuildCommandAtn() => BuildAtn(
         modeCount: 3,
         new RuleSpec(0, '<', 1, new(MyLexerActionType.PushMode, 1, 0)),
         new RuleSpec(0, '[', 2, new(MyLexerActionType.Mode, 2, 0)),
@@ -204,7 +204,7 @@ public class LexerCommandTests
         new RuleSpec(2, 'y', 8),
         new RuleSpec(2, ']', 9, new(MyLexerActionType.Mode, 0, 0)));
 
-    private static MyATN BuildLineCommentAtn()
+    private static Atn.MyATN BuildLineCommentAtn()
     {
         var states = new List<MyATNState>();
         MyATNState New(MyStateType type, int rule)
@@ -241,7 +241,7 @@ public class LexerCommandTests
         modeStart.AddTransition(new MyEpsilonTransition(commentStart));
         modeStart.AddTransition(new MyEpsilonTransition(wsStart));
 
-        return new MyATN
+        return new Atn.MyATN
         {
             grammarType = MyATNType.Lexer,
             maxTokenType = 2,
@@ -253,7 +253,7 @@ public class LexerCommandTests
         };
     }
 
-    private static MyATN BuildRecursiveCommentAtn()
+    private static Atn.MyATN BuildRecursiveCommentAtn()
     {
         var states = new List<MyATNState>();
         MyATNState New(MyStateType type, int rule)
@@ -307,7 +307,7 @@ public class LexerCommandTests
         modeStart.AddTransition(new MyEpsilonTransition(closeStart));
         modeStart.AddTransition(new MyEpsilonTransition(textStart));
 
-        return new MyATN
+        return new Atn.MyATN
         {
             grammarType = MyATNType.Lexer,
             maxTokenType = 4,
@@ -319,7 +319,7 @@ public class LexerCommandTests
         };
     }
 
-    private static MyATN BuildNestedNonGreedyAtn()
+    private static Atn.MyATN BuildNestedNonGreedyAtn()
     {
         var states = new List<MyATNState>();
         MyATNState New(MyStateType type, int rule)
@@ -363,7 +363,7 @@ public class LexerCommandTests
         modeStart.AddTransition(new MyEpsilonTransition(htmlStart));
         modeStart.AddTransition(new MyEpsilonTransition(cabStart));
 
-        return new MyATN
+        return new Atn.MyATN
         {
             grammarType = MyATNType.Lexer,
             maxTokenType = 2,
@@ -375,7 +375,7 @@ public class LexerCommandTests
         };
     }
 
-    private static MyATN BuildMutuallyRecursiveAtn()
+    private static Atn.MyATN BuildMutuallyRecursiveAtn()
     {
         var states = new List<MyATNState>();
         MyATNState New(MyStateType type, int rule)
@@ -414,7 +414,7 @@ public class LexerCommandTests
 
         modeStart.AddTransition(new MyEpsilonTransition(tokenStart));
 
-        return new MyATN
+        return new Atn.MyATN
         {
             grammarType = MyATNType.Lexer,
             maxTokenType = 1,
@@ -426,9 +426,9 @@ public class LexerCommandTests
         };
     }
 
-    private static MyATN BuildAtn(int modeCount, params RuleSpec[] rules)
+    private static Atn.MyATN BuildAtn(int modeCount, params RuleSpec[] rules)
     {
-        var atn = new MyATN
+        var atn = new Atn.MyATN
         {
             grammarType = MyATNType.Lexer,
             modeToStartState = new MyATNState[modeCount],
