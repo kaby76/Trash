@@ -47,7 +47,7 @@ public sealed class Ll1DecisionAnalyzerTests
             .IsEligible(predicate.decision));
     }
 
-    private static (MyATN atn, int decision, MyATNState first,
+    private static (Atn.MyATN atn, int decision, MyATNState first,
         MyATNState second, MyATNState stop, MyATNState extra) CreateDecision(
         int maxTokenType, bool extraState = false)
     {
@@ -61,7 +61,7 @@ public sealed class Ll1DecisionAnalyzerTests
         var states = extraState
             ? new[] { decision, first, second, stop, extra }
             : new[] { decision, first, second, stop };
-        return (new MyATN
+        return (new Atn.MyATN
         {
             maxTokenType = maxTokenType,
             allStates = states,

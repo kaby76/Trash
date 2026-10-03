@@ -161,7 +161,7 @@ public class ContextAwareLexingTests
         Assert.Equal(9, tokenCount);
     }
 
-    private static MyATN BuildParserAtn()
+    private static Atn.MyATN BuildParserAtn()
     {
         var states = Enumerable.Range(0, 6)
             .Select(number => new MyATNState
@@ -182,7 +182,7 @@ public class ContextAwareLexingTests
         states[3].AddTransition(new MyAtomTransition(states[4], -1));
         states[4].AddTransition(new MyEpsilonTransition(states[5]));
 
-        return new MyATN
+        return new Atn.MyATN
         {
             grammarType = MyATNType.Parser,
             maxTokenType = Value,
@@ -193,7 +193,7 @@ public class ContextAwareLexingTests
         };
     }
 
-    private static MyATN BuildLexerAtn()
+    private static Atn.MyATN BuildLexerAtn()
     {
         var states = new List<MyATNState>();
         var modeStart = State(MyStateType.TokenStart, -1, states);
@@ -219,7 +219,7 @@ public class ContextAwareLexingTests
         AddValueTransitions(valueLoop, valueLoop);
         valueLoop.AddTransition(new MyEpsilonTransition(valueStop));
 
-        return new MyATN
+        return new Atn.MyATN
         {
             grammarType = MyATNType.Lexer,
             maxTokenType = Value,
@@ -231,7 +231,7 @@ public class ContextAwareLexingTests
         };
     }
 
-    private static MyATN BuildEqualLengthLexerAtn()
+    private static Atn.MyATN BuildEqualLengthLexerAtn()
     {
         var states = new List<MyATNState>();
         var modeStart = State(MyStateType.TokenStart, -1, states);
@@ -244,7 +244,7 @@ public class ContextAwareLexingTests
             modeStart.AddTransition(new MyEpsilonTransition(starts[rule]));
             starts[rule].AddTransition(new MyAtomTransition(stops[rule], '1'));
         }
-        return new MyATN
+        return new Atn.MyATN
         {
             grammarType = MyATNType.Lexer,
             maxTokenType = 2,

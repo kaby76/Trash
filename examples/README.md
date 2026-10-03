@@ -25,6 +25,7 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`tree-sitter-to-w3c-ebnf/`](tree-sitter-to-w3c-ebnf/) | Convert Tree-sitter `grammar.json` rules to structural W3C EBNF with XQuery4, explicitly marking unsupported constructs |
 | [`w3cebnf-frontend/`](w3cebnf-frontend/) | Compile a basic W3C EBNF grammar to `.interp` tables and parse its input with AllStar |
 | [`xpath31-to-antlr4/`](xpath31-to-antlr4/) | Parse the XPath 3.1 EBNF grammar using generated `.interp` files built from the XPath 3.1 meta-grammar (work in progress) |
+| [`xquery-contextual-lexing/`](xquery-contextual-lexing/) | Use XQuery4 lexer predicates and parser-rule hooks to distinguish declared hyphenated identifiers from subtraction |
 
 Each example directory contains a `run-example.sh` and its own `README.md`.
 

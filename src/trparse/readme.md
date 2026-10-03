@@ -107,6 +107,26 @@ the lexer falls back to ordinary ANTLR maximal-munch and rule-priority
 semantics. Existing lexer modes and `skip`, `type`, `channel`, `mode`,
 `pushMode`, and `popMode` commands are honored.
 
+### XQuery4 interpreter hooks (experimental)
+
+With `--allstar --xquery-hooks hooks.json`, a manifest can bind lexer semantic
+predicates by rule name and predicate index, and bind XQuery4 files to parser
+rule entry/exit. Lexer predicates are read-only; committed parser exits can
+update per-input declaration state. The lexer is run lazily so later tokens
+can observe those updates. For example:
+
+    {"lexerPredicates":[{"rule":"IDENTIFIER","predicate":0,"query":"hyphen.xq"}],
+     "parserRules":[{"rule":"decl","enter":"on-decl-enter.xq","exit":"on-decl-exit.xq"}]}
+
+Query paths are relative to the manifest.
+See [`examples/xquery-contextual-lexing/`](../../examples/xquery-contextual-lexing/)
+for a runnable grammar, manifest, input, and golden-token test.
+
+This initial implementation supports the declaration-state functions used by
+that example, not arbitrary parser semantic predicates or transactional
+rollback of parser actions. It cannot be combined with
+`--indirect-left-recursion`.
+
 Use `--lexer-stats` to write a summary of lexer-rule overlaps observed while
 processing the input. Use `--lexer-overlaps` for per-position candidate and
 winner details; it implies the summary. Speculative ALL(*) lookahead is not
@@ -149,7 +169,7 @@ indirectly recursive rule nesting and grows it left-associatively:
 
 This opt-in path is intended for grammars that ANTLR normally rejects during
 code generation. It cannot currently be combined with
-`--context-aware-lexing`.
+`--context-aware-lexing` or `--xquery-hooks`.
 
 ## Usage
 
@@ -164,6 +184,7 @@ code generation. It cannot currently be combined with
                        Allow mutually/indirectly left-recursive interp rules.
         --context-aware-lexing
                        Prefer lexer tokens valid in the current ALL(*) parser context.
+        --xquery-hooks Manifest for experimental XQuery4 lexer predicates and parser hooks.
         --lexer-stats  Write observed interp lexer-overlap statistics to stderr.
         --lexer-overlaps
                        Write detailed observed overlaps (implies --lexer-stats).

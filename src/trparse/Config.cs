@@ -86,6 +86,10 @@ public class Config
         HelpText = "For ALL(*) interp parsing, prefer lexer tokens valid in the current parser context; fall back to normal ANTLR lexing when none match.")]
     public bool ContextAwareLexing { get; set; }
 
+    [Option("xquery-hooks", Required = false,
+        HelpText = "JSON manifest of XQuery4 lexer predicates and parser-rule entry/exit hooks for ALL(*) interpreter parsing.")]
+    public string XQueryHooks { get; set; }
+
     [Option("lexer-stats", Required = false,
         HelpText = "Write observed interp lexer-overlap statistics to stderr.")]
     public bool LexerStats { get; set; }

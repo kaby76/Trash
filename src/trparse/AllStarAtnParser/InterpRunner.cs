@@ -30,12 +30,14 @@ public static class InterpRunner
         InterpRuntimeCache runtimeCache = null,
         LexerAtnSimulator.LexerDfaCache lexerDfaCache = null,
         bool indirectLeftRecursion = false,
-        string startRuleName = null)
+        string startRuleName = null,
+        string xqueryHooksPath = null)
     {
-        if (indirectLeftRecursion && contextAwareLexing)
+        if (indirectLeftRecursion &&
+            (contextAwareLexing || !string.IsNullOrEmpty(xqueryHooksPath)))
             throw new ArgumentException(
                 "--indirect-left-recursion cannot currently be combined with " +
-                "--context-aware-lexing.");
+                "--context-aware-lexing or --xquery-hooks.");
 
         timings ??= new InterpRunTimings();
         timings.Files = 1;
@@ -119,15 +121,22 @@ public static class InterpRunner
         var statistics = lexerStats || lexerOverlaps
             ? new LexerStatistics()
             : null;
+        var hooks = string.IsNullOrEmpty(xqueryHooksPath)
+            ? null
+            : XQueryHooks.Load(xqueryHooksPath, inputText,
+                lexerInterp.RuleNames, parserInterp.RuleNames,
+                lexerInterp.SymbolicNames);
 
         TokenStore rawTokens;
         List<ParseEvent> events;
-        if (contextAwareLexing)
+        if (contextAwareLexing || hooks != null)
         {
             timer.Restart();
             events = AllStarParser.ParseContextAware(
                 parserAtn, lexerAtn, inputText, startRule, out rawTokens,
-                statistics, parserStatistics, predictionCache);
+                statistics, parserStatistics,
+                hooks == null ? predictionCache : null,
+                hooks: hooks);
             timer.Stop();
             // Tokens are requested lazily here; this is combined lex/parse time.
             timings.Parsing = timer.Elapsed;

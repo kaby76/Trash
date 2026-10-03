@@ -10,6 +10,9 @@ public partial class LexerAtnSimulator
 {
     private readonly MyATN _atn;
     private readonly bool _enableDfa;
+    private readonly Func<int, int, int, int, bool> _predicateEvaluator;
+    private int _matchStart;
+    private int _matchPosition;
     private readonly LexContextCache _contextCache;
     private readonly Stack<LexerConfig> _closureWork = new();
     private readonly Dictionary<int, IMyLexerAction[]> _actionSets;
@@ -35,10 +38,12 @@ public partial class LexerAtnSimulator
 
     internal LexerAtnSimulator(
         MyATN lexerAtn, LexerStatistics statistics, bool enableDfa,
-        LexerDfaCache dfaCache = null)
+        LexerDfaCache dfaCache = null,
+        Func<int, int, int, int, bool> predicateEvaluator = null)
     {
         _atn = lexerAtn;
-        _enableDfa = enableDfa;
+        _enableDfa = enableDfa && predicateEvaluator == null;
+        _predicateEvaluator = predicateEvaluator;
         Statistics = statistics;
         if (enableDfa && dfaCache != null)
         {
@@ -266,6 +271,8 @@ public partial class LexerAtnSimulator
     {
         if (mode < 0 || mode >= _atn.modeToStartState.Length)
             return EmptyMatch(startPos);
+        _matchStart = startPos;
+        _matchPosition = startPos;
         var current = GetModeStartState(mode);
         int pos = startPos;
         int bestRule = -1, bestEnd = -1, bestActions = 0;
@@ -282,6 +289,7 @@ public partial class LexerAtnSimulator
         while (pos < _input.Length)
         {
             int ch = _input[pos];
+            _matchPosition = pos + 1;
             var next = GetTargetState(current, ch);
             if (next == null) break;
             pos++;
@@ -298,6 +306,7 @@ public partial class LexerAtnSimulator
         // the end of a file that has no trailing newline.
         if (pos == _input.Length)
         {
+            _matchPosition = pos;
             var eof = GetTargetState(current, EOF);
             if (eof != null)
             {
@@ -554,8 +563,22 @@ public partial class LexerAtnSimulator
                 switch (tr)
                 {
                     case MyEpsilonTransition:
-                    case MyPredicateTransition:
                     case MyPrecedencePredicateTransition:
+                        next = new LexerConfig(
+                            tr.target, c.Stack, c.Actions,
+                            c.OuterRule < 0 ? tr.target.ruleIndex : c.OuterRule,
+                            NextNonGreedyDecision(c),
+                            NextNonGreedyContext(c),
+                            NextNonGreedyBranch(c, transitionIndex),
+                            c.CompletedRule);
+                        if (configs.Add(next)) work.Push(next);
+                        break;
+
+                    case MyPredicateTransition predicate:
+                        if (_predicateEvaluator != null &&
+                            !_predicateEvaluator(predicate.ruleIndex,
+                                predicate.predIndex, _matchStart, _matchPosition))
+                            break;
                         next = new LexerConfig(
                             tr.target, c.Stack, c.Actions,
                             c.OuterRule < 0 ? tr.target.ruleIndex : c.OuterRule,

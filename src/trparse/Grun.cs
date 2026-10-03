@@ -378,6 +378,8 @@ public class Grun
             AntlrJson.ParsingResultSet rs;
             long interpTokenCount;
             string interpLabel;
+            if (!string.IsNullOrEmpty(config.XQueryHooks) && !config.AllStar)
+                throw new ArgumentException("--xquery-hooks requires --allstar.");
             if (config.AllStar || config.ContextAwareLexing ||
                 config.IndirectLeftRecursion)
             {
@@ -394,7 +396,8 @@ public class Grun
                     config.LexerStats, config.LexerOverlaps, interpTimings,
                     parserStatistics, _parserPredictionCache,
                     _interpRuntimeCache, _lexerDfaCache,
-                    config.IndirectLeftRecursion, config.StartRule);
+                    config.IndirectLeftRecursion, config.StartRule,
+                    config.XQueryHooks);
                 if (interpTimings != null)
                     _interpTimings.Add(interpTimings);
                 interpLabel = "ALL(*)";
