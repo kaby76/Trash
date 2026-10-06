@@ -82,7 +82,7 @@ Without `-L`, `--allstar` reads a PAX/tar bundle containing root-level
 `.interp` files from stdin. The bundle is the default output of `trinterp`:
 
     dotnet trash parse Arithmetic.rex | dotnet trash interp |
-        dotnet trash parse --allstar -i '1+2*3' | dotnet trash tree -a
+        dotnet trash parse --allstar -i '1+2*3' | dotnet trash tree --text -a
 
 Provide the input text with `-i`, positional files, or `--xf`; `-x` cannot
 share stdin with the table bundle. The interpreter files are staged in a
@@ -212,12 +212,12 @@ code generation. It cannot currently be combined with
     dotnet trash parse --allstar -L interp --no-output input.txt
     dotnet trash parse --perf --per-file --allstar -L interp --no-output input.txt
     dotnet trash parse --allstar --parser-stats -L interp --no-output input.txt
-    echo "1+2+3" | dotnet trash parse | dotnet trash tree
+    echo "1+2+3" | dotnet trash parse | dotnet trash tree --text
     mkdir out; dotnet trash parse MyParser.g4 MyLexer.g4 | dotnet trash sponge -o out
 
     # Earley interp-based parse (no generated code needed)
     dotnet trash parse abb.g4 | dotnet trash interp -o out/
-    dotnet trash parse --pinterp out/abbParser.interp --linterp out/abbLexer.interp input.abb | dotnet trash tree
+    dotnet trash parse --pinterp out/abbParser.interp --linterp out/abbLexer.interp input.abb | dotnet trash tree --text
 
 ## Current version
 

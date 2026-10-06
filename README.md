@@ -38,7 +38,7 @@ For example, from the [REx example directory](examples/rex-interp/):
 
 ```sh
 dotnet trash parse Arithmetic.rex | dotnet trash interp |
-  dotnet trash parse --allstar -i '1+2*3' | dotnet trash tree -a
+  dotnet trash parse --allstar -i '1+2*3' | dotnet trash tree --text -a
 ```
 
 Support for a notation does not imply support for all of its semantics.
@@ -120,9 +120,9 @@ sortable reference table are in
 | [sort](src/trsort/readme.md) | Sort rules in a grammar |
 | [split](src/trsplit/readme.md) | Split a combined Antlr4 grammar |
 | [sponge](src/trsponge/readme.md) | Write parse result set back to files on disk |
-| [text](src/trtext/readme.md) | Print source text for parse tree nodes |
+| [text](src/trtext/readme.md) | Reconstruct source files into a PAX/tar bundle (`--text` for plain output) |
 | [tokens](src/trtokens/readme.md) | Print tokens in a parse tree |
-| [tree](src/trtree/readme.md) | Print a parse tree in a human-readable format |
+| [tree](src/trtree/readme.md) | Render parse trees into a PAX/tar bundle (`--text` for plain output) |
 | [unfold](src/trunfold/readme.md) | Unfold transform on a grammar |
 | [unfoldlit](src/trunfoldlit/readme.md) | Unfold transform with literals on a grammar |
 | [ungroup](src/trungroup/readme.md) | Ungroup transform on a grammar |
@@ -175,16 +175,16 @@ Parse-tree commands such as `xpath`, `xquery`, `foldlit`, `rename`, `sort`,
 `.pt` members and pass `.errors` and other bundle members through unchanged.
 Their output is another PAX/tar bundle, so commands remain composable with `|`.
 
-Commands whose normal output is human-readable text—such as `text`, `tree`,
-`xml`, `dot`, and `tokens`—still write text by default. Give one of these
-commands `--bundle` to use it as a bundle filter: every `.pt` member is replaced
-by its rendered artifact (for example, `.tree`), while unrelated members pass
-through unchanged.
+`text` and `tree` write PAX/tar bundles by default, replacing each `.pt`
+member with its rendered artifact while passing unrelated members through.
+Use `--text` for their human-readable stdout modes. Other display commands,
+such as `xml`, `dot`, and `tokens`, still write text by default and require
+`--bundle` to operate as bundle filters.
 
 ```sh
 find examples -type f \
   | dotnet trash parse --allstar -L interp -x \
-  | dotnet trash tree --bundle \
+  | dotnet trash tree \
   | dotnet trash sponge -o pt-allstar -c
 ```
 

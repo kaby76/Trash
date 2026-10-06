@@ -3,7 +3,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 tree=$(dotnet trash parse -t ABNF Message.abnf | dotnet trash interp |
-    dotnet trash parse --allstar input.txt | dotnet trash tree -a)
+    dotnet trash parse --allstar input.txt | dotnet trash tree --text -a)
 grep -q '(abnf_start ' <<<"$tree"
 grep -q '(message ' <<<"$tree"
 grep -q '(name ' <<<"$tree"

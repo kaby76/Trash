@@ -9,11 +9,7 @@
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<AssemblyName>trtree</AssemblyName>
 		<PackageId>trtree</PackageId>
-		<Description>
-			<![CDATA[Reads a tree from stdin and prints the tree as an indented node list.
-This program is part of the Trash toolkit.
-]]>
-		</Description>
+		<Description>Renders parse trees as .tree members in a PAX/tar artifact bundle. Use --text for plain output. This program is part of the Trash toolkit.</Description>
 		<ToolCommandName>trtree</ToolCommandName>
 		<RootNamespace>trtree</RootNamespace>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>

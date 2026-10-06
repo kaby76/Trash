@@ -9,12 +9,7 @@
 		<PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
 		<AssemblyName>trtext</AssemblyName>
 		<PackageId>trtext</PackageId>
-		<Description>
-			<![CDATA[Reads a tree from stdin and prints the source text. If 'line-number' is
-specified, the line number range for the tree is printed.
-This program is part of the Trash toolkit.
-]]>
-		</Description>
+		<Description>Reconstructs source text from parse trees in a PAX/tar artifact bundle. Use --text for plain-text output. This program is part of the Trash toolkit.</Description>
 		<ToolCommandName>trtext</ToolCommandName>
 		<RootNamespace>trtext</RootNamespace>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>

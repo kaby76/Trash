@@ -20,7 +20,12 @@ class Command
 
     public void Execute(Config config)
     {
-        if (config.Bundle)
+        if (config.Text && config.Bundle)
+            throw new ArgumentException("--text and --bundle cannot be combined.");
+        if (!config.Text && config.DisplayName)
+            throw new ArgumentException("--display-source requires --text; bundle members contain only tree text.");
+
+        if (!config.Text)
         {
             ExecuteBundle(config);
             return;

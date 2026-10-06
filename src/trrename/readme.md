@@ -10,7 +10,7 @@ Rename symbols in an ANTLR4 grammar using the XQuery4 update engine.
 
 ## Usage
 
-    dotnet trash parse Expression.g4 | dotnet trash rename -r 'e,exp;a,atom' | dotnet trash text
+    dotnet trash parse Expression.g4 | dotnet trash rename -r 'e,exp;a,atom' | dotnet trash text --text
 
 ## Details
 
@@ -30,7 +30,7 @@ Unrelated bundle members such as `.errors` are preserved.
 
 ## Examples
 
-    dotnet trash parse Foobar.g4 | dotnet trash rename -r 'a,b;c,d' | dotnet trash text > new-grammar.g4
+    dotnet trash parse Foobar.g4 | dotnet trash rename -r 'a,b;c,d' | dotnet trash text --text > new-grammar.g4
 
 Run the regression cases with `bash tests/trrename/test.sh` from the repository
 root after building `trparse`, `trrename`, and `trtext` in Release configuration.

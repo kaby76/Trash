@@ -55,8 +55,15 @@ class Command
 
     public void Execute(Config config)
     {
+        if (config.Text && config.Bundle)
+            throw new ArgumentException("--text and --bundle cannot be combined.");
+        if (!config.Text && (config.FilesWithMatches || config.FilesWithoutMatch ||
+                             config.Count || config.LineNumber))
+            throw new ArgumentException(
+                "-l, -L, -c, and -n require --text; bundle members contain only source text.");
+
         var input = AntlrJson.ParsingResultIO.Read(config.File);
-        if (config.Bundle)
+        if (!config.Text)
         {
             using var output = System.Console.OpenStandardOutput();
             AntlrJson.ParsingResultIO.WriteFilteredBundle(

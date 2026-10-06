@@ -28,15 +28,15 @@ dotnet trash interp -o interp/ --atn < grammar.json
 # Run native
 pushd Generated-CSharp
 find ../examples -name '*.*bnf' | dotnet trash parse -t gen -x > native.pt
-dotnet trash tree -f native.pt > native.tree
+dotnet trash tree --text -f native.pt > native.tree
 popd
 
 # Parse each .abnf and .bnf example file using the interpreter.
 pushd interp
 dotnet trash parse --lib . $files > earley.pt
-dotnet trash tree -f earley.pt > earley.tree
+dotnet trash tree --text -f earley.pt > earley.tree
 dotnet trash parse --lib . --allstar $files > allstar.pt
-dotnet trash tree -f allstar.pt > allstar.tree
+dotnet trash tree --text -f allstar.pt > allstar.tree
 popd
 
 echo "Done."

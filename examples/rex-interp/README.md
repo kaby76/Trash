@@ -7,7 +7,7 @@ It requires no generated target-language parser.
 
 ```sh
 dotnet trash parse Arithmetic.rex | dotnet trash interp |
-  dotnet trash parse --allstar -i '1+2*3' | dotnet trash tree -a
+  dotnet trash parse --allstar -i '1+2*3' | dotnet trash tree --text -a
 ```
 
 Expected output:

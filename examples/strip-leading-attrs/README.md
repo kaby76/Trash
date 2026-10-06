@@ -52,4 +52,4 @@ bash run-example.sh
      after it).
    - Appends the remaining children of `grammarDecl` (`identifier`, `SEMI`,
      …) unchanged.
-4. `dotnet trash tree` displays the cleaned result.
+4. `dotnet trash tree --text` displays the cleaned result.

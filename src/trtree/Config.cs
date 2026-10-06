@@ -4,7 +4,7 @@ namespace Trash;
 
 public class Config
 {
-    [Option('d', "display-source", Required = false, HelpText = "Display the name of the source for the tree so it can be easily identified.")]
+    [Option('d', "display-source", Required = false, HelpText = "In --text mode, display the source name with the tree.")]
     public bool DisplayName { get; set; }
     
     [Option('f', "file", Required = false, HelpText = "Read parse tree data from file instead of stdin.")]
@@ -28,8 +28,11 @@ public class Config
     [Option('b', "block-style", Required = false, HelpText = "Output tree as block style.")]
     public bool BlockTreeStyle { get; set; }
 
-    [Option("bundle", Required = false, HelpText = "Read and write an ordinary POSIX PAX artifact bundle.")]
+    [Option("bundle", Required = false, HelpText = "Compatibility alias for the default PAX/tar bundle output.")]
     public bool Bundle { get; set; }
+
+    [Option("text", Required = false, HelpText = "Write human-readable tree text instead of a PAX/tar bundle.")]
+    public bool Text { get; set; }
 
     [Option("version", Required = false)]
     public string Version { get; set; } = "4.1.0";

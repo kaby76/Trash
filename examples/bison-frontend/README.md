@@ -8,7 +8,7 @@ grammar parse trees in one batch, then AllStar parses [`input.txt`](input.txt).
 dotnet trash parse Message.y MessageLexer.g4 | dotnet trash interp |
   dotnet trash parse --allstar \
   --pinterp Bison_Message.interp --linterp MessageLexer.interp input.txt \
-  | dotnet trash tree -a
+  | dotnet trash tree --text -a
 ```
 
 Run `bash run-example.sh` to verify the pipeline. The Bison grammar uses

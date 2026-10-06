@@ -27,7 +27,7 @@ grammar:
 
 _Command_
 
-    dotnet trash parse Expression.g4 | dotnet trash rup | dotnet trash text
+    dotnet trash parse Expression.g4 | dotnet trash rup | dotnet trash text --text
 
 _Result_
 

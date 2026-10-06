@@ -32,7 +32,7 @@ consume them without needing the generated target-language source.
     dotnet trash parse CLexer.g4 CParser.g4 | dotnet trash interp -o out/
     dotnet trash parse Heavy.g4 | dotnet trash interp --actions-in-interp -o out/
     dotnet trash parse Arithmetic.rex | dotnet trash interp |
-        dotnet trash parse --allstar -i '1+2*3' | dotnet trash tree -a
+        dotnet trash parse --allstar -i '1+2*3' | dotnet trash tree --text -a
 
 ## G4X interpretation
 

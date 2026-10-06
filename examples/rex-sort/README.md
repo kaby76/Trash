@@ -11,10 +11,10 @@ For a grammar file:
 ```sh
 dotnet trash parse Grammar.rex \
   | dotnet trash xquery -q /absolute/path/to/sort-rex.xq \
-  | dotnet trash text > sorted.rex
+  | dotnet trash text --text > sorted.rex
 ```
 
-Use `dotnet trash text --bundle | dotnet trash sponge -c -o DIR` instead if you
+Use `dotnet trash text | tar -xvf - -C DIR` instead if you
 want the original filename and diagnostics written to a directory. Do not write
 over the input grammar before checking the result.
 

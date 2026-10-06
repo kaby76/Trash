@@ -5,7 +5,7 @@ cd "$(dirname "$0")"
 check_tree() {
     local grammar=$1 input=$2 expected=$3 actual
     actual=$(dotnet trash parse "$grammar" | dotnet trash interp |
-        dotnet trash parse --allstar -i "$input" | dotnet trash tree -a)
+        dotnet trash parse --allstar -i "$input" | dotnet trash tree --text -a)
     if [[ "$actual" != "$expected" ]]; then
         printf 'Unexpected tree for %s:\n%s\n' "$input" "$actual" >&2
         exit 1

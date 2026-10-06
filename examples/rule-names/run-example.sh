@@ -5,4 +5,4 @@ cd "$(dirname "$0")"
 
 dotnet trash parse RuleNames.g4 \
   | dotnet trash xquery --query rule-names.xq \
-  | dotnet trash tree
+  | dotnet trash tree --text

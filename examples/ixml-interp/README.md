@@ -6,7 +6,7 @@ lists, and verifies rejection of incomplete expressions and trailing input.
 
 ```sh
 dotnet trash parse Arithmetic.ixml | dotnet trash interp |
-  dotnet trash parse --allstar -i '1+23' | dotnet trash tree -a
+  dotnet trash parse --allstar -i '1+23' | dotnet trash tree --text -a
 ```
 
 Expected tree:

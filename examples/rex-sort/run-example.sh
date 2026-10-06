@@ -7,7 +7,7 @@ trap 'case "$scratch" in ./rex-sort-test-*) rm -rf -- "$scratch" ;; esac' EXIT
 
 dotnet trash parse ../rex-interp/Arithmetic.rex \
   | dotnet trash xquery -q sort-rex.xq \
-  | dotnet trash text --bundle >"$scratch/result.tar"
+  | dotnet trash text >"$scratch/result.tar"
 tar -xOf "$scratch/result.tar" Arithmetic.rex >"$scratch/sorted.rex"
 
 awk '

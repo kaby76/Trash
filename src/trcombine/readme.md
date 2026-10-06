@@ -9,7 +9,7 @@ Combine a split ANTLR4 parser and lexer grammar into one grammar.
 ```sh
 dotnet trash parse tests/trcombine/Gold/ArithmeticParser.g4 tests/trcombine/Gold/ArithmeticLexer.g4 \
   | dotnet trash combine \
-  | dotnet trash text
+  | dotnet trash text --text
 ```
 
 `combine` reads a PAX/tar parse-result bundle from stdin, or from `-f FILE`.
@@ -30,7 +30,7 @@ To extract the combined source into a directory:
 ```sh
 dotnet trash parse tests/trcombine/Gold/ArithmeticParser.g4 tests/trcombine/Gold/ArithmeticLexer.g4 \
   | dotnet trash combine \
-  | dotnet trash text --bundle \
+  | dotnet trash text \
   | dotnet trash sponge -c -o combined
 ```
 
