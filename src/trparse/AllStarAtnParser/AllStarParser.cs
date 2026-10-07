@@ -205,7 +205,9 @@ public static class AllStarParser
             _statistics = parserStatistics;
             _ll1Tables = null;
             _sim = new AllStarSimulator(
-                parserAtn, parserStatistics, predictionCache);
+                parserAtn, parserStatistics, predictionCache,
+                hooks?.HasParserPredicates == true
+                    ? EvaluatePredictionPredicate : null);
             _lexer = hooks == null
                 ? new LexerAtnSimulator(lexerAtn, lexerStatistics, lexerDfaCache)
                 : new LexerAtnSimulator(lexerAtn, lexerStatistics,
@@ -324,6 +326,23 @@ public static class AllStarParser
                             state = _metadata.SkipEpsilon(tr.target);
                             break;
 
+                        case CommittedStateKind.Predicate:
+                            if (_hooks != null)
+                            {
+                                var predicate = (MyPredicateTransition)tr;
+                                var types = _contextAware
+                                    ? BuildPredictionTokens(null, 2)
+                                    : _tokenTypes;
+                                int position = _contextAware ? 0 : Pos;
+                                if (!_hooks.EvaluateParserPredicate(
+                                        predicate.ruleIndex, predicate.predIndex,
+                                        types, position, _events, _allTokens,
+                                        speculative: false))
+                                    return false;
+                            }
+                            state = _metadata.SkipEpsilon(tr.target);
+                            break;
+
                         case CommittedStateKind.Rule:
                             var rt = _metadata.RuleTransition[stateNumber];
                             if (AllStarParser.Trace && rt.precedence != 0)
@@ -403,6 +422,12 @@ public static class AllStarParser
 
         public void CaptureStatistics() => _sim.CaptureRetainedStatistics();
 
+        private bool EvaluatePredictionPredicate(MyPredicateTransition predicate,
+            int[] tokenTypes, int position) =>
+            _hooks.EvaluateParserPredicate(predicate.ruleIndex,
+                predicate.predIndex, tokenTypes, position, _events,
+                _allTokens, speculative: true);
+
         private void AddEvent(ParseEventKind kind, int index)
         {
             if (_events == null) return;
@@ -410,7 +435,8 @@ public static class AllStarParser
             if (_statistics != null) _statistics.ParseEventsCreated++;
         }
 
-        private int[] BuildPredictionTokens(IReadOnlySet<int> expected)
+        private int[] BuildPredictionTokens(IReadOnlySet<int> expected,
+            int maxOnChannel = int.MaxValue)
         {
             var cursor = _lexerCursor.Clone();
             var types = new List<int>();
@@ -430,6 +456,7 @@ public static class AllStarParser
                     {
                         types.Add(token.Type);
                         firstOnChannel = false;
+                        if (types.Count >= maxOnChannel) break;
                     }
                     if (token.Type == EOF_TYPE) break;
                 }

@@ -1,0 +1,16 @@
+{
+  "parserPredicates": [
+    {
+      "rule": "annotationFieldValue",
+      "predicate": 0,
+      "query": "is-not-identifier-assign.xq",
+      "predict": true
+    },
+    {
+      "rule": "recordComponentList",
+      "predicate": 1,
+      "query": "last-record-component.xq",
+      "predict": false
+    }
+  ]
+}

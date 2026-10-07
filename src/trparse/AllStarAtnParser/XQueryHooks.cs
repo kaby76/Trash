@@ -18,11 +18,15 @@ public sealed class XQueryHooks
     private readonly string[] _parserRules;
     private readonly string[] _tokenNames;
     private readonly Dictionary<(int Rule, int Predicate), ExprNode> _lexerPredicates = new();
+    private readonly Dictionary<(int Rule, int Predicate), (ExprNode Query, bool Predict)>
+        _parserPredicates = new();
     private readonly Dictionary<int, ExprNode> _ruleEnter = new();
     private readonly Dictionary<int, ExprNode> _ruleExit = new();
     private readonly HashSet<string> _declared = new(StringComparer.Ordinal);
     private XdmDocument _tree;
     private bool _inDeclaration;
+
+    public bool HasParserPredicates => _parserPredicates.Count != 0;
 
     private XQueryHooks(string input, string[] parserRules, string[] tokenNames)
     {
@@ -47,6 +51,13 @@ public sealed class XQueryHooks
             if (rule < 0) throw new InvalidDataException($"Unknown lexer rule '{spec.Rule}'.");
             hooks._lexerPredicates.Add((rule, spec.Predicate),
                 Compile(directory, spec.Query));
+        }
+        foreach (var spec in manifest.ParserPredicates ?? [])
+        {
+            int rule = Array.IndexOf(parserRules, spec.Rule);
+            if (rule < 0) throw new InvalidDataException($"Unknown parser rule '{spec.Rule}'.");
+            hooks._parserPredicates.Add((rule, spec.Predicate),
+                (Compile(directory, spec.Query), spec.Predict));
         }
         foreach (var spec in manifest.ParserRules ?? [])
         {
@@ -87,6 +98,36 @@ public sealed class XQueryHooks
             Atomic(HasDeclaredPrefix(args[0].StringValue,
                 int.Parse(args[1].StringValue)))));
         return new XQueryEvaluator(context).Evaluate(expression).EffectiveBooleanValue;
+    }
+
+    public bool EvaluateParserPredicate(int rule, int predicate,
+        IReadOnlyList<int> tokenTypes, int position,
+        IReadOnlyList<ParseEvent> events, IReadOnlyList<LexerToken> tokens,
+        bool speculative)
+    {
+        if (!_parserPredicates.TryGetValue((rule, predicate), out var binding))
+            throw new InvalidOperationException(
+                $"No XQuery binding for parser predicate {rule}:{predicate}.");
+        if (speculative && !binding.Predict) return true;
+
+        var (tree, node) = Snapshot(events, tokens);
+        if (!speculative) _tree = tree;
+        var context = CreateContext(node);
+        context.SetVariable("tree", new XdmSequence(tree));
+        context.SetVariable("lookahead1", Atomic(TokenName(tokenTypes, position)));
+        context.SetVariable("lookahead2", Atomic(TokenName(tokenTypes, position + 1)));
+        return new XQueryEvaluator(context).Evaluate(binding.Query)
+            .EffectiveBooleanValue;
+    }
+
+    private string TokenName(IReadOnlyList<int> types, int position)
+    {
+        if (position >= types.Count) return "EOF";
+        int type = types[position];
+        if (type < 0) return "EOF";
+        return type < _tokenNames.Length
+            ? _tokenNames[type] ?? type.ToString()
+            : type.ToString();
     }
 
     private bool HasDeclaredPrefix(string candidate, int hyphenOffset)
@@ -190,7 +231,15 @@ public sealed class XQueryHooks
     private sealed class Manifest
     {
         public List<LexerPredicateSpec> LexerPredicates { get; set; }
+        public List<ParserPredicateSpec> ParserPredicates { get; set; }
         public List<ParserRuleSpec> ParserRules { get; set; }
+    }
+    private sealed class ParserPredicateSpec
+    {
+        public string Rule { get; set; }
+        public int Predicate { get; set; }
+        public string Query { get; set; }
+        public bool Predict { get; set; }
     }
     private sealed class LexerPredicateSpec
     {

@@ -9,6 +9,7 @@ internal enum CommittedStateKind : byte
     Stop,
     Decision,
     Epsilon,
+    Predicate,
     Rule,
     Terminal
 }
@@ -86,8 +87,9 @@ internal sealed class CommittedAtnMetadata
             Kind[number] = transition switch
             {
                 MyEpsilonTransition or MyActionTransition or
-                    MyPredicateTransition or MyPrecedencePredicateTransition =>
+                    MyPrecedencePredicateTransition =>
                     CommittedStateKind.Epsilon,
+                MyPredicateTransition => CommittedStateKind.Predicate,
                 MyRuleTransition => CommittedStateKind.Rule,
                 _ => CommittedStateKind.Terminal
             };

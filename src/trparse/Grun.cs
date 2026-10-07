@@ -4,6 +4,7 @@ using ParseTreeEditing.UnvParseTreeDOM;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Formats.Tar;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -86,6 +87,19 @@ public class Grun
         string originalLib = config.Lib;
         try
         {
+            if (config.BundleGlob != null)
+            {
+                if (!config.Bundle)
+                    throw new ArgumentException("--bundle-glob requires bundle output.");
+                if (config.Input != null || config.ReadFileNameStdin ||
+                    config.ReadFileNameFile != null || (config.Files?.Any() ?? false))
+                    throw new ArgumentException(
+                        "--bundle-glob reads its inputs from stdin; do not combine it with -i, -x, --xf, or positional files.");
+                if (config.AllStar && string.IsNullOrEmpty(config.Lib))
+                    throw new ArgumentException(
+                        "--bundle-glob with --allstar requires -L; stdin contains source files, not an interpreter bundle.");
+                return RunInputBundle(parser_type, overallBefore);
+            }
             if (config.AllStar && string.IsNullOrEmpty(config.Lib))
             {
                 if (config.ReadFileNameStdin ||
@@ -234,7 +248,8 @@ public class Grun
         {
             System.Console.Error.WriteLine(e.ToString());
             result = 1;
-            System.Console.Out.WriteLine();
+            if (!config.Bundle)
+                System.Console.Out.WriteLine();
         }
         finally
         {
@@ -276,6 +291,132 @@ public class Grun
         var diagnostics = outcome.ExitCode == 0 ? string.Empty : stderr;
         _bundleParses.Add(new BundleParse(inputName, data.Skip(start).ToList(), diagnostics));
         return outcome;
+    }
+
+    private int RunInputBundle(string parserType, DateTime overallBefore)
+    {
+        var matcher = new BundleMemberGlob(config.BundleGlob);
+        var names = new HashSet<string>(StringComparer.Ordinal);
+        var parseData = new List<AntlrJson.ParsingResultSet>();
+        var emitBundle = !config.NoOutput && !config.NoParsingResultSets;
+        var temporaryPath = Path.Combine(Path.GetTempPath(),
+            "trparse-" + Guid.NewGuid().ToString("N") + ".tar");
+        using var temporary = new FileStream(temporaryPath, FileMode.CreateNew,
+            FileAccess.ReadWrite, FileShare.None, 81920,
+            FileOptions.SequentialScan | FileOptions.DeleteOnClose);
+        using var input = Console.OpenStandardInput();
+        using var reader = new TarReader(input);
+        int result = 0;
+        int rowNumber = 0;
+
+        // The temporary output avoids publishing a partial bundle if a later
+        // source member collides with a generated .pt or .errors member.
+        using (var writer = emitBundle
+            ? new TarWriter(temporary, TarEntryFormat.Pax, leaveOpen: true)
+            : null)
+        {
+            TarEntry entry;
+            while ((entry = reader.GetNextEntry(copyData: false)) != null)
+            {
+                var name = AntlrJson.ArtifactBundle.ValidateMemberName(entry.Name);
+                if (!names.Add(name))
+                    throw new InvalidDataException($"Duplicate bundle member '{name}'.");
+
+                bool regular = entry.EntryType is TarEntryType.RegularFile or
+                    TarEntryType.V7RegularFile;
+                bool selected = regular && matcher.IsMatch(name);
+                if (regular && !selected && writer == null)
+                    continue;
+                if (regular)
+                {
+                    using var sourceData = new MemoryStream();
+                    entry.DataStream?.CopyTo(sourceData);
+                    string sourceText = null;
+                    if (selected)
+                    {
+                        sourceData.Position = 0;
+                        using var source = new StreamReader(sourceData, Encoding.UTF8,
+                            detectEncodingFromByteOrderMarks: true,
+                            leaveOpen: true);
+                        sourceText = source.ReadToEnd();
+                    }
+                    if (writer != null)
+                    {
+                        sourceData.Position = 0;
+                        writer.WriteEntry(CopyRegularEntry(entry, name, sourceData));
+                    }
+                    if (selected)
+                    {
+                        var (r, _, _) = ParseOne(parserType, sourceText,
+                            name, rowNumber++, parseData);
+                        result = result == 0 ? r : result;
+                    }
+                    if (selected && writer != null)
+                    {
+                        var parse = _bundleParses[^1];
+                        for (var index = 0; index < parse.Results.Count; index++)
+                        {
+                            var suffix = parse.Results.Count == 1 ? "" : $".{index + 1}";
+                            WriteAddedMember(writer, names, name + suffix + ".pt",
+                                AntlrJson.ArtifactBundle.SerializeParsingResult(
+                                    parse.Results[index], config.Format));
+                        }
+                        WriteAddedMember(writer, names, name + ".errors",
+                            new UTF8Encoding(false).GetBytes(parse.Diagnostics));
+                    }
+                    if (selected)
+                    {
+                        _bundleParses.Clear();
+                        parseData.Clear();
+                    }
+                }
+                else if (writer != null)
+                {
+                    writer.WriteEntry(new PaxTarEntry(entry));
+                }
+            }
+        }
+
+        PrintPerfSummary((DateTime.Now - overallBefore).TotalSeconds);
+        if (emitBundle)
+        {
+            temporary.Position = 0;
+            using var output = Console.OpenStandardOutput();
+            temporary.CopyTo(output);
+        }
+        return result;
+    }
+
+    private static PaxTarEntry CopyRegularEntry(TarEntry source, string name,
+        Stream data)
+    {
+        var copy = new PaxTarEntry(TarEntryType.RegularFile, name)
+        {
+            DataStream = data,
+            Mode = source.Mode,
+            ModificationTime = source.ModificationTime,
+            Uid = source.Uid,
+            Gid = source.Gid
+        };
+        if (source is PosixTarEntry posix)
+        {
+            copy.UserName = posix.UserName;
+            copy.GroupName = posix.GroupName;
+        }
+        return copy;
+    }
+
+    private static void WriteAddedMember(TarWriter writer, HashSet<string> names,
+        string name, byte[] data)
+    {
+        name = AntlrJson.ArtifactBundle.ValidateMemberName(name);
+        if (!names.Add(name))
+            throw new InvalidDataException($"Duplicate bundle member '{name}'.");
+        writer.WriteEntry(new PaxTarEntry(TarEntryType.RegularFile, name)
+        {
+            DataStream = new MemoryStream(data, writable: false),
+            ModificationTime = DateTimeOffset.UnixEpoch
+        });
     }
 
     private void WriteBundle()

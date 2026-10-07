@@ -43,6 +43,46 @@ public sealed class XQueryHooksTests
         finally { Directory.Delete(directory, true); }
     }
 
+    [Fact]
+    public async Task JavaParserPredicatesUseLookaheadAndPartialTree()
+    {
+        var directory = Directory.CreateTempSubdirectory("JavaXQueryHooks-").FullName;
+        try
+        {
+            var source = Path.Combine(AppContext.BaseDirectory,
+                "TestData", "java-allstar-xquery");
+            foreach (var name in new[] { "JavaLexer.g4", "JavaParser.g4", "hooks.json",
+                         "is-not-identifier-assign.xq", "last-record-component.xq",
+                         "input.java", "invalid-record.java" })
+                File.Copy(Path.Combine(source, name), Path.Combine(directory, name));
+
+            var parsed = await RunCli(typeof(Trash.Program).Assembly.Location,
+                null, "-t", "ANTLRv4", Path.Combine(directory, "JavaLexer.g4"),
+                Path.Combine(directory, "JavaParser.g4"));
+            var generated = await RunCli(typeof(trinterp.Program).Assembly.Location,
+                parsed.Output, "-o", directory);
+            Assert.Equal(0, generated.Exit);
+
+            string parser = Path.Combine(directory, "JavaParser.interp");
+            string lexer = Path.Combine(directory, "JavaLexer.interp");
+            string manifest = Path.Combine(directory, "hooks.json");
+            var valid = await File.ReadAllTextAsync(Path.Combine(directory, "input.java"));
+            var invalid = await File.ReadAllTextAsync(
+                Path.Combine(directory, "invalid-record.java"));
+
+            var (result, _) = InterpRunner.Run(parser, lexer, valid,
+                "input.java", false, xqueryHooksPath: manifest);
+            Assert.Single(result.Nodes);
+            Assert.Throws<InvalidOperationException>(() =>
+                InterpRunner.Run(parser, lexer, invalid, "invalid-record.java",
+                    false, xqueryHooksPath: manifest));
+            var (withoutHooks, _) = InterpRunner.Run(parser, lexer, invalid,
+                "invalid-record.java", false);
+            Assert.Single(withoutHooks.Nodes);
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
     private static async Task<(int Exit, byte[] Output)> RunCli(
         string assembly, byte[]? input, params string[] args)
     {

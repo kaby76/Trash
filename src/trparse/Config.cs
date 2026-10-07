@@ -59,6 +59,10 @@ public class Config
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }
 
+    [Option("bundle-glob", Required = false,
+        HelpText = "Read a PAX/tar bundle from stdin, parse members matching this glob, and preserve all input members in the output bundle. Use -L for interpreted parsing.")]
+    public string BundleGlob { get; set; }
+
     [Option("xf", Required = false, HelpText = "Read input file names from file provided on command line.")]
     public string ReadFileNameFile { get; set; }
 
