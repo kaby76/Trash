@@ -8,8 +8,8 @@ set -e
 cd "$(dirname "$0")"
 
 dotnet trash parse A.g4 > A.pt
-dotnet trash tree -f A.pt > A.tree
+dotnet trash tree --text -f A.pt > A.tree
 
 dotnet trash xquery -f A.pt --query ungroup-rule.xq 'a' > A-ungrouped.pt
-dotnet trash tree -f A-ungrouped.pt > A-ungrouped.tree
+dotnet trash tree --text -f A-ungrouped.pt > A-ungrouped.tree
 dotnet trash sponge -f A-ungrouped.pt -c -o ungrouped

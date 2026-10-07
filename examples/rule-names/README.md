@@ -23,7 +23,7 @@ Or run the pipeline directly:
 ```sh
 dotnet trash parse RuleNames.g4 \
   | dotnet trash xquery --query rule-names.xq \
-  | dotnet trash tree
+  | dotnet trash tree --text
 ```
 
 `trparse` parses `RuleNames.g4`, `trxquery` constructs a new XML element tree,

@@ -27,7 +27,7 @@ dotnet trash parse --lib interp/ --allstar --no-prs -i "^"
 if ($LASTEXITCODE -ne 0) { Write-Error "trparse --allstar caret-set test failed"; exit 1 }
 
 # Step 3: render the parse tree (-f avoids a stdin pipe).
-dotnet trash tree -f parse-result.json | Out-File trparse-interp.tree -Encoding utf8NoBOM
+dotnet trash tree --text -f parse-result.json | Out-File trparse-interp.tree -Encoding utf8NoBOM
 if ($LASTEXITCODE -ne 0) { Write-Error "trtree failed"; exit 1 }
 
 # Step 4: compare to golden output (normalise line endings).

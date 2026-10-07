@@ -76,6 +76,55 @@ The output is the same `ParsingResultSet` JSON format as all other `trparse`
 modes, so every downstream Trash Toolkit tool (`trtree`, `trxgrep`, etc.)
 works without modification.
 
+### Piped ALL(*) interpretation
+
+Without `-L`, `--allstar` reads a PAX/tar bundle containing root-level
+`.interp` files from stdin. The bundle is the default output of `trinterp`:
+
+    dotnet trash parse Arithmetic.rex | dotnet trash interp |
+        dotnet trash parse --allstar -i '1+2*3' | dotnet trash tree --text -a
+
+Provide the input text with `-i`, positional files, or `--xf`; `-x` cannot
+share stdin with the table bundle. The interpreter files are staged in a
+temporary directory for the parse and removed afterward. If the bundle has
+more than one parser/lexer pair, select one with `--pinterp` and `--linterp`.
+Supplying `-L` retains the existing directory-based behavior and does not
+consume a table bundle from stdin.
+
+### Parsing source members of a PAX/tar bundle
+
+`--bundle-glob PATTERN` reads a PAX/tar bundle from stdin and parses only
+matching regular-file members. The default output is a PAX/tar bundle with
+every original member retained, followed by a `.pt` and `.errors` member for
+each selected source. Names retain the source extension and directory, e.g.
+`src/pkg/Foo.java` produces `src/pkg/Foo.java.pt` and
+`src/pkg/Foo.java.errors`. Existing output names are never overwritten: a
+collision is an error. A pattern with no matches passes the input files
+through unchanged. The output is staged in a temporary file before being
+published to stdout, so a large bundle needs scratch disk space roughly
+equal to its output size.
+
+Patterns match member paths, not disk paths, and are case-sensitive. `*` and
+`?` match within one path component; `**` crosses directories, including zero
+directories in `**/`. Thus `src/**/*.java` matches both `src/Foo.java` and
+`src/pkg/Foo.java`. `--bundle-glob` cannot be combined with `-i`, `-x`,
+`--xf`, or positional input files. With `--allstar`, specify `-L` because
+stdin now contains sources rather than an interpreter-table bundle.
+
+For example, after downloading the [OpenJDK 21 GA source ZIP](https://github.com/openjdk/jdk/archive/refs/tags/jdk-21-ga.zip),
+convert it to PAX/tar and parse just Java sources with the interpreter tables
+for `grammars-v4/java/java`:
+
+```bash
+unzip -q jdk-21-ga.zip
+tar --format=pax -C jdk-jdk-21-ga -cf - src |
+    dotnet trash parse --allstar -L /path/to/java/java/interp \
+      --bundle-glob 'src/**/*.java' > jdk-21-parsed.tar
+```
+
+The ZIP itself is not a PAX/tar bundle; the conversion supplies one. Non-Java
+members of `src` remain in `jdk-21-parsed.tar` without parse sidecars.
+
 ### Context-aware lexing
 
 The ALL(*) interpreter can lex lazily using the parser's valid-lookahead set.
@@ -91,6 +140,34 @@ off-channel rules remain eligible. If none of the context-valid rules matches,
 the lexer falls back to ordinary ANTLR maximal-munch and rule-priority
 semantics. Existing lexer modes and `skip`, `type`, `channel`, `mode`,
 `pushMode`, and `popMode` commands are honored.
+
+### XQuery4 interpreter hooks (experimental)
+
+With `--allstar --xquery-hooks hooks.json`, a manifest can bind lexer and parser
+semantic predicates by rule name and predicate index, and bind XQuery4 files to
+parser-rule entry/exit. Predicates are read-only; committed parser exits can
+update per-input declaration state. The lexer is run lazily so later tokens
+can observe those updates. For example:
+
+    {"lexerPredicates":[{"rule":"IDENTIFIER","predicate":0,"query":"hyphen.xq"}],
+     "parserRules":[{"rule":"decl","enter":"on-decl-enter.xq","exit":"on-decl-exit.xq"}]}
+
+Query paths are relative to the manifest.
+See [`examples/xquery-contextual-lexing/`](../../examples/xquery-contextual-lexing/)
+for a runnable grammar, manifest, input, and golden-token test.
+See [`examples/java-allstar-xquery/`](../../examples/java-allstar-xquery/) for
+parser predicates bound to XQuery4. A parser predicate query receives
+`$lookahead1` and `$lookahead2` as token names, `$tree` as the partial parse
+tree, and the current rule element as its context item. Set `"predict": true`
+when a predicate must participate in alternative prediction; otherwise it is
+checked only on the committed path. For example:
+
+    {"parserPredicates":[{"rule":"annotationFieldValue","predicate":0,
+      "query":"is-not-identifier-assign.xq","predict":true}]}
+
+The parser-hook state functions currently support the declaration-state use
+case; parser actions do not have transactional rollback. It cannot be combined with
+`--indirect-left-recursion`.
 
 Use `--lexer-stats` to write a summary of lexer-rule overlaps observed while
 processing the input. Use `--lexer-overlaps` for per-position candidate and
@@ -134,7 +211,7 @@ indirectly recursive rule nesting and grows it left-associatively:
 
 This opt-in path is intended for grammars that ANTLR normally rejects during
 code generation. It cannot currently be combined with
-`--context-aware-lexing`.
+`--context-aware-lexing` or `--xquery-hooks`.
 
 ## Usage
 
@@ -149,6 +226,7 @@ code generation. It cannot currently be combined with
                        Allow mutually/indirectly left-recursive interp rules.
         --context-aware-lexing
                        Prefer lexer tokens valid in the current ALL(*) parser context.
+        --xquery-hooks Manifest for experimental XQuery4 lexer predicates and parser hooks.
         --lexer-stats  Write observed interp lexer-overlap statistics to stderr.
         --lexer-overlaps
                        Write detailed observed overlaps (implies --lexer-stats).
@@ -176,16 +254,16 @@ code generation. It cannot currently be combined with
     dotnet trash parse --allstar -L interp --no-output input.txt
     dotnet trash parse --perf --per-file --allstar -L interp --no-output input.txt
     dotnet trash parse --allstar --parser-stats -L interp --no-output input.txt
-    echo "1+2+3" | dotnet trash parse | dotnet trash tree
+    echo "1+2+3" | dotnet trash parse | dotnet trash tree --text
     mkdir out; dotnet trash parse MyParser.g4 MyLexer.g4 | dotnet trash sponge -o out
 
     # Earley interp-based parse (no generated code needed)
     dotnet trash parse abb.g4 | dotnet trash interp -o out/
-    dotnet trash parse --pinterp out/abbParser.interp --linterp out/abbLexer.interp input.abb | dotnet trash tree
+    dotnet trash parse --pinterp out/abbParser.interp --linterp out/abbLexer.interp input.abb | dotnet trash tree --text
 
 ## Current version
 
-Release 4.0.0.
+Release 4.1.0.
 
 ## License
 

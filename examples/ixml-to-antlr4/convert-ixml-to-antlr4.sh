@@ -66,4 +66,4 @@ dotnet trash xquery -q "$native_script_dir/sep-repeat-to-antlr4.xq" \
     -f "$native_work_dir/sets.pt" > "$work_dir/final.pt"
 
 printf 'grammar %s;\n\n' "$grammar_name"
-dotnet trash text -f "$native_work_dir/final.pt"
+dotnet trash text --text -f "$native_work_dir/final.pt"

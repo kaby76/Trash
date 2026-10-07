@@ -19,7 +19,6 @@ public class Program
         {
             System.Console.Error.WriteLine(e.ToString());
             Environment.ExitCode = 1;
-            System.Console.Out.WriteLine();
             System.Console.Out.Flush();
             System.Console.Out.Close();
         }

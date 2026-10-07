@@ -10,22 +10,25 @@ public class Config
     [Option('v', "verbose", Required = false)]
     public bool Verbose { get; set; }
 
-    [Option('l', "files-with-matches", Required = false, HelpText = "print only names of FILEs with selected lines")]
+    [Option('l', "files-with-matches", Required = false, HelpText = "In --text mode, print only names of files with selected nodes.")]
     public bool FilesWithMatches { get; set; }
 
-    [Option('n', "line-number", Required = false, HelpText = "print line number with output lines")]
+    [Option('n', "line-number", Required = false, HelpText = "Legacy text-mode option (currently has no effect).")]
     public bool LineNumber { get; set; }
 
     [Option('L', "files-without-match", Required = false,
-        HelpText = "print only names of FILEs with no selected lines")]
+        HelpText = "In --text mode, print only names of files with no selected nodes.")]
     public bool FilesWithoutMatch { get; set; }
 
-    [Option('c', "count", Required = false, HelpText = "print only a count of selected lines per FILE")]
+    [Option('c', "count", Required = false, HelpText = "In --text mode, print the selected-node count per file.")]
     public bool Count { get; set; }
 
-    [Option("bundle", Required = false, HelpText = "Write a PAX bundle, replacing .pt members with .txt members.")]
+    [Option("bundle", Required = false, HelpText = "Compatibility alias for the default PAX/tar bundle output.")]
     public bool Bundle { get; set; }
 
+    [Option("text", Required = false, HelpText = "Write human-readable reconstructed text instead of a PAX/tar bundle.")]
+    public bool Text { get; set; }
+
     [Option("version", Required = false)]
-    public string Version { get; set; } = "4.0.0";
+    public string Version { get; set; } = "4.1.0";
 }

@@ -1,12 +1,12 @@
 # Interpret basic iXML directly
 
 Run `bash run-example.sh` with the current Trash tools installed. The script
-generates `.interp` tables, checks exact AllStar parse trees for arithmetic and
+streams `.interp` tables, checks exact AllStar parse trees for arithmetic and
 lists, and verifies rejection of incomplete expressions and trailing input.
 
 ```sh
-dotnet trash parse Arithmetic.ixml | dotnet trash interp -o interp-arithmetic
-dotnet trash parse --allstar -L interp-arithmetic -i '1+23' | dotnet trash tree -a
+dotnet trash parse Arithmetic.ixml | dotnet trash interp |
+  dotnet trash parse --allstar -i '1+23' | dotnet trash tree --text -a
 ```
 
 Expected tree:

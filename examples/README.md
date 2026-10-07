@@ -17,6 +17,7 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`ixml-interp/`](ixml-interp/) | Compile basic scannerless iXML directly to interpreter tables, with arithmetic and separated-list tree checks |
 | [`ixml-to-antlr4/`](ixml-to-antlr4/) | Convert an iXML grammar to Antlr4 syntax using a five-pass XQuery Update pipeline (structural syntax, encoded characters, character sets, inline-set extraction, separator quantifiers) |
 | [`java-antlr/`](java-antlr/) | Generate a Java-target Antlr4 parser for the Java grammar, build, and run |
+| [`java-allstar-xquery/`](java-allstar-xquery/) | Interpret the Java grammar with AllStar and XQuery4 parser predicates, then parse Java sources from an OpenJDK 21 PAX/tar bundle |
 | [`lark-to-antlr4/`](lark-to-antlr4/) | Convert a Lark grammar to Antlr4 syntax using a multi-pass XQuery Update pipeline |
 | [`kleene/`](kleene/) | Eliminate direct left and right recursion from parser rules using XQuery Update scripts (`kleene-lr.xq`, `kleene-rr.xq`), replacing recursive alternatives with Kleene-star EBNF |
 | [`rule-names/`](rule-names/) | Construct XML containing one element for every parser-rule name selected from an ANTLR4 grammar parse tree |
@@ -25,6 +26,7 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`tree-sitter-to-w3c-ebnf/`](tree-sitter-to-w3c-ebnf/) | Convert Tree-sitter `grammar.json` rules to structural W3C EBNF with XQuery4, explicitly marking unsupported constructs |
 | [`w3cebnf-frontend/`](w3cebnf-frontend/) | Compile a basic W3C EBNF grammar to `.interp` tables and parse its input with AllStar |
 | [`xpath31-to-antlr4/`](xpath31-to-antlr4/) | Parse the XPath 3.1 EBNF grammar using generated `.interp` files built from the XPath 3.1 meta-grammar (work in progress) |
+| [`xquery-contextual-lexing/`](xquery-contextual-lexing/) | Use XQuery4 lexer predicates and parser-rule hooks to distinguish declared hyphenated identifiers from subtraction |
 
 Each example directory contains a `run-example.sh` and its own `README.md`.
 

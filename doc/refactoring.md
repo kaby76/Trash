@@ -646,7 +646,7 @@ _Trash commands_
 
 Using [`kleene-lr.xq`](../examples/lr-rr-to-kleene/kleene-lr.xq) to eliminate direct left recursion:
 
-    dotnet trash parse Kleene.g4 | dotnet trash xquery kleene-lr.xq | dotnet trash text
+    dotnet trash parse Kleene.g4 | dotnet trash xquery kleene-lr.xq | dotnet trash text --text
 
 _Modified grammar (left recursion removed)_
 
@@ -660,7 +660,7 @@ _Modified grammar (left recursion removed)_
 
 Using [`kleene-rr.xq`](../examples/lr-rr-to-kleene/kleene-rr.xq) to eliminate direct right recursion:
 
-    dotnet trash parse Kleene.g4 | dotnet trash xquery kleene-rr.xq | dotnet trash text
+    dotnet trash parse Kleene.g4 | dotnet trash xquery kleene-rr.xq | dotnet trash text --text
 
 _Modified grammar (right recursion removed)_
 

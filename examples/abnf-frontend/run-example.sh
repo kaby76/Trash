@@ -2,15 +2,11 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-scratch="$(mktemp -d ./abnf-frontend-test-XXXXXXXX)"
-trap 'rm -f -- "$scratch"/Abnf_Message.interp "$scratch"/Abnf_Message.tokens "$scratch"/Abnf_MessageLexer.interp "$scratch"/Abnf_MessageLexer.tokens "$scratch"/output.tree; rmdir -- "$scratch"' EXIT
-
-dotnet trash parse -t ABNF Message.abnf | dotnet trash interp -o "$scratch"
-dotnet trash parse --allstar -L "$scratch" input.txt | dotnet trash tree -a >"$scratch/output.tree"
-
-grep -q '(abnf_start ' "$scratch/output.tree"
-grep -q '(message ' "$scratch/output.tree"
-grep -q '(name ' "$scratch/output.tree"
+tree=$(dotnet trash parse -t ABNF Message.abnf | dotnet trash interp |
+    dotnet trash parse --allstar input.txt | dotnet trash tree --text -a)
+grep -q '(abnf_start ' <<<"$tree"
+grep -q '(message ' <<<"$tree"
+grep -q '(name ' <<<"$tree"
 
 echo 'ABNF grammar compiled and input parsed successfully.'
-cat "$scratch/output.tree"
+printf '%s\n' "$tree"

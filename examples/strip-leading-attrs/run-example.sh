@@ -19,14 +19,14 @@ rm -f grammar.json result.pt
 dotnet trash parse ExampleLexer.g4 > grammar.json
 
 echo "=== Original grammarDecl (with leading Attribute nodes) ==="
-dotnet trash xpath -f grammar.json '//grammarDecl' | dotnet trash tree
+dotnet trash xpath -f grammar.json '//grammarDecl' | dotnet trash tree --text
 
 # Apply the XQuery to strip attributes that precede LEXER/PARSER.
 dotnet trash xquery -q strip-leading-attrs.xq -f grammar.json > result.pt
 
 echo ""
 echo "=== Cleaned grammarDecl (leading Attribute nodes removed) ==="
-dotnet trash tree -f result.pt
+dotnet trash tree --text -f result.pt
 
 echo ""
 echo "Done."

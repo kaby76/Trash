@@ -379,7 +379,7 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
         var target = new MyATNState { stateNumber = 1 };
         source.AddTransition(new MyPredicateTransition(
             target, ruleIndex: 0, predIndex: 0, isCtxDependent: true));
-        var atn = new MyATN { allStates = new[] { source, target } };
+        var atn = new Atn.MyATN { allStates = new[] { source, target } };
         var cache = new ParserPredictionCache();
 
         _ = new AllStarSimulator(atn, predictionCache: cache);
@@ -511,7 +511,7 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
     }
 
     private sealed record DotFixture(
-        MyATN ParserAtn,
+        Atn.MyATN ParserAtn,
         ParsedInterp ParserInterp,
         ParsedInterp LexerInterp,
         TokenStore Tokens,

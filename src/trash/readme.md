@@ -1,4 +1,4 @@
-Release 4.0.0.
+Release 4.1.0.
 
 # trash
 
@@ -29,7 +29,7 @@ Both the full command name and a short alias (without the `tr` prefix) are accep
 
 ## Example pipeline
 
-    dotnet trash parse -g antlr4 MyGrammar.g4 | dotnet trash tree
+    dotnet trash parse -g antlr4 MyGrammar.g4 | dotnet trash tree --text
 
 ## Commands
 

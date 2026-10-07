@@ -54,7 +54,7 @@ Template input "templates.txt":
 //field[position()=1] -> {{ "<NAME>" : <exp> }} ;
 ```
 
-    dotnet trash parse input.txt | dotnet trash piggy templates.txt | dotnet trash text
+    dotnet trash parse input.txt | dotnet trash piggy templates.txt | dotnet trash text --text
 
 Output:
 ```
@@ -63,7 +63,7 @@ Output:
 
 ## Current version
 
-Release 4.0.0.
+Release 4.1.0.
 
 ## License
 

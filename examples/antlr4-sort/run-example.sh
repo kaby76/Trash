@@ -7,7 +7,7 @@ trap 'rm -f -- "$scratch/result.tar" "$scratch/sorted.g4"; rmdir -- "$scratch"' 
 
 dotnet trash parse SortDemo.g4 \
   | dotnet trash xquery -q sort-antlr4.xq \
-  | dotnet trash text --bundle >"$scratch/result.tar"
+  | dotnet trash text >"$scratch/result.tar"
 tar -xOf "$scratch/result.tar" SortDemo.g4 >"$scratch/sorted.g4"
 
 awk '

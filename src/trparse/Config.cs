@@ -54,10 +54,14 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "4.0.0";
+    public string Version { get; set; } = "4.1.0";
 
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }
+
+    [Option("bundle-glob", Required = false,
+        HelpText = "Read a PAX/tar bundle from stdin, parse members matching this glob, and preserve all input members in the output bundle. Use -L for interpreted parsing.")]
+    public string BundleGlob { get; set; }
 
     [Option("xf", Required = false, HelpText = "Read input file names from file provided on command line.")]
     public string ReadFileNameFile { get; set; }
@@ -72,10 +76,10 @@ public class Config
         HelpText = "Parser rule name to use as the start rule for interp parsing (overrides the .interp default).")]
     public string StartRule { get; set; }
 
-    [Option('L', "lib", Required = false, HelpText = "Directory to search for .interp files (resolves relative --pinterp / --linterp paths).")]
+    [Option('L', "lib", Required = false, HelpText = "Directory to search for .interp files (resolves relative --pinterp / --linterp paths). Without -L, --allstar reads a PAX/tar interpreter bundle from stdin.")]
     public string Lib { get; set; }
 
-    [Option("allstar", Required = false, HelpText = "Use ALL(*) parser instead of Earley when --pinterp / --linterp are specified.")]
+    [Option("allstar", Required = false, HelpText = "Use ALL(*) interpreter parsing. Without -L, read .interp files from a PAX/tar bundle on stdin.")]
     public bool AllStar { get; set; }
 
     [Option("indirect-left-recursion", Required = false,
@@ -85,6 +89,10 @@ public class Config
     [Option("context-aware-lexing", Required = false,
         HelpText = "For ALL(*) interp parsing, prefer lexer tokens valid in the current parser context; fall back to normal ANTLR lexing when none match.")]
     public bool ContextAwareLexing { get; set; }
+
+    [Option("xquery-hooks", Required = false,
+        HelpText = "JSON manifest of XQuery4 lexer predicates and parser-rule entry/exit hooks for ALL(*) interpreter parsing.")]
+    public string XQueryHooks { get; set; }
 
     [Option("lexer-stats", Required = false,
         HelpText = "Write observed interp lexer-overlap statistics to stderr.")]

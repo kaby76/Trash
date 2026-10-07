@@ -17,7 +17,7 @@ dotnet trash gen -t CSharp
 pushd Generated-CSharp
 make
 popd
-echo "1 + 2 + 3" | dotnet trash parse | dotnet trash tree > trparse.tree
+echo "1 + 2 + 3" | dotnet trash parse | dotnet trash tree --text > trparse.tree
 rm -rf Generated-CSharp
 
 # Diff result.

@@ -59,7 +59,7 @@ _Conversion of Antlr4 Abnf to Lark Abnf_
 
 _Command_
 
-    dotnet trash parse Abnf.g4 | dotnet trash convert -t lark | dotnet trash text > Abnf.lark
+    dotnet trash parse Abnf.g4 | dotnet trash convert -t lark | dotnet trash text --text > Abnf.lark
 
 _Output_
 
@@ -93,7 +93,7 @@ _Output_
 
 ## Current version
 
-Release 4.0.0.
+Release 4.1.0.
 
 ## License
 

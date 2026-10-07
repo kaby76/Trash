@@ -1,24 +1,28 @@
 <file_>
+  <expression>
     <expression>
-        <expression>
-            <atom>
-                <scientific>
-                    <SCIENTIFIC_NUMBER>
-                    </SCIENTIFIC_NUMBER>
-                </scientific>
-            </atom>
-        </expression>
-        <PLUS>
-        </PLUS>
-        <expression>
-            <atom>
-                <scientific>
-                    <SCIENTIFIC_NUMBER>
-                    </SCIENTIFIC_NUMBER>
-                </scientific>
-            </atom>
-        </expression>
+      <atom>
+        <scientific>
+          <SCIENTIFIC_NUMBER>
+            <t>1</t>
+          </SCIENTIFIC_NUMBER>
+        </scientific>
+      </atom>
     </expression>
-    <EOF>
-    </EOF>
+    <PLUS>
+      <t>+</t>
+    </PLUS>
+    <expression>
+      <atom>
+        <scientific>
+          <SCIENTIFIC_NUMBER>
+            <t>2</t>
+          </SCIENTIFIC_NUMBER>
+        </scientific>
+      </atom>
+    </expression>
+  </expression>
+  <EOF>
+    <t />
+  </EOF>
 </file_>

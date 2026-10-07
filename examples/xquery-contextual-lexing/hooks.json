@@ -1,0 +1,8 @@
+{
+  "lexerPredicates": [
+    { "rule": "IDENTIFIER", "predicate": 0, "query": "hyphen.xq" }
+  ],
+  "parserRules": [
+    { "rule": "decl", "enter": "on-decl-enter.xq", "exit": "on-decl-exit.xq" }
+  ]
+}

@@ -10,10 +10,10 @@ for ANTLR4 `parser grammar` files, not combined or lexer grammars.
 ```sh
 dotnet trash parse Grammar.g4 \
   | dotnet trash xquery -q /absolute/path/to/sort-antlr4.xq \
-  | dotnet trash text > sorted.g4
+  | dotnet trash text --text > sorted.g4
 ```
 
-Use `dotnet trash text --bundle | dotnet trash sponge -c -o DIR` to write the
+Use `dotnet trash text | tar -xvf - -C DIR` to write the
 result under its original filename. Avoid overwriting the input before checking
 the result.
 

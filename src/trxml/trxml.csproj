@@ -10,7 +10,7 @@
 		<AssemblyName>trxml</AssemblyName>
 		<PackageId>trxml</PackageId>
 		<Description>
-			<![CDATA[Read a tree from stdin and write an XML represenation of it.
+			<![CDATA[Render parse trees as .xml members in a PAX/tar artifact bundle; use --text for plain XML.
 This program is part of the Trash toolkit.]]>
 		</Description>
 		<ToolCommandName>trxml</ToolCommandName>
@@ -18,7 +18,7 @@ This program is part of the Trash toolkit.]]>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>4.0.0</Version>
+		<Version>4.1.0</Version>
 		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trxml</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>

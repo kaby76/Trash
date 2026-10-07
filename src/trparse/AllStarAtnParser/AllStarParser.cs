@@ -114,7 +114,8 @@ public static class AllStarParser
         LexerStatistics lexerStatistics = null,
         ParserStatistics parserStatistics = null,
         ParserPredictionCache predictionCache = null,
-        LexerAtnSimulator.LexerDfaCache lexerDfaCache = null)
+        LexerAtnSimulator.LexerDfaCache lexerDfaCache = null,
+        XQueryHooks hooks = null)
     {
         if (parserAtn == null) throw new ArgumentNullException(nameof(parserAtn));
         if (lexerAtn == null) throw new ArgumentNullException(nameof(lexerAtn));
@@ -128,7 +129,7 @@ public static class AllStarParser
         var instance = new ParserInstance(
             parserAtn, lexerAtn, input, allTokens, metadata,
             events, lexerStatistics, parserStatistics, predictionCache,
-            lexerDfaCache);
+            lexerDfaCache, hooks);
         bool success = instance.ParseRule(startRuleIndex, PredictionContext.EMPTY);
         instance.CaptureStatistics();
         if (!success)
@@ -156,6 +157,7 @@ public static class AllStarParser
         private readonly ParserStatistics _statistics;
         private readonly ushort[][] _ll1Tables;
         private readonly List<ParseEvent> _events;
+        private readonly XQueryHooks _hooks;
         private readonly HashSet<(int Rule, int Position, int Precedence)>
             _activeRuleCalls = new();
 
@@ -189,7 +191,8 @@ public static class AllStarParser
                               LexerStatistics lexerStatistics,
                               ParserStatistics parserStatistics = null,
                               ParserPredictionCache predictionCache = null,
-                              LexerAtnSimulator.LexerDfaCache lexerDfaCache = null)
+                              LexerAtnSimulator.LexerDfaCache lexerDfaCache = null,
+                              XQueryHooks hooks = null)
         {
             _atn = parserAtn;
             _allTokens = allTokens;
@@ -198,12 +201,17 @@ public static class AllStarParser
             _tokenTypes = Array.Empty<int>();
             _metadata = metadata;
             _events = events;
+            _hooks = hooks;
             _statistics = parserStatistics;
             _ll1Tables = null;
             _sim = new AllStarSimulator(
-                parserAtn, parserStatistics, predictionCache);
-            _lexer = new LexerAtnSimulator(
-                lexerAtn, lexerStatistics, lexerDfaCache);
+                parserAtn, parserStatistics, predictionCache,
+                hooks?.HasParserPredicates == true
+                    ? EvaluatePredictionPredicate : null);
+            _lexer = hooks == null
+                ? new LexerAtnSimulator(lexerAtn, lexerStatistics, lexerDfaCache)
+                : new LexerAtnSimulator(lexerAtn, lexerStatistics,
+                    enableDfa: false, predicateEvaluator: hooks.EvaluateLexerPredicate);
             _lexer.SetInput(input);
             _lexerCursor = new LexerAtnSimulator.Cursor();
             _input = input;
@@ -233,6 +241,7 @@ public static class AllStarParser
             AddEvent(isRecursion
                 ? ParseEventKind.EnterRecursionRule
                 : ParseEventKind.EnterRule, ruleIndex);
+            _hooks?.OnRuleEnter(ruleIndex, _events, _allTokens);
             var state = _metadata.SkipEpsilon(_atn.start[ruleIndex]);
 
             while (true)
@@ -317,6 +326,23 @@ public static class AllStarParser
                             state = _metadata.SkipEpsilon(tr.target);
                             break;
 
+                        case CommittedStateKind.Predicate:
+                            if (_hooks != null)
+                            {
+                                var predicate = (MyPredicateTransition)tr;
+                                var types = _contextAware
+                                    ? BuildPredictionTokens(null, 2)
+                                    : _tokenTypes;
+                                int position = _contextAware ? 0 : Pos;
+                                if (!_hooks.EvaluateParserPredicate(
+                                        predicate.ruleIndex, predicate.predIndex,
+                                        types, position, _events, _allTokens,
+                                        speculative: false))
+                                    return false;
+                            }
+                            state = _metadata.SkipEpsilon(tr.target);
+                            break;
+
                         case CommittedStateKind.Rule:
                             var rt = _metadata.RuleTransition[stateNumber];
                             if (AllStarParser.Trace && rt.precedence != 0)
@@ -355,6 +381,7 @@ public static class AllStarParser
                 }
             }
 
+            _hooks?.OnRuleExit(ruleIndex, _events, _allTokens);
             AddEvent(isRecursion
                 ? ParseEventKind.ExitRecursionRule
                 : ParseEventKind.ExitRule, ruleIndex);
@@ -395,6 +422,12 @@ public static class AllStarParser
 
         public void CaptureStatistics() => _sim.CaptureRetainedStatistics();
 
+        private bool EvaluatePredictionPredicate(MyPredicateTransition predicate,
+            int[] tokenTypes, int position) =>
+            _hooks.EvaluateParserPredicate(predicate.ruleIndex,
+                predicate.predIndex, tokenTypes, position, _events,
+                _allTokens, speculative: true);
+
         private void AddEvent(ParseEventKind kind, int index)
         {
             if (_events == null) return;
@@ -402,7 +435,8 @@ public static class AllStarParser
             if (_statistics != null) _statistics.ParseEventsCreated++;
         }
 
-        private int[] BuildPredictionTokens(IReadOnlySet<int> expected)
+        private int[] BuildPredictionTokens(IReadOnlySet<int> expected,
+            int maxOnChannel = int.MaxValue)
         {
             var cursor = _lexerCursor.Clone();
             var types = new List<int>();
@@ -422,6 +456,7 @@ public static class AllStarParser
                     {
                         types.Add(token.Type);
                         firstOnChannel = false;
+                        if (types.Count >= maxOnChannel) break;
                     }
                     if (token.Type == EOF_TYPE) break;
                 }

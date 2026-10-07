@@ -8,7 +8,8 @@ rm -rf Generated-CSharp
 dotnet trash gen -t CSharp --arithmetic
 cd Generated-CSharp
 make
-dotnet trash parse -i "1+2" | dotnet trash xml > ../output
+dotnet ../../../src/trparse/bin/Release/net10.0/trparse.dll -i "1+2" |
+  dotnet ../../../src/trxml/bin/Release/net10.0/trxml.dll --text > ../output
 cd ..
 rm -rf Generated-CSharp/
 dos2unix output

@@ -13,8 +13,8 @@ mkdir Generated
 
 # Test.
 dotnet trash parse Expression.g4 | dotnet trash xquery 'delete node //parserRuleSpec[RULE_REF/text()="a"]' > o.tar
-cat o.tar | dotnet trash tree --bundle | dotnet trash sponge -c -o Generated
-cat o.tar | dotnet trash text --bundle | dotnet trash sponge -c -o Generated
+cat o.tar | dotnet trash tree | dotnet trash sponge -c -o Generated
+cat o.tar | dotnet trash text | dotnet trash sponge -c -o Generated
 rm o.tar
 
 # Diff.

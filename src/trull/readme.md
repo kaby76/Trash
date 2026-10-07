@@ -29,7 +29,7 @@ Before:
 
 Command:
 
-    dotnet trash parse KeywordFun.g4 | dotnet trash ull "//lexerRuleSpec[TOKEN_REF/text() = 'A']//STRING_LITERAL" | dotnet trash text
+    dotnet trash parse KeywordFun.g4 | dotnet trash ull "//lexerRuleSpec[TOKEN_REF/text() = 'A']//STRING_LITERAL" | dotnet trash text --text
 
 After:
 
@@ -43,7 +43,7 @@ After:
 
 Command:
 
-    dotnet trash parse KeywordFun.g4 | dotnet trash ull | dotnet trash text
+    dotnet trash parse KeywordFun.g4 | dotnet trash ull | dotnet trash text --text
 
 After:
 
@@ -63,7 +63,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-Release 4.0.0.
+Release 4.1.0.
 
 ## License
 

@@ -26,7 +26,7 @@ fi
 # over the earlier, equally long DECIMAL_LITERAL rule.
 dotnet trash parse --context-aware-lexing --lexer-overlaps \
   -L interp input.decaf > result.pt 2> context.err
-dotnet trash tree -f result.pt > result.tree
+dotnet trash tree --text -f result.pt > result.tree
 
 echo "Ordinary ALL(*) failed as expected; context-aware ALL(*) succeeded."
 cat context.err >&2

@@ -5,8 +5,8 @@ This example compiles [`Message.ebnf`](Message.ebnf) with `trinterp` and parses
 character, character sets and ranges, alternatives, and `+` repetition.
 
 ```sh
-dotnet trash parse -t W3CEBNF Message.ebnf | dotnet trash interp -o interp
-dotnet trash parse --allstar -L interp input.txt | dotnet trash tree -a
+dotnet trash parse -t W3CEBNF Message.ebnf | dotnet trash interp |
+  dotnet trash parse --allstar input.txt | dotnet trash tree --text -a
 ```
 
 Build the Release tools, then run `bash run-example.sh` to test the pipeline.

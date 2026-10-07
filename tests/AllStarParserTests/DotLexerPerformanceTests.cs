@@ -288,7 +288,7 @@ public sealed class DotLexerPerformanceTests(ITestOutputHelper output)
         return text.AppendLine("}").ToString();
     }
 
-    private static void WarmUp(MyATN atn, string input)
+    private static void WarmUp(Atn.MyATN atn, string input)
     {
         var tokens = new LexerAtnSimulator(atn).Tokenize(input);
         Assert.Equal(-1, tokens[^1].Type);
@@ -296,7 +296,7 @@ public sealed class DotLexerPerformanceTests(ITestOutputHelper output)
     }
 
     private static LexerSample[] Measure(
-        MyATN atn, string input, int? expectedTokenCount)
+        Atn.MyATN atn, string input, int? expectedTokenCount)
     {
         var samples = new LexerSample[SampleSize];
         for (var i = 0; i < samples.Length; i++)

@@ -15,6 +15,8 @@ public sealed class AllStarSimulator
     private readonly MyATN _atn;
     private readonly ParserStatistics _statistics;
     private readonly ParserPredictionCache _sharedCache;
+    private readonly Func<MyPredicateTransition, int[], int, bool>
+        _predicateEvaluator;
 
     // Reusable scratch buffers for Closure — cleared at the start of each use so
     // behaviour is identical to allocating fresh collections, but without the
@@ -29,10 +31,12 @@ public sealed class AllStarSimulator
 
     public AllStarSimulator(
         MyATN atn, ParserStatistics statistics = null,
-        ParserPredictionCache predictionCache = null)
+        ParserPredictionCache predictionCache = null,
+        Func<MyPredicateTransition, int[], int, bool> predicateEvaluator = null)
     {
         _atn = atn;
         _statistics = statistics;
+        _predicateEvaluator = predicateEvaluator;
         if (predictionCache != null)
         {
             predictionCache.Bind(atn);
@@ -132,9 +136,10 @@ public sealed class AllStarSimulator
 
             // SLL uses a local prediction-context stack rooted at EMPTY. Conflicts
             // are not resolved here; they signal full-context LL fallback below.
-            int sllAlt = ExecSllDfa(
-                decision, decisionState, tokenTypes, startPos, callerCtx, precedence,
-                precedenceRuleIndex);
+            int sllAlt = _predicateEvaluator == null
+                ? ExecSllDfa(decision, decisionState, tokenTypes, startPos,
+                    callerCtx, precedence, precedenceRuleIndex)
+                : -1;
             if (sllAlt > 0) return sllAlt;
 
             _statistics?.RecordFullContextFallback(decision);
@@ -461,7 +466,8 @@ public sealed class AllStarSimulator
         {
             var target = decisionState.transitions[i].target;
             var cfg = new ATNConfig(target, i + 1, baseCtx, precedence);
-            Closure(cfg, initial, fullCtx, precedence, precedenceRuleIndex);
+            Closure(cfg, initial, fullCtx, precedence, precedenceRuleIndex,
+                tokenTypes, startPos);
         }
 
         int alt = initial.GetUniqueAlt();
@@ -495,7 +501,8 @@ public sealed class AllStarSimulator
                 _statistics.FullContextLookaheadTokens++;
             }
             var reach = ComputeReachSet(
-                current, tokenType, fullCtx, precedence, precedenceRuleIndex);
+                current, tokenType, fullCtx, precedence, precedenceRuleIndex,
+                tokenTypes, pos);
             if (reach.IsEmpty) break;
 
             alt = reach.GetUniqueAlt();
@@ -549,7 +556,9 @@ public sealed class AllStarSimulator
 
     private ATNConfigSet ComputeReachSet(ATNConfigSet configs, int tokenType,
                                          bool fullCtx, int precedence,
-                                         int precedenceRuleIndex = -1)
+                                         int precedenceRuleIndex = -1,
+                                         int[] predictionTokens = null,
+                                         int predictionPosition = -1)
     {
         var reach = NewConfigSet();
         foreach (var cfg in configs.Configs)
@@ -566,12 +575,15 @@ public sealed class AllStarSimulator
         _closureBusy.Clear();
         var closed = NewConfigSet();
         foreach (var c in reach.Configs)
-            Closure(c, closed, fullCtx, precedence, precedenceRuleIndex);
+            Closure(c, closed, fullCtx, precedence, precedenceRuleIndex,
+                predictionTokens, predictionPosition);
         return closed;
     }
 
     private void Closure(ATNConfig seed, ATNConfigSet configs, bool fullCtx,
-                         int precedence, int precedenceRuleIndex)
+                         int precedence, int precedenceRuleIndex,
+                         int[] predictionTokens = null,
+                         int predictionPosition = -1)
     {
         _closureStack.Clear();
         _closureStack.Push(seed);
@@ -613,8 +625,14 @@ public sealed class AllStarSimulator
                 {
                     case MyEpsilonTransition:
                     case MyActionTransition:
-                    case MyPredicateTransition:
                         next = config.WithState(tr.target);
+                        break;
+
+                    case MyPredicateTransition predicate:
+                        if (_predicateEvaluator == null || predictionTokens == null ||
+                            _predicateEvaluator(predicate, predictionTokens,
+                                predictionPosition))
+                            next = config.WithState(tr.target);
                         break;
 
                     case MyPrecedencePredicateTransition pt:
@@ -665,7 +683,8 @@ public sealed class AllStarSimulator
         {
             var target = decisionState.transitions[i].target;
             Closure(new ATNConfig(target, i + 1, callerCtx, precedence), initial,
-                    fullCtx: true, precedence, precedenceRuleIndex);
+                    fullCtx: true, precedence, precedenceRuleIndex,
+                    tokenTypes, startPos);
         }
 
         foreach (var c in initial.Configs)

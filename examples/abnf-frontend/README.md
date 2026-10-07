@@ -6,8 +6,8 @@ interpreter to parse [`input.txt`](input.txt). No generated target-language
 parser is needed.
 
 ```sh
-dotnet trash parse -t ABNF Message.abnf | dotnet trash interp -o interp
-dotnet trash parse --allstar -L interp input.txt | dotnet trash tree -a
+dotnet trash parse -t ABNF Message.abnf | dotnet trash interp |
+  dotnet trash parse --allstar input.txt | dotnet trash tree --text -a
 ```
 
 Run `bash run-example.sh` to check the pipeline. The grammar demonstrates
