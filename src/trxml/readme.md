@@ -2,19 +2,25 @@
 
 ## Summary
 
-Print a parse tree in XML structured format
+Render parse trees as XML artifacts in a PAX/tar bundle.
 
 ## Description
 
-Read a tree from stdin and write an XML represenation of it.
+By default, read a PAX/tar parse-result bundle from stdin and write a PAX/tar
+bundle to stdout. Each `.pt` member is replaced by an `.xml` member at the
+same path (for example, `dir/example.st.pt` becomes `dir/example.st.xml`).
+Other members pass through unchanged. Legacy parsing-result JSON input is
+also accepted. Use `--text` for plain XML output; `--bundle` is a compatibility
+alias for the default and cannot be combined with `--text`.
 
 ## Usage
 
-    dotnet trash xml
+    dotnet trash xml [-f FILE] [--text | --bundle]
 
 ## Examples
 
-    dotnet trash parse A.g4 | dotnet trash xml
+    dotnet trash parse A.g4 | dotnet trash xml | tar -tf -
+    dotnet trash parse A.g4 | dotnet trash xml --text
 
 ## Current version
 

@@ -10,7 +10,7 @@
 		<AssemblyName>trjson</AssemblyName>
 		<PackageId>trjson</PackageId>
 		<Description>
-			<![CDATA[Read a tree from stdin and write a JSON represenation of it.
+			<![CDATA[Render parse trees as .json members in a PAX/tar artifact bundle; use --text for plain JSON.
 This program is part of the Trash toolkit.
 ]]>
 		</Description>

@@ -2,19 +2,25 @@
 
 ## Summary
 
-Print a parse tree in JSON structured format
+Render parse trees as JSON artifacts in a PAX/tar bundle.
 
 ## Description
 
-Read a parse tree from stdin and write a JSON represenation of it.
+By default, read a PAX/tar parse-result bundle from stdin and write a PAX/tar
+bundle to stdout. Each `.pt` member is replaced by a `.json` member at the
+same path (for example, `dir/example.st.pt` becomes `dir/example.st.json`).
+Other members pass through unchanged. Legacy parsing-result JSON input is
+also accepted. Use `--text` for plain JSON output; `--bundle` is a compatibility
+alias for the default and cannot be combined with `--text`.
 
 ## Usage
 
-    dotnet trash json
+    dotnet trash json [-f FILE] [--text | --bundle]
 
 ## Examples
 
-    dotnet trash parse A.g4 | dotnet trash json | less
+    dotnet trash parse A.g4 | dotnet trash json | tar -tf -
+    dotnet trash parse A.g4 | dotnet trash json --text | less
 
 ## Current version
 

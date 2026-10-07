@@ -10,7 +10,7 @@
 		<AssemblyName>trxml</AssemblyName>
 		<PackageId>trxml</PackageId>
 		<Description>
-			<![CDATA[Read a tree from stdin and write an XML represenation of it.
+			<![CDATA[Render parse trees as .xml members in a PAX/tar artifact bundle; use --text for plain XML.
 This program is part of the Trash toolkit.]]>
 		</Description>
 		<ToolCommandName>trxml</ToolCommandName>
