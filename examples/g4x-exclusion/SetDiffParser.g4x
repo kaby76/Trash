@@ -1,0 +1,4 @@
+parser grammar SetDiffParser;
+options { tokenVocab=SetDiffLexer; }
+
+start : (Keyword | NullLiteral | Identifier)+ EOF;

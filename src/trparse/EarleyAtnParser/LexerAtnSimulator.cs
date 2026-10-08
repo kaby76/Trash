@@ -11,6 +11,8 @@ public partial class LexerAtnSimulator
     private readonly MyATN _atn;
     private readonly bool _enableDfa;
     private readonly Func<int, int, int, int, bool> _predicateEvaluator;
+    private readonly Func<int, int, int, int, bool> _externalPredicateEvaluator;
+    [ThreadStatic] private static HashSet<(MyATN Atn, int Rule, int Start, int End)> _activeExclusionMatches;
     private int _matchStart;
     private int _matchPosition;
     private readonly LexContextCache _contextCache;
@@ -42,8 +44,10 @@ public partial class LexerAtnSimulator
         Func<int, int, int, int, bool> predicateEvaluator = null)
     {
         _atn = lexerAtn;
-        _enableDfa = enableDfa && predicateEvaluator == null;
-        _predicateEvaluator = predicateEvaluator;
+        _externalPredicateEvaluator = predicateEvaluator;
+        _predicateEvaluator = predicateEvaluator != null || lexerAtn.G4XExclusions.Count != 0
+            ? EvaluatePredicate : null;
+        _enableDfa = enableDfa && _predicateEvaluator == null;
         Statistics = statistics;
         if (enableDfa && dfaCache != null)
         {
@@ -105,6 +109,59 @@ public partial class LexerAtnSimulator
     public void SetInput(string input)
     {
         _input = input ?? throw new ArgumentNullException(nameof(input));
+    }
+
+    private bool EvaluatePredicate(int rule, int predicate, int start, int end)
+    {
+        if (_atn.G4XExclusions.TryGetValue((rule, predicate), out var exclusions))
+        {
+            foreach (var operand in exclusions)
+            {
+                bool excluded = operand.Kind == "literal"
+                    ? end - start == operand.Value.Length &&
+                      _input.AsSpan(start, end - start).SequenceEqual(operand.Value.AsSpan())
+                    : ExcludedRuleMatches(int.Parse(operand.Value), start, end);
+                if (excluded) return false;
+            }
+            return true;
+        }
+        return _externalPredicateEvaluator?.Invoke(rule, predicate, start, end) ?? true;
+    }
+
+    private bool ExcludedRuleMatches(int rule, int start, int end)
+    {
+        var active = _activeExclusionMatches ??= new();
+        var key = (_atn, rule, start, end);
+        if (!active.Add(key))
+            throw new InvalidOperationException("Cyclic G4X set-difference rule reference.");
+        try
+        {
+            var matcher = new LexerAtnSimulator(_atn, null, enableDfa: false,
+                predicateEvaluator: _externalPredicateEvaluator);
+            matcher.SetInput(_input);
+            return matcher.MatchRuleExactly(rule, start, end);
+        }
+        finally { active.Remove(key); }
+    }
+
+    private bool MatchRuleExactly(int rule, int start, int end)
+    {
+        _matchStart = start;
+        _matchPosition = start;
+        var configs = new HashSet<LexerConfig>(LexerConfigEq.Instance)
+        {
+            new LexerConfig(_atn.start[rule], LexStack.Empty,
+                0, rule, -1, LexStack.Empty, -1, -1)
+        };
+        EpsClosure(configs);
+        var state = new DfaState(configs);
+        for (int pos = start; pos < end; pos++)
+        {
+            _matchPosition = pos + 1;
+            state = GetTargetState(state, _input[pos]);
+            if (state == null) return false;
+        }
+        return state.Accepts.Any(accept => accept.Rule == rule);
     }
 
     /// <summary>

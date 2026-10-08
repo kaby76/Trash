@@ -77,6 +77,7 @@ public static class InterpRunner
             }
             var loadedLexerAtn = AtnDeserializer.Deserialize(
                 loadedLexerInterp.AtnData);
+            loadedLexerAtn.G4XExclusions = loadedLexerInterp.G4XExclusions;
             timer.Stop();
             timings.AtnDeserialization = timer.Elapsed;
 

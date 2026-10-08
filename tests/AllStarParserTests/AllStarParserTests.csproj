@@ -15,6 +15,12 @@
     <Content Include="../../examples/context-aware-lexing/Decaf.g4"
              CopyToOutputDirectory="PreserveNewest"
              Link="TestData/g4x/examples/context-aware-lexing/Decaf.g4" />
+    <Content Include="../../examples/g4x-exclusion/SetDiff*.g4x"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/g4x-set-difference/%(Filename)%(Extension)" />
+    <Content Include="../../examples/g4x-exclusion/input.txt"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/g4x-set-difference/input.txt" />
     <Content Include="../../examples/xquery-contextual-lexing/Foo*.g4"
              CopyToOutputDirectory="PreserveNewest"
              Link="TestData/xquery-contextual-lexing/%(Filename)%(Extension)" />

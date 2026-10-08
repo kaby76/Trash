@@ -13,6 +13,7 @@ public class ParsedInterp
     /// the 'start-rule:' section is absent (lexer interp files and old files).
     /// </summary>
     public int StartStateNumber = -1;
+    public Dictionary<(int Rule, int Predicate), MyATN.G4XExclusionOperand[]> G4XExclusions = new();
 }
 
 public static class InterpFileReader
@@ -69,6 +70,35 @@ public static class InterpFileReader
             {
                 var line = lines[i++].Trim();
                 if (line.Length > 0) { result.StartStateNumber = int.Parse(line); break; }
+            }
+        }
+
+        if (TrySkipToSection(lines, ref i, "g4x-set-differences:"))
+        {
+            foreach (var entry in ReadSection(lines, ref i))
+            {
+                var fields = entry.Split(':', 3);
+                if (fields.Length != 3 || !int.TryParse(fields[0], out int rule) ||
+                    !int.TryParse(fields[1], out int predicate) ||
+                    rule < 0 || rule >= result.RuleNames.Length)
+                    throw new InvalidDataException($"Invalid G4X set-difference entry '{entry}'.");
+                var pairs = System.Text.Json.JsonSerializer.Deserialize<string[][]>(
+                    Convert.FromBase64String(fields[2]))
+                    ?? throw new InvalidDataException("Empty G4X set-difference operand list.");
+                var operands = pairs.Select(pair =>
+                {
+                    if (pair.Length != 2 || pair[0] is not ("rule" or "literal"))
+                        throw new InvalidDataException($"Invalid G4X set-difference operand in '{entry}'.");
+                    if (pair[0] == "rule")
+                    {
+                        int excludedRule = Array.IndexOf(result.RuleNames, pair[1]);
+                        if (excludedRule < 0)
+                            throw new InvalidDataException($"Unknown G4X exclusion rule '{pair[1]}'.");
+                        return new MyATN.G4XExclusionOperand("rule", excludedRule.ToString());
+                    }
+                    return new MyATN.G4XExclusionOperand("literal", pair[1]);
+                }).ToArray();
+                result.G4XExclusions.Add((rule, predicate), operands);
             }
         }
 

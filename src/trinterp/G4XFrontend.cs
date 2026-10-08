@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
+using System.Text.Json;
 using static trinterp.GrammarParser;
 
 namespace trinterp;
@@ -71,13 +73,18 @@ public sealed class G4XFrontend : IGrammarFrontend
         {
             if (IsTerminal(item)) { result.Children.Add(item); continue; }
             var alt = item.LocalName == "labeledAlt" ? Child(item, "alternative") : item;
-            if (Child(alt, "exclusion") != null)
-                throw new NotSupportedException("G4X set-difference compilation is not supported yet; exclusion cannot be ignored.");
+            var exclusion = Child(alt, "exclusion");
+            if (exclusion != null && !lexer)
+                throw new NotSupportedException("G4X parser-rule set-difference requires scannerless compilation, which is not supported yet.");
+            if (exclusion != null && !outer)
+                throw new NotSupportedException("G4X set-difference inside a lexer block is not supported yet.");
             if (!lexer && Child(alt, "lexerCommands") != null)
                 throw new InvalidOperationException("Lexer commands require a lexer grammar.");
             var lowered = new GrammarNode(lexer ? "lexerAlt" : "alternative");
             var elements = lexer ? new GrammarNode("lexerElements") : lowered;
             foreach (var element in Children(alt, "element")) elements.Children.Add(LowerElement(element, lexer, rules));
+            if (exclusion != null)
+                elements.Children.Add(LowerExclusion(exclusion, rules));
             if (lexer)
             {
                 lowered.Children.Add(elements);
@@ -96,6 +103,35 @@ public sealed class G4XFrontend : IGrammarFrontend
             else result.Children.Add(lowered);
         }
         return result;
+    }
+
+    private static GrammarNode LowerExclusion(GrammarNode exclusion, HashSet<string> rules)
+    {
+        var operands = new List<string[]>();
+        foreach (var operand in Children(exclusion, "exclusionOperand"))
+        {
+            if (Child(operand, "identifier") is { } identifier)
+            {
+                var name = GetText(identifier);
+                if (!rules.Contains(name))
+                    throw new InvalidOperationException($"Undefined G4X set-difference rule '{name}'.");
+                operands.Add(new[] { "rule", name });
+            }
+            else if (ChildTerminal(operand, "STRING_LITERAL") is { } literal)
+                operands.Add(new[] { "literal", LexerAtnFactory.DecodeLiteral(GetText(literal)) });
+            else
+                throw new NotSupportedException(
+                    "G4X set-difference currently supports named lexer rules and string literals, not character sets or ranges.");
+        }
+        if (operands.Count == 0)
+            throw new InvalidOperationException("G4X set-difference requires an exclusion operand.");
+        var encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(operands)));
+        var predicate = new GrammarNode("lexerElement");
+        predicate.Children.Add(new GrammarNode("actionBlock")
+            { Text = "{g4x-set-diff:" + encoded + "}" });
+        predicate.Children.Add(new GrammarNode("QUESTION")
+            { Terminal = true, Text = "?" });
+        return predicate;
     }
 
     private static GrammarNode LowerElement(GrammarNode element, bool lexer, HashSet<string> rules)

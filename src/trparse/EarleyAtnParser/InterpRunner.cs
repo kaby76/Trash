@@ -51,6 +51,7 @@ public static class InterpRunner
                 loadedParserInterp.AtnData);
             var loadedLexerAtn = AtnDeserializer.Deserialize(
                 loadedLexerInterp.AtnData);
+            loadedLexerAtn.G4XExclusions = loadedLexerInterp.G4XExclusions;
             int loadedStartRule = StartRuleResolver.Resolve(
                 loadedParserAtn, loadedParserInterp, null);
             runtime = new AllStarAtnParser.InterpRuntimeCache.RuntimeData(

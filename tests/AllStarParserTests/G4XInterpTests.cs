@@ -32,19 +32,58 @@ public sealed class G4XInterpTests
     }
 
     [Fact]
-    public async Task CliUnsupportedExclusionFailsWithoutWritingTables()
+    public async Task CliSetDifferenceCompilesAndSelectsKeywordAndLiteralFallbacks()
     {
-        var directory = Directory.CreateTempSubdirectory("G4XDiagnostic-").FullName;
+        var directory = Directory.CreateTempSubdirectory("G4XDifference-").FullName;
+        try
+        {
+            var example = Path.Combine(AppContext.BaseDirectory, "TestData", "g4x-set-difference");
+            var parsed = await RunCli(typeof(Trash.Program).Assembly.Location, null,
+                Path.Combine(example, "SetDiffLexer.g4x"),
+                Path.Combine(example, "SetDiffParser.g4x"));
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCli(typeof(trinterp.Program).Assembly.Location, parsed.Output, "-o", directory);
+            Assert.True(generated.Exit == 0, generated.Error);
+            var lexerPath = Path.Combine(directory, "SetDiffLexer.interp");
+            var lexerData = Atn.InterpFileReader.Read(File.ReadAllText(lexerPath));
+            Assert.Single(lexerData.G4XExclusions);
+            var lexerAtn = Atn.AtnDeserializer.Deserialize(lexerData.AtnData);
+            lexerAtn.G4XExclusions = lexerData.G4XExclusions;
+            var input = await File.ReadAllTextAsync(Path.Combine(example, "input.txt"));
+            var tokens = new EarleyAtnParser.LexerAtnSimulator(lexerAtn).Tokenize(input);
+            Assert.Equal(new[] { "Keyword", "Identifier", "NullLiteral", "Keyword",
+                "Identifier", "Identifier", "Identifier" },
+                tokens.Where(t => t.Type > 0 && t.Channel == 0)
+                    .Select(t => lexerData.SymbolicNames[t.Type]));
+            var (result, _) = AllStarAtnParser.InterpRunner.Run(
+                Path.Combine(directory, "SetDiffParser.interp"), lexerPath,
+                input, "input.txt", false);
+            Assert.Single(result.Nodes);
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
+    [Fact]
+    public async Task SetDifferenceRejectsCompleteMatchButAllowsShorterMatches()
+    {
+        var directory = Directory.CreateTempSubdirectory("G4XNoFallback-").FullName;
         try
         {
             var grammar = Path.Combine(directory, "L.g4x");
             await File.WriteAllTextAsync(grammar, "lexer grammar L; word:[a-z]+ - 'if';");
             var parsed = await RunCli(typeof(Trash.Program).Assembly.Location, null, grammar);
             Assert.True(parsed.Exit == 0, parsed.Error);
-            var generated = await RunCli(typeof(trinterp.Program).Assembly.Location, parsed.Output, "-o", directory);
-            Assert.NotEqual(0, generated.Exit);
-            Assert.Contains("set-difference", generated.Error);
-            Assert.Empty(Directory.GetFiles(directory, "*.interp"));
+            var generated = await RunCli(typeof(trinterp.Program).Assembly.Location,
+                parsed.Output, "-o", directory);
+            Assert.True(generated.Exit == 0, generated.Error);
+            var data = Atn.InterpFileReader.Read(File.ReadAllText(Path.Combine(directory, "L.interp")));
+            var atn = Atn.AtnDeserializer.Deserialize(data.AtnData);
+            atn.G4XExclusions = data.G4XExclusions;
+            var lexer = new EarleyAtnParser.LexerAtnSimulator(atn);
+            Assert.Equal(data.SymbolicNames.ToList().IndexOf("word"), lexer.Tokenize("iffy")[0].Type);
+            // Excluding the complete match does not exclude shorter accepted lexemes.
+            Assert.Equal(new[] { "i", "f" }, lexer.Tokenize("if")
+                .Where(t => t.Type > 0).Select(t => t.Text));
         }
         finally { Directory.Delete(directory, true); }
     }
@@ -304,7 +343,9 @@ public sealed class G4XInterpTests
     }
 
     [Theory]
-    [InlineData("lexer grammar L; word:[a-z]+ - 'if';", "set-difference")]
+    [InlineData("lexer grammar L; word:[a-z]+ - [ab];", "character sets or ranges")]
+    [InlineData("grammar C; Start:'x' EOF - 'y';", "parser-rule set-difference")]
+    [InlineData("lexer grammar L; word:'x' - Missing;", "Undefined G4X set-difference")]
     [InlineData("grammar C; Start:[a-z] EOF;", "scannerless")]
     [InlineData("grammar C; Start:'x' -> skip;", "Lexer commands")]
     [InlineData("lexer grammar L; fragment a:'a'; b:~a;", "set expansion")]

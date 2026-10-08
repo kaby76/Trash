@@ -25,17 +25,22 @@ TypeIdentifier : Identifier - ('permits' | 'record' | 'sealed' | 'var' | 'yield'
 ```
 
 The clause applies to its preceding alternative; group alternatives on the
-left if their union is to be excluded. This is currently grammar syntax only:
-the generated G4X parser records the clause, but ANTLR4 and Trash's
-interpreter do not yet enforce set-difference matching semantics.
+left if their union is to be excluded. `trinterp` compiles top-level lexer
+alternatives with named-rule and string-literal exclusions. The interpreter
+rejects a candidate only when an excluded operand matches that candidate's
+complete text. See [`examples/g4x-exclusion`](../../../examples/g4x-exclusion/)
+for a runnable grammar and input.
 
 ## Table generation
 
 `dotnet trash parse Lexer.g4x Parser.g4x | dotnet trash interp -o interp`
 compiles supported G4X syntax into lexer/parser tables. See
 [`examples/g4x-interp`](../../../examples/g4x-interp/README.md) for a runnable
-example. Exclusions, imports, and scannerless parser character sets currently
-produce compilation errors; they are never silently discarded.
+example. Parser-rule exclusions, exclusions inside lexer blocks,
+character-set/range exclusion operands, and case-insensitive set difference
+are not yet supported; they produce compilation errors. Imports and
+scannerless parser character sets also produce errors rather than being
+silently discarded.
 
 ## License
 [BSD](https://opensource.org/license/bsd-3-clause)

@@ -28,6 +28,10 @@ public class MyLexerAction : IMyLexerAction
 
 public class MyATN
 {
+    public readonly record struct G4XExclusionOperand(string Kind, string Value);
+
+    // Trash-specific lexer predicates compiled from G4X set-difference clauses.
+    public Dictionary<(int Rule, int Predicate), G4XExclusionOperand[]> G4XExclusions = new();
     public MyATNType grammarType;
     public int maxTokenType;
     public MyATNState[] allStates = Array.Empty<MyATNState>();
