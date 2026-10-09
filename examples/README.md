@@ -16,6 +16,7 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`rex-sort/`](rex-sort/) | Sort REx syntax and lexical rules alphabetically using XQuery4 while preserving their parse-tree content |
 | [`ixml-interp/`](ixml-interp/) | Compile basic scannerless iXML directly to interpreter tables, with arithmetic and separated-list tree checks |
 | [`ixml-to-antlr4/`](ixml-to-antlr4/) | Convert an iXML grammar to Antlr4 syntax using a five-pass XQuery Update pipeline (structural syntax, encoded characters, character sets, inline-set extraction, separator quantifiers) |
+| [`java27-g4x/`](java27-g4x/) | Compile a Java 27 G4X lexer/parser to `.interp` tables and parse Java inputs with grammar-selected context-aware ALL(*) |
 | [`java-antlr/`](java-antlr/) | Generate a Java-target Antlr4 parser for the Java grammar, build, and run |
 | [`java-allstar-xquery/`](java-allstar-xquery/) | Interpret the Java grammar with AllStar and XQuery4 parser predicates, then parse Java sources from an OpenJDK 21 PAX/tar bundle |
 | [`lark-to-antlr4/`](lark-to-antlr4/) | Convert a Lark grammar to Antlr4 syntax using a multi-pass XQuery Update pipeline |
