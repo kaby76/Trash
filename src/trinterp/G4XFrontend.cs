@@ -26,10 +26,14 @@ public sealed class G4XFrontend : IGrammarFrontend
             var name = GetText(Child(rule, "identifier"));
             if (!names.Add(name)) throw new InvalidOperationException($"Duplicate rule '{name}'.");
         }
+        var parserRules = lexer ? null : rules.ToDictionary(
+            rule => GetText(Child(rule, "identifier")),
+            rule => Child(rule, "ruleBlock"), StringComparer.Ordinal);
         foreach (var rule in rules)
         {
             var name = Child(rule, "identifier");
             var body = Child(rule, "ruleBlock");
+            if (!lexer) ValidateParserExclusions(body, parserRules);
             var lowered = new GrammarNode(lexer ? "lexerRuleSpec" : "parserRuleSpec");
             lowered.Children.Add(Token(name, lexer ? "TOKEN_REF" : "RULE_REF"));
             var modifiers = Child(rule, "ruleModifiers");
@@ -66,6 +70,44 @@ public sealed class G4XFrontend : IGrammarFrontend
     private static GrammarNode LowerBody(GrammarNode body, bool lexer, HashSet<string> rules) =>
         new(lexer ? "lexerRuleBlock" : "ruleBlock", LowerAlts(Child(body, "ruleAltList"), lexer, rules, true));
 
+    private static void ValidateParserExclusions(GrammarNode body,
+        Dictionary<string, GrammarNode> parserRules)
+    {
+        foreach (var item in Children(Child(body, "ruleAltList"), "labeledAlt"))
+        {
+            var alt = Child(item, "alternative");
+            if (Child(alt, "exclusion") != null &&
+                !IsSingleTokenAlternative(alt, parserRules, new HashSet<string>(StringComparer.Ordinal)))
+                throw new NotSupportedException(
+                    "G4X parser-rule set-difference currently requires an alternative that consumes exactly one token.");
+        }
+    }
+
+    private static bool IsSingleTokenAlternative(GrammarNode alt,
+        Dictionary<string, GrammarNode> parserRules, HashSet<string> visiting)
+    {
+        var elements = Children(alt, "element").ToList();
+        if (elements.Count != 1) return false;
+        var element = elements[0];
+        if (Child(element, "ebnfSuffix") != null || Child(element, "labeledElement") != null)
+            return false;
+        var symbol = Child(Child(element, "atom"), "symbolRef");
+        if (symbol == null || Child(symbol, "argActionBlock") != null) return false;
+        if (ChildTerminal(symbol, "STRING_LITERAL") != null) return true;
+        var identifier = Child(symbol, "identifier");
+        if (identifier == null) return false;
+        var name = GetText(identifier);
+        if (!parserRules.TryGetValue(name, out var body)) return true; // token reference
+        if (!visiting.Add(name)) return false;
+        try
+        {
+            var alternatives = Children(Child(body, "ruleAltList"), "labeledAlt").ToList();
+            return alternatives.Count != 0 && alternatives.All(item =>
+                IsSingleTokenAlternative(Child(item, "alternative"), parserRules, visiting));
+        }
+        finally { visiting.Remove(name); }
+    }
+
     private static GrammarNode LowerAlts(GrammarNode list, bool lexer, HashSet<string> rules, bool outer)
     {
         var result = new GrammarNode(lexer ? "lexerAltList" : outer ? "ruleAltList" : "altList");
@@ -74,17 +116,17 @@ public sealed class G4XFrontend : IGrammarFrontend
             if (IsTerminal(item)) { result.Children.Add(item); continue; }
             var alt = item.LocalName == "labeledAlt" ? Child(item, "alternative") : item;
             var exclusion = Child(alt, "exclusion");
-            if (exclusion != null && !lexer)
-                throw new NotSupportedException("G4X parser-rule set-difference requires scannerless compilation, which is not supported yet.");
             if (exclusion != null && !outer)
-                throw new NotSupportedException("G4X set-difference inside a lexer block is not supported yet.");
+                throw new NotSupportedException("G4X set-difference inside a block is not supported yet.");
             if (!lexer && Child(alt, "lexerCommands") != null)
                 throw new InvalidOperationException("Lexer commands require a lexer grammar.");
             var lowered = new GrammarNode(lexer ? "lexerAlt" : "alternative");
             var elements = lexer ? new GrammarNode("lexerElements") : lowered;
+            if (exclusion != null && !lexer)
+                elements.Children.Add(LowerExclusion(exclusion, rules, lexer));
             foreach (var element in Children(alt, "element")) elements.Children.Add(LowerElement(element, lexer, rules));
-            if (exclusion != null)
-                elements.Children.Add(LowerExclusion(exclusion, rules));
+            if (exclusion != null && lexer)
+                elements.Children.Add(LowerExclusion(exclusion, rules, lexer));
             if (lexer)
             {
                 lowered.Children.Add(elements);
@@ -105,13 +147,16 @@ public sealed class G4XFrontend : IGrammarFrontend
         return result;
     }
 
-    private static GrammarNode LowerExclusion(GrammarNode exclusion, HashSet<string> rules)
+    private static GrammarNode LowerExclusion(GrammarNode exclusion, HashSet<string> rules, bool lexer)
     {
         var operands = new List<string[]>();
         foreach (var operand in Children(exclusion, "exclusionOperand"))
         {
             if (Child(operand, "identifier") is { } identifier)
             {
+                if (!lexer)
+                    throw new NotSupportedException(
+                        "G4X parser-rule set-difference currently supports string-literal exclusions, not named rules.");
                 var name = GetText(identifier);
                 if (!rules.Contains(name))
                     throw new InvalidOperationException($"Undefined G4X set-difference rule '{name}'.");
@@ -126,7 +171,7 @@ public sealed class G4XFrontend : IGrammarFrontend
         if (operands.Count == 0)
             throw new InvalidOperationException("G4X set-difference requires an exclusion operand.");
         var encoded = Convert.ToBase64String(Encoding.UTF8.GetBytes(JsonSerializer.Serialize(operands)));
-        var predicate = new GrammarNode("lexerElement");
+        var predicate = new GrammarNode(lexer ? "lexerElement" : "element");
         predicate.Children.Add(new GrammarNode("actionBlock")
             { Text = "{g4x-set-diff:" + encoded + "}" });
         predicate.Children.Add(new GrammarNode("QUESTION")

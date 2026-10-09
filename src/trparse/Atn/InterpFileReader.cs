@@ -13,6 +13,7 @@ public class ParsedInterp
     /// the 'start-rule:' section is absent (lexer interp files and old files).
     /// </summary>
     public int StartStateNumber = -1;
+    public bool ContextAwareLexing;
     public Dictionary<(int Rule, int Predicate), MyATN.G4XExclusionOperand[]> G4XExclusions = new();
 }
 
@@ -63,6 +64,8 @@ public static class InterpFileReader
         for (int j = 0; j < parts.Length; j++)
             result.AtnData[j] = int.Parse(parts[j].Trim());
 
+        // Optional Trash-specific sections can appear in either order.
+        int optionalSectionStart = i;
         // Optional start-rule section (parser interp files only).
         if (TrySkipToSection(lines, ref i, "start-rule:"))
         {
@@ -73,6 +76,7 @@ public static class InterpFileReader
             }
         }
 
+        i = optionalSectionStart;
         if (TrySkipToSection(lines, ref i, "g4x-set-differences:"))
         {
             foreach (var entry in ReadSection(lines, ref i))
@@ -102,7 +106,44 @@ public static class InterpFileReader
             }
         }
 
+        i = optionalSectionStart;
+        if (TrySkipToSection(lines, ref i, "trash-options:"))
+            foreach (var option in ReadSection(lines, ref i))
+                if (TryReadContextAwareLexing(option, out bool enabled))
+                    result.ContextAwareLexing = enabled;
+
         return result;
+    }
+
+    // The command driver needs this one flag before choosing Earley or ALL(*).
+    // Scan only the optional section; avoid deserializing the whole ATN twice.
+    public static bool RequiresContextAwareLexing(string path)
+    {
+        bool inOptions = false;
+        foreach (var rawLine in File.ReadLines(path))
+        {
+            var line = rawLine.Trim();
+            if (!inOptions)
+            {
+                inOptions = line == "trash-options:";
+                continue;
+            }
+            if (line.Length == 0) break;
+            if (TryReadContextAwareLexing(line, out bool enabled))
+                return enabled;
+        }
+        return false;
+    }
+
+    private static bool TryReadContextAwareLexing(string option, out bool enabled)
+    {
+        enabled = false;
+        const string prefix = "contextAwareLexing=";
+        if (!option.StartsWith(prefix, StringComparison.Ordinal)) return false;
+        if (!bool.TryParse(option[prefix.Length..], out enabled))
+            throw new InvalidDataException(
+                "Invalid contextAwareLexing value in .interp; expected true or false.");
+        return true;
     }
 
     private static void SkipToSection(string[] lines, ref int i, string header)

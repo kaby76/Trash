@@ -89,6 +89,9 @@ public class GrammarModel
     // caseInsensitive option: when true, every char literal/range is expanded to both cases.
     public bool IsCaseInsensitive;
 
+    // G4X parser option: let trparse choose context-aware lexing automatically.
+    public bool ContextAwareLexing;
+
     // Channel names beyond DEFAULT_TOKEN_CHANNEL and HIDDEN.
     public List<string> ExtraChannelNames = new();
 

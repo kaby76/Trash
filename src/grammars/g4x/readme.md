@@ -30,15 +30,33 @@ alternatives with named-rule and string-literal exclusions. The interpreter
 rejects a candidate only when an excluded operand matches that candidate's
 complete text. See [`examples/g4x-exclusion`](../../../examples/g4x-exclusion/)
 for a runnable grammar and input.
+AllStar also evaluates string-literal exclusions on parser alternatives that
+consume exactly one token. It compares the token text, not just the token type,
+so `--context-aware-lexing` cannot admit an excluded word by selecting a
+contextual `Identifier` token.
+
+For a G4X parser grammar that always needs contextual token selection, put
+`contextAwareLexing=true` in its grammar-level options block:
+
+```antlr
+parser grammar MyParser;
+options { tokenVocab=MyLexer; contextAwareLexing=true; }
+```
+
+`trinterp` records this setting in the parser `.interp`. When `trparse` loads
+that table, it selects ALL(*) with context-aware lexing without needing
+`--allstar` or `--context-aware-lexing` on the command line. The command-line
+flag still enables context-aware lexing for grammars without this option.
 
 ## Table generation
 
 `dotnet trash parse Lexer.g4x Parser.g4x | dotnet trash interp -o interp`
 compiles supported G4X syntax into lexer/parser tables. See
 [`examples/g4x-interp`](../../../examples/g4x-interp/README.md) for a runnable
-example. Parser-rule exclusions, exclusions inside lexer blocks,
-character-set/range exclusion operands, and case-insensitive set difference
-are not yet supported; they produce compilation errors. Imports and
+example. Multi-token parser alternatives, named parser-rule exclusions,
+exclusions inside blocks, character-set/range exclusion operands, and
+case-insensitive lexer set difference are not yet supported; they produce
+compilation errors. Imports and
 scannerless parser character sets also produce errors rather than being
 silently discarded.
 

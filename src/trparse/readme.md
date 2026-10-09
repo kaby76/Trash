@@ -134,6 +134,11 @@ explicit `--allstar` below is optional:
     dotnet trash parse --allstar --context-aware-lexing \
         --pinterp MyParser.interp --linterp MyLexer.interp input.txt
 
+A G4X parser grammar can instead declare
+`options { contextAwareLexing=true; }`. `trinterp` writes the setting to its
+parser `.interp`, and `trparse` selects this mode automatically when loading
+that table. Re-run `trinterp` after changing the grammar option.
+
 At each parser position, lexer rules producing an expected token type are
 considered before applying longest-match and rule-order priority. Skip and
 off-channel rules remain eligible. If none of the context-valid rules matches,
@@ -210,8 +215,10 @@ indirectly recursive rule nesting and grows it left-associatively:
     dotnet trash parse --indirect-left-recursion -L interp input.txt
 
 This opt-in path is intended for grammars that ANTLR normally rejects during
-code generation. It cannot currently be combined with
-`--context-aware-lexing` or `--xquery-hooks`.
+code generation. It can be combined with `--context-aware-lexing`: the
+fixed-point parser requests tokens on each grammar path and retains only the
+tokens of the selected parse. It cannot currently be combined with
+`--xquery-hooks`.
 
 ## Usage
 

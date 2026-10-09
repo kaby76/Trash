@@ -33,11 +33,9 @@ public static class InterpRunner
         string startRuleName = null,
         string xqueryHooksPath = null)
     {
-        if (indirectLeftRecursion &&
-            (contextAwareLexing || !string.IsNullOrEmpty(xqueryHooksPath)))
+        if (indirectLeftRecursion && !string.IsNullOrEmpty(xqueryHooksPath))
             throw new ArgumentException(
-                "--indirect-left-recursion cannot currently be combined with " +
-                "--context-aware-lexing or --xquery-hooks.");
+                "--indirect-left-recursion cannot currently be combined with --xquery-hooks.");
 
         timings ??= new InterpRunTimings();
         timings.Files = 1;
@@ -77,6 +75,7 @@ public static class InterpRunner
             }
             var loadedLexerAtn = AtnDeserializer.Deserialize(
                 loadedLexerInterp.AtnData);
+            loadedParserAtn.G4XExclusions = loadedParserInterp.G4XExclusions;
             loadedLexerAtn.G4XExclusions = loadedLexerInterp.G4XExclusions;
             timer.Stop();
             timings.AtnDeserialization = timer.Elapsed;
@@ -100,6 +99,7 @@ public static class InterpRunner
                     parserInterpPath, lexerInterpPath, runtime);
         }
         var parserInterp = runtime.ParserInterp;
+        contextAwareLexing |= parserInterp.ContextAwareLexing;
         var lexerInterp = runtime.LexerInterp;
         var parserAtn = runtime.ParserAtn;
         var lexerAtn = runtime.LexerAtn;
@@ -133,11 +133,15 @@ public static class InterpRunner
         if (contextAwareLexing || hooks != null)
         {
             timer.Restart();
-            events = AllStarParser.ParseContextAware(
-                parserAtn, lexerAtn, inputText, startRule, out rawTokens,
-                statistics, parserStatistics,
-                hooks == null ? predictionCache : null,
-                hooks: hooks);
+            events = indirectLeftRecursion
+                ? IndirectLeftRecursiveParser.ParseContextAware(
+                    parserAtn, lexerAtn, inputText, startRule, out rawTokens,
+                    statistics, parserStatistics, lexerDfaCache)
+                : AllStarParser.ParseContextAware(
+                    parserAtn, lexerAtn, inputText, startRule, out rawTokens,
+                    statistics, parserStatistics,
+                    hooks == null ? predictionCache : null,
+                    hooks: hooks);
             timer.Stop();
             // Tokens are requested lazily here; this is combined lex/parse time.
             timings.Parsing = timer.Elapsed;

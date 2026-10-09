@@ -64,6 +64,43 @@ public sealed class G4XInterpTests
     }
 
     [Fact]
+    public async Task G4XOptionSelectsContextAwareAllStarWithoutCliFlag()
+    {
+        var directory = Directory.CreateTempSubdirectory("G4XContextOption-").FullName;
+        try
+        {
+            var lexer = Path.Combine(directory, "L.g4x");
+            var parser = Path.Combine(directory, "P.g4x");
+            var input = Path.Combine(directory, "input.txt");
+            await File.WriteAllTextAsync(lexer,
+                "lexer grammar L; KEY:'key'; WORD:[a-z]+;");
+            await File.WriteAllTextAsync(parser,
+                "parser grammar P; options{tokenVocab=L; contextAwareLexing=true;} Start:WORD EOF;");
+            await File.WriteAllTextAsync(input, "key");
+            var parsed = await RunCli(typeof(Trash.Program).Assembly.Location,
+                null, lexer, parser);
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCli(typeof(trinterp.Program).Assembly.Location,
+                parsed.Output, "-o", directory);
+            Assert.True(generated.Exit == 0, generated.Error);
+            var parserInterp = Path.Combine(directory, "P.interp");
+            Assert.True(Atn.InterpFileReader.Read(File.ReadAllText(parserInterp))
+                .ContextAwareLexing);
+            Assert.True(Atn.InterpFileReader.RequiresContextAwareLexing(parserInterp));
+            var (direct, _) = AllStarAtnParser.InterpRunner.Run(
+                parserInterp, Path.Combine(directory, "L.interp"),
+                "key", "input.txt", false);
+            Assert.Single(direct.Nodes);
+            var run = await RunCli(typeof(Trash.Program).Assembly.Location,
+                null, "-L", directory, "--pinterp", "P.interp",
+                "--linterp", "L.interp", "--no-output", "--per-file", input);
+            Assert.True(run.Exit == 0, run.Error);
+            Assert.Contains("ALL(*)", run.Error);
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
+    [Fact]
     public async Task SetDifferenceRejectsCompleteMatchButAllowsShorterMatches()
     {
         var directory = Directory.CreateTempSubdirectory("G4XNoFallback-").FullName;
@@ -176,7 +213,8 @@ public sealed class G4XInterpTests
         return text;
     }
 
-    private static string Parse(List<GrammarModel> models, string parserName, string lexerName, string input, bool indirect = false)
+    private static string Parse(List<GrammarModel> models, string parserName, string lexerName,
+        string input, bool indirect = false, bool contextAware = false)
     {
         var directory = Directory.CreateTempSubdirectory("G4XInterp-").FullName;
         try
@@ -184,7 +222,8 @@ public sealed class G4XInterpTests
             foreach (var model in models) File.WriteAllText(Path.Combine(directory, model.Name + ".interp"), Tables(model));
             var (result, _) = AllStarAtnParser.InterpRunner.Run(
                 Path.Combine(directory, parserName + ".interp"), Path.Combine(directory, lexerName + ".interp"),
-                input, "input.txt", false, indirectLeftRecursion: indirect);
+                input, "input.txt", false, contextAwareLexing: contextAware,
+                indirectLeftRecursion: indirect);
             return new TreeOutput(result.Lexer, result.Parser).OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString();
         }
         finally { Directory.Delete(directory, true); }
@@ -217,6 +256,82 @@ public sealed class G4XInterpTests
         Assert.Throws<InvalidOperationException>(() => Batch(parser, lexer));
         lexer = Model("lexer grammar L; fragment digit : [0-9]; number : digit+; comma : ','; space : [ \\t]+ -> skip;");
         Assert.Equal("(Start 12 , 34 <EOF>)", Parse(Batch(parser, lexer), "P", "L", "12, 34"));
+    }
+
+    [Fact]
+    public void ParserSetDifferenceRejectsContextuallyLexedKeyword()
+    {
+        const string lexer = "lexer grammar L; PERMITS:'permits'; Identifier:[a-z]+; WS:[ \\t]+ -> skip;";
+        const string parser = "parser grammar P; options{tokenVocab=L;} " +
+            "start:typeIdentifier EOF; typeIdentifier:identifier - ('permits' | 'record'); " +
+            "identifier:Identifier;";
+        List<GrammarModel> BatchFresh() => Batch(Model(parser), Model(lexer));
+        var withoutExclusion = parser.Replace(
+            "identifier - ('permits' | 'record')", "identifier");
+        Assert.Equal("(start (typeIdentifier (identifier permits)) <EOF>)",
+            Parse(Batch(Model(withoutExclusion), Model(lexer)), "P", "L",
+                "permits", contextAware: true));
+        Assert.Equal("(start (typeIdentifier (identifier normal)) <EOF>)",
+            Parse(BatchFresh(), "P", "L", "normal", contextAware: true));
+        Assert.Equal("(start (typeIdentifier (identifier normal)) <EOF>)",
+            Parse(BatchFresh(), "P", "L", "normal"));
+        Assert.Throws<InvalidOperationException>(() =>
+            Parse(BatchFresh(), "P", "L", "permits", contextAware: true));
+        Assert.Throws<InvalidOperationException>(() =>
+            Parse(BatchFresh(), "P", "L", "record", contextAware: true));
+        Assert.Throws<InvalidOperationException>(() =>
+            Parse(BatchFresh(), "P", "L", "record"));
+    }
+
+    [Fact]
+    public void ParserSetDifferenceParticipatesInAlternativePrediction()
+    {
+        const string lexer = "lexer grammar L; Identifier:[a-z]+;";
+        const string parser = "parser grammar P; options{tokenVocab=L;} " +
+            "start:typeIdentifier EOF | Identifier EOF; " +
+            "typeIdentifier:identifier - 'permits'; identifier:Identifier;";
+        List<GrammarModel> BatchFresh() => Batch(Model(parser), Model(lexer));
+        Assert.Equal("(start (typeIdentifier (identifier normal)) <EOF>)",
+            Parse(BatchFresh(), "P", "L", "normal"));
+        Assert.Equal("(start permits <EOF>)",
+            Parse(BatchFresh(), "P", "L", "permits"));
+    }
+
+    [Fact]
+    public void EarleyExplicitlyRejectsParserSetDifference()
+    {
+        var models = Batch(
+            Model("parser grammar P; options{tokenVocab=L;} start:word EOF; word:Identifier - 'if';"),
+            Model("lexer grammar L; Identifier:[a-z]+;"));
+        var directory = Directory.CreateTempSubdirectory("G4XEarleyDifference-").FullName;
+        try
+        {
+            foreach (var model in models)
+                File.WriteAllText(Path.Combine(directory, model.Name + ".interp"), Tables(model));
+            var exception = Assert.Throws<NotSupportedException>(() =>
+                EarleyAtnParser.InterpRunner.Run(
+                    Path.Combine(directory, "P.interp"),
+                    Path.Combine(directory, "L.interp"), "if", "input.txt", false));
+            Assert.Contains("--allstar", exception.Message);
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
+    [Fact]
+    public void ContextAwareIndirectRecursionHonorsParserSetDifference()
+    {
+        const string lexer = "lexer grammar L; KEY:'key'; WORD:[a-z]+; PLUS:'+';";
+        const string parser = "parser grammar P; options{tokenVocab=L;} " +
+            "start:expr EOF; expr:bridge | word; bridge:expr PLUS word; " +
+            "word:WORD - 'key';";
+        List<GrammarModel> BatchFresh() => Batch(Model(parser), Model(lexer));
+        Assert.Equal(
+            "(start (expr (bridge (expr (word alpha)) + (word beta))) <EOF>)",
+            Parse(BatchFresh(), "P", "L", "alpha+beta",
+                indirect: true, contextAware: true));
+        Assert.Throws<InvalidOperationException>(() =>
+            Parse(BatchFresh(), "P", "L", "key+beta",
+                indirect: true, contextAware: true));
     }
 
     [Fact]
@@ -344,7 +459,8 @@ public sealed class G4XInterpTests
 
     [Theory]
     [InlineData("lexer grammar L; word:[a-z]+ - [ab];", "character sets or ranges")]
-    [InlineData("grammar C; Start:'x' EOF - 'y';", "parser-rule set-difference")]
+    [InlineData("grammar C; Start:'x' EOF - 'y';", "consumes exactly one token")]
+    [InlineData("grammar C; Start:'x' - Missing;", "string-literal exclusions")]
     [InlineData("lexer grammar L; word:'x' - Missing;", "Undefined G4X set-difference")]
     [InlineData("grammar C; Start:[a-z] EOF;", "scannerless")]
     [InlineData("grammar C; Start:'x' -> skip;", "Lexer commands")]

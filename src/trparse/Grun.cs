@@ -27,6 +27,7 @@ public class Grun
     private readonly AllStarAtnParser.ParserPredictionCache _parserPredictionCache;
     private readonly AllStarAtnParser.InterpRunTimings _interpTimings = new();
     private readonly AllStarAtnParser.InterpRuntimeCache _interpRuntimeCache = new();
+    private readonly Dictionary<string, bool> _grammarContextAwareLexing = new();
     private readonly EarleyAtnParser.LexerAtnSimulator.LexerDfaCache
         _lexerDfaCache = new();
 
@@ -265,7 +266,21 @@ public class Grun
         List<AntlrJson.ParsingResultSet> data)
     {
         if (!config.Bundle)
-            return DoParse(parserType, text, "", inputName, rowNumber, data);
+        {
+            int countBefore = data.Count;
+            try
+            {
+                return DoParse(parserType, text, "", inputName, rowNumber, data);
+            }
+            catch (Exception exception)
+            {
+                // A bad input must not abort the remaining positional, -x, or
+                // --xf inputs. Keep the overall exit status nonzero instead.
+                data.RemoveRange(countBefore, data.Count - countBefore);
+                Console.Error.WriteLine(exception);
+                return (1, 0, 0);
+            }
+        }
 
         int start = data.Count;
         var originalError = Console.Error;
@@ -278,6 +293,7 @@ public class Grun
         }
         catch (Exception exception)
         {
+            data.RemoveRange(start, data.Count - start);
             captured.WriteLine(exception);
             outcome = (1, 0, 0);
         }
@@ -515,13 +531,23 @@ public class Grun
 
         if (resolvedPInterp != null && resolvedLInterp != null)
         {
+            if (!_grammarContextAwareLexing.TryGetValue(resolvedPInterp,
+                    out bool grammarContextAwareLexing))
+            {
+                grammarContextAwareLexing = Atn.InterpFileReader
+                    .RequiresContextAwareLexing(resolvedPInterp);
+                _grammarContextAwareLexing.Add(resolvedPInterp,
+                    grammarContextAwareLexing);
+            }
+            bool contextAwareLexing = config.ContextAwareLexing ||
+                grammarContextAwareLexing;
             DateTime interpBefore = DateTime.Now;
             AntlrJson.ParsingResultSet rs;
             long interpTokenCount;
             string interpLabel;
             if (!string.IsNullOrEmpty(config.XQueryHooks) && !config.AllStar)
                 throw new ArgumentException("--xquery-hooks requires --allstar.");
-            if (config.AllStar || config.ContextAwareLexing ||
+            if (config.AllStar || contextAwareLexing ||
                 config.IndirectLeftRecursion)
             {
                 AllStarAtnParser.AllStarParser.Trace = config.Verbose;
@@ -533,7 +559,7 @@ public class Grun
                     : null;
                 (rs, interpTokenCount) = AllStarAtnParser.InterpRunner.Run(
                     resolvedPInterp, resolvedLInterp, txt, input_name,
-                    config.LineNumbers, config.ContextAwareLexing,
+                    config.LineNumbers, contextAwareLexing,
                     config.LexerStats, config.LexerOverlaps, interpTimings,
                     parserStatistics, _parserPredictionCache,
                     _interpRuntimeCache, _lexerDfaCache,

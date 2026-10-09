@@ -101,6 +101,14 @@ public static class InterpFormatter
             sb.AppendLine();
         }
 
+        if (grammar.IsG4X && grammar.ContextAwareLexing)
+        {
+            sb.AppendLine();
+            sb.AppendLine("trash-options:");
+            sb.AppendLine("contextAwareLexing=true");
+            sb.AppendLine();
+        }
+
         // Normalise to LF line endings (matches antlr-ng output on all platforms).
         return sb.ToString().Replace("\r\n", "\n");
     }

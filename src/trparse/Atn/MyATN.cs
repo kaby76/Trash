@@ -30,7 +30,7 @@ public class MyATN
 {
     public readonly record struct G4XExclusionOperand(string Kind, string Value);
 
-    // Trash-specific lexer predicates compiled from G4X set-difference clauses.
+    // Trash-specific lexer and parser predicates compiled from G4X set-difference clauses.
     public Dictionary<(int Rule, int Predicate), G4XExclusionOperand[]> G4XExclusions = new();
     public MyATNType grammarType;
     public int maxTokenType;
