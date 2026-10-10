@@ -130,13 +130,15 @@ public static class InterpRunner
 
         TokenStore rawTokens;
         List<ParseEvent> events;
+        var parseProgress = indirectLeftRecursion
+            ? new IndirectLeftRecursiveParser.ParseProgress() : null;
         if (contextAwareLexing || hooks != null)
         {
             timer.Restart();
             events = indirectLeftRecursion
                 ? IndirectLeftRecursiveParser.ParseContextAware(
                     parserAtn, lexerAtn, inputText, startRule, out rawTokens,
-                    statistics, parserStatistics, lexerDfaCache)
+                    statistics, parserStatistics, lexerDfaCache, parseProgress)
                 : AllStarParser.ParseContextAware(
                     parserAtn, lexerAtn, inputText, startRule, out rawTokens,
                     statistics, parserStatistics,
@@ -163,7 +165,8 @@ public static class InterpRunner
             timer.Restart();
             events = indirectLeftRecursion
                 ? IndirectLeftRecursiveParser.Parse(
-                    parserAtn, rawTokens, startRule, parserStatistics)
+                    parserAtn, rawTokens, startRule, parserStatistics,
+                    parseProgress)
                 : AllStarParser.Parse(
                     parserAtn, rawTokens, startRule, parserStatistics,
                     predictionCache);
@@ -176,8 +179,16 @@ public static class InterpRunner
         if (parserStatistics != null)
             Console.Error.WriteLine(parserStatistics.Format());
         if (events == null)
+        {
+            if (!indirectLeftRecursion)
+                throw new InvalidOperationException(
+                    $"ALL(*) parse failed for '{fileName}': input rejected by grammar.");
+            string location = contextAwareLexing
+                ? DescribeSourcePosition(inputText, parseProgress.FarthestPosition)
+                : DescribeTokenPosition(rawTokens, parseProgress.FarthestPosition);
             throw new InvalidOperationException(
-                $"ALL(*) parse failed for '{fileName}': input rejected by grammar.");
+                $"{fileName}: {location}: ALL(*) parse failed: input rejected by grammar.");
+        }
 
         if (show_tokens)
         {
@@ -305,4 +316,48 @@ public static class InterpRunner
                 list[i] = token;
         }
     }
+
+    private static string DescribeTokenPosition(
+        IReadOnlyList<LexerToken> tokens, int onChannelPosition)
+    {
+        int position = 0;
+        foreach (var token in tokens)
+        {
+            if (token.Channel != 0 && token.Type != -1) continue;
+            if (position++ != onChannelPosition) continue;
+            return $"line {token.Line}:{token.Column} near '{EscapeExcerpt(token.Text)}'";
+        }
+        return "end of input";
+    }
+
+    private static string DescribeSourcePosition(string input, int offset)
+    {
+        offset = Math.Clamp(offset, 0, input.Length);
+        int line = 1, column = 0;
+        for (int i = 0; i < offset; i++)
+        {
+            if (input[i] == '\r')
+            {
+                line++;
+                column = 0;
+                if (i + 1 < offset && input[i + 1] == '\n') i++;
+            }
+            else if (input[i] == '\n')
+            {
+                line++;
+                column = 0;
+            }
+            else column++;
+        }
+        string excerpt = offset == input.Length
+            ? "<EOF>"
+            : input.Substring(offset, Math.Min(24, input.Length - offset));
+        return $"line {line}:{column} near '{EscapeExcerpt(excerpt)}'";
+    }
+
+    private static string EscapeExcerpt(string text) => text
+        .Replace("\r", "\\r")
+        .Replace("\n", "\\n")
+        .Replace("\t", "\\t")
+        .Replace("'", "\\'");
 }

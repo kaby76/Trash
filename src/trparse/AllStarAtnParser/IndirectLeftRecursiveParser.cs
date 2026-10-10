@@ -12,6 +12,11 @@ using EarleyAtnParser;
 /// </summary>
 internal static class IndirectLeftRecursiveParser
 {
+    internal sealed class ParseProgress
+    {
+        public int FarthestPosition { get; set; }
+    }
+
     private const int DefaultChannel = 0;
     private const int EofType = -1;
 
@@ -26,7 +31,7 @@ internal static class IndirectLeftRecursiveParser
 
     public static List<ParseEvent> Parse(
         MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex,
-        ParserStatistics statistics = null)
+        ParserStatistics statistics = null, ParseProgress progress = null)
     {
         ArgumentNullException.ThrowIfNull(atn);
         if ((uint)startRuleIndex >= (uint)atn.start.Length)
@@ -38,7 +43,8 @@ internal static class IndirectLeftRecursiveParser
                 allTokens[i].Type == EofType)
                 onChannel.Add(i);
 
-        var evaluator = new Evaluator(atn, allTokens, onChannel, statistics);
+        var evaluator = new Evaluator(atn, allTokens, onChannel, statistics,
+            progress);
         return evaluator.Parse(startRuleIndex);
     }
 
@@ -52,14 +58,15 @@ internal static class IndirectLeftRecursiveParser
         MyATN parserAtn, MyATN lexerAtn, string input, int startRuleIndex,
         out TokenStore selectedTokens, LexerStatistics lexerStatistics = null,
         ParserStatistics parserStatistics = null,
-        LexerAtnSimulator.LexerDfaCache lexerDfaCache = null)
+        LexerAtnSimulator.LexerDfaCache lexerDfaCache = null,
+        ParseProgress progress = null)
     {
         ArgumentNullException.ThrowIfNull(parserAtn);
         ArgumentNullException.ThrowIfNull(lexerAtn);
         if ((uint)startRuleIndex >= (uint)parserAtn.start.Length)
             throw new ArgumentOutOfRangeException(nameof(startRuleIndex));
         var evaluator = new ContextEvaluator(parserAtn, lexerAtn, input,
-            lexerStatistics, parserStatistics, lexerDfaCache);
+            lexerStatistics, parserStatistics, lexerDfaCache, progress);
         return evaluator.Parse(startRuleIndex, out selectedTokens);
     }
 
@@ -69,18 +76,21 @@ internal static class IndirectLeftRecursiveParser
         private readonly IReadOnlyList<LexerToken> _tokens;
         private readonly IReadOnlyList<int> _onChannel;
         private readonly ParserStatistics _statistics;
+        private readonly ParseProgress _progress;
         private readonly Dictionary<RuleKey, List<RuleResult>> _memo = new();
         private readonly Dictionary<RuleKey, HashSet<RuleKey>> _dependents = new();
         private readonly Queue<RuleKey> _pending = new();
         private readonly HashSet<RuleKey> _queued = new();
 
         public Evaluator(MyATN atn, IReadOnlyList<LexerToken> tokens,
-            IReadOnlyList<int> onChannel, ParserStatistics statistics)
+            IReadOnlyList<int> onChannel, ParserStatistics statistics,
+            ParseProgress progress)
         {
             _atn = atn;
             _tokens = tokens;
             _onChannel = onChannel;
             _statistics = statistics;
+            _progress = progress;
         }
 
         public List<ParseEvent> Parse(int startRule)
@@ -132,6 +142,9 @@ internal static class IndirectLeftRecursiveParser
             while (work.Count > 0)
             {
                 var item = work.Dequeue();
+                if (_progress != null)
+                    _progress.FarthestPosition = Math.Max(
+                        _progress.FarthestPosition, item.Position);
                 if (!visited.Add(new StateKey(
                         item.State.stateNumber, item.Position)))
                     continue;
@@ -240,6 +253,7 @@ internal static class IndirectLeftRecursiveParser
         private readonly LexerAtnSimulator _lexer;
         private readonly TokenStore _allTokens;
         private readonly ParserStatistics _statistics;
+        private readonly ParseProgress _progress;
         private readonly AllStarSimulator _expected;
         private readonly Dictionary<LexPosition, LexerAtnSimulator.Cursor> _cursors = new();
         private readonly Dictionary<ContextRuleKey, List<ContextResult>> _memo = new();
@@ -251,11 +265,13 @@ internal static class IndirectLeftRecursiveParser
 
         public ContextEvaluator(MyATN parserAtn, MyATN lexerAtn, string input,
             LexerStatistics lexerStatistics, ParserStatistics statistics,
-            LexerAtnSimulator.LexerDfaCache lexerDfaCache)
+            LexerAtnSimulator.LexerDfaCache lexerDfaCache,
+            ParseProgress progress)
         {
             _atn = parserAtn;
             _input = input;
             _statistics = statistics;
+            _progress = progress;
             _allTokens = new TokenStore(input);
             _lexer = new LexerAtnSimulator(lexerAtn, lexerStatistics, lexerDfaCache);
             _lexer.SetInput(input);
@@ -323,6 +339,9 @@ internal static class IndirectLeftRecursiveParser
             while (work.Count > 0)
             {
                 var item = work.Dequeue();
+                if (_progress != null)
+                    _progress.FarthestPosition = Math.Max(
+                        _progress.FarthestPosition, item.Position.Offset);
                 if (!visited.Add(new ContextStateKey(item.State.stateNumber,
                         item.Position))) continue;
 

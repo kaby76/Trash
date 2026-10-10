@@ -10,6 +10,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.Json;
+using System.Threading.Tasks;
 
 namespace Trash;
 
@@ -28,11 +29,14 @@ public class Grun
     private readonly AllStarAtnParser.InterpRunTimings _interpTimings = new();
     private readonly AllStarAtnParser.InterpRuntimeCache _interpRuntimeCache = new();
     private readonly Dictionary<string, bool> _grammarContextAwareLexing = new();
+    private const string TimeoutWorkerName = "TRPARSE_TIMEOUT_WORKER_NAME";
+    private const string TimeoutWorkerRow = "TRPARSE_TIMEOUT_WORKER_ROW";
     private readonly EarleyAtnParser.LexerAtnSimulator.LexerDfaCache
         _lexerDfaCache = new();
 
     private sealed record BundleParse(string InputName,
-        List<AntlrJson.ParsingResultSet> Results, string Diagnostics);
+        List<AntlrJson.ParsingResultSet> Results, string Diagnostics,
+        List<byte[]> SerializedResults = null);
 
     public Grun(Config co)
     {
@@ -83,6 +87,11 @@ public class Grun
     public int Run(string parser_type)
     {
         int result = 0;
+        if (config.TimeoutSeconds < 0)
+            throw new ArgumentOutOfRangeException("--timeout",
+                "The per-file timeout must be zero or a positive number of seconds.");
+        if (config.TimeoutSeconds > 0 && !config.Bundle)
+            throw new ArgumentException("--timeout requires bundle output.");
         DateTime overallBefore = DateTime.Now;
         InterpBundle stagedTables = null;
         string originalLib = config.Lib;
@@ -164,15 +173,27 @@ public class Grun
             }
             else if (config.Input == null && (config.Files == null || config.Files.Count() == 0))
             {
-                string lines = null;
-                for (; ; )
+                var workerName = Environment.GetEnvironmentVariable(TimeoutWorkerName);
+                if (workerName != null)
                 {
-                    lines = System.Console.In.ReadToEnd();
-                    if (lines != null && lines != "") break;
+                    txt = System.Console.In.ReadToEnd();
+                    int.TryParse(Environment.GetEnvironmentVariable(TimeoutWorkerRow),
+                        out int workerRow);
+                    (result, _, _) = ParseOne(parser_type, txt,
+                        workerName, workerRow, data);
                 }
+                else
+                {
+                    string lines = null;
+                    for (; ; )
+                    {
+                        lines = System.Console.In.ReadToEnd();
+                        if (lines != null && lines != "") break;
+                    }
 
-                txt = lines;
-                (result, _, _) = ParseOne(parser_type, txt, "stdin", 0, data);
+                    txt = lines;
+                    (result, _, _) = ParseOne(parser_type, txt, "stdin", 0, data);
+                }
             }
             else if (config.Input != null)
             {
@@ -261,10 +282,169 @@ public class Grun
         return result;
     }
 
+    private sealed record TimedWorkerResult(int ExitCode, bool TimedOut,
+        double Seconds, byte[] Output, string Error);
+
+    private (int ExitCode, double ParseSeconds, long TokenCount) ParseOneWithTimeout(
+        string parserType, string text, string inputName, int rowNumber)
+    {
+        var worker = RunTimedWorkerAsync(parserType, text, inputName, rowNumber)
+            .GetAwaiter().GetResult();
+        string diagnostics = worker.Error;
+        if (worker.TimedOut)
+        {
+            WriteFailedFileStatus(inputName, rowNumber);
+            var message = $"trparse: '{inputName}' timed out after " +
+                $"{config.TimeoutSeconds} seconds; parse process terminated.";
+            Console.Error.WriteLine(message);
+            diagnostics += message + Environment.NewLine;
+        }
+        else if (worker.ExitCode != 0 && diagnostics.Length == 0)
+        {
+            WriteFailedFileStatus(inputName, rowNumber);
+            diagnostics = $"trparse: '{inputName}' worker exited with code " +
+                $"{worker.ExitCode}." + Environment.NewLine;
+            Console.Error.Write(diagnostics);
+        }
+        else if (diagnostics.Length > 0)
+            Console.Error.WriteLine(diagnostics.TrimEnd('\r', '\n'));
+
+        var serialized = worker.ExitCode == 0 && !config.NoOutput &&
+            !config.NoParsingResultSets
+            ? ReadWorkerResults(worker.Output)
+            : new List<byte[]>();
+        _bundleParses.Add(new BundleParse(inputName,
+            new List<AntlrJson.ParsingResultSet>(),
+            worker.ExitCode == 0 ? string.Empty : diagnostics, serialized));
+        return (worker.ExitCode, worker.Seconds, 0);
+    }
+
+    private async Task<TimedWorkerResult> RunTimedWorkerAsync(
+        string parserType, string text, string inputName, int rowNumber)
+    {
+        var start = new ProcessStartInfo("dotnet")
+        {
+            RedirectStandardInput = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false,
+            WorkingDirectory = Environment.CurrentDirectory
+        };
+        start.ArgumentList.Add(typeof(Grun).Assembly.Location);
+        void Flag(bool enabled, string name)
+        {
+            if (enabled) start.ArgumentList.Add(name);
+        }
+        void Value(string name, string value)
+        {
+            if (value == null) return;
+            start.ArgumentList.Add(name);
+            start.ArgumentList.Add(value);
+        }
+        Value("-t", parserType);
+        Value("-d", config.Dll);
+        Value("-p", config.ParserLocation);
+        Value("-L", config.Lib);
+        Value("--pinterp", config.PInterp);
+        Value("--linterp", config.LInterp);
+        Value("--start-rule", config.StartRule);
+        Value("--xquery-hooks", config.XQueryHooks);
+        Value("-g", config.Encoding);
+        Flag(config.AllStar, "--allstar");
+        Flag(config.IndirectLeftRecursion, "--indirect-left-recursion");
+        Flag(config.ContextAwareLexing, "--context-aware-lexing");
+        Flag(config.LexerStats, "--lexer-stats");
+        Flag(config.LexerOverlaps, "--lexer-overlaps");
+        Flag(config.ParserStats, "--parser-stats");
+        Flag(config.NoSharedParserDfa, "--no-shared-parser-dfa");
+        Flag(config.InterpTimings, "--interp-timings");
+        Flag(config.LineNumbers, "-l");
+        Flag(config.Quiet, "-q");
+        Flag(config.Verbose, "-v");
+        Flag(config.Format, "--fmt");
+        Flag(config.GroupBy, "--group");
+        Flag(config.NoOutput, "--no-output");
+        Flag(config.NoParsingResultSets, "--no-prs");
+        Flag(config.PerFilePerformance, "--per-file");
+        if (Program.args?.Contains("--tokens") == true)
+            start.ArgumentList.Add("--tokens");
+        if (Program.args?.Contains("--numeric-token-types") == true)
+            start.ArgumentList.Add("--numeric-token-types");
+        start.Environment[TimeoutWorkerName] = inputName;
+        start.Environment[TimeoutWorkerRow] = rowNumber.ToString();
+
+        var clock = Stopwatch.StartNew();
+        using var process = Process.Start(start)
+            ?? throw new InvalidOperationException("Failed to start trparse timeout worker.");
+        using var output = new MemoryStream();
+        var stdout = process.StandardOutput.BaseStream.CopyToAsync(output);
+        var stderr = process.StandardError.ReadToEndAsync();
+        var writeInput = Task.Run(async () =>
+        {
+            await process.StandardInput.WriteAsync(text);
+            process.StandardInput.Close();
+        });
+        bool timedOut = false;
+        using var deadline = new System.Threading.CancellationTokenSource(
+            TimeSpan.FromSeconds(config.TimeoutSeconds));
+        try
+        {
+            await process.WaitForExitAsync(deadline.Token);
+        }
+        catch (OperationCanceledException) when (!process.HasExited)
+        {
+            timedOut = true;
+            try { process.Kill(entireProcessTree: true); }
+            catch (InvalidOperationException) when (process.HasExited) { }
+            await process.WaitForExitAsync();
+        }
+        try { await writeInput; }
+        catch (IOException) when (process.HasExited) { }
+        catch (ObjectDisposedException) when (process.HasExited) { }
+        await stdout;
+        var error = await stderr;
+        clock.Stop();
+        return new TimedWorkerResult(timedOut ? 1 : process.ExitCode,
+            timedOut, clock.Elapsed.TotalSeconds, output.ToArray(), error);
+    }
+
+    private static List<byte[]> ReadWorkerResults(byte[] bundle)
+    {
+        var results = new List<byte[]>();
+        using var input = new MemoryStream(bundle, writable: false);
+        using var reader = new TarReader(input);
+        TarEntry entry;
+        while ((entry = reader.GetNextEntry(copyData: false)) != null)
+        {
+            if (!entry.Name.EndsWith(".pt", StringComparison.Ordinal)) continue;
+            using var data = new MemoryStream();
+            entry.DataStream.CopyTo(data);
+            results.Add(data.ToArray());
+        }
+        return results;
+    }
+
+    private static bool IsParseRejection(Exception exception) =>
+        exception is InvalidOperationException &&
+        exception.Message.EndsWith(": input rejected by grammar.",
+            StringComparison.Ordinal);
+
+    private void WriteFailedFileStatus(string inputName, int rowNumber)
+    {
+        if (config.Quiet || !config.PerFilePerformance) return;
+        string label = config.AllStar || config.IndirectLeftRecursion ||
+            config.ContextAwareLexing ||
+            _grammarContextAwareLexing.Values.Any(value => value) ? "ALL(*)" :
+            !string.IsNullOrEmpty(config.Lib) ? "Earley" : "CSharp";
+        Console.Error.WriteLine($"{label} {rowNumber} {inputName} failed");
+    }
+
     private (int ExitCode, double ParseSeconds, long TokenCount) ParseOne(
         string parserType, string text, string inputName, int rowNumber,
         List<AntlrJson.ParsingResultSet> data)
     {
+        if (config.TimeoutSeconds > 0)
+            return ParseOneWithTimeout(parserType, text, inputName, rowNumber);
         if (!config.Bundle)
         {
             int countBefore = data.Count;
@@ -277,7 +457,9 @@ public class Grun
                 // A bad input must not abort the remaining positional, -x, or
                 // --xf inputs. Keep the overall exit status nonzero instead.
                 data.RemoveRange(countBefore, data.Count - countBefore);
-                Console.Error.WriteLine(exception);
+                WriteFailedFileStatus(inputName, rowNumber);
+                Console.Error.WriteLine(IsParseRejection(exception)
+                    ? exception.Message : exception.ToString());
                 return (1, 0, 0);
             }
         }
@@ -294,7 +476,9 @@ public class Grun
         catch (Exception exception)
         {
             data.RemoveRange(start, data.Count - start);
-            captured.WriteLine(exception);
+            WriteFailedFileStatus(inputName, rowNumber);
+            captured.WriteLine(IsParseRejection(exception)
+                ? exception.Message : exception.ToString());
             outcome = (1, 0, 0);
         }
         finally
@@ -370,12 +554,16 @@ public class Grun
                     if (selected && writer != null)
                     {
                         var parse = _bundleParses[^1];
-                        for (var index = 0; index < parse.Results.Count; index++)
+                        int resultCount = parse.SerializedResults?.Count ??
+                            parse.Results.Count;
+                        for (var index = 0; index < resultCount; index++)
                         {
-                            var suffix = parse.Results.Count == 1 ? "" : $".{index + 1}";
+                            var suffix = resultCount == 1 ? "" : $".{index + 1}";
                             WriteAddedMember(writer, names, name + suffix + ".pt",
-                                AntlrJson.ArtifactBundle.SerializeParsingResult(
-                                    parse.Results[index], config.Format));
+                                parse.SerializedResults != null
+                                    ? parse.SerializedResults[index]
+                                    : AntlrJson.ArtifactBundle.SerializeParsingResult(
+                                        parse.Results[index], config.Format));
                         }
                         WriteAddedMember(writer, names, name + ".errors",
                             new UTF8Encoding(false).GetBytes(parse.Diagnostics));
@@ -444,12 +632,16 @@ public class Grun
         foreach (var parse in _bundleParses)
         {
             var baseName = baseNames[paths[parse.InputName]];
-            for (var index = 0; index < parse.Results.Count; index++)
+            int resultCount = parse.SerializedResults?.Count ?? parse.Results.Count;
+            for (var index = 0; index < resultCount; index++)
             {
-                var suffix = parse.Results.Count == 1 ? "" : $".{index + 1}";
+                var suffix = resultCount == 1 ? "" : $".{index + 1}";
                 artifacts.Add(new AntlrJson.Artifact(
                     baseName + suffix + ".pt",
-                    AntlrJson.ArtifactBundle.SerializeParsingResult(parse.Results[index], config.Format)));
+                    parse.SerializedResults != null
+                        ? parse.SerializedResults[index]
+                        : AntlrJson.ArtifactBundle.SerializeParsingResult(
+                            parse.Results[index], config.Format)));
             }
             artifacts.Add(new AntlrJson.Artifact(
                 baseName + ".errors", new UTF8Encoding(false).GetBytes(parse.Diagnostics)));
@@ -473,7 +665,17 @@ public class Grun
 
     private void PrintPerfSummary(double overallSeconds)
     {
+        if (Environment.GetEnvironmentVariable(TimeoutWorkerName) != null)
+            return;
         if (config.Quiet) return;
+        if (config.TimeoutSeconds > 0)
+        {
+            if (config.PerformanceSummary)
+                Console.Error.WriteLine(
+                    "Per-file timeout uses isolated processes; aggregate PT/PR is unavailable.");
+            Console.Error.WriteLine("TT: " + overallSeconds);
+            return;
+        }
         if (config.InterpTimings && _interpTimings.Files > 0)
             System.Console.Error.WriteLine(_interpTimings.Format());
         if (!config.PerformanceSummary)
