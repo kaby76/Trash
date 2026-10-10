@@ -125,6 +125,92 @@ public sealed class G4XInterpTests
         finally { Directory.Delete(directory, true); }
     }
 
+    [Fact]
+    public async Task IndirectParserWithoutContextAwareLexingEnforcesExclusion()
+    {
+        var directory = Directory.CreateTempSubdirectory("G4XIndirectExclusion-").FullName;
+        try
+        {
+            var lexer = Path.Combine(directory, "L.g4x");
+            var parser = Path.Combine(directory, "P.g4x");
+            await File.WriteAllTextAsync(lexer,
+                "lexer grammar L; WORD: [a-z]+;");
+            await File.WriteAllTextAsync(parser,
+                "parser grammar P; options {tokenVocab=L;} Start: word EOF; word: WORD - 'key';");
+            var parsed = await RunCli(typeof(Trash.Program).Assembly.Location,
+                null, lexer, parser);
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCli(typeof(trinterp.Program).Assembly.Location,
+                parsed.Output, "-o", directory);
+            Assert.True(generated.Exit == 0, generated.Error);
+            var parserInterp = Path.Combine(directory, "P.interp");
+            var lexerInterp = Path.Combine(directory, "L.interp");
+            Assert.Single(AllStarAtnParser.InterpRunner.Run(parserInterp,
+                lexerInterp, "other", "input.txt", false,
+                indirectLeftRecursion: true).Result.Nodes);
+            Assert.Throws<InvalidOperationException>(() =>
+                AllStarAtnParser.InterpRunner.Run(parserInterp, lexerInterp,
+                    "key", "input.txt", false, indirectLeftRecursion: true));
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
+    [Theory]
+    [InlineData("😀")]
+    [InlineData("\\uD83D\\uDE00")]
+    public async Task SetDifferenceDecodesSupplementaryLiteral(string excluded)
+    {
+        var directory = Directory.CreateTempSubdirectory("G4XEmojiExclusion-").FullName;
+        try
+        {
+            var grammar = Path.Combine(directory, "L.g4x");
+            await File.WriteAllTextAsync(grammar,
+                $"lexer grammar L; WORD: [a-z]+ - '{excluded}';");
+            var parsed = await RunCli(typeof(Trash.Program).Assembly.Location,
+                null, grammar);
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCli(typeof(trinterp.Program).Assembly.Location,
+                parsed.Output, "-o", directory);
+            Assert.True(generated.Exit == 0, generated.Error);
+            var data = Atn.InterpFileReader.Read(File.ReadAllText(
+                Path.Combine(directory, "L.interp")));
+            var operand = Assert.Single(Assert.Single(data.G4XExclusions).Value);
+            Assert.Equal("😀", operand.Value);
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
+    [Fact(Timeout = 30000)]
+    public async Task GrammarSelectedContextAwareTimeoutUsesAllStarStatus()
+    {
+        var directory = Directory.CreateTempSubdirectory("G4XContextTimeout-").FullName;
+        try
+        {
+            var lexer = Path.Combine(directory, "DemoLexer.g4x");
+            var parser = Path.Combine(directory, "DemoParser.g4x");
+            var input = Path.Combine(directory, "input.txt");
+            await File.WriteAllTextAsync(lexer,
+                "lexer grammar DemoLexer; WORD: [a-z]+; WS: [ \\t\\r\\n]+ -> skip;");
+            await File.WriteAllTextAsync(parser,
+                "parser grammar DemoParser; options {tokenVocab=DemoLexer; contextAwareLexing=true;} Start: WORD+ EOF;");
+            await File.WriteAllTextAsync(input,
+                string.Concat(Enumerable.Repeat("word ", 500_000)));
+            var parsed = await RunCli(typeof(Trash.Program).Assembly.Location,
+                null, lexer, parser);
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCli(typeof(trinterp.Program).Assembly.Location,
+                parsed.Output, "-o", directory);
+            Assert.True(generated.Exit == 0, generated.Error);
+            var run = await RunCli(typeof(Trash.Program).Assembly.Location,
+                null, "-L", directory, "--timeout", "1", "--no-output",
+                "--per-file", input);
+            Assert.NotEqual(0, run.Exit);
+            Assert.Contains($"ALL(*) 0 {input} failed", run.Error);
+            Assert.Contains("timed out after 1 seconds", run.Error);
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
     private static async Task<(int Exit, byte[] Output, string Error)> RunCli(string assembly, byte[]? input, params string[] args)
     {
         var start = new System.Diagnostics.ProcessStartInfo("dotnet")

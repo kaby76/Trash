@@ -611,7 +611,10 @@ public class LexerAtnFactory : ParserAtnFactory
         {
             var (ch, length) = NextCharInSequence(s, i);
             if (length == 0) break;
-            decoded.Append(char.ConvertFromUtf32(ch));
+            if (ch <= char.MaxValue)
+                decoded.Append((char)ch);
+            else
+                decoded.Append(char.ConvertFromUtf32(ch));
             i += length;
         }
         return decoded.ToString();

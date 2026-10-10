@@ -7,6 +7,25 @@ namespace AllStarParserTests;
 
 public class IndirectLeftRecursionTests
 {
+    [Fact]
+    public void TimeoutWorkerInheritsParserDfaCacheLimits()
+    {
+        var config = new Trash.Config
+        {
+            ParserDfaCacheStates = 17,
+            ParserDfaCacheMegabytes = 3
+        };
+        var start = new Trash.Grun(config).CreateTimeoutWorkerStartInfo(
+            null, "input.txt", 0);
+        var arguments = start.ArgumentList.ToArray();
+        int states = Array.IndexOf(arguments, "--parser-dfa-cache-states");
+        int megabytes = Array.IndexOf(arguments, "--parser-dfa-cache-mb");
+        Assert.True(states >= 0);
+        Assert.True(megabytes >= 0);
+        Assert.Equal("17", arguments[states + 1]);
+        Assert.Equal("3", arguments[megabytes + 1]);
+    }
+
     [Fact(Timeout = 5000)]
     public async Task OrdinaryAllStarReportsIndirectCycleInsteadOfRecursingForever()
     {

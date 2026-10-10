@@ -195,6 +195,12 @@ internal static class IndirectLeftRecursiveParser
                                     transition.target, item.Position, item.Events));
                             break;
 
+                        case MyPredicateTransition predicate:
+                            if (ParserPredicateMatches(predicate, item.Position))
+                                work.Enqueue(new WorkItem(
+                                    transition.target, item.Position, item.Events));
+                            break;
+
                         case MyAtomTransition or MyRangeTransition or
                              MySetTransition or MyNotSetTransition or
                              MyWildcardTransition:
@@ -225,6 +231,25 @@ internal static class IndirectLeftRecursiveParser
                     }
                 }
             }
+        }
+
+        private bool ParserPredicateMatches(MyPredicateTransition predicate,
+            int position)
+        {
+            if (!_atn.G4XExclusions.TryGetValue(
+                    (predicate.ruleIndex, predicate.predIndex), out var exclusions))
+                return true;
+            if ((uint)position >= (uint)_onChannel.Count) return false;
+            string text = _tokens[_onChannel[position]].Text;
+            foreach (var operand in exclusions)
+            {
+                if (operand.Kind != "literal")
+                    throw new NotSupportedException(
+                        "Named parser-rule set-difference operands are not supported.");
+                if (string.Equals(text, operand.Value, StringComparison.Ordinal))
+                    return false;
+            }
+            return true;
         }
 
         private static List<ParseEvent> Append(

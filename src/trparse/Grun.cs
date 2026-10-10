@@ -288,6 +288,7 @@ public class Grun
     private (int ExitCode, double ParseSeconds, long TokenCount) ParseOneWithTimeout(
         string parserType, string text, string inputName, int rowNumber)
     {
+        CacheGrammarContextAwareLexingForTimeout();
         var worker = RunTimedWorkerAsync(parserType, text, inputName, rowNumber)
             .GetAwaiter().GetResult();
         string diagnostics = worker.Error;
@@ -321,6 +322,45 @@ public class Grun
 
     private async Task<TimedWorkerResult> RunTimedWorkerAsync(
         string parserType, string text, string inputName, int rowNumber)
+    {
+        var start = CreateTimeoutWorkerStartInfo(parserType, inputName, rowNumber);
+        var clock = Stopwatch.StartNew();
+        using var process = Process.Start(start)
+            ?? throw new InvalidOperationException("Failed to start trparse timeout worker.");
+        using var output = new MemoryStream();
+        var stdout = process.StandardOutput.BaseStream.CopyToAsync(output);
+        var stderr = process.StandardError.ReadToEndAsync();
+        var writeInput = Task.Run(async () =>
+        {
+            await process.StandardInput.WriteAsync(text);
+            process.StandardInput.Close();
+        });
+        bool timedOut = false;
+        using var deadline = new System.Threading.CancellationTokenSource(
+            TimeSpan.FromSeconds(config.TimeoutSeconds));
+        try
+        {
+            await process.WaitForExitAsync(deadline.Token);
+        }
+        catch (OperationCanceledException) when (!process.HasExited)
+        {
+            timedOut = true;
+            try { process.Kill(entireProcessTree: true); }
+            catch (InvalidOperationException) when (process.HasExited) { }
+            await process.WaitForExitAsync();
+        }
+        try { await writeInput; }
+        catch (IOException) when (process.HasExited) { }
+        catch (ObjectDisposedException) when (process.HasExited) { }
+        await stdout;
+        var error = await stderr;
+        clock.Stop();
+        return new TimedWorkerResult(timedOut ? 1 : process.ExitCode,
+            timedOut, clock.Elapsed.TotalSeconds, output.ToArray(), error);
+    }
+
+    internal ProcessStartInfo CreateTimeoutWorkerStartInfo(
+        string parserType, string inputName, int rowNumber)
     {
         var start = new ProcessStartInfo("dotnet")
         {
@@ -357,6 +397,10 @@ public class Grun
         Flag(config.LexerOverlaps, "--lexer-overlaps");
         Flag(config.ParserStats, "--parser-stats");
         Flag(config.NoSharedParserDfa, "--no-shared-parser-dfa");
+        Value("--parser-dfa-cache-states", config.ParserDfaCacheStates.ToString(
+            System.Globalization.CultureInfo.InvariantCulture));
+        Value("--parser-dfa-cache-mb", config.ParserDfaCacheMegabytes.ToString(
+            System.Globalization.CultureInfo.InvariantCulture));
         Flag(config.InterpTimings, "--interp-timings");
         Flag(config.LineNumbers, "-l");
         Flag(config.Quiet, "-q");
@@ -372,40 +416,7 @@ public class Grun
             start.ArgumentList.Add("--numeric-token-types");
         start.Environment[TimeoutWorkerName] = inputName;
         start.Environment[TimeoutWorkerRow] = rowNumber.ToString();
-
-        var clock = Stopwatch.StartNew();
-        using var process = Process.Start(start)
-            ?? throw new InvalidOperationException("Failed to start trparse timeout worker.");
-        using var output = new MemoryStream();
-        var stdout = process.StandardOutput.BaseStream.CopyToAsync(output);
-        var stderr = process.StandardError.ReadToEndAsync();
-        var writeInput = Task.Run(async () =>
-        {
-            await process.StandardInput.WriteAsync(text);
-            process.StandardInput.Close();
-        });
-        bool timedOut = false;
-        using var deadline = new System.Threading.CancellationTokenSource(
-            TimeSpan.FromSeconds(config.TimeoutSeconds));
-        try
-        {
-            await process.WaitForExitAsync(deadline.Token);
-        }
-        catch (OperationCanceledException) when (!process.HasExited)
-        {
-            timedOut = true;
-            try { process.Kill(entireProcessTree: true); }
-            catch (InvalidOperationException) when (process.HasExited) { }
-            await process.WaitForExitAsync();
-        }
-        try { await writeInput; }
-        catch (IOException) when (process.HasExited) { }
-        catch (ObjectDisposedException) when (process.HasExited) { }
-        await stdout;
-        var error = await stderr;
-        clock.Stop();
-        return new TimedWorkerResult(timedOut ? 1 : process.ExitCode,
-            timedOut, clock.Elapsed.TotalSeconds, output.ToArray(), error);
+        return start;
     }
 
     private static List<byte[]> ReadWorkerResults(byte[] bundle)
@@ -428,6 +439,36 @@ public class Grun
         exception is InvalidOperationException &&
         exception.Message.EndsWith(": input rejected by grammar.",
             StringComparison.Ordinal);
+
+    private bool RequiresContextAwareLexing(string parserInterp)
+    {
+        if (!_grammarContextAwareLexing.TryGetValue(parserInterp, out bool enabled))
+        {
+            enabled = Atn.InterpFileReader.RequiresContextAwareLexing(parserInterp);
+            _grammarContextAwareLexing.Add(parserInterp, enabled);
+        }
+        return enabled;
+    }
+
+    private void CacheGrammarContextAwareLexingForTimeout()
+    {
+        string parserInterp;
+        if (!string.IsNullOrEmpty(config.PInterp) &&
+            !string.IsNullOrEmpty(config.LInterp))
+            parserInterp = ResolveInterpPath(config.PInterp, config.Lib);
+        else if (string.IsNullOrEmpty(config.PInterp) &&
+                 string.IsNullOrEmpty(config.LInterp) &&
+                 !string.IsNullOrEmpty(config.Lib))
+        {
+            try { parserInterp = DiscoverInterpPair(config.Lib).pinterp; }
+            catch (IOException) { return; } // The worker will report the invalid path.
+            catch (InvalidOperationException) { return; }
+        }
+        else return;
+
+        try { RequiresContextAwareLexing(parserInterp); }
+        catch (IOException) { } // Let the worker report the missing table.
+    }
 
     private void WriteFailedFileStatus(string inputName, int rowNumber)
     {
@@ -733,14 +774,8 @@ public class Grun
 
         if (resolvedPInterp != null && resolvedLInterp != null)
         {
-            if (!_grammarContextAwareLexing.TryGetValue(resolvedPInterp,
-                    out bool grammarContextAwareLexing))
-            {
-                grammarContextAwareLexing = Atn.InterpFileReader
-                    .RequiresContextAwareLexing(resolvedPInterp);
-                _grammarContextAwareLexing.Add(resolvedPInterp,
-                    grammarContextAwareLexing);
-            }
+            bool grammarContextAwareLexing =
+                RequiresContextAwareLexing(resolvedPInterp);
             bool contextAwareLexing = config.ContextAwareLexing ||
                 grammarContextAwareLexing;
             DateTime interpBefore = DateTime.Now;
