@@ -22,7 +22,7 @@ XPaths, type _export MSYS2_ARG_CONV_EXCL="*"_, then execute your command.
 
 ## Current version
 
-Release 4.1.0.
+Release 4.2.0.
 
 ## License
 

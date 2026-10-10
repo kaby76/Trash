@@ -158,6 +158,7 @@ public static class AllStarParser
         private readonly ushort[][] _ll1Tables;
         private readonly List<ParseEvent> _events;
         private readonly XQueryHooks _hooks;
+        private List<string> _predictionTexts;
         private readonly HashSet<(int Rule, int Position, int Precedence)>
             _activeRuleCalls = new();
 
@@ -181,7 +182,8 @@ public static class AllStarParser
             _ll1Tables = enableLl1Bypass
                 ? Ll1DecisionAnalyzer.For(atn).Tables
                 : null;
-            _sim = new AllStarSimulator(atn, statistics, predictionCache);
+            _sim = new AllStarSimulator(atn, statistics, predictionCache,
+                atn.G4XExclusions.Count != 0 ? EvaluatePredictionPredicate : null);
         }
 
         public ParserInstance(MyATN parserAtn, MyATN lexerAtn, string input,
@@ -206,7 +208,7 @@ public static class AllStarParser
             _ll1Tables = null;
             _sim = new AllStarSimulator(
                 parserAtn, parserStatistics, predictionCache,
-                hooks?.HasParserPredicates == true
+                hooks?.HasParserPredicates == true || parserAtn.G4XExclusions.Count != 0
                     ? EvaluatePredictionPredicate : null);
             _lexer = hooks == null
                 ? new LexerAtnSimulator(lexerAtn, lexerStatistics, lexerDfaCache)
@@ -327,17 +329,26 @@ public static class AllStarParser
                             break;
 
                         case CommittedStateKind.Predicate:
-                            if (_hooks != null)
+                            if (_hooks != null || _atn.G4XExclusions.Count != 0)
                             {
                                 var predicate = (MyPredicateTransition)tr;
-                                var types = _contextAware
-                                    ? BuildPredictionTokens(null, 2)
-                                    : _tokenTypes;
-                                int position = _contextAware ? 0 : Pos;
-                                if (!_hooks.EvaluateParserPredicate(
+                                int[] types = _tokenTypes;
+                                int position = Pos;
+                                if (_contextAware)
+                                {
+                                    var expected = _atn.G4XExclusions.ContainsKey(
+                                        (predicate.ruleIndex, predicate.predIndex))
+                                        ? _sim.GetExpectedTokenTypes(
+                                            tr.target, callerCtx, precedence)
+                                        : null;
+                                    types = BuildPredictionTokens(expected, 2);
+                                    position = 0;
+                                }
+                                if (!EvaluateParserExclusion(predicate, position) ||
+                                    (_hooks != null && !_hooks.EvaluateParserPredicate(
                                         predicate.ruleIndex, predicate.predIndex,
                                         types, position, _events, _allTokens,
-                                        speculative: false))
+                                        speculative: false)))
                                     return false;
                             }
                             state = _metadata.SkipEpsilon(tr.target);
@@ -424,9 +435,39 @@ public static class AllStarParser
 
         private bool EvaluatePredictionPredicate(MyPredicateTransition predicate,
             int[] tokenTypes, int position) =>
-            _hooks.EvaluateParserPredicate(predicate.ruleIndex,
+            EvaluateParserExclusion(predicate, position) &&
+            (_hooks == null || _hooks.EvaluateParserPredicate(predicate.ruleIndex,
                 predicate.predIndex, tokenTypes, position, _events,
-                _allTokens, speculative: true);
+                _allTokens, speculative: true));
+
+        private bool EvaluateParserExclusion(MyPredicateTransition predicate,
+            int position)
+        {
+            if (!_atn.G4XExclusions.TryGetValue(
+                    (predicate.ruleIndex, predicate.predIndex), out var exclusions))
+                return true;
+            string text;
+            if (_contextAware)
+            {
+                if (_predictionTexts == null || (uint)position >= (uint)_predictionTexts.Count)
+                    return false;
+                text = _predictionTexts[position];
+            }
+            else
+            {
+                if ((uint)position >= (uint)_onIdx.Count) return false;
+                text = _allTokens[_onIdx[position]].Text;
+            }
+            foreach (var operand in exclusions)
+            {
+                if (operand.Kind != "literal")
+                    throw new NotSupportedException(
+                        "Named parser-rule set-difference operands are not supported.");
+                if (string.Equals(text, operand.Value, StringComparison.Ordinal))
+                    return false;
+            }
+            return true;
+        }
 
         private void AddEvent(ParseEventKind kind, int index)
         {
@@ -440,6 +481,7 @@ public static class AllStarParser
         {
             var cursor = _lexerCursor.Clone();
             var types = new List<int>();
+            var texts = _atn.G4XExclusions.Count != 0 ? new List<string>() : null;
             var speculativeTokens = new TokenStore(_input);
             bool firstOnChannel = true;
             bool previousRecordStatistics = _lexer.RecordStatistics;
@@ -455,6 +497,7 @@ public static class AllStarParser
                     if (token.Channel == DEFAULT_CHANNEL || token.Type == EOF_TYPE)
                     {
                         types.Add(token.Type);
+                        texts?.Add(token.Text);
                         firstOnChannel = false;
                         if (types.Count >= maxOnChannel) break;
                     }
@@ -462,6 +505,7 @@ public static class AllStarParser
                 }
             }
             finally { _lexer.RecordStatistics = previousRecordStatistics; }
+            _predictionTexts = texts;
             return types.ToArray();
         }
 

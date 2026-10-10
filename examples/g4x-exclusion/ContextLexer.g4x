@@ -1,0 +1,5 @@
+lexer grammar ContextLexer;
+
+PERMITS : 'permits';
+Identifier : [a-z]+;
+WS : [ \t\r\n]+ -> skip;

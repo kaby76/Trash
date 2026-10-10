@@ -1,0 +1,8 @@
+lexer grammar SetDiffLexer;
+
+// Identifier deliberately precedes the keyword rules. Without the exclusion,
+// equal-length matches would choose Identifier for every word below.
+Identifier : [a-z]+ - (Keyword | 'null');
+Keyword : 'if' | 'class';
+NullLiteral : 'null';
+WS : [ \t\r\n]+ -> skip;

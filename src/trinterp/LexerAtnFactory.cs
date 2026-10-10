@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using static trinterp.GrammarParser;
 
 namespace trinterp;
@@ -246,6 +247,10 @@ public class LexerAtnFactory : ParserAtnFactory
         if (actionBlock != null)
         {
             bool isPred = Children(lexerElement).Any(c => IsTerminal(c) && GetText(c).Trim() == "?");
+            if (isPred && GetText(actionBlock).Contains("g4x-set-diff:", StringComparison.Ordinal) &&
+                CurrentCaseInsensitive)
+                throw new NotSupportedException(
+                    "G4X set-difference with caseInsensitive=true is not supported yet.");
             if (isPred) return MakeSemPred(lexerElement, actionBlock);
             return MakeLexerCustomAction(actionBlock);
         }
@@ -595,6 +600,24 @@ public class LexerAtnFactory : ParserAtnFactory
         }
 
         return new AtnHandle(states[0], states[^1]);
+    }
+
+    internal static string DecodeLiteral(string grammarLiteral)
+    {
+        var s = grammarLiteral;
+        if (s.Length >= 2 && s[0] == '\'' && s[^1] == '\'') s = s[1..^1];
+        var decoded = new StringBuilder();
+        for (int i = 0; i < s.Length;)
+        {
+            var (ch, length) = NextCharInSequence(s, i);
+            if (length == 0) break;
+            if (ch <= char.MaxValue)
+                decoded.Append((char)ch);
+            else
+                decoded.Append(char.ConvertFromUtf32(ch));
+            i += length;
+        }
+        return decoded.ToString();
     }
 
     private AtnHandle MakeLexerTokenRef(string name)

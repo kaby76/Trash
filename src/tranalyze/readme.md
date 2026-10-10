@@ -65,7 +65,7 @@ _Output_
 
 ## Current version
 
-Release 4.1.0.
+Release 4.2.0.
 
 ## License
 

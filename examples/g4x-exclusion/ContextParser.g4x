@@ -1,0 +1,6 @@
+parser grammar ContextParser;
+options { tokenVocab=ContextLexer; contextAwareLexing=true; }
+
+start : typeIdentifier EOF;
+typeIdentifier : identifier - ('permits' | 'record');
+identifier : Identifier;

@@ -51,6 +51,7 @@ public static class InterpRunner
                 loadedParserInterp.AtnData);
             var loadedLexerAtn = AtnDeserializer.Deserialize(
                 loadedLexerInterp.AtnData);
+            loadedLexerAtn.G4XExclusions = loadedLexerInterp.G4XExclusions;
             int loadedStartRule = StartRuleResolver.Resolve(
                 loadedParserAtn, loadedParserInterp, null);
             runtime = new AllStarAtnParser.InterpRuntimeCache.RuntimeData(
@@ -68,6 +69,9 @@ public static class InterpRunner
                     parserInterpPath, lexerInterpPath, runtime);
         }
         var parserInterp = runtime.ParserInterp;
+        if (parserInterp.G4XExclusions.Count != 0)
+            throw new NotSupportedException(
+                "G4X parser-rule set-difference requires --allstar; the Earley interpreter does not evaluate parser predicates.");
         var lexerInterp = runtime.LexerInterp;
         var parserAtn = runtime.ParserAtn;
         var lexerAtn = runtime.LexerAtn;

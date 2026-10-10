@@ -134,6 +134,11 @@ explicit `--allstar` below is optional:
     dotnet trash parse --allstar --context-aware-lexing \
         --pinterp MyParser.interp --linterp MyLexer.interp input.txt
 
+A G4X parser grammar can instead declare
+`options { contextAwareLexing=true; }`. `trinterp` writes the setting to its
+parser `.interp`, and `trparse` selects this mode automatically when loading
+that table. Re-run `trinterp` after changing the grammar option.
+
 At each parser position, lexer rules producing an expected token type are
 considered before applying longest-match and rule-order priority. Skip and
 off-channel rules remain eligible. If none of the context-valid rules matches,
@@ -210,8 +215,29 @@ indirectly recursive rule nesting and grows it left-associatively:
     dotnet trash parse --indirect-left-recursion -L interp input.txt
 
 This opt-in path is intended for grammars that ANTLR normally rejects during
-code generation. It cannot currently be combined with
-`--context-aware-lexing` or `--xquery-hooks`.
+code generation. It can be combined with `--context-aware-lexing`: the
+fixed-point parser requests tokens on each grammar path and retains only the
+tokens of the selected parse. It cannot currently be combined with
+`--xquery-hooks`.
+
+### Per-file timeout
+
+`--timeout N` gives each input file at most N wall-clock seconds. A timed-out
+parse is terminated, its `.errors` member reports the timeout, and later files
+are still parsed. The command exits nonzero if any input times out or fails:
+
+    dotnet trash parse -L interp --indirect-left-recursion \
+      --timeout 5 examples/*.java > results.tar
+
+The limit is opt-in and works with positional files, `-x`, `--xf`, and
+`--bundle-glob`, as well as `-i` or stdin input. It applies to generated and
+interpreted parsers. To guarantee termination even if a parser cannot be
+interrupted cooperatively, each file runs in a child process when this option
+is set. Startup and table loading count toward the wall-clock limit; learned
+lexer/parser DFA caches are not shared between files in this mode. Bundle
+output (the default) is required. `--no-output` is supported. Because each
+worker has separate timing state, `--perf` cannot report aggregate PT/PR in
+this mode; the overall TT and `--per-file` lines remain available.
 
 ## Usage
 
@@ -233,6 +259,9 @@ code generation. It cannot currently be combined with
         --parser-stats Write ALL(*) prediction and parser-work statistics to stderr.
         --perf         Write the complete aggregate performance summary to stderr.
         --per-file     Write one performance line per input file to stderr.
+        --timeout <seconds>
+                       Terminate a file's parse after this many wall-clock seconds
+                       and continue with the next file (bundle output only).
         --no-shared-parser-dfa
                        Disable learned parser-DFA reuse across input files.
         --parser-dfa-cache-states <n>
@@ -263,7 +292,7 @@ code generation. It cannot currently be combined with
 
 ## Current version
 
-Release 4.1.0.
+Release 4.2.0.
 
 ## License
 

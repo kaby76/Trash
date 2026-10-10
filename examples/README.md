@@ -10,12 +10,13 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`bison-frontend/`](bison-frontend/) | Compile Bison productions with a separate ANTLR4 lexer and parse input with AllStar |
 | [`context-aware-lexing/`](context-aware-lexing/) | Parse a Decaf array declaration whose overlapping integer tokens require parser-directed lexical selection |
 | [`first/`](first/) | Compute nullable parser rules and grammar-theoretic FIRST sets with an XQuery4 fixed-point analysis |
-| [`g4x-exclusion/`](g4x-exclusion/) | Parse JLS-style identifier rules using G4X's set-difference syntax (syntax only) |
+| [`g4x-exclusion/`](g4x-exclusion/) | Compile and run G4X lexer set difference for named rules and literals |
 | [`g4x-interp/`](g4x-interp/) | Generate tables from case-neutral G4X lexer/parser grammars and verify a left-recursive expression tree with AllStar |
 | [`rex-interp/`](rex-interp/) | Generate tables from basic REx arithmetic and list grammars, verify parse trees, and check rejection of invalid input |
 | [`rex-sort/`](rex-sort/) | Sort REx syntax and lexical rules alphabetically using XQuery4 while preserving their parse-tree content |
 | [`ixml-interp/`](ixml-interp/) | Compile basic scannerless iXML directly to interpreter tables, with arithmetic and separated-list tree checks |
 | [`ixml-to-antlr4/`](ixml-to-antlr4/) | Convert an iXML grammar to Antlr4 syntax using a five-pass XQuery Update pipeline (structural syntax, encoded characters, character sets, inline-set extraction, separator quantifiers) |
+| [`java27-g4x/`](java27-g4x/) | Compile a Java 27 G4X lexer/parser to `.interp` tables and parse Java inputs with grammar-selected context-aware ALL(*) |
 | [`java-antlr/`](java-antlr/) | Generate a Java-target Antlr4 parser for the Java grammar, build, and run |
 | [`java-allstar-xquery/`](java-allstar-xquery/) | Interpret the Java grammar with AllStar and XQuery4 parser predicates, then parse Java sources from an OpenJDK 21 PAX/tar bundle |
 | [`lark-to-antlr4/`](lark-to-antlr4/) | Convert a Lark grammar to Antlr4 syntax using a multi-pass XQuery Update pipeline |

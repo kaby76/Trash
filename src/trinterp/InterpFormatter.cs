@@ -87,6 +87,28 @@ public static class InterpFormatter
             FormatActions(sb, grammar);
         }
 
+        // This Trash-specific section is required at runtime even when the
+        // optional ANTLR action listing is disabled.
+        var exclusions = grammar.SemPreds
+            .Where(pred => pred.Text.StartsWith("g4x-set-diff:", System.StringComparison.Ordinal))
+            .ToList();
+        if (exclusions.Count > 0)
+        {
+            sb.AppendLine();
+            sb.AppendLine("g4x-set-differences:");
+            foreach (var pred in exclusions)
+                sb.AppendLine($"{pred.RuleIndex}:{pred.PredIndex}:{pred.Text["g4x-set-diff:".Length..]}");
+            sb.AppendLine();
+        }
+
+        if (grammar.IsG4X && grammar.ContextAwareLexing)
+        {
+            sb.AppendLine();
+            sb.AppendLine("trash-options:");
+            sb.AppendLine("contextAwareLexing=true");
+            sb.AppendLine();
+        }
+
         // Normalise to LF line endings (matches antlr-ng output on all platforms).
         return sb.ToString().Replace("\r\n", "\n");
     }

@@ -39,7 +39,7 @@ public class GrammarParser
     {
         if (root.LocalName != "grammarSpec")
             throw new InvalidOperationException("Expected an ANTLRv4 or G4X grammar tree.");
-        var model = new GrammarModel { FileName = fileName };
+        var model = new GrammarModel { FileName = fileName, IsG4X = g4x };
 
         // --- grammar declaration ---
         var grammarDecl = Child(root, "grammarDecl");
@@ -118,6 +118,16 @@ public class GrammarParser
                 model.IsCaseInsensitive = true;
             else if (key == "tokenVocab")
                 model.TokenVocab = value;
+            else if (key == "contextAwareLexing" && model.IsG4X)
+            {
+                if (!bool.TryParse(value, out bool enabled))
+                    throw new InvalidOperationException(
+                        "G4X option contextAwareLexing must be true or false.");
+                if (model.IsLexer)
+                    throw new InvalidOperationException(
+                        "G4X option contextAwareLexing belongs in the parser grammar.");
+                model.ContextAwareLexing = enabled;
+            }
             // Other options (superClass, etc.) are ignored for ATN purposes.
         }
     }
