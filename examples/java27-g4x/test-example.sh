@@ -30,6 +30,8 @@ continued=$(dotnet "$parse" -L interp --indirect-left-recursion \
 status=$?
 set -e
 [[ $status -ne 0 ]]
-grep -Fq "parse failed for 'examples/Foo4391.java'" <<< "$continued"
+grep -Fq 'ALL(*) 0 examples/Foo4391.java failed' <<< "$continued"
+grep -Fq 'examples/Foo4391.java: line 1:37' <<< "$continued"
+grep -Fq 'ALL(*) parse failed: input rejected by grammar.' <<< "$continued"
 grep -Fq 'ALL(*) 1 examples/helloworld.java success' <<< "$continued"
 echo 'Java27 G4X example passed.'
