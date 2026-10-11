@@ -89,6 +89,29 @@ public class IndirectLeftRecursionTests
             tree);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void LongLeftRecursiveChainRetainsEveryTerminal(bool contextAwareLexing)
+    {
+        var directory = Path.Combine(AppContext.BaseDirectory, "TestData",
+            "indirect-left-recursion");
+        const int operands = 128;
+        string input = string.Concat(Enumerable.Repeat("1+", operands - 1)) + "1";
+        var (result, _) = AllStarAtnParser.InterpRunner.Run(
+            Path.Combine(directory, "IndirectLeftRecursion.interp"),
+            Path.Combine(directory, "IndirectLeftRecursionLexer.interp"),
+            input, "chain.txt", lineNumbers: false,
+            contextAwareLexing: contextAwareLexing,
+            indirectLeftRecursion: true);
+        string tree = new TreeOutput(result.Lexer, result.Parser)
+            .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString();
+        Assert.Equal(operands, tree.Count(ch => ch == '1'));
+        Assert.Equal(operands - 1, tree.Count(ch => ch == '+'));
+        Assert.StartsWith("(start (expression (additionExpression ", tree);
+        Assert.EndsWith("<EOF>)", tree);
+    }
+
     [Fact]
     public async Task MultipleFilesContinueAfterAParseFailure()
     {

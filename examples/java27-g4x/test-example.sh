@@ -22,16 +22,30 @@ result=$(dotnet "$parse" -L interp --indirect-left-recursion \
 [[ $(grep -Fc ' success ' <<< "$result") -eq 6 ]]
 [[ $(grep -Fc 'ALL(*) ' <<< "$result") -eq 6 ]]
 
+unicode=$(dotnet "$parse" -L interp --allstar --indirect-left-recursion \
+  --xquery-hooks hooks.json --no-output --per-file \
+  examples/Escapes.java 2>&1)
+grep -Fq 'ALL(*) 0 examples/Escapes.java success' <<< "$unicode"
+
+# Exercise the long left-recursive string-concatenation chain separately.
+stress=$(dotnet "$parse" -L interp --allstar --indirect-left-recursion \
+  --xquery-hooks hooks.json --no-output --per-file --timeout 45 \
+  examples/ManyStringsConcat.java 2>&1)
+grep -Fq 'ALL(*) 0 examples/ManyStringsConcat.java success' <<< "$stress"
+
 # A rejected first file must not prevent the following input from parsing.
+invalid=$(mktemp --suffix=.java)
+trap 'rm -f "$invalid"' EXIT
+printf 'class Broken { void m( { }\n' > "$invalid"
 set +e
 continued=$(dotnet "$parse" -L interp --indirect-left-recursion \
   --no-output --per-file \
-  examples/Foo4391.java examples/helloworld.java 2>&1)
+  "$invalid" examples/helloworld.java 2>&1)
 status=$?
 set -e
 [[ $status -ne 0 ]]
-grep -Fq 'ALL(*) 0 examples/Foo4391.java failed' <<< "$continued"
-grep -Fq 'examples/Foo4391.java: line 1:37' <<< "$continued"
+grep -Fq "ALL(*) 0 $invalid failed" <<< "$continued"
+grep -Fq "$invalid: line 1:" <<< "$continued"
 grep -Fq 'ALL(*) parse failed: input rejected by grammar.' <<< "$continued"
 grep -Fq 'ALL(*) 1 examples/helloworld.java success' <<< "$continued"
 echo 'Java27 G4X example passed.'

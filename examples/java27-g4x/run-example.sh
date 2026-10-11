@@ -15,3 +15,7 @@ printf '\n'
 
 dotnet trash parse -L interp --indirect-left-recursion --no-output --per-file \
   examples/AllInOne7.java examples/AllInOne11.java examples/AllInOne17.java
+
+# Unicode escapes are translated before the lexer reads Escapes.java.
+dotnet trash parse -L interp --allstar --indirect-left-recursion \
+  --xquery-hooks hooks.json --no-output --per-file examples/Escapes.java

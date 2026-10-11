@@ -9,6 +9,50 @@ namespace AllStarParserTests;
 public sealed class XQueryHooksTests
 {
     [Fact]
+    public void JavaSourceHookTranslatesEscapesAndRetainsOriginalOffsets()
+    {
+        string query = Path.Combine(AppContext.BaseDirectory,
+            "TestData", "java27-g4x", "java-unicode.xq");
+        string raw = "\"-\\u005c\\-\"";
+        var transformed = SourceTransformHook.Apply(raw, query);
+        Assert.Equal("\"-\\\\-\"", transformed.Text);
+        Assert.Equal(2, transformed.OriginalOffset(2));
+        Assert.Equal(8, transformed.OriginalOffset(3));
+        Assert.Equal(raw.Length, transformed.OriginalOffset(transformed.Text.Length));
+
+        string ineligible = "\\\\u005c";
+        Assert.Equal(ineligible,
+            SourceTransformHook.Apply(ineligible, query).Text);
+        Assert.Equal(@"\u005a",
+            SourceTransformHook.Apply(@"\u005cu005a", query).Text);
+        Assert.Equal(@"\\",
+            SourceTransformHook.Apply(@"\u005c\u005c", query).Text);
+        Assert.Equal(@"\\n",
+            SourceTransformHook.Apply(@"\\\u006e", query).Text);
+        Assert.Throws<InvalidDataException>(() =>
+            SourceTransformHook.Apply("\\u00xz", query));
+    }
+
+    [Fact]
+    public void SourceOnlyHookWorksWithIndirectLeftRecursion()
+    {
+        string fixture = Path.Combine(AppContext.BaseDirectory,
+            "TestData", "indirect-left-recursion");
+        string manifest = Path.Combine(AppContext.BaseDirectory,
+            "TestData", "java27-g4x", "hooks.json");
+        var (result, _) = InterpRunner.Run(
+            Path.Combine(fixture, "IndirectLeftRecursion.interp"),
+            Path.Combine(fixture, "IndirectLeftRecursionLexer.interp"),
+            "\\u0031+\\u0032+3", "unicode.txt", false,
+            indirectLeftRecursion: true, xqueryHooksPath: manifest);
+        string tree = new TreeOutput(result.Lexer, result.Parser)
+            .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString();
+        Assert.Contains("1", tree);
+        Assert.Contains("2", tree);
+        Assert.Contains("3", tree);
+    }
+
+    [Fact]
     public async Task InterpretedLexerPredicateUsesCommittedDeclaration()
     {
         var directory = Directory.CreateTempSubdirectory("XQueryHooks-").FullName;

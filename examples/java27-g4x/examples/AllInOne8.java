@@ -261,7 +261,7 @@ class Issue1897 {
                 }
             }
 
-            void b(Issue1897.C.@Dum3 D Issue1897.C.D.this) {
+            void b(Issue1897.C.@Dum3 D this) {
 
             }
 
@@ -272,7 +272,7 @@ class Issue1897 {
             }
         }
 
-        void b(Issue1897.C Issue1897.C.this) {
+        void b(Issue1897.C this) {
 
         }
     }

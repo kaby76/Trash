@@ -171,8 +171,16 @@ checked only on the committed path. For example:
       "query":"is-not-identifier-assign.xq","predict":true}]}
 
 The parser-hook state functions currently support the declaration-state use
-case; parser actions do not have transactional rollback. It cannot be combined with
-`--indirect-left-recursion`.
+case; parser actions do not have transactional rollback. Stateful hooks (lexer
+or parser predicates and parser-rule entry/exit actions) cannot be combined
+with `--indirect-left-recursion`. A source-only hook is supported with indirect
+left recursion. Set `"source":{"query":"preprocess.xq"}` in the manifest;
+the query receives `$input` and returns ordered, non-overlapping `<edit>`
+elements with zero-based UTF-16 `start` and `length` attributes and replacement
+text as content. The edits are applied before lexing, and diagnostics map
+positions back to the original input. See
+[`examples/java27-g4x/`](../../examples/java27-g4x/) for Java Unicode-escape
+translation.
 
 Use `--lexer-stats` to write a summary of lexer-rule overlaps observed while
 processing the input. Use `--lexer-overlaps` for per-position candidate and
@@ -218,7 +226,7 @@ This opt-in path is intended for grammars that ANTLR normally rejects during
 code generation. It can be combined with `--context-aware-lexing`: the
 fixed-point parser requests tokens on each grammar path and retains only the
 tokens of the selected parse. It cannot currently be combined with
-`--xquery-hooks`.
+stateful `--xquery-hooks`; source-only hooks are supported.
 
 ### Per-file timeout
 

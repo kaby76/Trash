@@ -33,10 +33,6 @@ public static class InterpRunner
         string startRuleName = null,
         string xqueryHooksPath = null)
     {
-        if (indirectLeftRecursion && !string.IsNullOrEmpty(xqueryHooksPath))
-            throw new ArgumentException(
-                "--indirect-left-recursion cannot currently be combined with --xquery-hooks.");
-
         timings ??= new InterpRunTimings();
         timings.Files = 1;
         var timer = new System.Diagnostics.Stopwatch();
@@ -122,11 +118,18 @@ public static class InterpRunner
         var statistics = lexerStats || lexerOverlaps
             ? new LexerStatistics()
             : null;
+        SourceTransformHook source = null;
         var hooks = string.IsNullOrEmpty(xqueryHooksPath)
             ? null
             : XQueryHooks.Load(xqueryHooksPath, inputText,
                 lexerInterp.RuleNames, parserInterp.RuleNames,
-                lexerInterp.SymbolicNames);
+                lexerInterp.SymbolicNames, out source);
+        string lexerInput = source?.Text ?? inputText;
+        if (hooks is { HasRuntimeHooks: false }) hooks = null;
+        if (indirectLeftRecursion && hooks != null)
+            throw new ArgumentException(
+                "--indirect-left-recursion cannot currently be combined with " +
+                "stateful --xquery-hooks; source-only hooks are supported.");
 
         TokenStore rawTokens;
         List<ParseEvent> events;
@@ -137,10 +140,10 @@ public static class InterpRunner
             timer.Restart();
             events = indirectLeftRecursion
                 ? IndirectLeftRecursiveParser.ParseContextAware(
-                    parserAtn, lexerAtn, inputText, startRule, out rawTokens,
+                    parserAtn, lexerAtn, lexerInput, startRule, out rawTokens,
                     statistics, parserStatistics, lexerDfaCache, parseProgress)
                 : AllStarParser.ParseContextAware(
-                    parserAtn, lexerAtn, inputText, startRule, out rawTokens,
+                    parserAtn, lexerAtn, lexerInput, startRule, out rawTokens,
                     statistics, parserStatistics,
                     hooks == null ? predictionCache : null,
                     hooks: hooks);
@@ -153,7 +156,7 @@ public static class InterpRunner
             var sim = new EarleyAtnParser.LexerAtnSimulator(
                 lexerAtn, statistics, lexerDfaCache);
             timer.Restart();
-            rawTokens = sim.Tokenize(inputText);
+            rawTokens = sim.Tokenize(lexerInput);
             timer.Stop();
             timings.Tokenization = timer.Elapsed;
             timings.LexerDfa = sim.GetDfaStatistics();
@@ -184,7 +187,9 @@ public static class InterpRunner
                 throw new InvalidOperationException(
                     $"ALL(*) parse failed for '{fileName}': input rejected by grammar.");
             string location = contextAwareLexing
-                ? DescribeSourcePosition(inputText, parseProgress.FarthestPosition)
+                ? DescribeSourcePosition(inputText,
+                    source?.OriginalOffset(parseProgress.FarthestPosition)
+                        ?? parseProgress.FarthestPosition)
                 : DescribeTokenPosition(rawTokens, parseProgress.FarthestPosition);
             throw new InvalidOperationException(
                 $"{fileName}: {location}: ALL(*) parse failed: input rejected by grammar.");

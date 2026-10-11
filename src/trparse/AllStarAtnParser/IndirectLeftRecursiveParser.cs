@@ -22,12 +22,79 @@ internal static class IndirectLeftRecursiveParser
 
     private readonly record struct RuleKey(int Rule, int Start, int Precedence);
 
-    private sealed record RuleResult(int End, List<ParseEvent> Events);
+    private sealed record RuleResult(int End, EventSequence<ParseEvent> Events);
 
     private readonly record struct StateKey(int State, int Position);
 
     private sealed record WorkItem(MyATNState State, int Position,
-        List<ParseEvent> Events);
+        EventSequence<ParseEvent> Events);
+
+    // A result for each longer left-recursive seed shares its previous prefix.
+    // Flatten only the selected derivation; copying full Lists here made long
+    // expression chains increasingly expensive on every fixed-point pass.
+    private sealed class EventSequence<T>
+    {
+        public static readonly EventSequence<T> Empty = new();
+
+        private readonly EventSequence<T> _left;
+        private readonly EventSequence<T> _right;
+        private readonly IReadOnlyList<T> _items;
+        public int Count { get; }
+
+        private EventSequence() { }
+
+        private EventSequence(IReadOnlyList<T> items)
+        {
+            _items = items;
+            Count = items.Count;
+        }
+
+        private EventSequence(EventSequence<T> left, EventSequence<T> right)
+        {
+            _left = left;
+            _right = right;
+            Count = left.Count + right.Count;
+        }
+
+        public static EventSequence<T> One(T value) => new(new[] { value });
+
+        public static EventSequence<T> From(IReadOnlyList<T> items) =>
+            items.Count == 0 ? Empty : new EventSequence<T>(items);
+
+        public static EventSequence<T> Concat(
+            EventSequence<T> left, EventSequence<T> right) =>
+            left.Count == 0 ? right : right.Count == 0 ? left : new(left, right);
+
+        public static EventSequence<T> Append(EventSequence<T> prefix, T value) =>
+            Concat(prefix, One(value));
+
+        public IEnumerable<T> Items()
+        {
+            var pending = new Stack<EventSequence<T>>();
+            pending.Push(this);
+            while (pending.Count > 0)
+            {
+                var current = pending.Pop();
+                if (current._items != null)
+                {
+                    for (int i = 0; i < current._items.Count; i++)
+                        yield return current._items[i];
+                }
+                else if (current._left != null)
+                {
+                    pending.Push(current._right);
+                    pending.Push(current._left);
+                }
+            }
+        }
+
+        public List<T> ToList()
+        {
+            var result = new List<T>(Count);
+            result.AddRange(Items());
+            return result;
+        }
+    }
 
     public static List<ParseEvent> Parse(
         MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex,
@@ -78,6 +145,7 @@ internal static class IndirectLeftRecursiveParser
         private readonly ParserStatistics _statistics;
         private readonly ParseProgress _progress;
         private readonly Dictionary<RuleKey, List<RuleResult>> _memo = new();
+        private readonly Dictionary<RuleKey, HashSet<int>> _resultEnds = new();
         private readonly Dictionary<RuleKey, HashSet<RuleKey>> _dependents = new();
         private readonly Queue<RuleKey> _pending = new();
         private readonly HashSet<RuleKey> _queued = new();
@@ -97,6 +165,7 @@ internal static class IndirectLeftRecursiveParser
         {
             var root = new RuleKey(startRule, 0, 0);
             _memo[root] = new List<RuleResult>();
+            _resultEnds[root] = new HashSet<int>();
             Schedule(root);
             while (_pending.Count > 0)
             {
@@ -105,9 +174,11 @@ internal static class IndirectLeftRecursiveParser
                 foreach (var result in Evaluate(key))
                 {
                     var results = _memo[key];
-                    if (results.Any(r => r.End == result.End)) continue;
+                    if (!_resultEnds[key].Add(result.End)) continue;
                     results.Add(result);
-                    results.Sort((a, b) => a.End.CompareTo(b.End));
+                    if (results.Count > 1 &&
+                        results[^2].End > result.End)
+                        results.Sort((a, b) => a.End.CompareTo(b.End));
                     if (_dependents.TryGetValue(key, out var callers))
                         foreach (var caller in callers) Schedule(caller);
                 }
@@ -117,7 +188,7 @@ internal static class IndirectLeftRecursiveParser
             // growth behavior of an ANTLR left-recursive rule.
             return _memo[root]
                 .OrderByDescending(r => r.End)
-                .FirstOrDefault()?.Events;
+                .FirstOrDefault()?.Events.ToList();
         }
 
         private void Schedule(RuleKey key)
@@ -137,7 +208,8 @@ internal static class IndirectLeftRecursiveParser
             var work = new Queue<WorkItem>();
             var visited = new HashSet<StateKey>();
             work.Enqueue(new WorkItem(_atn.start[key.Rule], key.Start,
-                new List<ParseEvent>()));
+                EventSequence<ParseEvent>.Empty));
+            visited.Add(new StateKey(_atn.start[key.Rule].stateNumber, key.Start));
 
             while (work.Count > 0)
             {
@@ -145,22 +217,12 @@ internal static class IndirectLeftRecursiveParser
                 if (_progress != null)
                     _progress.FarthestPosition = Math.Max(
                         _progress.FarthestPosition, item.Position);
-                if (!visited.Add(new StateKey(
-                        item.State.stateNumber, item.Position)))
-                    continue;
-
                 if (_atn.stop.Contains(item.State) &&
                     item.State.ruleIndex == key.Rule)
                 {
-                    var events = new List<ParseEvent>(item.Events.Count + 2);
                     bool precedenceRule = _atn.start[key.Rule].isPrecedenceRule;
-                    events.Add(precedenceRule
-                        ? ParseEvent.EnterRecursionRule(key.Rule)
-                        : ParseEvent.EnterRule(key.Rule));
-                    events.AddRange(item.Events);
-                    events.Add(precedenceRule
-                        ? ParseEvent.ExitRecursionRule(key.Rule)
-                        : ParseEvent.ExitRule(key.Rule));
+                    var events = WrapRuleEvents(item.Events, key.Rule,
+                        precedenceRule);
                     yield return new RuleResult(item.Position, events);
                     continue;
                 }
@@ -177,12 +239,17 @@ internal static class IndirectLeftRecursiveParser
                             {
                                 children = new List<RuleResult>();
                                 _memo.Add(childKey, children);
+                                _resultEnds.Add(childKey, new HashSet<int>());
                                 Schedule(childKey);
                             }
                             AddDependency(childKey, key);
                             foreach (var child in children)
                             {
-                                var events = Append(item.Events, child.Events);
+                                if (!visited.Add(new StateKey(
+                                        rule.target.stateNumber, child.End)))
+                                    continue;
+                                var events = EventSequence<ParseEvent>.Concat(
+                                    item.Events, child.Events);
                                 work.Enqueue(new WorkItem(
                                     rule.target, child.End, events));
                             }
@@ -191,14 +258,14 @@ internal static class IndirectLeftRecursiveParser
 
                         case MyPrecedencePredicateTransition predicate:
                             if (predicate.precedence >= key.Precedence)
-                                work.Enqueue(new WorkItem(
-                                    transition.target, item.Position, item.Events));
+                                QueueUnchanged(work, visited,
+                                    transition.target, item);
                             break;
 
                         case MyPredicateTransition predicate:
                             if (ParserPredicateMatches(predicate, item.Position))
-                                work.Enqueue(new WorkItem(
-                                    transition.target, item.Position, item.Events));
+                                QueueUnchanged(work, visited,
+                                    transition.target, item);
                             break;
 
                         case MyAtomTransition or MyRangeTransition or
@@ -209,12 +276,13 @@ internal static class IndirectLeftRecursiveParser
                                 int tokenIndex = _onChannel[item.Position];
                                 if (transition.Matches(
                                         _tokens[tokenIndex].Type, 1,
-                                        _atn.maxTokenType))
+                                        _atn.maxTokenType) &&
+                                    visited.Add(new StateKey(
+                                        transition.target.stateNumber,
+                                        item.Position + 1)))
                                 {
-                                    var events = new List<ParseEvent>(
-                                        item.Events.Count + 1);
-                                    events.AddRange(item.Events);
-                                    events.Add(ParseEvent.Consume(tokenIndex));
+                                    var events = EventSequence<ParseEvent>.Append(
+                                        item.Events, ParseEvent.Consume(tokenIndex));
                                     work.Enqueue(new WorkItem(
                                         transition.target,
                                         item.Position + 1, events));
@@ -225,11 +293,19 @@ internal static class IndirectLeftRecursiveParser
                         default:
                             // Epsilon, action and ordinary predicate edges do
                             // not consume input in the interpreted runtime.
-                            work.Enqueue(new WorkItem(
-                                transition.target, item.Position, item.Events));
+                            QueueUnchanged(work, visited,
+                                transition.target, item);
                             break;
                     }
                 }
+            }
+
+            static void QueueUnchanged(Queue<WorkItem> work,
+                HashSet<StateKey> visited, MyATNState target, WorkItem item)
+            {
+                if (visited.Add(new StateKey(target.stateNumber, item.Position)))
+                    work.Enqueue(new WorkItem(target, item.Position,
+                        item.Events));
             }
         }
 
@@ -251,24 +327,26 @@ internal static class IndirectLeftRecursiveParser
             }
             return true;
         }
-
-        private static List<ParseEvent> Append(
-            List<ParseEvent> prefix, List<ParseEvent> suffix)
-        {
-            var result = new List<ParseEvent>(prefix.Count + suffix.Count);
-            result.AddRange(prefix);
-            result.AddRange(suffix);
-            return result;
-        }
     }
+
+    private static EventSequence<ParseEvent> WrapRuleEvents(
+        EventSequence<ParseEvent> body, int rule, bool precedenceRule) =>
+        EventSequence<ParseEvent>.Concat(
+            EventSequence<ParseEvent>.One(precedenceRule
+                ? ParseEvent.EnterRecursionRule(rule)
+                : ParseEvent.EnterRule(rule)),
+            EventSequence<ParseEvent>.Concat(body,
+                EventSequence<ParseEvent>.One(precedenceRule
+                    ? ParseEvent.ExitRecursionRule(rule)
+                    : ParseEvent.ExitRule(rule))));
 
     private readonly record struct LexPosition(int Offset, int Mode, string ModeStack);
     private readonly record struct ContextRuleKey(int Rule, LexPosition Start, int Precedence);
     private readonly record struct ContextStateKey(int State, LexPosition Position);
-    private sealed record ContextResult(LexPosition End, List<ParseEvent> Events,
-        List<int> TokenIndices);
+    private sealed record ContextResult(LexPosition End,
+        EventSequence<ParseEvent> Events, EventSequence<int> TokenIndices);
     private sealed record ContextWorkItem(MyATNState State, LexPosition Position,
-        List<ParseEvent> Events, List<int> TokenIndices);
+        EventSequence<ParseEvent> Events, EventSequence<int> TokenIndices);
     private sealed record LexStep(LexPosition End, int TokenIndex, int[] AllTokenIndices);
 
     private sealed class ContextEvaluator
@@ -282,6 +360,7 @@ internal static class IndirectLeftRecursiveParser
         private readonly AllStarSimulator _expected;
         private readonly Dictionary<LexPosition, LexerAtnSimulator.Cursor> _cursors = new();
         private readonly Dictionary<ContextRuleKey, List<ContextResult>> _memo = new();
+        private readonly Dictionary<ContextRuleKey, HashSet<LexPosition>> _resultEnds = new();
         private readonly Dictionary<ContextRuleKey, HashSet<ContextRuleKey>> _dependents = new();
         private readonly Queue<ContextRuleKey> _pending = new();
         private readonly HashSet<ContextRuleKey> _queued = new();
@@ -308,6 +387,7 @@ internal static class IndirectLeftRecursiveParser
         {
             var root = new ContextRuleKey(startRule, new LexPosition(0, 0, ""), 0);
             _memo.Add(root, new List<ContextResult>());
+            _resultEnds.Add(root, new HashSet<LexPosition>());
             Schedule(root);
             while (_pending.Count > 0)
             {
@@ -316,9 +396,11 @@ internal static class IndirectLeftRecursiveParser
                 foreach (var result in Evaluate(key))
                 {
                     var results = _memo[key];
-                    if (results.Any(r => r.End == result.End)) continue;
+                    if (!_resultEnds[key].Add(result.End)) continue;
                     results.Add(result);
-                    results.Sort((a, b) => a.End.Offset.CompareTo(b.End.Offset));
+                    if (results.Count > 1 &&
+                        results[^2].End.Offset > result.End.Offset)
+                        results.Sort((a, b) => a.End.Offset.CompareTo(b.End.Offset));
                     if (_dependents.TryGetValue(key, out var callers))
                         foreach (var caller in callers) Schedule(caller);
                 }
@@ -328,7 +410,7 @@ internal static class IndirectLeftRecursiveParser
             selectedTokens = new TokenStore(_input);
             if (best == null) return null;
             var indexMap = new Dictionary<int, int>();
-            foreach (int index in best.TokenIndices)
+            foreach (int index in best.TokenIndices.Items())
             {
                 if (indexMap.ContainsKey(index)) continue;
                 var token = _allTokens[index];
@@ -337,7 +419,7 @@ internal static class IndirectLeftRecursiveParser
                     token.Type == EofType ? "<EOF>" : null));
             }
             var events = new List<ParseEvent>(best.Events.Count);
-            foreach (var e in best.Events)
+            foreach (var e in best.Events.Items())
                 events.Add(e.Kind == ParseEventKind.Consume
                     ? ParseEvent.Consume(indexMap[e.Index]) : e);
             return events;
@@ -360,28 +442,21 @@ internal static class IndirectLeftRecursiveParser
             var work = new Queue<ContextWorkItem>();
             var visited = new HashSet<ContextStateKey>();
             work.Enqueue(new ContextWorkItem(_atn.start[key.Rule], key.Start,
-                new List<ParseEvent>(), new List<int>()));
+                EventSequence<ParseEvent>.Empty, EventSequence<int>.Empty));
+            visited.Add(new ContextStateKey(
+                _atn.start[key.Rule].stateNumber, key.Start));
             while (work.Count > 0)
             {
                 var item = work.Dequeue();
                 if (_progress != null)
                     _progress.FarthestPosition = Math.Max(
                         _progress.FarthestPosition, item.Position.Offset);
-                if (!visited.Add(new ContextStateKey(item.State.stateNumber,
-                        item.Position))) continue;
-
                 if (_atn.stop.Contains(item.State) &&
                     item.State.ruleIndex == key.Rule)
                 {
-                    var events = new List<ParseEvent>(item.Events.Count + 2);
                     bool precedenceRule = _atn.start[key.Rule].isPrecedenceRule;
-                    events.Add(precedenceRule
-                        ? ParseEvent.EnterRecursionRule(key.Rule)
-                        : ParseEvent.EnterRule(key.Rule));
-                    events.AddRange(item.Events);
-                    events.Add(precedenceRule
-                        ? ParseEvent.ExitRecursionRule(key.Rule)
-                        : ParseEvent.ExitRule(key.Rule));
+                    var events = WrapRuleEvents(item.Events, key.Rule,
+                        precedenceRule);
                     yield return new ContextResult(item.Position, events,
                         item.TokenIndices);
                     continue;
@@ -399,26 +474,33 @@ internal static class IndirectLeftRecursiveParser
                             {
                                 children = new List<ContextResult>();
                                 _memo.Add(childKey, children);
+                                _resultEnds.Add(childKey, new HashSet<LexPosition>());
                                 Schedule(childKey);
                             }
                             AddDependency(childKey, key);
                             foreach (var child in children)
                             {
+                                if (!visited.Add(new ContextStateKey(
+                                        rule.target.stateNumber, child.End)))
+                                    continue;
                                 work.Enqueue(new ContextWorkItem(rule.target,
-                                    child.End, Append(item.Events, child.Events),
-                                    Append(item.TokenIndices, child.TokenIndices)));
+                                    child.End,
+                                    EventSequence<ParseEvent>.Concat(
+                                        item.Events, child.Events),
+                                    EventSequence<int>.Concat(
+                                        item.TokenIndices, child.TokenIndices)));
                             }
                             break;
                         }
                         case MyPrecedencePredicateTransition predicate:
                             if (predicate.precedence >= key.Precedence)
-                                work.Enqueue(new ContextWorkItem(transition.target,
-                                    item.Position, item.Events, item.TokenIndices));
+                                QueueUnchanged(work, visited,
+                                    transition.target, item);
                             break;
                         case MyPredicateTransition predicate:
                             if (ParserPredicateMatches(predicate, item.Position))
-                                work.Enqueue(new ContextWorkItem(transition.target,
-                                    item.Position, item.Events, item.TokenIndices));
+                                QueueUnchanged(work, visited,
+                                    transition.target, item);
                             break;
                         case MyAtomTransition or MyRangeTransition or
                              MySetTransition or MyNotSetTransition or
@@ -428,21 +510,35 @@ internal static class IndirectLeftRecursiveParser
                                 ExpectedTypes(transition));
                             if (step == null || !transition.Matches(
                                     _allTokens[step.TokenIndex].Type, 1,
-                                    _atn.maxTokenType)) break;
-                            var events = new List<ParseEvent>(item.Events)
-                                { ParseEvent.Consume(step.TokenIndex) };
-                            var indices = new List<int>(item.TokenIndices);
-                            indices.AddRange(step.AllTokenIndices);
+                                    _atn.maxTokenType) ||
+                                !visited.Add(new ContextStateKey(
+                                    transition.target.stateNumber, step.End)))
+                                break;
+                            var events = EventSequence<ParseEvent>.Append(
+                                item.Events, ParseEvent.Consume(step.TokenIndex));
+                            var indices = EventSequence<int>.Concat(
+                                item.TokenIndices,
+                                EventSequence<int>.From(step.AllTokenIndices));
                             work.Enqueue(new ContextWorkItem(transition.target,
                                 step.End, events, indices));
                             break;
                         }
                         default:
-                            work.Enqueue(new ContextWorkItem(transition.target,
-                                item.Position, item.Events, item.TokenIndices));
+                            QueueUnchanged(work, visited,
+                                transition.target, item);
                             break;
                     }
                 }
+            }
+
+            static void QueueUnchanged(Queue<ContextWorkItem> work,
+                HashSet<ContextStateKey> visited, MyATNState target,
+                ContextWorkItem item)
+            {
+                if (visited.Add(new ContextStateKey(
+                        target.stateNumber, item.Position)))
+                    work.Enqueue(new ContextWorkItem(target, item.Position,
+                        item.Events, item.TokenIndices));
             }
         }
 
@@ -510,14 +606,6 @@ internal static class IndirectLeftRecursiveParser
             {
                 return null; // an impossible branch, not a failure of every parse
             }
-        }
-
-        private static List<T> Append<T>(List<T> prefix, List<T> suffix)
-        {
-            var result = new List<T>(prefix.Count + suffix.Count);
-            result.AddRange(prefix);
-            result.AddRange(suffix);
-            return result;
         }
     }
 }
