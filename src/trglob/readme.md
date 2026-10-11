@@ -17,7 +17,7 @@ Expand a glob string into file names.
 
 ## Current version
 
-Release 4.2.0.
+Release 4.3.0.
 
 ## License
 
