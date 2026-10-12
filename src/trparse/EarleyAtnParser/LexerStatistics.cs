@@ -157,14 +157,17 @@ public sealed class LexerStatistics
 
     public string FormatOverlaps(
         string fileName, IReadOnlyList<string> ruleNames,
-        IReadOnlyList<string> symbolicNames)
+        IReadOnlyList<string> symbolicNames,
+        Func<int, (int Offset, int Line, int Column)> mapPosition = null)
     {
         var writer = new StringWriter();
         foreach (var overlap in Overlaps)
         {
+            var position = mapPosition?.Invoke(overlap.StartPosition) ??
+                (overlap.StartPosition, overlap.Line, overlap.Column);
             writer.WriteLine(
-                $"Lexer overlap at {fileName}:{overlap.Line}:{overlap.Column} " +
-                $"(offset {overlap.StartPosition}, mode {overlap.Mode})");
+                $"Lexer overlap at {fileName}:{position.Line}:{position.Column} " +
+                $"(offset {position.Offset}, mode {overlap.Mode})");
             foreach (var candidate in overlap.Candidates)
                 writer.WriteLine(
                     $"  {RuleName(ruleNames, candidate.RuleIndex)} " +

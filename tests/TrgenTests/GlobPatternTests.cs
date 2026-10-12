@@ -8,6 +8,56 @@ namespace TrgenTests;
 public class GlobPatternTests
 {
     [Fact]
+    public async Task BracesInsideCharacterClassesAreNotExpanded()
+    {
+        var directory = Path.Combine(Path.GetTempPath(),
+            "trglob-classes-" + Guid.NewGuid().ToString("N"));
+        var examples = Path.Combine(directory, "examples");
+        var generated = Path.Combine(directory, "Generated-CSharp");
+        Directory.CreateDirectory(examples);
+        Directory.CreateDirectory(generated);
+        try
+        {
+            foreach (var name in new[] { "{.cpp", "}.cpp", "root{.cpp",
+                         "root}.cpp", "root,.cpp" })
+                File.WriteAllText(Path.Combine(examples, name), "");
+
+            async Task<string[]> Match(string pattern)
+            {
+                var startInfo = new ProcessStartInfo("dotnet")
+                {
+                    WorkingDirectory = generated,
+                    RedirectStandardOutput = true,
+                    RedirectStandardError = true,
+                    UseShellExecute = false
+                };
+                startInfo.ArgumentList.Add(
+                    typeof(trglob::Trash.Program).Assembly.Location);
+                startInfo.ArgumentList.Add(pattern);
+                using var process = Process.Start(startInfo);
+                Assert.NotNull(process);
+                var outputTask = process.StandardOutput.ReadToEndAsync();
+                var errorTask = process.StandardError.ReadToEndAsync();
+                await process.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(30));
+                Assert.True(process.ExitCode == 0, await errorTask);
+                return (await outputTask).Split('\n',
+                    StringSplitOptions.TrimEntries |
+                    StringSplitOptions.RemoveEmptyEntries);
+            }
+
+            Assert.Equal(new[] { "../examples/{.cpp", "../examples/}.cpp" },
+                await Match("../examples/[{}].cpp"));
+            Assert.Equal(new[] { "../examples/root,.cpp",
+                "../examples/root{.cpp", "../examples/root}.cpp" },
+                await Match("../examples/{root[{},].cpp,missing.cpp}"));
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [Fact]
     public async Task BraceAlternativesMayContainDirectorySeparators()
     {
         var directory = Path.Combine(Path.GetTempPath(),

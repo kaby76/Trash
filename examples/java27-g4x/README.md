@@ -10,8 +10,8 @@ The parser grammar declares `contextAwareLexing=true` in its `options` block.
 context-aware ALL(*) automatically. The grammar also has indirect left
 recursion, which still requires `--indirect-left-recursion` at parse time.
 
-Run `bash run-example.sh` to display the `helloworld.java` tree, parse
-three larger examples, and parse `Escapes.java` with the source hook.
+Run `bash run-example.sh` to display the `helloworld.java` tree and parse
+all 16 remaining sample `.java` files with the source hook.
 `hooks.json` binds `java-unicode.xq` to a pre-lex XQuery4 source hook.
 Its `ctx:java-unicode-edits($input)` function implements JLS Unicode-escape
 translation and retains an offset map to the original input. Source-only

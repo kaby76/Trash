@@ -2,6 +2,19 @@ namespace EarleyAtnParser;
 
 using Atn;
 
+public sealed class LexerNoViableAltException : InvalidOperationException
+{
+    public int Position { get; }
+    public char Character { get; }
+
+    public LexerNoViableAltException(int position, int line, int column, char character)
+        : base($"Lexer error at line {line}:{column}: no rule matches '{character}' (U+{(int)character:X4}).")
+    {
+        Position = position;
+        Character = character;
+    }
+}
+
 /// <summary>
 /// Character-level ATN-based lexer. Implements a longest-match NFA simulation
 /// from scratch, with no Antlr4 runtime dependencies in the core algorithm.
@@ -229,8 +242,8 @@ public partial class LexerAtnSimulator
         int matchEnd = match.EndPosition;
 
         if (matchedRule < 0)
-            throw new InvalidOperationException(
-                $"Lexer error at line {startLine}:{startColumn}: no rule matches '{_input[start]}' (U+{(int)_input[start]:X4}).");
+            throw new LexerNoViableAltException(
+                start, startLine, startColumn, _input[start]);
 
         int tokenType = _atn.ruleToTokenType[matchedRule];
         int channel = DEFAULT_CHANNEL;

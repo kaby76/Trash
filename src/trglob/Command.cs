@@ -94,7 +94,18 @@ class Command
     // a directory separator must be expanded before it reaches that matcher.
     private static IEnumerable<string> ExpandBraces(string pattern)
     {
-        int open = pattern.IndexOf('{');
+        int open = -1;
+        bool inClass = false;
+        for (int i = 0; i < pattern.Length; i++)
+        {
+            if (pattern[i] == '[' && !inClass) inClass = true;
+            else if (pattern[i] == ']' && inClass) inClass = false;
+            else if (pattern[i] == '{' && !inClass)
+            {
+                open = i;
+                break;
+            }
+        }
         if (open < 0)
         {
             yield return pattern;
@@ -105,8 +116,20 @@ class Command
         int close = -1;
         var alternatives = new List<string>();
         int start = open + 1;
+        inClass = false;
         for (int i = open; i < pattern.Length; i++)
         {
+            if (pattern[i] == '[' && !inClass)
+            {
+                inClass = true;
+                continue;
+            }
+            if (pattern[i] == ']' && inClass)
+            {
+                inClass = false;
+                continue;
+            }
+            if (inClass) continue;
             if (pattern[i] == '{') depth++;
             else if (pattern[i] == '}')
             {

@@ -53,6 +53,57 @@ public sealed class XQueryHooksTests
     }
 
     [Fact]
+    public void SourceOnlyHookReportsOriginalPositionsForLexerAndParserFailures()
+    {
+        string fixture = Path.Combine(AppContext.BaseDirectory,
+            "TestData", "indirect-left-recursion");
+        string manifest = Path.Combine(AppContext.BaseDirectory,
+            "TestData", "java27-g4x", "hooks.json");
+        string parser = Path.Combine(fixture, "IndirectLeftRecursion.interp");
+        string lexer = Path.Combine(fixture, "IndirectLeftRecursionLexer.interp");
+
+        var lexerError = Assert.Throws<InvalidOperationException>(() =>
+            InterpRunner.Run(parser, lexer, "\\u0031+?", "lexer.txt", false,
+                indirectLeftRecursion: true, xqueryHooksPath: manifest));
+        Assert.Contains("lexer.txt: line 1:7", lexerError.Message);
+        Assert.Contains("Lexer error", lexerError.Message);
+
+        var contextError = Assert.Throws<InvalidOperationException>(() =>
+            InterpRunner.Run(parser, lexer, "\\u0031+?", "context.txt", false,
+                contextAwareLexing: true, indirectLeftRecursion: true,
+                xqueryHooksPath: manifest));
+        Assert.Contains("context.txt: line 1:7", contextError.Message);
+
+        var parserError = Assert.Throws<InvalidOperationException>(() =>
+            InterpRunner.Run(parser, lexer, "\\u0031+", "parser.txt", false,
+                indirectLeftRecursion: true, xqueryHooksPath: manifest));
+        Assert.Contains("parser.txt: line 1:7", parserError.Message);
+        Assert.Contains("input rejected by grammar", parserError.Message);
+    }
+
+    [Fact]
+    public async Task SourceOnlyHookReportsOriginalTokenOffsets()
+    {
+        string fixture = Path.Combine(AppContext.BaseDirectory,
+            "TestData", "indirect-left-recursion");
+        string manifest = Path.Combine(AppContext.BaseDirectory,
+            "TestData", "java27-g4x", "hooks.json");
+        var directory = Directory.CreateTempSubdirectory("SourceTokenOffsets-").FullName;
+        try
+        {
+            string file = Path.Combine(directory, "unicode.txt");
+            File.WriteAllText(file, "\\u0031+2");
+            var run = await RunCli(typeof(Trash.Program).Assembly.Location,
+                null, "--allstar", "-L", fixture, "--indirect-left-recursion",
+                "--xquery-hooks", manifest, "--no-output", "--tokens", file);
+            Assert.Contains("[@0,0:5='1'", run.Error);
+            Assert.Contains("[@1,6:6='+'", run.Error);
+            Assert.Contains("[@2,7:7='2'", run.Error);
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
+    [Fact]
     public async Task InterpretedLexerPredicateUsesCommittedDeclaration()
     {
         var directory = Directory.CreateTempSubdirectory("XQueryHooks-").FullName;
@@ -127,7 +178,7 @@ public sealed class XQueryHooksTests
         finally { Directory.Delete(directory, true); }
     }
 
-    private static async Task<(int Exit, byte[] Output)> RunCli(
+    private static async Task<(int Exit, byte[] Output, string Error)> RunCli(
         string assembly, byte[]? input, params string[] args)
     {
         var start = new ProcessStartInfo("dotnet")
@@ -149,8 +200,9 @@ public sealed class XQueryHooksTests
             process.StandardInput.Close();
             await process.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(30));
             await read;
-            Assert.True(process.ExitCode == 0, await error);
-            return (process.ExitCode, output.ToArray());
+            string stderr = await error;
+            Assert.True(process.ExitCode == 0, stderr);
+            return (process.ExitCode, output.ToArray(), stderr);
         }
         finally { if (!process.HasExited) process.Kill(entireProcessTree: true); }
     }
