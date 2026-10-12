@@ -168,16 +168,25 @@ namespace Trash
                     var is_lexer_grammar = is_lex.Count() != 0;
                     var is_combined = !is_parser_grammar && !is_lexer_grammar;
                     var grammar_name = name_.First();
-                    if (!string.IsNullOrEmpty(test.start_rule) &&
-                        parser_rules.Count > 0 && !parser_rules.Contains(test.start_rule))
+                    // A descriptor may define several tests over different
+                    // grammars in the same directory. Its entry point only
+                    // belongs to the parser selected by this test.
+                    bool selected_parser = parser_rules.Count > 0 &&
+                        (string.IsNullOrEmpty(test.grammar_name) ||
+                         grammar_name == test.grammar_name ||
+                         grammar_name == test.grammar_name + "Parser");
+                    if (selected_parser && !string.IsNullOrEmpty(test.start_rule) &&
+                        !parser_rules.Contains(test.start_rule))
                         throw new InvalidOperationException(
                             $"Start rule '{test.start_rule}' was not found in grammar '{sgfn}'. " +
                             "Available parser rules: " + string.Join(", ", parser_rules));
-                    if (ss.Count > 1 && string.IsNullOrEmpty(test.start_rule))
+                    if (selected_parser && ss.Count > 1 &&
+                        string.IsNullOrEmpty(test.start_rule))
                         throw new InvalidOperationException(
                             $"Grammar '{sgfn}' has multiple EOF-terminated parser start rules: " +
                             string.Join(", ", ss) + ". Use --start-rule to select one.");
-                    var start_symbol = !string.IsNullOrEmpty(test.start_rule)
+                    var start_symbol = selected_parser &&
+                        !string.IsNullOrEmpty(test.start_rule)
                         ? test.start_rule : ss.FirstOrDefault();
 
                     if (!(is_combined && !is_parser_grammar && !is_lexer_grammar
@@ -915,6 +924,8 @@ namespace Trash
                     .Select("/desc/inputs", nsmgr)
                     .Cast<XPathNavigator>()
                     .Select(t => t.Value.Trim())
+                    .SelectMany(t => t.Split(';', StringSplitOptions.TrimEntries |
+                        StringSplitOptions.RemoveEmptyEntries))
                     .Where(t => t != "")
                     .ToList();
                 if (spec_all_inputs.Any())
@@ -1170,6 +1181,8 @@ namespace Trash
                         .Select("inputs", nsmgr)
                         .Cast<XPathNavigator>()
                         .Select(t => t.Value.Trim())
+                        .SelectMany(t => t.Split(';', StringSplitOptions.TrimEntries |
+                            StringSplitOptions.RemoveEmptyEntries))
                         .Where(t => t != "")
                         .ToList();
                     var spec_examplesy = spec_all_inputs_test.Any()
