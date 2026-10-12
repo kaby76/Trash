@@ -22,6 +22,7 @@
 
   <ItemGroup>
     <ProjectReference Include="../../src/trgen/trgen.csproj" />
+    <ProjectReference Include="../../src/trglob/trglob.csproj" Aliases="trglob" />
   </ItemGroup>
 
 </Project>

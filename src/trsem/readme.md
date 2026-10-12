@@ -18,7 +18,7 @@ Read a static semantics spec file and generate code.
 
 ## Current version
 
-Release 4.2.0.
+Release 4.3.0.
 
 ## License
 

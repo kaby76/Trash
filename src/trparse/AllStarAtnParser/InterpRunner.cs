@@ -33,10 +33,6 @@ public static class InterpRunner
         string startRuleName = null,
         string xqueryHooksPath = null)
     {
-        if (indirectLeftRecursion && !string.IsNullOrEmpty(xqueryHooksPath))
-            throw new ArgumentException(
-                "--indirect-left-recursion cannot currently be combined with --xquery-hooks.");
-
         timings ??= new InterpRunTimings();
         timings.Files = 1;
         var timer = new System.Diagnostics.Stopwatch();
@@ -122,11 +118,18 @@ public static class InterpRunner
         var statistics = lexerStats || lexerOverlaps
             ? new LexerStatistics()
             : null;
+        SourceTransformHook source = null;
         var hooks = string.IsNullOrEmpty(xqueryHooksPath)
             ? null
             : XQueryHooks.Load(xqueryHooksPath, inputText,
                 lexerInterp.RuleNames, parserInterp.RuleNames,
-                lexerInterp.SymbolicNames);
+                lexerInterp.SymbolicNames, out source);
+        string lexerInput = source?.Text ?? inputText;
+        if (hooks is { HasRuntimeHooks: false }) hooks = null;
+        if (indirectLeftRecursion && hooks != null)
+            throw new ArgumentException(
+                "--indirect-left-recursion cannot currently be combined with " +
+                "stateful --xquery-hooks; source-only hooks are supported.");
 
         TokenStore rawTokens;
         List<ParseEvent> events;
@@ -135,15 +138,22 @@ public static class InterpRunner
         if (contextAwareLexing || hooks != null)
         {
             timer.Restart();
-            events = indirectLeftRecursion
-                ? IndirectLeftRecursiveParser.ParseContextAware(
-                    parserAtn, lexerAtn, inputText, startRule, out rawTokens,
-                    statistics, parserStatistics, lexerDfaCache, parseProgress)
-                : AllStarParser.ParseContextAware(
-                    parserAtn, lexerAtn, inputText, startRule, out rawTokens,
-                    statistics, parserStatistics,
-                    hooks == null ? predictionCache : null,
-                    hooks: hooks);
+            try
+            {
+                events = indirectLeftRecursion
+                    ? IndirectLeftRecursiveParser.ParseContextAware(
+                        parserAtn, lexerAtn, lexerInput, startRule, out rawTokens,
+                        statistics, parserStatistics, lexerDfaCache, parseProgress)
+                    : AllStarParser.ParseContextAware(
+                        parserAtn, lexerAtn, lexerInput, startRule, out rawTokens,
+                        statistics, parserStatistics,
+                        hooks == null ? predictionCache : null,
+                        hooks: hooks);
+            }
+            catch (LexerNoViableAltException ex) when (source != null)
+            {
+                throw SourceLexerError(fileName, inputText, source, ex);
+            }
             timer.Stop();
             // Tokens are requested lazily here; this is combined lex/parse time.
             timings.Parsing = timer.Elapsed;
@@ -153,7 +163,14 @@ public static class InterpRunner
             var sim = new EarleyAtnParser.LexerAtnSimulator(
                 lexerAtn, statistics, lexerDfaCache);
             timer.Restart();
-            rawTokens = sim.Tokenize(inputText);
+            try
+            {
+                rawTokens = sim.Tokenize(lexerInput);
+            }
+            catch (LexerNoViableAltException ex) when (source != null)
+            {
+                throw SourceLexerError(fileName, inputText, source, ex);
+            }
             timer.Stop();
             timings.Tokenization = timer.Elapsed;
             timings.LexerDfa = sim.GetDfaStatistics();
@@ -175,7 +192,8 @@ public static class InterpRunner
         }
         PrintLexerStatistics(
             statistics, lexerOverlaps, fileName,
-            lexerInterp.RuleNames, lexerInterp.SymbolicNames);
+            lexerInterp.RuleNames, lexerInterp.SymbolicNames,
+            inputText, source);
         if (parserStatistics != null)
             Console.Error.WriteLine(parserStatistics.Format());
         if (events == null)
@@ -184,8 +202,11 @@ public static class InterpRunner
                 throw new InvalidOperationException(
                     $"ALL(*) parse failed for '{fileName}': input rejected by grammar.");
             string location = contextAwareLexing
-                ? DescribeSourcePosition(inputText, parseProgress.FarthestPosition)
-                : DescribeTokenPosition(rawTokens, parseProgress.FarthestPosition);
+                ? DescribeSourcePosition(inputText,
+                    source?.OriginalOffset(parseProgress.FarthestPosition)
+                        ?? parseProgress.FarthestPosition)
+                : DescribeTokenPosition(rawTokens,
+                    parseProgress.FarthestPosition, inputText, source);
             throw new InvalidOperationException(
                 $"{fileName}: {location}: ALL(*) parse failed: input rejected by grammar.");
         }
@@ -202,8 +223,15 @@ public static class InterpRunner
                     .Replace("\r", "\\r")
                     .Replace("\t", "\\t");
                 string channel = tok.Channel != 0 ? $",channel={tok.Channel}" : "";
+                int start = source?.OriginalOffset(tok.StartIndex) ?? tok.StartIndex;
+                int stop = source == null ? tok.StopIndex :
+                    tok.StopIndex < tok.StartIndex ? start - 1 :
+                    source.OriginalOffset(tok.StopIndex + 1) - 1;
+                var (line, column) = source == null
+                    ? (tok.Line, tok.Column)
+                    : SourceLineColumn(inputText, start);
                 System.Console.Error.WriteLine(
-                    $"[@{tok.TokenIndex},{tok.StartIndex}:{tok.StopIndex}='{text}',<{typeName}>{channel},{tok.Line}:{tok.Column}]");
+                    $"[@{tok.TokenIndex},{start}:{stop}='{text}',<{typeName}>{channel},{line}:{column}]");
             }
         }
 
@@ -256,12 +284,19 @@ public static class InterpRunner
 
     internal static void PrintLexerStatistics(
         LexerStatistics statistics, bool includeOverlaps, string fileName,
-        string[] ruleNames, string[] symbolicNames)
+        string[] ruleNames, string[] symbolicNames,
+        string originalInput = null, SourceTransformHook source = null)
     {
         if (statistics == null) return;
         if (includeOverlaps)
             Console.Error.Write(statistics.FormatOverlaps(
-                fileName, ruleNames, symbolicNames));
+                fileName, ruleNames, symbolicNames,
+                source == null ? null : position =>
+                {
+                    int offset = source.OriginalOffset(position);
+                    var (line, column) = SourceLineColumn(originalInput, offset);
+                    return (offset, line, column);
+                }));
         Console.Error.Write(statistics.FormatSummary(ruleNames));
     }
 
@@ -318,19 +353,45 @@ public static class InterpRunner
     }
 
     private static string DescribeTokenPosition(
-        IReadOnlyList<LexerToken> tokens, int onChannelPosition)
+        IReadOnlyList<LexerToken> tokens, int onChannelPosition,
+        string originalInput, SourceTransformHook source)
     {
         int position = 0;
         foreach (var token in tokens)
         {
             if (token.Channel != 0 && token.Type != -1) continue;
             if (position++ != onChannelPosition) continue;
+            if (source != null)
+                return DescribeSourcePosition(originalInput,
+                    source.OriginalOffset(token.StartIndex));
             return $"line {token.Line}:{token.Column} near '{EscapeExcerpt(token.Text)}'";
         }
         return "end of input";
     }
 
+    private static InvalidOperationException SourceLexerError(
+        string fileName, string inputText, SourceTransformHook source,
+        LexerNoViableAltException error)
+    {
+        string location = DescribeSourcePosition(inputText,
+            source.OriginalOffset(error.Position));
+        return new InvalidOperationException(
+            $"{fileName}: {location}: Lexer error: no rule matches " +
+            $"'{EscapeExcerpt(error.Character.ToString())}' " +
+            $"(U+{(int)error.Character:X4}).", error);
+    }
+
     private static string DescribeSourcePosition(string input, int offset)
+    {
+        offset = Math.Clamp(offset, 0, input.Length);
+        var (line, column) = SourceLineColumn(input, offset);
+        string excerpt = offset == input.Length
+            ? "<EOF>"
+            : input.Substring(offset, Math.Min(24, input.Length - offset));
+        return $"line {line}:{column} near '{EscapeExcerpt(excerpt)}'";
+    }
+
+    private static (int Line, int Column) SourceLineColumn(string input, int offset)
     {
         offset = Math.Clamp(offset, 0, input.Length);
         int line = 1, column = 0;
@@ -349,10 +410,7 @@ public static class InterpRunner
             }
             else column++;
         }
-        string excerpt = offset == input.Length
-            ? "<EOF>"
-            : input.Substring(offset, Math.Min(24, input.Length - offset));
-        return $"line {line}:{column} near '{EscapeExcerpt(excerpt)}'";
+        return (line, column);
     }
 
     private static string EscapeExcerpt(string text) => text

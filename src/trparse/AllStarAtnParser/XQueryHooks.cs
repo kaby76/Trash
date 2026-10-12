@@ -27,6 +27,9 @@ public sealed class XQueryHooks
     private bool _inDeclaration;
 
     public bool HasParserPredicates => _parserPredicates.Count != 0;
+    public bool HasRuntimeHooks => _lexerPredicates.Count != 0 ||
+        _parserPredicates.Count != 0 || _ruleEnter.Count != 0 ||
+        _ruleExit.Count != 0;
 
     private XQueryHooks(string input, string[] parserRules, string[] tokenNames)
     {
@@ -38,13 +41,19 @@ public sealed class XQueryHooks
     }
 
     public static XQueryHooks Load(string path, string input,
-        string[] lexerRules, string[] parserRules, string[] tokenNames)
+        string[] lexerRules, string[] parserRules, string[] tokenNames,
+        out SourceTransformHook source)
     {
         var manifest = JsonSerializer.Deserialize<Manifest>(File.ReadAllText(path),
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
             ?? throw new InvalidDataException($"Empty XQuery hook manifest '{path}'.");
-        var hooks = new XQueryHooks(input, parserRules, tokenNames);
         string directory = Path.GetDirectoryName(Path.GetFullPath(path))!;
+        source = manifest.Source == null ? null :
+            SourceTransformHook.Apply(input,
+                Path.Combine(directory, !string.IsNullOrWhiteSpace(manifest.Source.Query)
+                    ? manifest.Source.Query
+                    : throw new InvalidDataException("Source-hook query filename is missing.")));
+        var hooks = new XQueryHooks(source?.Text ?? input, parserRules, tokenNames);
         foreach (var spec in manifest.LexerPredicates ?? [])
         {
             int rule = Array.IndexOf(lexerRules, spec.Rule);
@@ -230,9 +239,14 @@ public sealed class XQueryHooks
 
     private sealed class Manifest
     {
+        public SourceSpec Source { get; set; }
         public List<LexerPredicateSpec> LexerPredicates { get; set; }
         public List<ParserPredicateSpec> ParserPredicates { get; set; }
         public List<ParserRuleSpec> ParserRules { get; set; }
+    }
+    private sealed class SourceSpec
+    {
+        public string Query { get; set; }
     }
     private sealed class ParserPredicateSpec
     {

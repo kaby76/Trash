@@ -13,5 +13,4 @@ dotnet trash parse -L interp --indirect-left-recursion examples/helloworld.java 
   dotnet trash tree --text -a
 printf '\n'
 
-dotnet trash parse -L interp --indirect-left-recursion --no-output --per-file \
-  examples/AllInOne7.java examples/AllInOne11.java examples/AllInOne17.java
+dotnet trash parse -L interp --allstar --indirect-left-recursion --xquery-hooks hooks.json --no-output --per-file --timeout 20 examples/*.java

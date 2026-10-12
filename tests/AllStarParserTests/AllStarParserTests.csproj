@@ -45,6 +45,12 @@
     <Content Include="../../examples/java-allstar-xquery/*.java"
              CopyToOutputDirectory="PreserveNewest"
              Link="TestData/java-allstar-xquery/%(Filename)%(Extension)" />
+    <Content Include="../../examples/java27-g4x/hooks.json"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/java27-g4x/hooks.json" />
+    <Content Include="../../examples/java27-g4x/java-unicode.xq"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/java27-g4x/java-unicode.xq" />
     <Content Include="../../examples/java-antlr/Java*.g4"
              CopyToOutputDirectory="PreserveNewest"
              Link="TestData/g4x/examples/java-antlr/%(Filename)%(Extension)" />

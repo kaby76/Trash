@@ -2,22 +2,43 @@
 
 ## Summary
 
-Expand a glob string into file names.
+Expand one or more glob patterns into file names.
 
 ## Description
 
 ## Usage
 
-    dotnet trash glob <string>+
+    dotnet trash glob [--full] <pattern>+
+
+Each argument may contain one pattern or a semicolon-separated list of
+patterns. Quote patterns in the shell so `*`, `**`, `!`, and `;` reach `trglob`
+unchanged. Patterns are relative to the current directory unless absolute.
+Positive patterns are combined; a pattern prefixed with `!` excludes matches
+from the combined result. Duplicate paths are removed and output is sorted.
+By default paths are relative to the current directory; `--full` prints
+absolute paths.
+
+`*` matches within one path segment, `?` matches one character, and `**`
+matches across directories (including zero directories in `**/`).
+Braces select alternatives, including alternatives with directory separators:
+`{*.cpp,cpp20/**/*.cpp}`. Brace alternatives can be nested.
 
 ## Examples
 
     dotnet trash glob '../examples/**/*.dart'
     dotnet trash glob '../examples/**'
+    dotnet trash glob '../examples/*.cpp;../examples/cpp20/**/*.cpp'
+    dotnet trash glob '../examples/{*.cpp,cpp20/**/*.cpp}'
+    dotnet trash glob '../examples/**/*.cpp' '!../examples/generated/**'
+
+In `desc.xml`, `<inputs>` also accepts semicolon-separated patterns, such as
+`<inputs>examples/*.cpp;examples/cpp20/**/*.cpp</inputs>`. `trgen` emits each
+pattern separately in generated test scripts, prefixing each with `../`
+because those scripts run from a `Generated-*` directory.
 
 ## Current version
 
-Release 4.2.0.
+Release 4.3.0.
 
 ## License
 
