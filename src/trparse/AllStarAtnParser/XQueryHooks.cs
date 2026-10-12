@@ -27,6 +27,7 @@ public sealed class XQueryHooks
     private bool _inDeclaration;
 
     public bool HasParserPredicates => _parserPredicates.Count != 0;
+    public bool HasLexerPredicates => _lexerPredicates.Count != 0;
     public bool HasRuntimeHooks => _lexerPredicates.Count != 0 ||
         _parserPredicates.Count != 0 || _ruleEnter.Count != 0 ||
         _ruleExit.Count != 0;

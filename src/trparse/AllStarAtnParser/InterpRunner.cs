@@ -135,7 +135,7 @@ public static class InterpRunner
         List<ParseEvent> events;
         var parseProgress = indirectLeftRecursion
             ? new IndirectLeftRecursiveParser.ParseProgress() : null;
-        if (contextAwareLexing || hooks != null)
+        if (contextAwareLexing || hooks?.HasLexerPredicates == true)
         {
             timer.Restart();
             try
@@ -148,6 +148,7 @@ public static class InterpRunner
                         parserAtn, lexerAtn, lexerInput, startRule, out rawTokens,
                         statistics, parserStatistics,
                         hooks == null ? predictionCache : null,
+                        lexerDfaCache: lexerDfaCache,
                         hooks: hooks);
             }
             catch (LexerNoViableAltException ex) when (source != null)
@@ -186,7 +187,8 @@ public static class InterpRunner
                     parseProgress)
                 : AllStarParser.Parse(
                     parserAtn, rawTokens, startRule, parserStatistics,
-                    predictionCache);
+                    hooks == null ? predictionCache : null,
+                    hooks);
             timer.Stop();
             timings.Parsing = timer.Elapsed;
         }
