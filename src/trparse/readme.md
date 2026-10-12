@@ -300,7 +300,7 @@ this mode; the overall TT and `--per-file` lines remain available.
 
 ## Current version
 
-Release 4.3.0.
+Release 4.4.0.
 
 ## License
 
