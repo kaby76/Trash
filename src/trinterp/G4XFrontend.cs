@@ -14,6 +14,7 @@ public sealed class G4XFrontend : IGrammarFrontend
     {
         if (root.LocalName != "grammarSpec")
             throw new InvalidOperationException("Expected a G4X grammarSpec.");
+        RestoreCommonLeafWrappers(root);
         if (root.DescendantsAndSelf().Any(n => n.LocalName == "delegateGrammars"))
             throw new NotSupportedException("G4X grammar imports are not supported yet; supply a tokenVocab and its lexer grammar for token references.");
         bool lexer = Child(Child(root, "grammarDecl"), "grammarType")
@@ -28,11 +29,11 @@ public sealed class G4XFrontend : IGrammarFrontend
         }
         var parserRules = lexer ? null : rules.ToDictionary(
             rule => GetText(Child(rule, "identifier")),
-            rule => Child(rule, "ruleBlock"), StringComparer.Ordinal);
+            rule => Child(rule, "ruleAltList"), StringComparer.Ordinal);
         foreach (var rule in rules)
         {
             var name = Child(rule, "identifier");
-            var body = Child(rule, "ruleBlock");
+            var body = Child(rule, "ruleAltList");
             if (!lexer) ValidateParserExclusions(body, parserRules);
             var lowered = new GrammarNode(lexer ? "lexerRuleSpec" : "parserRuleSpec");
             lowered.Children.Add(Token(name, lexer ? "TOKEN_REF" : "RULE_REF"));
@@ -67,15 +68,29 @@ public sealed class G4XFrontend : IGrammarFrontend
         return new GrammarNode(kind) { Terminal = true, Text = GetText(source), Line = line, Column = col };
     }
 
+    // G4X omits the ANTLR4 grammar's single-symbol identifier/actionBlock
+    // productions. Restore their common-tree shape for the existing compiler.
+    private static void RestoreCommonLeafWrappers(GrammarNode node)
+    {
+        for (int i = 0; i < node.Children.Count; i++)
+        {
+            var child = node.Children[i];
+            if (child.Terminal && child.LocalName is "ID" or "ACTION")
+                node.Children[i] = new GrammarNode(
+                    child.LocalName == "ID" ? "identifier" : "actionBlock", child);
+            else
+                RestoreCommonLeafWrappers(child);
+        }
+    }
+
     private static GrammarNode LowerBody(GrammarNode body, bool lexer, HashSet<string> rules) =>
-        new(lexer ? "lexerRuleBlock" : "ruleBlock", LowerAlts(Child(body, "ruleAltList"), lexer, rules, true));
+        new(lexer ? "lexerRuleBlock" : "ruleBlock", LowerAlts(body, lexer, rules, true));
 
     private static void ValidateParserExclusions(GrammarNode body,
         Dictionary<string, GrammarNode> parserRules)
     {
-        foreach (var item in Children(Child(body, "ruleAltList"), "labeledAlt"))
+        foreach (var alt in Children(body, "alternative"))
         {
-            var alt = Child(item, "alternative");
             if (Child(alt, "exclusion") != null &&
                 !IsSingleTokenAlternative(alt, parserRules, new HashSet<string>(StringComparer.Ordinal)))
                 throw new NotSupportedException(
@@ -89,7 +104,7 @@ public sealed class G4XFrontend : IGrammarFrontend
         var elements = Children(alt, "element").ToList();
         if (elements.Count != 1) return false;
         var element = elements[0];
-        if (Child(element, "ebnfSuffix") != null || Child(element, "labeledElement") != null)
+        if (Child(element, "ebnfSuffix") != null)
             return false;
         var symbol = Child(Child(element, "atom"), "symbolRef");
         if (symbol == null || Child(symbol, "argActionBlock") != null) return false;
@@ -101,9 +116,9 @@ public sealed class G4XFrontend : IGrammarFrontend
         if (!visiting.Add(name)) return false;
         try
         {
-            var alternatives = Children(Child(body, "ruleAltList"), "labeledAlt").ToList();
+            var alternatives = Children(body, "alternative").ToList();
             return alternatives.Count != 0 && alternatives.All(item =>
-                IsSingleTokenAlternative(Child(item, "alternative"), parserRules, visiting));
+                IsSingleTokenAlternative(item, parserRules, visiting));
         }
         finally { visiting.Remove(name); }
     }
@@ -114,7 +129,7 @@ public sealed class G4XFrontend : IGrammarFrontend
         foreach (var item in list.Children)
         {
             if (IsTerminal(item)) { result.Children.Add(item); continue; }
-            var alt = item.LocalName == "labeledAlt" ? Child(item, "alternative") : item;
+            var alt = item;
             var exclusion = Child(alt, "exclusion");
             if (exclusion != null && !outer)
                 throw new NotSupportedException("G4X set-difference inside a block is not supported yet.");
@@ -136,10 +151,9 @@ public sealed class G4XFrontend : IGrammarFrontend
             {
                 if (Child(alt, "elementOptions") is { } options) lowered.Children.Insert(0, options);
             }
-            if (!lexer && item.LocalName == "labeledAlt")
+            if (!lexer && outer)
             {
                 var labeled = new GrammarNode("labeledAlt", lowered);
-                labeled.Children.AddRange(item.Children.Where(c => c != alt));
                 result.Children.Add(labeled);
             }
             else result.Children.Add(lowered);
@@ -187,22 +201,20 @@ public sealed class G4XFrontend : IGrammarFrontend
             switch (child.LocalName)
             {
                 case "atom": result.Children.Add(LowerAtom(child, lexer, rules)); break;
-                case "labeledElement":
-                    var label = new GrammarNode(lexer ? "labeledLexerElement" : "labeledElement");
-                    foreach (var part in child.Children)
-                        label.Children.Add(part.LocalName == "atom" ? LowerAtom(part, lexer, rules)
-                            : part.LocalName == "block" ? LowerBlock(part, lexer, rules) : part);
-                    result.Children.Add(label);
-                    break;
                 case "ebnf":
                     var block = LowerBlock(Child(child, "block"), lexer, rules);
                     if (lexer)
                     {
                         result.Children.Add(block);
-                        var suffix = Child(Child(child, "blockSuffix"), "ebnfSuffix");
+                        var suffix = Child(child, "ebnfSuffix");
                         if (suffix != null) result.Children.Add(suffix);
                     }
-                    else result.Children.Add(new GrammarNode("ebnf", block, Child(child, "blockSuffix")));
+                    else
+                    {
+                        var suffix = Child(child, "ebnfSuffix");
+                        result.Children.Add(new GrammarNode("ebnf", block,
+                            suffix == null ? null : new GrammarNode("blockSuffix", suffix)));
+                    }
                     break;
                 default: result.Children.Add(child); break;
             }

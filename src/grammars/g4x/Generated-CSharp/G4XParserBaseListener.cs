@@ -204,18 +204,6 @@ public partial class G4XParserBaseListener : IG4XParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitActionScopeName([NotNull] G4XParser.ActionScopeNameContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4XParser.actionBlock"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterActionBlock([NotNull] G4XParser.ActionBlockContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4XParser.actionBlock"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitActionBlock([NotNull] G4XParser.ActionBlockContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4XParser.argActionBlock"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -384,18 +372,6 @@ public partial class G4XParserBaseListener : IG4XParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitRuleModifier([NotNull] G4XParser.RuleModifierContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4XParser.ruleBlock"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterRuleBlock([NotNull] G4XParser.RuleBlockContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4XParser.ruleBlock"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitRuleBlock([NotNull] G4XParser.RuleBlockContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4XParser.ruleAltList"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -407,18 +383,6 @@ public partial class G4XParserBaseListener : IG4XParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitRuleAltList([NotNull] G4XParser.RuleAltListContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4XParser.labeledAlt"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLabeledAlt([NotNull] G4XParser.LabeledAltContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4XParser.labeledAlt"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLabeledAlt([NotNull] G4XParser.LabeledAltContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4XParser.lexerCommands"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -552,18 +516,6 @@ public partial class G4XParserBaseListener : IG4XParserListener {
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitPredicateOption([NotNull] G4XParser.PredicateOptionContext context) { }
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4XParser.labeledElement"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterLabeledElement([NotNull] G4XParser.LabeledElementContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4XParser.labeledElement"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitLabeledElement([NotNull] G4XParser.LabeledElementContext context) { }
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4XParser.ebnf"/>.
 	/// <para>The default implementation does nothing.</para>
 	/// </summary>
@@ -575,18 +527,6 @@ public partial class G4XParserBaseListener : IG4XParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitEbnf([NotNull] G4XParser.EbnfContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4XParser.blockSuffix"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterBlockSuffix([NotNull] G4XParser.BlockSuffixContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4XParser.blockSuffix"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitBlockSuffix([NotNull] G4XParser.BlockSuffixContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4XParser.ebnfSuffix"/>.
 	/// <para>The default implementation does nothing.</para>
@@ -719,18 +659,6 @@ public partial class G4XParserBaseListener : IG4XParserListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	public virtual void ExitElementOption([NotNull] G4XParser.ElementOptionContext context) { }
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4XParser.identifier"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void EnterIdentifier([NotNull] G4XParser.IdentifierContext context) { }
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4XParser.identifier"/>.
-	/// <para>The default implementation does nothing.</para>
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	public virtual void ExitIdentifier([NotNull] G4XParser.IdentifierContext context) { }
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4XParser.qualifiedIdentifier"/>.
 	/// <para>The default implementation does nothing.</para>

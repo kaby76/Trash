@@ -116,12 +116,6 @@ public interface IG4XParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitActionScopeName([NotNull] G4XParser.ActionScopeNameContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4XParser.actionBlock"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitActionBlock([NotNull] G4XParser.ActionBlockContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="G4XParser.argActionBlock"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -206,23 +200,11 @@ public interface IG4XParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitRuleModifier([NotNull] G4XParser.RuleModifierContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4XParser.ruleBlock"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitRuleBlock([NotNull] G4XParser.RuleBlockContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="G4XParser.ruleAltList"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitRuleAltList([NotNull] G4XParser.RuleAltListContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4XParser.labeledAlt"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLabeledAlt([NotNull] G4XParser.LabeledAltContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="G4XParser.lexerCommands"/>.
 	/// </summary>
@@ -290,23 +272,11 @@ public interface IG4XParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <return>The visitor result.</return>
 	Result VisitPredicateOption([NotNull] G4XParser.PredicateOptionContext context);
 	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4XParser.labeledElement"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitLabeledElement([NotNull] G4XParser.LabeledElementContext context);
-	/// <summary>
 	/// Visit a parse tree produced by <see cref="G4XParser.ebnf"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitEbnf([NotNull] G4XParser.EbnfContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4XParser.blockSuffix"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitBlockSuffix([NotNull] G4XParser.BlockSuffixContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="G4XParser.ebnfSuffix"/>.
 	/// </summary>
@@ -373,12 +343,6 @@ public interface IG4XParserVisitor<Result> : IParseTreeVisitor<Result> {
 	/// <param name="context">The parse tree.</param>
 	/// <return>The visitor result.</return>
 	Result VisitElementOption([NotNull] G4XParser.ElementOptionContext context);
-	/// <summary>
-	/// Visit a parse tree produced by <see cref="G4XParser.identifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	/// <return>The visitor result.</return>
-	Result VisitIdentifier([NotNull] G4XParser.IdentifierContext context);
 	/// <summary>
 	/// Visit a parse tree produced by <see cref="G4XParser.qualifiedIdentifier"/>.
 	/// </summary>

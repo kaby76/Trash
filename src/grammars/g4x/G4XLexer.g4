@@ -302,10 +302,6 @@ STAR
     : '*'
     ;
 
-PLUS_ASSIGN
-    : '+='
-    ;
-
 PLUS
     : '+'
     ;
@@ -334,10 +330,6 @@ DOT
 
 AT
     : '@'
-    ;
-
-POUND
-    : '#'
     ;
 
 NOT
