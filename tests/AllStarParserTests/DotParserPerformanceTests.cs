@@ -316,6 +316,23 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
     }
 
     [Fact]
+    public void PredicateEvaluatorDoesNotReusePrewarmedDfa()
+    {
+        var fixture = Prepare(GenerateDotInput(100));
+        var cache = new ParserPredictionCache();
+        Assert.NotNull(AllStarParser.Parse(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            predictionCache: cache));
+        Assert.True(cache.RetainedStates > 0);
+
+        var statistics = new ParserStatistics();
+        _ = new AllStarSimulator(fixture.ParserAtn, statistics, cache,
+            predicateEvaluator: (_, _, _) => true);
+        Assert.Equal(0, statistics.SharedDfaStatesAtStart);
+        Assert.Equal(0, statistics.SharedDfaTransitionsAtStart);
+    }
+
+    [Fact]
     public void SharedDotParserInternsCommittedCallerContexts()
     {
         var fixture = Prepare(GenerateDotInput(100));

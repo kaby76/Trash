@@ -40,7 +40,9 @@ public sealed class AllStarSimulator
         _atn = atn;
         _statistics = statistics;
         _predicateEvaluator = predicateEvaluator;
-        if (predictionCache != null)
+        // A DFA learned without an evaluator may have treated predicates as
+        // unconditional. Keep predicate-aware prediction local to this parse.
+        if (predictionCache != null && predicateEvaluator == null)
         {
             predictionCache.Bind(atn);
             // Once the shared cache reaches its retention budget, do not mix

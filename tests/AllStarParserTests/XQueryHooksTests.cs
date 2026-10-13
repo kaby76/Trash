@@ -14,7 +14,8 @@ public sealed class XQueryHooksTests
         string query = Path.Combine(AppContext.BaseDirectory,
             "TestData", "java27-g4x", "java-unicode.xq");
         string raw = "\"-\\u005c\\-\"";
-        var transformed = SourceTransformHook.Apply(raw, query);
+        var runtimeCache = new InterpRuntimeCache();
+        var transformed = SourceTransformHook.Apply(raw, query, runtimeCache);
         Assert.Equal("\"-\\\\-\"", transformed.Text);
         Assert.Equal(2, transformed.OriginalOffset(2));
         Assert.Equal(8, transformed.OriginalOffset(3));
@@ -22,15 +23,15 @@ public sealed class XQueryHooksTests
 
         string ineligible = "\\\\u005c";
         Assert.Equal(ineligible,
-            SourceTransformHook.Apply(ineligible, query).Text);
+            SourceTransformHook.Apply(ineligible, query, runtimeCache).Text);
         Assert.Equal(@"\u005a",
-            SourceTransformHook.Apply(@"\u005cu005a", query).Text);
+            SourceTransformHook.Apply(@"\u005cu005a", query, runtimeCache).Text);
         Assert.Equal(@"\\",
-            SourceTransformHook.Apply(@"\u005c\u005c", query).Text);
+            SourceTransformHook.Apply(@"\u005c\u005c", query, runtimeCache).Text);
         Assert.Equal(@"\\n",
-            SourceTransformHook.Apply(@"\\\u006e", query).Text);
+            SourceTransformHook.Apply(@"\\\u006e", query, runtimeCache).Text);
         Assert.Throws<InvalidDataException>(() =>
-            SourceTransformHook.Apply("\\u00xz", query));
+            SourceTransformHook.Apply("\\u00xz", query, runtimeCache));
     }
 
     [Fact]

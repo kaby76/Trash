@@ -54,7 +54,8 @@ public sealed class XQueryHooks
             SourceTransformHook.Apply(input,
                 Path.Combine(directory, !string.IsNullOrWhiteSpace(manifest.Source.Query)
                     ? manifest.Source.Query
-                    : throw new InvalidDataException("Source-hook query filename is missing.")));
+                    : throw new InvalidDataException("Source-hook query filename is missing.")),
+                runtimeCache);
         var hooks = new XQueryHooks(source?.Text ?? input, parserRules, tokenNames);
         foreach (var spec in manifest.LexerPredicates ?? [])
         {
