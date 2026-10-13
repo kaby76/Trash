@@ -123,7 +123,7 @@ public static class InterpRunner
             ? null
             : XQueryHooks.Load(xqueryHooksPath, inputText,
                 lexerInterp.RuleNames, parserInterp.RuleNames,
-                lexerInterp.SymbolicNames, out source);
+                lexerInterp.SymbolicNames, out source, runtimeCache);
         string lexerInput = source?.Text ?? inputText;
         if (hooks is { HasRuntimeHooks: false }) hooks = null;
         if (indirectLeftRecursion && hooks != null)

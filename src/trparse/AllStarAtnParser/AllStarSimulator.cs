@@ -28,6 +28,9 @@ public sealed class AllStarSimulator
     private readonly Dictionary<(int decision, int precedence), DecisionDfa> _decisionDfas;
     private readonly Dictionary<CallerMatchKey, CallerMatchResult>
         _callerMatchCache = new();
+    // A predicate reached while building an SLL closure makes that closure
+    // dependent on the current input/tree. Never retain it in the DFA.
+    private bool _sllPredicateEncountered;
 
     public AllStarSimulator(
         MyATN atn, ParserStatistics statistics = null,
@@ -136,10 +139,8 @@ public sealed class AllStarSimulator
 
             // SLL uses a local prediction-context stack rooted at EMPTY. Conflicts
             // are not resolved here; they signal full-context LL fallback below.
-            int sllAlt = _predicateEvaluator == null
-                ? ExecSllDfa(decision, decisionState, tokenTypes, startPos,
-                    callerCtx, precedence, precedenceRuleIndex)
-                : -1;
+            int sllAlt = ExecSllDfa(decision, decisionState, tokenTypes, startPos,
+                callerCtx, precedence, precedenceRuleIndex);
             if (sllAlt > 0) return sllAlt;
 
             _statistics?.RecordFullContextFallback(decision);
@@ -201,11 +202,14 @@ public sealed class AllStarSimulator
         if (dfa.Start == null)
         {
             _closureBusy.Clear();
+            _sllPredicateEncountered = false;
             var initial = NewConfigSet();
             for (int i = 0; i < decisionState.transitions.Count; i++)
                 Closure(new ATNConfig(decisionState.transitions[i].target, i + 1,
                                       PredictionContext.EMPTY, precedence),
                         initial, fullCtx: false, precedence, precedenceRuleIndex);
+            if (_sllPredicateEncountered)
+                return -1;
             var start = InternDfaState(dfa, initial);
             if (sharedDfa && !start.IsRetained)
             {
@@ -241,9 +245,12 @@ public sealed class AllStarSimulator
             if (!state.Edges.TryGetValue(tokenType, out DfaState target))
             {
                 _statistics?.RecordDfaMiss(decision);
+                _sllPredicateEncountered = false;
                 var reach = ComputeReachSet(
                     state.Configs, tokenType, fullCtx: false, precedence,
                     precedenceRuleIndex);
+                if (_sllPredicateEncountered)
+                    return -1;
                 // A completed alternative only needs caller context when the
                 // same lookahead also keeps a competing path alive. If no path
                 // consumes it, the completed alternative is the SLL result.
@@ -629,6 +636,9 @@ public sealed class AllStarSimulator
                         break;
 
                     case MyPredicateTransition predicate:
+                        if (!fullCtx && _predicateEvaluator != null &&
+                            predictionTokens == null)
+                            _sllPredicateEncountered = true;
                         if (_predicateEvaluator == null || predictionTokens == null ||
                             _predicateEvaluator(predicate, predictionTokens,
                                 predictionPosition))

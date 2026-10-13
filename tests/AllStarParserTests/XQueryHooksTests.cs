@@ -165,14 +165,22 @@ public sealed class XQueryHooksTests
             var invalid = await File.ReadAllTextAsync(
                 Path.Combine(directory, "invalid-record.java"));
 
+            var runtimeCache = new InterpRuntimeCache();
+            var statistics = new ParserStatistics();
             var (result, _) = InterpRunner.Run(parser, lexer, valid,
-                "input.java", false, xqueryHooksPath: manifest);
+                "input.java", false, parserStatistics: statistics,
+                runtimeCache: runtimeCache,
+                xqueryHooksPath: manifest);
             Assert.Single(result.Nodes);
+            Assert.True(statistics.DfaStatesCreated > 0);
+            Assert.True(statistics.FullContextFallbacks <
+                statistics.AdaptivePredictionCalls);
             Assert.Throws<InvalidOperationException>(() =>
                 InterpRunner.Run(parser, lexer, invalid, "invalid-record.java",
-                    false, xqueryHooksPath: manifest));
+                    false, runtimeCache: runtimeCache,
+                    xqueryHooksPath: manifest));
             var (withoutHooks, _) = InterpRunner.Run(parser, lexer, invalid,
-                "invalid-record.java", false);
+                "invalid-record.java", false, runtimeCache: runtimeCache);
             Assert.Single(withoutHooks.Nodes);
         }
         finally { Directory.Delete(directory, true); }
