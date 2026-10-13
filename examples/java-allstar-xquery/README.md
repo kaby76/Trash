@@ -17,11 +17,15 @@ after the components have been parsed, when the partial parse tree exists.
 
 Run `bash test-example.sh` for a small, offline test. It generates interpreter
 tables, accepts `input.java`, rejects `invalid-record.java`, and verifies that
-bundle parsing adds `.pt` and `.errors` sidecars under `src/`.
+bundle parsing adds `.pt` and `.errors` sidecars under
+`jdk-jdk-21-ga/src/`.
 
 Run `bash run-example.sh` to download the
 [OpenJDK 21 GA source archive](https://github.com/openjdk/jdk/tree/jdk-21-ga),
-unpack it, and parse its `src/**/*.java` files. This is a large workload:
-allow time and free disk space for the extracted sources and resulting PAX/tar
-bundle. The archive, extracted sources, tables, and output are ignored by Git.
-The final bundle is `data/jdk21-parsed.tar`.
+stream the decompressed tarball into `trparse`, and parse its
+`jdk-jdk-21-ga/src/**/*.java` members. This is a large workload: allow time
+and free disk space for the downloaded archive and resulting PAX/tar bundle.
+The output retains the archive's `jdk-jdk-21-ga/` prefix and non-Java members,
+and adds `.pt` and `.errors` sidecars for selected Java files. The archive,
+tables, and output are ignored by Git. The final bundle is
+`data/jdk21-parsed.tar`.

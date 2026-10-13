@@ -16,17 +16,11 @@ if [[ ! -f "$archive" ]]; then
         --output "$archive"
 fi
 
-root=data/jdk21
-mkdir -p "$root"
-if [[ ! -f "$root/.extracted" ]]; then
-    tar -xzf "$archive" -C "$root" --strip-components=1
-    touch "$root/.extracted"
-fi
-
-# Archive member paths now start at src/, so this glob selects Java sources
-# without depending on GitHub's jdk-jdk-21-ga wrapper directory.
-tar --format=pax -C "$root" -cf - src |
+# GitHub's tarball has a jdk-jdk-21-ga/ wrapper directory. Parse its Java
+# source members directly without extracting or repacking the archive.
+gzip -dc "$archive" |
     dotnet trash parse --allstar -L interp --xquery-hooks hooks.json \
-        --bundle-glob 'src/**/*.java' --per-file > data/jdk21-parsed.tar
+        --bundle-glob 'jdk-jdk-21-ga/src/**/*.java' --per-file \
+        > data/jdk21-parsed.tar
 
-echo 'Wrote data/jdk21-parsed.tar (original src files plus Java .pt/.errors sidecars).'
+echo 'Wrote data/jdk21-parsed.tar (original archive plus Java .pt/.errors sidecars).'
