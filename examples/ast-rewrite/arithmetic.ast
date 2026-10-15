@@ -1,0 +1,11 @@
+// A separate, declarative CST-to-AST mapping. First matching rule wins.
+ast Arithmetic {
+    default single-child -> child;
+    default otherwise -> error;
+
+    start(root:expr, EOF) -> root;
+    expr(left:term, op:'+', right:expr) -> ^(Binary[op] left right);
+    term(left:atom, op:'*', right:term) -> ^(Binary[op] left right);
+    atom(value:NUMBER) -> ^(Number[value]);
+    atom('(', inner:expr, ')') -> inner;
+}

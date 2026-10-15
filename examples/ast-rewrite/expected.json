@@ -1,0 +1,1 @@
+{"kind":"Binary","text":"+","children":[{"kind":"Number","text":"1"},{"kind":"Binary","text":"*","children":[{"kind":"Number","text":"2"},{"kind":"Number","text":"3"}]}]}
