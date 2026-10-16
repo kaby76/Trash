@@ -1,0 +1,7 @@
+ast LinvastLua {
+    default single-child -> child;
+    default otherwise -> error;
+
+    var(value:NAME) -> ^(IdNode[value]);
+    number(value:INT) -> ^(LitExprNode[value]);
+}

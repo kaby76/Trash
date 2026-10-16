@@ -1,0 +1,7 @@
+ast LinvastKotlin {
+    default single-child -> child;
+    default otherwise -> error;
+
+    simpleIdentifier(value:Identifier) -> ^(IdNode[value]);
+    literalConstant(value:IntegerLiteral) -> ^(LitExprNode[value]);
+}

@@ -1,0 +1,7 @@
+ast LinvastJava {
+    default single-child -> child;
+    default otherwise -> error;
+
+    primary(value:IDENTIFIER) -> ^(IdNode[value]);
+    integerLiteral(value:DECIMAL_LITERAL) -> ^(LitExprNode[value]);
+}

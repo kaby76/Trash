@@ -1,0 +1,8 @@
+// A small LINVAST-compatible expression subset, built at rule exit.
+ast LinvastC {
+    default single-child -> child;
+    default otherwise -> error;
+
+    primaryExpression(value:Identifier) -> ^(IdNode[value]);
+    primaryExpression(value:Constant) -> ^(LitExprNode[value]);
+}
