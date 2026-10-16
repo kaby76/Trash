@@ -146,6 +146,21 @@ the lexer falls back to ordinary ANTLR maximal-munch and rule-priority
 semantics. Existing lexer modes and `skip`, `type`, `channel`, `mode`,
 `pushMode`, and `popMode` commands are honored.
 
+### AST construction during ALL(*) parsing (experimental)
+
+Use `--allstar --ast-map path/to/mapping.ast` to reduce committed rule exits
+directly into an AST. The output is still the ordinary PAX/tar bundle with a
+`.pt` parse result, so `trtree`, `trxquery`, and other Trash commands can read
+it. No CST or intermediate event list is constructed in this mode. For a
+runnable grammar and `.ast` mapping, see
+[`examples/ast-during-parse/`](../../examples/ast-during-parse/).
+
+The current implementation accepts ordinary pre-tokenized ALL(*) parsing.
+It rejects context-aware lexing, runtime XQuery hooks, and indirect left
+recursion; direct left-recursion events are not implemented either. This is a
+prototype of the rewrite notation, not a full replacement for parse-tree
+construction. Any partial AST from a failed parse is discarded.
+
 ### XQuery4 interpreter hooks (experimental)
 
 With `--allstar --xquery-hooks hooks.json`, a manifest can bind lexer and parser
@@ -261,6 +276,7 @@ this mode; the overall TT and `--per-file` lines remain available.
         --context-aware-lexing
                        Prefer lexer tokens valid in the current ALL(*) parser context.
         --xquery-hooks Manifest for experimental XQuery4 lexer predicates and parser hooks.
+        --ast-map      Build an AST during ALL(*) parsing using a separate .ast mapping.
         --lexer-stats  Write observed interp lexer-overlap statistics to stderr.
         --lexer-overlaps
                        Write detailed observed overlaps (implies --lexer-stats).

@@ -6,6 +6,6 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
   <ItemGroup>
-    <ProjectReference Include="../../src/AntlrJson/AntlrJson.csproj" />
+    <ProjectReference Include="../../src/trparse/trparse.csproj" />
   </ItemGroup>
 </Project>

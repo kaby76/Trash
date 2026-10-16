@@ -35,6 +35,24 @@ public static class AllStarParser
     }
 
     /// <summary>
+    /// Parse with committed events delivered as they occur, without retaining
+    /// an event list or constructing a parse tree. The observer must discard
+    /// its partial result if parsing returns false.
+    /// </summary>
+    public static bool ParseStreaming(
+        MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex,
+        Action<ParseEvent> onEvent,
+        ParserStatistics statistics = null,
+        ParserPredictionCache predictionCache = null)
+    {
+        ArgumentNullException.ThrowIfNull(onEvent);
+        return ParseCore(
+            atn, allTokens, startRuleIndex, buildEvents: false, statistics,
+            predictionCache, enableLl1Bypass: false,
+            eventObserver: onEvent).Success;
+    }
+
+    /// <summary>
     /// Recognize an already-tokenized input without constructing parse events
     /// or a parse tree. This isolates parser prediction and committed ATN
     /// traversal for performance measurement.
@@ -72,7 +90,8 @@ public static class AllStarParser
         MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex,
         bool buildEvents, ParserStatistics statistics,
         ParserPredictionCache predictionCache, bool enableLl1Bypass,
-        XQueryHooks hooks = null)
+        XQueryHooks hooks = null,
+        Action<ParseEvent> eventObserver = null)
     {
         if (atn == null) throw new ArgumentNullException(nameof(atn));
         if (startRuleIndex < 0 || startRuleIndex >= atn.start.Length)
@@ -97,7 +116,7 @@ public static class AllStarParser
         var events = buildEvents ? new List<ParseEvent>() : null;
         var instance = new ParserInstance(
             atn, allTokens, onIdx, tokenTypes, metadata, events, statistics,
-            predictionCache, enableLl1Bypass, hooks);
+            predictionCache, enableLl1Bypass, hooks, eventObserver);
         bool success = instance.ParseRule(startRuleIndex, PredictionContext.EMPTY);
         instance.CaptureStatistics();
         if (!success)
@@ -159,6 +178,7 @@ public static class AllStarParser
         private readonly ParserStatistics _statistics;
         private readonly ushort[][] _ll1Tables;
         private readonly List<ParseEvent> _events;
+        private readonly Action<ParseEvent> _eventObserver;
         private readonly XQueryHooks _hooks;
         private List<string> _predictionTexts;
         private readonly HashSet<(int Rule, int Position, int Precedence)>
@@ -173,7 +193,8 @@ public static class AllStarParser
                               ParserStatistics statistics = null,
                               ParserPredictionCache predictionCache = null,
                               bool enableLl1Bypass = true,
-                              XQueryHooks hooks = null)
+                              XQueryHooks hooks = null,
+                              Action<ParseEvent> eventObserver = null)
         {
             _atn = atn;
             _allTokens = allTokens;
@@ -181,6 +202,7 @@ public static class AllStarParser
             _tokenTypes = tokenTypes;
             _metadata = metadata;
             _events = events;
+            _eventObserver = eventObserver;
             _hooks = hooks;
             _statistics = statistics;
             _ll1Tables = enableLl1Bypass
@@ -476,8 +498,10 @@ public static class AllStarParser
 
         private void AddEvent(ParseEventKind kind, int index)
         {
-            if (_events == null) return;
-            _events.Add(new ParseEvent(kind, index));
+            if (_events == null && _eventObserver == null) return;
+            var parseEvent = new ParseEvent(kind, index);
+            _events?.Add(parseEvent);
+            _eventObserver?.Invoke(parseEvent);
             if (_statistics != null) _statistics.ParseEventsCreated++;
         }
 

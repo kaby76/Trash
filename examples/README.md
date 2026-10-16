@@ -4,6 +4,7 @@ Runnable examples demonstrating common Trash toolchain workflows.
 
 | Directory | Description |
 |-----------|-------------|
+| [`ast-during-parse/`](ast-during-parse/) | Construct pipeable `.pt` ASTs on AllStar's committed rule-exit events, without constructing a CST |
 | [`ast-rewrite/`](ast-rewrite/) | Prototype a separate ANTLR3-like `.ast` rewrite mapping from AllStar CSTs to JSON ASTs |
 | [`abnf-interp/`](abnf-interp/) | Parse ABNF/BNF files using generated `.interp` files (no code generation step) |
 | [`abnf-frontend/`](abnf-frontend/) | Compile a grammar written in ABNF to `.interp` files and parse its input with AllStar |
