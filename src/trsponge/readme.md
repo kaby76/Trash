@@ -19,7 +19,7 @@ results to file(s).
 
 ## Current version
 
-Release 4.4.0.
+Release 4.5.0.
 
 ## License
 
