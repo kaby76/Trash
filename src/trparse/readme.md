@@ -162,15 +162,23 @@ recursion. Direct left recursion is reduced at each committed
 child names even after those children have been reduced to AST nodes. In a
 pattern, `op:_` captures a child of any grammar name, and
 `decl:declarator[ArrDeclNode]` additionally requires the child's reduced AST
-kind. In a constructor, `...left` splices the children of a captured AST node
-when it has the same kind as the new node; otherwise it appends the captured
-node. This supports flat `SourceNode`, block, and argument lists.
+kind. A child pattern can end in `?`, `*`, or `+` to match zero-or-one,
+zero-or-more, or one-or-more consecutive children of that grammar name;
+the matcher backtracks when a later pattern needs a child. For example,
+`block('{', items:statement*, '}') -> ^(BlockStatNode ...items)` handles
+blocks of any length. In a constructor, `...items` appends each captured
+node and splices its children when it has the same AST kind as the new node.
+An absent optional capture splices nothing. A plain capture (`item`) must
+contain exactly one node. Text captures may join a sequence, for example
+`qualifiedName(parts:_+) -> ^(IdNode[parts])`. Separators between repeated
+children still need explicit patterns; the repetition operator matches a
+single child kind, not an arbitrary grammar fragment.
 
 The mapping is still an experimental structural approximation, not a full
 replacement for LINVAST's typed objects, source metadata, and semantic
 rewrites. Any partial AST from a failed parse is discarded. See
-[`examples/linvast-ast/c/`](../../examples/linvast-ast/c/) for an expanded C
-mapping with whole-source fixtures.
+[`examples/linvast-ast/`](../../examples/linvast-ast/) for expanded C, Java,
+Kotlin, and Lua mappings with whole-source fixtures.
 
 ### XQuery4 interpreter hooks (experimental)
 

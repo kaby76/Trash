@@ -82,30 +82,11 @@ public sealed class AstTreeBuilder
     {
         foreach (var rule in _mapping.Rules)
         {
-            if (rule.RuleName != frame.Name ||
-                rule.Pattern.Length != frame.Children.Count)
+            if (rule.RuleName != frame.Name)
                 continue;
-            var captures = new Dictionary<string, UnvParseTreeNode>(
-                StringComparer.Ordinal);
-            var matches = true;
-            for (var i = 0; i < frame.Children.Count; i++)
-            {
-                var pattern = rule.Pattern[i];
-                var child = frame.Children[i];
-                if (pattern.NodeName is not null && pattern.NodeName != "_" &&
-                    pattern.NodeName != child.Name ||
-                    pattern.Literal is not null && pattern.Literal != child.Text ||
-                    pattern.AstKind is not null &&
-                    (child.Node is not UnvParseTreeElement element ||
-                     element.LocalName != pattern.AstKind))
-                {
-                    matches = false;
-                    break;
-                }
-                if (pattern.Capture is not null)
-                    captures.Add(pattern.Capture, child.Node);
-            }
-            if (matches)
+            if (TryMatch(rule.Pattern, frame.Children, 0, 0,
+                    new Dictionary<string, List<UnvParseTreeNode>>(StringComparer.Ordinal),
+                    out var captures))
                 return Instantiate(rule.Result, captures);
         }
         if (_mapping.SingleChild && frame.Children.Count == 1)
@@ -120,14 +101,55 @@ public sealed class AstTreeBuilder
         return fallback;
     }
 
+    private static bool TryMatch(PatternPart[] pattern, List<Child> children,
+        int patternIndex, int childIndex,
+        Dictionary<string, List<UnvParseTreeNode>> captures,
+        out Dictionary<string, List<UnvParseTreeNode>> result)
+    {
+        if (patternIndex == pattern.Length)
+        {
+            result = captures;
+            return childIndex == children.Count;
+        }
+        var part = pattern[patternIndex];
+        var available = 0;
+        while (available < part.Max && childIndex + available < children.Count &&
+               Matches(part, children[childIndex + available]))
+            available++;
+        for (var count = available; count >= part.Min; count--)
+        {
+            var next = new Dictionary<string, List<UnvParseTreeNode>>(captures,
+                StringComparer.Ordinal);
+            if (part.Capture is not null)
+            {
+                if (next.ContainsKey(part.Capture))
+                    throw new InvalidOperationException(
+                        $"Duplicate AST capture '{part.Capture}'.");
+                next.Add(part.Capture, children.GetRange(childIndex, count)
+                    .Select(child => child.Node).ToList());
+            }
+            if (TryMatch(pattern, children, patternIndex + 1,
+                    childIndex + count, next, out result))
+                return true;
+        }
+        result = captures;
+        return false;
+    }
+
+    private static bool Matches(PatternPart pattern, Child child) =>
+        (pattern.NodeName is null or "_" || pattern.NodeName == child.Name) &&
+        (pattern.Literal is null || pattern.Literal == child.Text) &&
+        (pattern.AstKind is null || child.Node is UnvParseTreeElement element &&
+            element.LocalName == pattern.AstKind);
+
     private UnvParseTreeNode Instantiate(Template template,
-        IReadOnlyDictionary<string, UnvParseTreeNode> captures)
+        IReadOnlyDictionary<string, List<UnvParseTreeNode>> captures)
     {
         if (template is CaptureTemplate capture)
-            return captures.TryGetValue(capture.Name, out var value)
-                ? value
+            return captures.TryGetValue(capture.Name, out var values) && values.Count == 1
+                ? values[0]
                 : throw new InvalidOperationException(
-                    $"Unknown AST capture '{capture.Name}'.");
+                    $"AST capture '{capture.Name}' must contain exactly one node.");
         if (template is SpliceTemplate)
             throw new InvalidOperationException("A splice must be inside an AST node.");
         if (template is not NodeTemplate node)
@@ -135,40 +157,45 @@ public sealed class AstTreeBuilder
         var result = Element(node.Kind, _astRuleIndices[node.Kind]);
         if (node.TextCapture is not null)
         {
-            if (!captures.TryGetValue(node.TextCapture, out var source))
+            if (!captures.TryGetValue(node.TextCapture, out var sources) ||
+                sources.Count == 0)
                 throw new InvalidOperationException(
-                    $"Unknown AST text capture '{node.TextCapture}'.");
+                    $"AST text capture '{node.TextCapture}' must not be empty.");
+            var source = sources[0];
             var sourceText = source is UnvParseTreeElement sourceElement &&
                 sourceElement.ChildNodes.Length > 0 &&
                 sourceElement.ChildNodes.item(0) is UnvParseTreeText terminalText
                     ? terminalText : null;
             Append(result, Terminal("value",
-                UnvParseTreeElement.Reconstruct(source),
+                string.Concat(sources.Select(UnvParseTreeElement.Reconstruct)),
                 sourceText?.TokenType ?? 0, sourceText?.Channel ?? 0));
         }
         foreach (var child in node.Children)
         {
             if (child is SpliceTemplate splice)
             {
-                if (!captures.TryGetValue(splice.Name, out var source))
+                if (!captures.TryGetValue(splice.Name, out var sources))
                     throw new InvalidOperationException(
                         $"Unknown AST splice capture '{splice.Name}'.");
-                if (source is not UnvParseTreeElement sourceElement ||
-                    sourceElement.LocalName != node.Kind)
+                foreach (var source in sources)
                 {
-                    Append(result, source);
-                    continue;
-                }
-                var sourceChildren = (UnvParseTreeNodeList)sourceElement.ChildNodes;
-                var moved = sourceChildren._node_list
-                    .Cast<UnvParseTreeNode>().ToArray();
-                sourceChildren._node_list.Clear();
-                foreach (var item in moved)
-                {
-                    item.ParentNode = null;
-                    item.PreviousSibling = null;
-                    item.NextSibling = null;
-                    Append(result, item);
+                    if (source is not UnvParseTreeElement sourceElement ||
+                        sourceElement.LocalName != node.Kind)
+                    {
+                        Append(result, source);
+                        continue;
+                    }
+                    var sourceChildren = (UnvParseTreeNodeList)sourceElement.ChildNodes;
+                    var moved = sourceChildren._node_list
+                        .Cast<UnvParseTreeNode>().ToArray();
+                    sourceChildren._node_list.Clear();
+                    foreach (var item in moved)
+                    {
+                        item.ParentNode = null;
+                        item.PreviousSibling = null;
+                        item.NextSibling = null;
+                        Append(result, item);
+                    }
                 }
             }
             else

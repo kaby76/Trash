@@ -1,7 +1,115 @@
+// Structural reductions from LuaASTBuilder.{Expressions,Statements}.cs.
+// Scope-sensitive declaration synthesis is not representable here yet.
 ast LinvastLua {
     default single-child -> child;
     default otherwise -> error;
 
+    chunk(body:block, EOF) -> ^(SourceNode body);
+    block(stats:stat*, ret:retstat?) -> ^(BlockStatNode ...stats ...ret);
+
     var(value:NAME) -> ^(IdNode[value]);
-    number(value:INT) -> ^(LitExprNode[value]);
+    var(name:NAME, index:varSuffix)
+        -> ^(ArrAccessExprNode ^(IdNode[name]) index);
+    varSuffix('[', index:exp, ']') -> index;
+    funcname(parts:_+) -> ^(IdNode[parts]);
+    number(value:_) -> ^(LitExprNode[value]);
+    string(value:_) -> ^(LitExprNode[value]);
+    exp(value:'nil') -> ^(NullLitExprNode);
+    exp(value:'true') -> ^(LitExprNode[value]);
+    exp(value:'false') -> ^(LitExprNode[value]);
+    exp(value:'...') -> ^(IdNode[value]);
+    exp(left:exp, op:operatorComparison, right:exp)
+        -> ^(RelExprNode left ^(RelOpNode[op]) right);
+    exp(left:exp, op:operatorAnd, right:exp)
+        -> ^(LogicExprNode left ^(BinaryLogicOpNode[op]) right);
+    exp(left:exp, op:operatorOr, right:exp)
+        -> ^(LogicExprNode left ^(BinaryLogicOpNode[op]) right);
+    exp(left:exp, op:operatorPower, right:exp)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    exp(left:exp, op:operatorMulDivMod, right:exp)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    exp(left:exp, op:operatorAddSub, right:exp)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    exp(left:exp, op:operatorStrcat, right:exp)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    exp(left:exp, op:operatorBitwise, right:exp)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    exp(op:operatorUnary, value:exp)
+        -> ^(UnaryExprNode ^(UnaryOpNode[op]) value);
+    functiondef('function', body:funcbody)
+        -> ^(LambdaFuncExprNode body);
+
+    varOrExp('(', value:exp, ')') -> value;
+    prefixexp(value:varOrExp) -> value;
+    prefixexp(callee:varOrExp, args:nameAndArgs)
+        -> ^(FuncCallExprNode callee args);
+    explist(value:exp) -> value;
+    explist(first:exp, ',', second:exp) -> ^(ExprListNode first second);
+    varlist(value:var) -> value;
+    varlist(first:var, ',', second:var) -> ^(ExprListNode first second);
+    namelist(value:NAME) -> ^(IdNode[value]);
+    namelist(first:NAME, ',', second:NAME)
+        -> ^(IdListNode ^(IdNode[first]) ^(IdNode[second]));
+    args('(', ')') -> ^(ExprListNode);
+    args('(', values:explist, ')') -> ^(ExprListNode ...values);
+    nameAndArgs(':', name:NAME, args:args)
+        -> ^(FuncCallExprNode ^(IdNode[name]) args);
+    functioncall(callee:varOrExp, call:nameAndArgs)
+        -> ^(FuncCallExprNode callee call);
+
+    tableconstructor('{', '}') -> ^(DictInitNode);
+    tableconstructor('{', fields:fieldlist, '}') -> fields;
+    field('[', key:exp, ']', '=', value:exp)
+        -> ^(DictEntryNode key value);
+    field(name:NAME, '=', value:exp)
+        -> ^(DictEntryNode ^(IdNode[name]) value);
+    fieldlist(field:field[DictEntryNode]) -> ^(DictInitNode field);
+    fieldlist(field:field) -> ^(ExprListNode field);
+    fieldlist(first:field[DictEntryNode], fieldsep,
+        second:field[DictEntryNode]) -> ^(DictInitNode first second);
+    fieldlist(first:field, fieldsep, second:field)
+        -> ^(ExprListNode first second);
+
+    stat(';') -> ^(EmptyStatNode);
+    stat('break') -> ^(JumpStatNode);
+    stat('goto', label:NAME) -> ^(JumpStatNode ^(IdNode[label]));
+    stat('do', body:block, 'end') -> body;
+    stat('while', test:exp, 'do', body:block, 'end')
+        -> ^(WhileStatNode test body);
+    stat('for', name:NAME, '=', start:exp, ',', limit:exp,
+        'do', body:block, 'end')
+        -> ^(ForStatNode ^(AssignExprNode ^(IdNode[name]) start)
+            ^(RelExprNode ^(IdNode[name]) ^(RelOpNode) limit)
+            ^(IncExprNode ^(IdNode[name])) body);
+    stat('for', names:namelist, 'in', values:explist,
+        'do', body:block, 'end')
+        -> ^(ForStatNode names values body);
+    stat('if', test:exp, 'then', yes:block, 'end')
+        -> ^(IfStatNode test yes);
+    stat('if', test:exp, 'then', yes:block, 'else', no:block, 'end')
+        -> ^(IfStatNode test yes no);
+    stat(vars:varlist, '=', values:explist)
+        -> ^(ExprStatNode ^(AssignExprNode vars values));
+    stat('local', name:namelist[IdNode])
+        -> ^(DeclStatNode ^(DeclSpecsNode)
+            ^(DeclListNode ^(VarDeclNode name)));
+    stat('local', name:namelist[IdNode], '=', value:explist)
+        -> ^(DeclStatNode ^(DeclSpecsNode)
+            ^(DeclListNode ^(VarDeclNode name value)));
+    stat('local', names:namelist)
+        -> ^(DeclStatNode ^(DeclSpecsNode) ^(DeclListNode names));
+    stat('local', names:namelist, '=', values:explist)
+        -> ^(DeclStatNode ^(DeclSpecsNode) ^(DeclListNode names values));
+    retstat('return') -> ^(JumpStatNode);
+    retstat('return', values:explist) -> ^(JumpStatNode values);
+    retstat('return', ';') -> ^(JumpStatNode);
+    retstat('return', values:explist, ';') -> ^(JumpStatNode values);
+    funcbody('(', ')', body:block, 'end') -> ^(FuncDeclNode body);
+    funcbody('(', params:parlist, ')', body:block, 'end')
+        -> ^(FuncDeclNode params body);
+    stat('function', name:funcname, body:funcbody)
+        -> ^(FuncNode ^(DeclSpecsNode) ^(FuncDeclNode name ...body));
+    stat('local', 'function', name:NAME, body:funcbody)
+        -> ^(FuncNode ^(DeclSpecsNode)
+            ^(FuncDeclNode ^(IdNode[name]) ...body));
 }

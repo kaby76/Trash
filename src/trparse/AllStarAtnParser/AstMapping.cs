@@ -2,7 +2,7 @@
 namespace AllStarAtnParser;
 
 public sealed record PatternPart(string? Capture, string? NodeName, string? Literal,
-    string? AstKind = null);
+    string? AstKind = null, int Min = 1, int Max = 1);
 public abstract record Template;
 public sealed record CaptureTemplate(string Name) : Template;
 public sealed record SpliceTemplate(string Name) : Template;
@@ -65,17 +65,22 @@ public sealed class MappingParser
     private PatternPart ReadPatternPart()
     {
         PatternPart part;
-        if (PeekQuoted())
-            return new PatternPart(null, null, Unquote(Advance().Text));
-        var first = Identifier();
-        if (!Take(":")) part = new PatternPart(null, first, null);
-        else if (PeekQuoted()) part = new PatternPart(first, null, Unquote(Advance().Text));
-        else part = new PatternPart(first, Identifier(), null);
+        if (PeekQuoted()) part = new PatternPart(null, null, Unquote(Advance().Text));
+        else
+        {
+            var first = Identifier();
+            if (!Take(":")) part = new PatternPart(null, first, null);
+            else if (PeekQuoted()) part = new PatternPart(first, null, Unquote(Advance().Text));
+            else part = new PatternPart(first, Identifier(), null);
+        }
         if (Take("["))
         {
             part = part with { AstKind = Identifier() };
             Expect("]");
         }
+        if (Take("?")) part = part with { Min = 0 };
+        else if (Take("*")) part = part with { Min = 0, Max = int.MaxValue };
+        else if (Take("+")) part = part with { Max = int.MaxValue };
         return part;
     }
 
@@ -152,7 +157,7 @@ public sealed class MappingParser
             {
                 do { i++; } while (i < text.Length && (char.IsLetterOrDigit(text[i]) || text[i] is '_' or '-'));
             }
-            else if ("{}(),;:^[]".Contains(text[i])) i++;
+            else if ("{}(),;:^[]?*+".Contains(text[i])) i++;
             else throw new FormatException($"Unexpected character '{text[i]}' at offset {i}.");
             tokens.Add(new Lexeme(text[start..i], start));
         }

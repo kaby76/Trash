@@ -89,6 +89,77 @@ public sealed class AstMappingTests
             Assert.IsType<UnvParseTreeElement>(builder.Root).LocalName);
     }
 
+    [Fact]
+    public void RepeatedAndOptionalCapturesBuildAFlatList()
+    {
+        var mapping = MappingParser.Parse("""
+            ast A {
+                default otherwise -> error;
+                source(items:ITEM+, tail:END?) -> ^(SourceNode ...items ...tail);
+            }
+            """);
+        var builder = new AstTreeBuilder(mapping, ["source"],
+            ["", "ITEM", "END"],
+            Tokens("ab!", (1, 0, 0), (1, 1, 1), (2, 2, 2)));
+
+        builder.OnEvent(ParseEvent.EnterRule(0));
+        builder.OnEvent(ParseEvent.Consume(0));
+        builder.OnEvent(ParseEvent.Consume(1));
+        builder.OnEvent(ParseEvent.Consume(2));
+        builder.OnEvent(ParseEvent.ExitRule(0));
+
+        var root = Assert.IsType<UnvParseTreeElement>(builder.Root);
+        Assert.Equal("SourceNode", root.LocalName);
+        Assert.Equal(3, root.ChildNodes.Length);
+        Assert.Equal("ITEM", Assert.IsType<UnvParseTreeElement>(
+            root.ChildNodes.item(0)).LocalName);
+        Assert.Equal("END", Assert.IsType<UnvParseTreeElement>(
+            root.ChildNodes.item(2)).LocalName);
+    }
+
+    [Fact]
+    public void RepetitionBacktracksAndAbsentOptionalSplicesNothing()
+    {
+        var mapping = MappingParser.Parse("""
+            ast A {
+                default otherwise -> error;
+                source(prefix:ITEM*, last:ITEM, tail:END?)
+                    -> ^(SourceNode ...prefix last ...tail);
+            }
+            """);
+        var builder = new AstTreeBuilder(mapping, ["source"], ["", "ITEM", "END"],
+            Tokens("ab", (1, 0, 0), (1, 1, 1)));
+
+        builder.OnEvent(ParseEvent.EnterRule(0));
+        builder.OnEvent(ParseEvent.Consume(0));
+        builder.OnEvent(ParseEvent.Consume(1));
+        builder.OnEvent(ParseEvent.ExitRule(0));
+
+        Assert.Equal(2, Assert.IsType<UnvParseTreeElement>(builder.Root).ChildNodes.Length);
+    }
+
+    [Fact]
+    public void TextCaptureJoinsARepeatedSequence()
+    {
+        var mapping = MappingParser.Parse("""
+            ast A {
+                default otherwise -> error;
+                name(parts:_+) -> ^(IdNode[parts]);
+            }
+            """);
+        var builder = new AstTreeBuilder(mapping, ["name"],
+            ["", "IDENTIFIER", "DOT"],
+            Tokens("a.b", (1, 0, 0), (2, 1, 1), (1, 2, 2)));
+
+        builder.OnEvent(ParseEvent.EnterRule(0));
+        builder.OnEvent(ParseEvent.Consume(0));
+        builder.OnEvent(ParseEvent.Consume(1));
+        builder.OnEvent(ParseEvent.Consume(2));
+        builder.OnEvent(ParseEvent.ExitRule(0));
+
+        Assert.Equal("a.b", UnvParseTreeElement.Reconstruct(builder.Root));
+    }
+
     private static TokenStore Tokens(string source,
         params (int Type, int Start, int Stop)[] values)
     {
