@@ -1,9 +1,11 @@
 #nullable enable
 namespace AllStarAtnParser;
 
-public sealed record PatternPart(string? Capture, string? NodeName, string? Literal);
+public sealed record PatternPart(string? Capture, string? NodeName, string? Literal,
+    string? AstKind = null);
 public abstract record Template;
 public sealed record CaptureTemplate(string Name) : Template;
+public sealed record SpliceTemplate(string Name) : Template;
 public sealed record NodeTemplate(string Kind, string? TextCapture, Template[] Children) : Template;
 public sealed record MappingRule(string RuleName, PatternPart[] Pattern, Template Result);
 public sealed record Mapping(string Name, bool SingleChild, bool ErrorOtherwise, MappingRule[] Rules);
@@ -62,16 +64,25 @@ public sealed class MappingParser
 
     private PatternPart ReadPatternPart()
     {
+        PatternPart part;
         if (PeekQuoted())
             return new PatternPart(null, null, Unquote(Advance().Text));
         var first = Identifier();
-        if (!Take(":")) return new PatternPart(null, first, null);
-        if (PeekQuoted()) return new PatternPart(first, null, Unquote(Advance().Text));
-        return new PatternPart(first, Identifier(), null);
+        if (!Take(":")) part = new PatternPart(null, first, null);
+        else if (PeekQuoted()) part = new PatternPart(first, null, Unquote(Advance().Text));
+        else part = new PatternPart(first, Identifier(), null);
+        if (Take("["))
+        {
+            part = part with { AstKind = Identifier() };
+            Expect("]");
+        }
+        return part;
     }
 
     private Template ReadTemplate()
     {
+        if (Take("..."))
+            return new SpliceTemplate(Identifier());
         if (!Take("^"))
             return new CaptureTemplate(Identifier());
         Expect("(");
@@ -123,7 +134,8 @@ public sealed class MappingParser
                 continue;
             }
             var start = i;
-            if (i + 1 < text.Length && text[i..(i + 2)] == "->") i += 2;
+            if (i + 2 < text.Length && text[i..(i + 3)] == "...") i += 3;
+            else if (i + 1 < text.Length && text[i..(i + 2)] == "->") i += 2;
             else if (text[i] == '\'')
             {
                 i++;

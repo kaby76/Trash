@@ -99,7 +99,7 @@ public class Config
     public string XQueryHooks { get; set; }
 
     [Option("ast-map", Required = false,
-        HelpText = "With --allstar, construct an AST during parsing using a separate .ast rewrite mapping and emit it as a .pt result. Currently supports ordinary (non-left-recursive) parser events without context-aware lexing or XQuery hooks.")]
+        HelpText = "With --allstar, construct an AST during parsing using a separate .ast rewrite mapping and emit it as a .pt result. Supports direct left recursion, but not indirect left recursion, context-aware lexing, or runtime XQuery hooks.")]
     public string AstMap { get; set; }
 
     [Option("lexer-stats", Required = false,

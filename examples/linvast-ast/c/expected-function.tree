@@ -1,0 +1,1 @@
+(SourceNode (FuncNode (DeclSpecsNode (TypeNameNode int)) (FuncDeclNode (IdNode add) TypeNameListNode (FuncParamsNode (FuncParamNode (DeclSpecsNode (TypeNameNode int)) (VarDeclNode (IdNode a))) (FuncParamNode (DeclSpecsNode (TypeNameNode int)) (VarDeclNode (IdNode b)))) (BlockStatNode (JumpStatNode return (ArithmExprNode (IdNode a) (ArithmOpNode +) (IdNode b)))))))

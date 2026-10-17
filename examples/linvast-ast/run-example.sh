@@ -54,3 +54,34 @@ count=$(cd java && dotnet "$parse" --allstar -L "$scratch/java" \
   --start-rule primary --ast-map java.ast ../input/identifier.txt |
   dotnet trash xquery 'count(//IdNode)')
 [[ "$count" == 1 ]] || { echo "Expected one IdNode, got $count" >&2; exit 1; }
+
+# C's expanded mapping exercises direct left recursion and source-level nodes.
+check_c_tree() {
+  local rule=$1 input=$2 expected=$3 actual
+  actual=$(cd c && dotnet "$parse" --allstar -L "$scratch/c" \
+    --start-rule "$rule" --ast-map c.ast "../input/$input" |
+    dotnet trash tree --text -a)
+  [[ "$actual" == "$(< "$expected")" ]] || {
+    printf 'Unexpected C AST for %s:\n%s\n' "$input" "$actual" >&2
+    exit 1
+  }
+  printf 'c %s => %s\n' "$rule" "$actual"
+}
+check_c_tree expression c-arithmetic.c c/expected-arithmetic.tree
+check_c_tree compilationUnit c-function.c c/expected-function.tree
+
+check_c_count() {
+  local file=$1 query=$2 expected=$3 actual
+  (cd c && dotnet "$parse" --allstar -L "$scratch/c" --ast-map c.ast \
+    "../input/$file") > "$scratch/c-ast.tar"
+  actual=$(dotnet trash xquery "$query" < "$scratch/c-ast.tar")
+  [[ "$actual" == "$expected" ]] || {
+    printf '%s: expected %s from %s, got %s\n' "$file" "$expected" "$query" "$actual" >&2
+    exit 1
+  }
+}
+check_c_count c-control.c 'count(//IfStatNode)' 1
+check_c_count c-control.c 'count(//WhileStatNode)' 1
+check_c_count c-for.c 'count(//ForStatNode)' 1
+check_c_count c-for.c 'count(//ArrDeclNode)' 1
+check_c_count c-two-functions.c 'count(//SourceNode/FuncNode)' 2

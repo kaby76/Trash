@@ -14,15 +14,17 @@ languages produce the same shapes for the tested expression fragments:
 These names follow LINVAST's `IdNode` and `LitExprNode` vocabulary. They are
 DOM nodes in Trash's parse-result format, **not** instantiated LINVAST C#
 objects. The example does not claim to implement LINVAST's complete AST or
-all constructs in the four languages. In particular, the current `.ast`
-mapping language only matches exact direct-child patterns. It does not yet
-support the grammars' left-recursive expression rules, list captures, or
-arbitrary whole-source reductions. To isolate a shared, verified subset, the
-script selects a parser rule with `--start-rule` for each fragment.
+all constructs in the four languages. The C mapping has been expanded to
+direct-left-recursive expressions, declarations, functions, blocks, branches,
+and loops, with whole-source fixtures. The other three mappings remain the
+shared identifier/integer subset. See [C mapping notes](c/README.md) for
+supported forms and limitations. Indirect left recursion and stateful hooks
+still cannot be combined with `--ast-map`.
 
 Run `bash run-example.sh` from any directory. The script compiles each grammar
 to interpreter tables, parses identifier and integer inputs, compares all
-eight ASTs, and confirms that XQuery4 can consume the resulting `.pt` bundle.
+eight shared leaf ASTs, verifies C expression and whole-source ASTs, and
+confirms that XQuery4 can consume the resulting `.pt` bundle.
 For example, after producing interpreter files:
 
 ```sh

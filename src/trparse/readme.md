@@ -157,9 +157,20 @@ runnable grammar and `.ast` mapping, see
 
 The current implementation accepts ordinary pre-tokenized ALL(*) parsing.
 It rejects context-aware lexing, runtime XQuery hooks, and indirect left
-recursion; direct left-recursion events are not implemented either. This is a
-prototype of the rewrite notation, not a full replacement for parse-tree
-construction. Any partial AST from a failed parse is discarded.
+recursion. Direct left recursion is reduced at each committed
+`PushRecursionContext` event. An `.ast` rule matches the original grammar-rule
+child names even after those children have been reduced to AST nodes. In a
+pattern, `op:_` captures a child of any grammar name, and
+`decl:declarator[ArrDeclNode]` additionally requires the child's reduced AST
+kind. In a constructor, `...left` splices the children of a captured AST node
+when it has the same kind as the new node; otherwise it appends the captured
+node. This supports flat `SourceNode`, block, and argument lists.
+
+The mapping is still an experimental structural approximation, not a full
+replacement for LINVAST's typed objects, source metadata, and semantic
+rewrites. Any partial AST from a failed parse is discarded. See
+[`examples/linvast-ast/c/`](../../examples/linvast-ast/c/) for an expanded C
+mapping with whole-source fixtures.
 
 ### XQuery4 interpreter hooks (experimental)
 

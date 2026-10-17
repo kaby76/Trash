@@ -38,6 +38,7 @@ public sealed class AstTreeBuilder
         switch (evt.Kind)
         {
             case ParseEventKind.EnterRule:
+            case ParseEventKind.EnterRecursionRule:
                 _frames.Push(new Frame(_parserRuleNames[evt.Index]));
                 break;
             case ParseEventKind.Consume:
@@ -49,7 +50,18 @@ public sealed class AstTreeBuilder
                 _frames.Peek().Children.Add(new Child(name, token.Text,
                     Terminal(name, token.Text, token.Type, token.Channel)));
                 break;
+            case ParseEventKind.PushRecursionContext:
+                var previous = _frames.Pop();
+                if (previous.Name != _parserRuleNames[evt.Index])
+                    throw new InvalidOperationException("Mismatched recursive parser rule events.");
+                var wrapped = new Frame(previous.Name);
+                wrapped.Children.Add(new Child(previous.Name,
+                    string.Concat(previous.Children.Select(c => c.Text)),
+                    Reduce(previous)));
+                _frames.Push(wrapped);
+                break;
             case ParseEventKind.ExitRule:
+            case ParseEventKind.ExitRecursionRule:
                 var frame = _frames.Pop();
                 if (frame.Name != _parserRuleNames[evt.Index])
                     throw new InvalidOperationException("Mismatched parser rule events.");
@@ -80,8 +92,12 @@ public sealed class AstTreeBuilder
             {
                 var pattern = rule.Pattern[i];
                 var child = frame.Children[i];
-                if (pattern.NodeName is not null && pattern.NodeName != child.Name ||
-                    pattern.Literal is not null && pattern.Literal != child.Text)
+                if (pattern.NodeName is not null && pattern.NodeName != "_" &&
+                    pattern.NodeName != child.Name ||
+                    pattern.Literal is not null && pattern.Literal != child.Text ||
+                    pattern.AstKind is not null &&
+                    (child.Node is not UnvParseTreeElement element ||
+                     element.LocalName != pattern.AstKind))
                 {
                     matches = false;
                     break;
@@ -112,6 +128,8 @@ public sealed class AstTreeBuilder
                 ? value
                 : throw new InvalidOperationException(
                     $"Unknown AST capture '{capture.Name}'.");
+        if (template is SpliceTemplate)
+            throw new InvalidOperationException("A splice must be inside an AST node.");
         if (template is not NodeTemplate node)
             throw new InvalidOperationException("Unknown AST template.");
         var result = Element(node.Kind, _astRuleIndices[node.Kind]);
@@ -129,7 +147,33 @@ public sealed class AstTreeBuilder
                 sourceText?.TokenType ?? 0, sourceText?.Channel ?? 0));
         }
         foreach (var child in node.Children)
-            Append(result, Instantiate(child, captures));
+        {
+            if (child is SpliceTemplate splice)
+            {
+                if (!captures.TryGetValue(splice.Name, out var source))
+                    throw new InvalidOperationException(
+                        $"Unknown AST splice capture '{splice.Name}'.");
+                if (source is not UnvParseTreeElement sourceElement ||
+                    sourceElement.LocalName != node.Kind)
+                {
+                    Append(result, source);
+                    continue;
+                }
+                var sourceChildren = (UnvParseTreeNodeList)sourceElement.ChildNodes;
+                var moved = sourceChildren._node_list
+                    .Cast<UnvParseTreeNode>().ToArray();
+                sourceChildren._node_list.Clear();
+                foreach (var item in moved)
+                {
+                    item.ParentNode = null;
+                    item.PreviousSibling = null;
+                    item.NextSibling = null;
+                    Append(result, item);
+                }
+            }
+            else
+                Append(result, Instantiate(child, captures));
+        }
         return result;
     }
 
