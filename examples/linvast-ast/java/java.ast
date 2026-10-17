@@ -1,0 +1,149 @@
+// Structural reductions from JavaASTBuilder.{Expressions,Declarations,
+// Functions,Types}.cs. Rules that require semantic context remain explicit
+// failures rather than passing raw CST nodes into the AST.
+ast LinvastJava {
+    default single-child -> child;
+    default otherwise -> error;
+
+    compilationUnit(packageDeclaration?, imports:importDeclaration*,
+        types:typeDeclaration*, EOF) -> ^(SourceNode ...imports ...types);
+    packageDeclaration('package', path:qualifiedName, ';') -> ^(PackageNode[path]);
+    qualifiedName(parts:_+) -> ^(IdNode[parts]);
+    importDeclaration('import', path:qualifiedName, ';') -> ^(ImportNode[path]);
+    importDeclaration('import', 'static', path:qualifiedName, ';')
+        -> ^(ImportNode[path]);
+    typeDeclaration(';') -> ^(EmptyStatNode);
+    typeDeclaration(modifiers:classOrInterfaceModifier*, decl:classDeclaration)
+        -> decl;
+    classDeclaration('class', name:IDENTIFIER, body:classBody)
+        -> ^(TypeDeclNode ^(IdNode[name]) ^(TypeNameListNode)
+            ^(TypeNameListNode) body);
+    classBody('{', members:classBodyDeclaration*, '}')
+        -> ^(BlockStatNode ...members);
+    classBodyDeclaration(';') -> ^(EmptyStatNode);
+    classBodyDeclaration(modifiers:modifier*, member:memberDeclaration)
+        -> member;
+    methodBody(';') -> ^(BlockStatNode);
+    methodDeclaration(type:typeTypeOrVoid, name:IDENTIFIER,
+        params:formalParameters, body:methodBody)
+        -> ^(FuncNode ^(DeclSpecsNode type)
+            ^(FuncDeclNode ^(IdNode[name]) params body));
+    fieldDeclaration(type:typeType, vars:variableDeclarators, ';')
+        -> ^(DeclStatNode ^(DeclSpecsNode type) vars);
+    variableDeclarators(value:variableDeclarator) -> ^(DeclListNode value);
+    variableDeclarators(first:variableDeclarator, ',', second:variableDeclarator)
+        -> ^(DeclListNode first second);
+    variableDeclaratorId(name:IDENTIFIER) -> ^(IdNode[name]);
+    variableDeclarator(name:variableDeclaratorId) -> ^(VarDeclNode name);
+    variableDeclarator(name:variableDeclaratorId, '=', value:variableInitializer)
+        -> ^(VarDeclNode name value);
+    localVariableDeclaration(type:typeType, vars:variableDeclarators)
+        -> ^(DeclStatNode ^(DeclSpecsNode type) vars);
+    block('{', statements:blockStatement*, '}')
+        -> ^(BlockStatNode ...statements);
+    blockStatement(declaration:localVariableDeclaration, ';') -> declaration;
+    formalParameters('(', ')') -> ^(FuncParamsNode);
+    formalParameters('(', params:formalParameterList, ')') -> params;
+    formalParameterList(param:formalParameter) -> ^(FuncParamsNode param);
+    formalParameterList(first:formalParameter, ',', second:formalParameter)
+        -> ^(FuncParamsNode first second);
+    formalParameter(type:typeType, name:variableDeclaratorId)
+        -> ^(FuncParamNode ^(DeclSpecsNode type) ^(VarDeclNode name));
+    typeTypeOrVoid(value:'void') -> ^(TypeNameNode[value]);
+    primitiveType(value:_) -> ^(TypeNameNode[value]);
+    classOrInterfaceType(parts:_+) -> ^(TypeNameNode[parts]);
+
+    primary(value:IDENTIFIER) -> ^(IdNode[value]);
+    primary(value:THIS) -> ^(IdNode[value]);
+    primary(value:SUPER) -> ^(IdNode[value]);
+    primary('(', value:expression, ')') -> value;
+    integerLiteral(value:DECIMAL_LITERAL) -> ^(LitExprNode[value]);
+    integerLiteral(value:HEX_LITERAL) -> ^(LitExprNode[value]);
+    integerLiteral(value:OCT_LITERAL) -> ^(LitExprNode[value]);
+    integerLiteral(value:BINARY_LITERAL) -> ^(LitExprNode[value]);
+    floatLiteral(value:_) -> ^(LitExprNode[value]);
+    literal(value:CHAR_LITERAL) -> ^(LitExprNode[value]);
+    literal(value:STRING_LITERAL) -> ^(LitExprNode[value]);
+    literal(value:BOOL_LITERAL) -> ^(LitExprNode[value]);
+    literal(value:NULL_LITERAL) -> ^(NullLitExprNode);
+    parExpression('(', value:expression, ')') -> value;
+    methodCall(name:IDENTIFIER, '(', ')')
+        -> ^(FuncCallExprNode ^(IdNode[name]));
+    methodCall(name:IDENTIFIER, '(', args:expressionList, ')')
+        -> ^(FuncCallExprNode ^(IdNode[name]) args);
+    expressionList(value:expression) -> ^(ExprListNode value);
+    expressionList(first:expression, ',', second:expression)
+        -> ^(ExprListNode first second);
+    expression(array:expression, '[', index:expression, ']')
+        -> ^(ArrAccessExprNode array index);
+    expression(value:expression, op:'++') -> ^(IncExprNode value);
+    expression(value:expression, op:'--') -> ^(DecExprNode value);
+    expression(op:'++', value:expression) -> ^(IncExprNode value);
+    expression(op:'--', value:expression) -> ^(DecExprNode value);
+    expression(op:'+', value:expression)
+        -> ^(UnaryExprNode ^(UnaryOpNode[op]) value);
+    expression(op:'-', value:expression)
+        -> ^(UnaryExprNode ^(UnaryOpNode[op]) value);
+    expression(op:'!', value:expression)
+        -> ^(UnaryExprNode ^(UnaryOpNode[op]) value);
+    expression(op:'~', value:expression)
+        -> ^(UnaryExprNode ^(UnaryOpNode[op]) value);
+    expression(test:expression, '?', yes:expression, ':', no:expression)
+        -> ^(CondExprNode test yes no);
+    expression(left:expression, op:'=', right:expression)
+        -> ^(AssignExprNode left ^(AssignOpNode[op]) right);
+    expression(left:expression, op:'+=', right:expression)
+        -> ^(AssignExprNode left ^(AssignOpNode[op]) right);
+    expression(left:expression, op:'-=', right:expression)
+        -> ^(AssignExprNode left ^(AssignOpNode[op]) right);
+    expression(left:expression, op:'*=', right:expression)
+        -> ^(AssignExprNode left ^(AssignOpNode[op]) right);
+    expression(left:expression, op:'/=', right:expression)
+        -> ^(AssignExprNode left ^(AssignOpNode[op]) right);
+    expression(left:expression, op:'<', right:expression)
+        -> ^(RelExprNode left ^(RelOpNode[op]) right);
+    expression(left:expression, op:'>', right:expression)
+        -> ^(RelExprNode left ^(RelOpNode[op]) right);
+    expression(left:expression, op:'<=', right:expression)
+        -> ^(RelExprNode left ^(RelOpNode[op]) right);
+    expression(left:expression, op:'>=', right:expression)
+        -> ^(RelExprNode left ^(RelOpNode[op]) right);
+    expression(left:expression, op:'==', right:expression)
+        -> ^(RelExprNode left ^(RelOpNode[op]) right);
+    expression(left:expression, op:'!=', right:expression)
+        -> ^(RelExprNode left ^(RelOpNode[op]) right);
+    expression(left:expression, op:'&&', right:expression)
+        -> ^(LogicExprNode left ^(BinaryLogicOpNode[op]) right);
+    expression(left:expression, op:'||', right:expression)
+        -> ^(LogicExprNode left ^(BinaryLogicOpNode[op]) right);
+    expression(left:expression, op:'+', right:expression)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    expression(left:expression, op:'-', right:expression)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    expression(left:expression, op:'*', right:expression)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    expression(left:expression, op:'/', right:expression)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    expression(left:expression, op:'%', right:expression)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    expression(left:expression, op:'&', right:expression)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    expression(left:expression, op:'|', right:expression)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    expression(left:expression, op:'^', right:expression)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+
+    statement('return', value:expression, ';') -> ^(JumpStatNode value);
+    statement('return', ';') -> ^(JumpStatNode);
+    statement('throw', value:expression, ';') -> ^(ThrowStatNode value);
+    statement('break', ';') -> ^(JumpStatNode);
+    statement('continue', ';') -> ^(JumpStatNode);
+    statement(';') -> ^(EmptyStatNode);
+    statement(value:expression, ';') -> ^(ExprStatNode value);
+    statement('if', test:parExpression, yes:statement)
+        -> ^(IfStatNode test yes);
+    statement('if', test:parExpression, yes:statement, 'else', no:statement)
+        -> ^(IfStatNode test yes no);
+    statement('while', test:parExpression, body:statement)
+        -> ^(WhileStatNode test body);
+}

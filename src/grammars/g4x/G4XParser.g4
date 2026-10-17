@@ -54,7 +54,7 @@ grammarSpec
     ;
 
 grammarDecl
-    : grammarType identifier SEMI
+    : grammarType ID SEMI
     ;
 
 grammarType
@@ -83,13 +83,13 @@ optionsSpec
     ;
 
 option
-    : identifier ASSIGN optionValue
+    : ID ASSIGN optionValue
     ;
 
 optionValue
-    : identifier (DOT identifier)*
+    : ID (DOT ID)*
     | STRING_LITERAL
-    | actionBlock
+    | ACTION
     | INT
     ;
 
@@ -101,8 +101,8 @@ delegateGrammars
     ;
 
 delegateGrammar
-    : identifier ASSIGN identifier
-    | identifier
+    : ID ASSIGN ID
+    | ID
     ;
 
 // ------------
@@ -117,25 +117,21 @@ channelsSpec
     ;
 
 idList
-    : identifier (COMMA identifier)* COMMA?
+    : ID (COMMA ID)* COMMA?
     ;
 
 // Match stuff like @parser::members {int i;}
 
 action_
-    : AT (actionScopeName COLONCOLON)? identifier actionBlock
+    : AT (actionScopeName COLONCOLON)? ID ACTION
     ;
 
 // Scope names could collide with keywords; allow them as ids for action scopes
 
 actionScopeName
-    : identifier
+    : ID
     | LEXER
     | PARSER
-    ;
-
-actionBlock
-    : ACTION
     ;
 
 argActionBlock
@@ -143,7 +139,7 @@ argActionBlock
     ;
 
 modeSpec
-    : MODE identifier SEMI ruleSpec*
+    : MODE ID SEMI ruleSpec*
     ;
 
 rules
@@ -151,7 +147,7 @@ rules
     ;
 
 ruleSpec
-    : ruleModifiers? identifier argActionBlock? ruleReturns? throwsSpec? localsSpec? rulePrequel* COLON ruleBlock SEMI
+    : ruleModifiers? ID argActionBlock? ruleReturns? throwsSpec? localsSpec? rulePrequel* COLON ruleAltList SEMI
         exceptionGroup
     ;
 
@@ -160,11 +156,11 @@ exceptionGroup
     ;
 
 exceptionHandler
-    : CATCH argActionBlock actionBlock
+    : CATCH argActionBlock ACTION
     ;
 
 finallyClause
-    : FINALLY actionBlock
+    : FINALLY ACTION
     ;
 
 rulePrequel
@@ -188,7 +184,7 @@ localsSpec
 
 /** Match stuff like @init {int i;} */
 ruleAction
-    : AT identifier actionBlock
+    : AT ID ACTION
     ;
 
 ruleModifiers
@@ -205,16 +201,8 @@ ruleModifier
     | FRAGMENT
     ;
 
-ruleBlock
-    : ruleAltList
-    ;
-
 ruleAltList
-    : labeledAlt (OR labeledAlt)*
-    ;
-
-labeledAlt
-    : alternative (POUND identifier)?
+    : alternative (OR alternative)*
     ;
 
 // E.g., channel(HIDDEN), skip, more, mode(INSIDE), push(INSIDE), pop
@@ -229,12 +217,12 @@ lexerCommand
     ;
 
 lexerCommandName
-    : identifier
+    : ID
     | MODE
     ;
 
 lexerCommandExpr
-    : identifier
+    : ID
     | INT
     ;
 
@@ -256,7 +244,7 @@ exclusion
     ;
 
 exclusionOperand
-    : identifier
+    : ID
     | STRING_LITERAL
     | characterRange
     | argActionBlock
@@ -264,10 +252,9 @@ exclusionOperand
     ;
 
 element
-    : labeledElement (ebnfSuffix |)
-    | atom (ebnfSuffix |)
+    : atom ebnfSuffix?
     | ebnf
-    | actionBlock QUESTION? predicateOptions?
+    | ACTION QUESTION? predicateOptions?
     ;
 
 predicateOptions
@@ -276,22 +263,14 @@ predicateOptions
 
 predicateOption
     : elementOption
-    | identifier ASSIGN (actionBlock | INT | STRING_LITERAL)
-    ;
-
-labeledElement
-    : identifier (ASSIGN | PLUS_ASSIGN) (atom | block)
+    | ID ASSIGN (ACTION | INT | STRING_LITERAL)
     ;
 
 // --------------------
 // EBNF and blocks
 
 ebnf
-    : block blockSuffix?
-    ;
-
-blockSuffix
-    : ebnfSuffix
+    : block ebnfSuffix?
     ;
 
 ebnfSuffix
@@ -325,7 +304,7 @@ blockSet
     ;
 
 setElement
-    : identifier elementOptions?
+    : ID elementOptions?
     | STRING_LITERAL elementOptions?
     | characterRange
     | argActionBlock
@@ -345,7 +324,7 @@ characterRange
     ;
 
 symbolRef
-    : identifier argActionBlock? elementOptions?
+    : ID argActionBlock? elementOptions?
     | STRING_LITERAL elementOptions?
     ;
 
@@ -357,13 +336,9 @@ elementOptions
 
 elementOption
     : qualifiedIdentifier
-    | identifier ASSIGN (qualifiedIdentifier | STRING_LITERAL | INT)
-    ;
-
-identifier
-    : ID
+    | ID ASSIGN (qualifiedIdentifier | STRING_LITERAL | INT)
     ;
 
 qualifiedIdentifier
-    : identifier (DOT identifier)*
+    : ID (DOT ID)*
     ;

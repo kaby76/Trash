@@ -4,6 +4,8 @@ Runnable examples demonstrating common Trash toolchain workflows.
 
 | Directory | Description |
 |-----------|-------------|
+| [`ast-during-parse/`](ast-during-parse/) | Construct pipeable `.pt` ASTs on AllStar's committed rule-exit events, without constructing a CST |
+| [`ast-rewrite/`](ast-rewrite/) | Prototype a separate ANTLR3-like `.ast` rewrite mapping from AllStar CSTs to JSON ASTs |
 | [`abnf-interp/`](abnf-interp/) | Parse ABNF/BNF files using generated `.interp` files (no code generation step) |
 | [`abnf-frontend/`](abnf-frontend/) | Compile a grammar written in ABNF to `.interp` files and parse its input with AllStar |
 | [`antlr4-sort/`](antlr4-sort/) | Sort all ANTLR4 parser rules alphabetically with XQuery4, including EOF-terminated start rules |
@@ -19,8 +21,9 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`java27-g4x/`](java27-g4x/) | Compile a Java 27 G4X lexer/parser to `.interp` tables and parse Java inputs with grammar-selected context-aware ALL(*) |
 | [`java-antlr/`](java-antlr/) | Generate a Java-target Antlr4 parser for the Java grammar, build, and run |
 | [`java-allstar-xquery/`](java-allstar-xquery/) | Interpret the Java grammar with AllStar and XQuery4 parser predicates, then parse Java sources from an OpenJDK 21 PAX/tar bundle |
-| [`lark-to-antlr4/`](lark-to-antlr4/) | Convert a Lark grammar to Antlr4 syntax using a multi-pass XQuery Update pipeline |
 | [`kleene/`](kleene/) | Eliminate direct left and right recursion from parser rules using XQuery Update scripts (`kleene-lr.xq`, `kleene-rr.xq`), replacing recursive alternatives with Kleene-star EBNF |
+| [`lark-to-antlr4/`](lark-to-antlr4/) | Convert a Lark grammar to Antlr4 syntax using a multi-pass XQuery Update pipeline |
+| [`linvast-ast/`](linvast-ast/) | Build the same pipeable identifier and integer AST nodes during AllStar parsing with C, Java, Kotlin, and Lua LINVAST grammars |
 | [`rule-names/`](rule-names/) | Construct XML containing one element for every parser-rule name selected from an ANTLR4 grammar parse tree |
 | [`ungroup/`](ungroup/) | Expand a plain grouped alternative `(X \| Y) B` into distributed top-level alternatives `X B \| Y B` using an XQuery Update script with an external variable parameter |
 | [`strip-leading-attrs/`](strip-leading-attrs/) | Remove hidden-channel token attributes before `lexer`/`parser` in `grammarDecl` using an XQuery element constructor |

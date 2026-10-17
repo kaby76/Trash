@@ -171,16 +171,6 @@ public interface IG4XParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitActionScopeName([NotNull] G4XParser.ActionScopeNameContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4XParser.actionBlock"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterActionBlock([NotNull] G4XParser.ActionBlockContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4XParser.actionBlock"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitActionBlock([NotNull] G4XParser.ActionBlockContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4XParser.argActionBlock"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -321,16 +311,6 @@ public interface IG4XParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitRuleModifier([NotNull] G4XParser.RuleModifierContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4XParser.ruleBlock"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterRuleBlock([NotNull] G4XParser.RuleBlockContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4XParser.ruleBlock"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitRuleBlock([NotNull] G4XParser.RuleBlockContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4XParser.ruleAltList"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -340,16 +320,6 @@ public interface IG4XParserListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitRuleAltList([NotNull] G4XParser.RuleAltListContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4XParser.labeledAlt"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterLabeledAlt([NotNull] G4XParser.LabeledAltContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4XParser.labeledAlt"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitLabeledAlt([NotNull] G4XParser.LabeledAltContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4XParser.lexerCommands"/>.
 	/// </summary>
@@ -461,16 +431,6 @@ public interface IG4XParserListener : IParseTreeListener {
 	/// <param name="context">The parse tree.</param>
 	void ExitPredicateOption([NotNull] G4XParser.PredicateOptionContext context);
 	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4XParser.labeledElement"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterLabeledElement([NotNull] G4XParser.LabeledElementContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4XParser.labeledElement"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitLabeledElement([NotNull] G4XParser.LabeledElementContext context);
-	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4XParser.ebnf"/>.
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
@@ -480,16 +440,6 @@ public interface IG4XParserListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitEbnf([NotNull] G4XParser.EbnfContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4XParser.blockSuffix"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterBlockSuffix([NotNull] G4XParser.BlockSuffixContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4XParser.blockSuffix"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitBlockSuffix([NotNull] G4XParser.BlockSuffixContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4XParser.ebnfSuffix"/>.
 	/// </summary>
@@ -600,16 +550,6 @@ public interface IG4XParserListener : IParseTreeListener {
 	/// </summary>
 	/// <param name="context">The parse tree.</param>
 	void ExitElementOption([NotNull] G4XParser.ElementOptionContext context);
-	/// <summary>
-	/// Enter a parse tree produced by <see cref="G4XParser.identifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void EnterIdentifier([NotNull] G4XParser.IdentifierContext context);
-	/// <summary>
-	/// Exit a parse tree produced by <see cref="G4XParser.identifier"/>.
-	/// </summary>
-	/// <param name="context">The parse tree.</param>
-	void ExitIdentifier([NotNull] G4XParser.IdentifierContext context);
 	/// <summary>
 	/// Enter a parse tree produced by <see cref="G4XParser.qualifiedIdentifier"/>.
 	/// </summary>

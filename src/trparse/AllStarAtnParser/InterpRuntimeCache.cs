@@ -3,6 +3,7 @@ namespace AllStarAtnParser;
 using Antlr4.Runtime;
 using Atn;
 using EarleyAtnParser;
+using XQuery.Parser.Ast;
 
 /// <summary>
 /// Command-scoped immutable runtime data loaded from one parser/lexer interp
@@ -14,6 +15,8 @@ public sealed class InterpRuntimeCache
     private readonly object _syncRoot = new();
     private readonly Dictionary<(string Parser, string Lexer), RuntimeData>
         _entries = new();
+    private readonly Dictionary<(string Path, string Text), ExprNode>
+        _compiledQueries = new();
 
     public int Count
     {
@@ -39,9 +42,27 @@ public sealed class InterpRuntimeCache
         }
     }
 
+    internal ExprNode GetCompiledQuery(string path, string text,
+        Func<ExprNode> compile)
+    {
+        var key = (Path.GetFullPath(path), text);
+        lock (_syncRoot)
+        {
+            if (_compiledQueries.TryGetValue(key, out var expression))
+                return expression;
+            expression = compile();
+            _compiledQueries.Add(key, expression);
+            return expression;
+        }
+    }
+
     public void Clear()
     {
-        lock (_syncRoot) _entries.Clear();
+        lock (_syncRoot)
+        {
+            _entries.Clear();
+            _compiledQueries.Clear();
+        }
     }
 
     private static (string, string) Key(string parserPath, string lexerPath) =>

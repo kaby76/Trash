@@ -2,8 +2,7 @@
 
 ## Description
 G4X is Trash's fork of the ANTLR4 grammar for syntax extensions that are
-not part of ANTLR4. Initially it recognizes the same syntax as the copied
-ANTLR4 grammar. Use `.g4x` or `.g4x` files with `trparse`, or select it with
+not part of ANTLR4. Use `.g4x` files with `trparse`, or select it with
 `trparse -t G4X`.
 
 Rule syntax is the same in `lexer grammar`, `parser grammar`, and combined
@@ -14,6 +13,8 @@ combined `grammar` are parser rules. This includes rules inside `mode` blocks.
 `fragment` is accepted syntactically in every grammar; semantic restrictions
 will be checked separately. Bracketed content is parsed by position as either
 a rule argument or a character-set atom, not by capitalization.
+ANTLR4-style alternative labels (`#Name`) and element labels (`name=` or
+`name+=`) are not part of G4X. Rules use unlabeled alternatives and elements.
 
 G4X accepts a set-difference clause after an alternative. The `-` operator
 excludes matches of one named rule or literal; use parentheses for a union of

@@ -18,10 +18,13 @@ if dotnet "$parse" --allstar -L interp --xquery-hooks hooks.json \
 fi
 
 bundle=$(mktemp)
-trap 'rm -f "$bundle"' EXIT
-tar --format=pax -C fixtures -cf - src |
+archive=$(mktemp)
+trap 'rm -f "$bundle" "$archive"' EXIT
+tar --format=pax -C fixtures \
+    --transform='s|^src|jdk-jdk-21-ga/src|' -czf "$archive" src
+gzip -dc "$archive" |
     dotnet "$parse" --allstar -L interp --xquery-hooks hooks.json \
-        --bundle-glob 'src/**/*.java' > "$bundle"
-tar -tf "$bundle" | grep -qx 'src/TaggedRecord.java.pt'
-tar -tf "$bundle" | grep -qx 'src/TaggedRecord.java.errors'
+        --bundle-glob 'jdk-jdk-21-ga/src/**/*.java' > "$bundle"
+tar -tf "$bundle" | grep -qx 'jdk-jdk-21-ga/src/TaggedRecord.java.pt'
+tar -tf "$bundle" | grep -qx 'jdk-jdk-21-ga/src/TaggedRecord.java.errors'
 echo 'Java AllStar/XQuery smoke tests passed.'

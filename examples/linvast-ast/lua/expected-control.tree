@@ -1,0 +1,1 @@
+(SourceNode (BlockStatNode (DeclStatNode DeclSpecsNode (DeclListNode (VarDeclNode (IdNode x) (LitExprNode 1)))) (WhileStatNode (RelExprNode (IdNode x) (RelOpNode <) (LitExprNode 3)) (BlockStatNode (ExprStatNode (AssignExprNode (IdNode x) (ArithmExprNode (IdNode x) (ArithmOpNode +) (LitExprNode 1)))))) (JumpStatNode (IdNode x))))

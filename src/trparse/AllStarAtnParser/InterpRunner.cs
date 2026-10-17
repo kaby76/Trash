@@ -31,7 +31,8 @@ public static class InterpRunner
         LexerAtnSimulator.LexerDfaCache lexerDfaCache = null,
         bool indirectLeftRecursion = false,
         string startRuleName = null,
-        string xqueryHooksPath = null)
+        string xqueryHooksPath = null,
+        string astMapPath = null)
     {
         timings ??= new InterpRunTimings();
         timings.Files = 1;
@@ -123,19 +124,27 @@ public static class InterpRunner
             ? null
             : XQueryHooks.Load(xqueryHooksPath, inputText,
                 lexerInterp.RuleNames, parserInterp.RuleNames,
-                lexerInterp.SymbolicNames, out source);
+                lexerInterp.SymbolicNames, out source, runtimeCache);
         string lexerInput = source?.Text ?? inputText;
         if (hooks is { HasRuntimeHooks: false }) hooks = null;
         if (indirectLeftRecursion && hooks != null)
             throw new ArgumentException(
                 "--indirect-left-recursion cannot currently be combined with " +
                 "stateful --xquery-hooks; source-only hooks are supported.");
+        if (!string.IsNullOrEmpty(astMapPath) &&
+            (indirectLeftRecursion || contextAwareLexing || hooks != null))
+            throw new ArgumentException(
+                "--ast-map currently requires ordinary --allstar parsing " +
+                "without --indirect-left-recursion, --context-aware-lexing, " +
+                "or runtime --xquery-hooks.");
 
         TokenStore rawTokens;
         List<ParseEvent> events;
+        AstTreeBuilder astBuilder = null;
+        bool astAccepted = false;
         var parseProgress = indirectLeftRecursion
             ? new IndirectLeftRecursiveParser.ParseProgress() : null;
-        if (contextAwareLexing || hooks != null)
+        if (contextAwareLexing || hooks?.HasLexerPredicates == true)
         {
             timer.Restart();
             try
@@ -148,6 +157,7 @@ public static class InterpRunner
                         parserAtn, lexerAtn, lexerInput, startRule, out rawTokens,
                         statistics, parserStatistics,
                         hooks == null ? predictionCache : null,
+                        lexerDfaCache: lexerDfaCache,
                         hooks: hooks);
             }
             catch (LexerNoViableAltException ex) when (source != null)
@@ -180,13 +190,27 @@ public static class InterpRunner
             timer.Stop();
             timings.TokenReconciliation = timer.Elapsed;
             timer.Restart();
-            events = indirectLeftRecursion
-                ? IndirectLeftRecursiveParser.Parse(
-                    parserAtn, rawTokens, startRule, parserStatistics,
-                    parseProgress)
-                : AllStarParser.Parse(
-                    parserAtn, rawTokens, startRule, parserStatistics,
-                    predictionCache);
+            if (!string.IsNullOrEmpty(astMapPath))
+            {
+                var mapping = MappingParser.Parse(File.ReadAllText(astMapPath));
+                astBuilder = new AstTreeBuilder(mapping, parserInterp.RuleNames,
+                    lexerInterp.SymbolicNames, rawTokens);
+                astAccepted = AllStarParser.ParseStreaming(parserAtn,
+                    rawTokens, startRule, astBuilder.OnEvent,
+                    parserStatistics, predictionCache);
+                events = null;
+            }
+            else
+            {
+                events = indirectLeftRecursion
+                    ? IndirectLeftRecursiveParser.Parse(
+                        parserAtn, rawTokens, startRule, parserStatistics,
+                        parseProgress)
+                    : AllStarParser.Parse(
+                        parserAtn, rawTokens, startRule, parserStatistics,
+                        hooks == null ? predictionCache : null,
+                        hooks);
+            }
             timer.Stop();
             timings.Parsing = timer.Elapsed;
         }
@@ -196,7 +220,7 @@ public static class InterpRunner
             inputText, source);
         if (parserStatistics != null)
             Console.Error.WriteLine(parserStatistics.Format());
-        if (events == null)
+        if (events == null && !astAccepted)
         {
             if (!indirectLeftRecursion)
                 throw new InvalidOperationException(
@@ -236,13 +260,15 @@ public static class InterpRunner
         }
 
         timer.Restart();
-        var compactTree = CompactTreeBuilder.Build(
-            events, rawTokens,
-            parserInterp.RuleNames,
-            parserInterp.SymbolicNames,
-            parserInterp.LiteralNames,
-            lexerInterp.RuleNames,
-            lineNumbers);
+        var compactTree = astBuilder == null
+            ? CompactTreeBuilder.Build(
+                events, rawTokens,
+                parserInterp.RuleNames,
+                parserInterp.SymbolicNames,
+                parserInterp.LiteralNames,
+                lexerInterp.RuleNames,
+                lineNumbers)
+            : null;
         timer.Stop();
         timings.TreeBuilding = timer.Elapsed;
 
@@ -260,7 +286,7 @@ public static class InterpRunner
         myLexer._grammarFileName = Path.GetFileNameWithoutExtension(lexerInterpPath);
 
         var myParser = new EditableAntlrTree.MyParser();
-        myParser._ruleNames = parserInterp.RuleNames;
+        myParser._ruleNames = astBuilder?.AstRuleNames ?? parserInterp.RuleNames;
         myParser._vocabulary = parserVocab;
         myParser._grammarFileName = Path.GetFileNameWithoutExtension(parserInterpPath);
 
@@ -273,6 +299,7 @@ public static class InterpRunner
         {
             FileName = fileName,
             NodeProvider = compactTree,
+            Nodes = astBuilder == null ? null : new[] { astBuilder.Root },
             Parser = myParser,
             Lexer = myLexer
         };

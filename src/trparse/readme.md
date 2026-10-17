@@ -146,6 +146,40 @@ the lexer falls back to ordinary ANTLR maximal-munch and rule-priority
 semantics. Existing lexer modes and `skip`, `type`, `channel`, `mode`,
 `pushMode`, and `popMode` commands are honored.
 
+### AST construction during ALL(*) parsing (experimental)
+
+Use `--allstar --ast-map path/to/mapping.ast` to reduce committed rule exits
+directly into an AST. The output is still the ordinary PAX/tar bundle with a
+`.pt` parse result, so `trtree`, `trxquery`, and other Trash commands can read
+it. No CST or intermediate event list is constructed in this mode. For a
+runnable grammar and `.ast` mapping, see
+[`examples/ast-during-parse/`](../../examples/ast-during-parse/).
+
+The current implementation accepts ordinary pre-tokenized ALL(*) parsing.
+It rejects context-aware lexing, runtime XQuery hooks, and indirect left
+recursion. Direct left recursion is reduced at each committed
+`PushRecursionContext` event. An `.ast` rule matches the original grammar-rule
+child names even after those children have been reduced to AST nodes. In a
+pattern, `op:_` captures a child of any grammar name, and
+`decl:declarator[ArrDeclNode]` additionally requires the child's reduced AST
+kind. A child pattern can end in `?`, `*`, or `+` to match zero-or-one,
+zero-or-more, or one-or-more consecutive children of that grammar name;
+the matcher backtracks when a later pattern needs a child. For example,
+`block('{', items:statement*, '}') -> ^(BlockStatNode ...items)` handles
+blocks of any length. In a constructor, `...items` appends each captured
+node and splices its children when it has the same AST kind as the new node.
+An absent optional capture splices nothing. A plain capture (`item`) must
+contain exactly one node. Text captures may join a sequence, for example
+`qualifiedName(parts:_+) -> ^(IdNode[parts])`. Separators between repeated
+children still need explicit patterns; the repetition operator matches a
+single child kind, not an arbitrary grammar fragment.
+
+The mapping is still an experimental structural approximation, not a full
+replacement for LINVAST's typed objects, source metadata, and semantic
+rewrites. Any partial AST from a failed parse is discarded. See
+[`examples/linvast-ast/`](../../examples/linvast-ast/) for expanded C, Java,
+Kotlin, and Lua mappings with whole-source fixtures.
+
 ### XQuery4 interpreter hooks (experimental)
 
 With `--allstar --xquery-hooks hooks.json`, a manifest can bind lexer and parser
@@ -261,6 +295,7 @@ this mode; the overall TT and `--per-file` lines remain available.
         --context-aware-lexing
                        Prefer lexer tokens valid in the current ALL(*) parser context.
         --xquery-hooks Manifest for experimental XQuery4 lexer predicates and parser hooks.
+        --ast-map      Build an AST during ALL(*) parsing using a separate .ast mapping.
         --lexer-stats  Write observed interp lexer-overlap statistics to stderr.
         --lexer-overlaps
                        Write detailed observed overlaps (implies --lexer-stats).
@@ -300,7 +335,7 @@ this mode; the overall TT and `--per-file` lines remain available.
 
 ## Current version
 
-Release 4.3.0.
+Release 4.4.0.
 
 ## License
 

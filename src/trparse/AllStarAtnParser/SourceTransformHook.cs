@@ -26,11 +26,18 @@ public sealed class SourceTransformHook
     public int OriginalOffset(int transformedOffset) =>
         OriginalOffsets[Math.Clamp(transformedOffset, 0, Text.Length)];
 
-    public static SourceTransformHook Apply(string input, string queryPath)
+    public static SourceTransformHook Apply(string input, string queryPath,
+        InterpRuntimeCache runtimeCache = null)
     {
-        var parser = new XQueryParser(File.ReadAllText(queryPath));
-        parser.AddNamespace("ctx", ContextNamespace);
-        var expression = parser.Parse();
+        string text = File.ReadAllText(queryPath);
+        XQuery.Parser.Ast.ExprNode Compile()
+        {
+            var parser = new XQueryParser(text);
+            parser.AddNamespace("ctx", ContextNamespace);
+            return parser.Parse();
+        }
+        var expression = runtimeCache?.GetCompiledQuery(queryPath, text, Compile)
+            ?? Compile();
         var context = EvaluationContext.CreateDefault();
         context.SetVariable("input", new XdmSequence(new XdmAtomicValue(input)));
         var name = new XdmQName(ContextNamespace, "java-unicode-edits", "ctx");

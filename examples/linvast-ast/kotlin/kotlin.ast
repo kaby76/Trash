@@ -1,0 +1,118 @@
+// Structural reductions from KotlinASTBuilder.{Expressions,Declarations,
+// Functions,Statements,Types}.cs. The active lexer is the ASCII-only demo.
+ast LinvastKotlin {
+    default single-child -> child;
+    default otherwise -> error;
+
+    kotlinFile(NL*, pre:preamble, anysemi*, top:topLevelObject, anysemi*, EOF)
+        -> ^(SourceNode ...pre top);
+    kotlinFile(NL*, pre:preamble, anysemi*, first:topLevelObject,
+        anysemi+, second:topLevelObject, anysemi*, EOF)
+        -> ^(SourceNode ...pre first second);
+    kotlinFile(NL*, preamble, anysemi*, EOF) -> ^(SourceNode);
+    preamble(fileAnnotations?, packageHeader, imports:importList)
+        -> imports;
+    packageHeader() -> ^(PackageNode);
+    importList(imports:importHeader*) -> ^(SourceNode ...imports);
+    importHeader('import', path:identifier) -> ^(ImportNode[path]);
+    importHeader('import', path:identifier, semi) -> ^(ImportNode[path]);
+
+    simpleIdentifier(value:_) -> ^(IdNode[value]);
+    identifier(parts:_+) -> ^(IdNode[parts]);
+    literalConstant(value:IntegerLiteral) -> ^(LitExprNode[value]);
+    literalConstant(value:BooleanLiteral) -> ^(LitExprNode[value]);
+    literalConstant(value:HexLiteral) -> ^(LitExprNode[value]);
+    literalConstant(value:BinLiteral) -> ^(LitExprNode[value]);
+    literalConstant(value:CharacterLiteral) -> ^(LitExprNode[value]);
+    literalConstant(value:RealLiteral) -> ^(LitExprNode[value]);
+    literalConstant(value:LongLiteral) -> ^(LitExprNode[value]);
+    literalConstant(NullLiteral) -> ^(NullLitExprNode);
+    parenthesizedExpression('(', value:expression, ')') -> value;
+    typeReference('dynamic') -> ^(TypeNameNode);
+    simpleUserType(name:simpleIdentifier) -> ^(TypeNameNode[name]);
+    nullableType(value:typeReference, '?') -> ^(TypeNameNode[value]);
+
+    disjunction(left:conjunction, '||', right:conjunction)
+        -> ^(LogicExprNode left ^(BinaryLogicOpNode) right);
+    conjunction(left:equalityComparison, '&&', right:equalityComparison)
+        -> ^(LogicExprNode left ^(BinaryLogicOpNode) right);
+    equalityComparison(left:comparison, op:equalityOperation, right:comparison)
+        -> ^(RelExprNode left ^(RelOpNode[op]) right);
+    comparison(left:namedInfix, op:comparisonOperator, right:namedInfix)
+        -> ^(RelExprNode left ^(RelOpNode[op]) right);
+    namedInfix(left:elvisExpression, op:inOperator, right:elvisExpression)
+        -> ^(RelExprNode left ^(RelOpNode[op]) right);
+    elvisExpression(left:infixFunctionCall, op:ELVIS, right:infixFunctionCall)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    rangeExpression(left:additiveExpression, op:RANGE, right:additiveExpression)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    additiveExpression(left:multiplicativeExpression, op:additiveOperator,
+        right:multiplicativeExpression)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    multiplicativeExpression(left:typeRHS, op:multiplicativeOperation,
+        right:typeRHS)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    expression(left:disjunction, op:assignmentOperator, right:disjunction)
+        -> ^(ExprStatNode ^(AssignExprNode left ^(AssignOpNode[op]) right));
+
+    functionDeclaration('fun', NL*, name:identifier, NL*,
+        params:functionValueParameters, NL*, body:functionBody)
+        -> ^(FuncNode ^(DeclSpecsNode)
+            ^(FuncDeclNode ^(IdNode[name]) params body));
+    functionDeclaration('fun', NL*, name:identifier, NL*,
+        params:functionValueParameters, NL*, ':', NL*, type:type, NL*, body:functionBody)
+        -> ^(FuncNode ^(DeclSpecsNode type)
+            ^(FuncDeclNode ^(IdNode[name]) params body));
+    functionValueParameters('(', ')') -> ^(FuncParamsNode);
+    functionValueParameters('(', param:functionValueParameter, ')')
+        -> ^(FuncParamsNode param);
+    functionValueParameters('(', first:functionValueParameter, ',',
+        second:functionValueParameter, ')')
+        -> ^(FuncParamsNode first second);
+    parameter(name:simpleIdentifier, ':', type:type)
+        -> ^(FuncParamNode ^(DeclSpecsNode type) ^(VarDeclNode name));
+    functionBody('=', NL*, value:expression)
+        -> ^(BlockStatNode ^(ExprStatNode value));
+
+    variableDeclaration(name:simpleIdentifier) -> ^(VarDeclNode name);
+    variableDeclaration(name:simpleIdentifier, ':', type:type)
+        -> ^(VarDeclNode name);
+    propertyDeclaration(kind:'val', NL*, var:variableDeclaration)
+        -> ^(DeclStatNode ^(DeclSpecsNode[kind]) ^(DeclListNode var));
+    propertyDeclaration(kind:'var', NL*, var:variableDeclaration)
+        -> ^(DeclStatNode ^(DeclSpecsNode[kind]) ^(DeclListNode var));
+    propertyDeclaration(kind:'val', NL*, var:variableDeclaration,
+        NL*, '=', NL*, value:expression)
+        -> ^(DeclStatNode ^(DeclSpecsNode[kind])
+            ^(DeclListNode ^(VarDeclNode ...var value)));
+    propertyDeclaration(kind:'var', NL*, var:variableDeclaration,
+        NL*, '=', NL*, value:expression)
+        -> ^(DeclStatNode ^(DeclSpecsNode[kind])
+            ^(DeclListNode ^(VarDeclNode ...var value)));
+    classBody('{', NL*, members:classMemberDeclaration*, NL*, '}')
+        -> ^(BlockStatNode ...members);
+    classDeclaration('class', NL*, name:simpleIdentifier, NL*, body:classBody)
+        -> ^(TypeDeclNode name ^(TypeNameListNode)
+            ^(TypeNameListNode) body);
+    classMemberDeclaration(member:propertyDeclaration, anysemi+) -> member;
+    classMemberDeclaration(member:functionDeclaration, anysemi+) -> member;
+
+    block('{', body:statements, '}') -> body;
+    statements(anysemi*) -> ^(BlockStatNode);
+    statements(anysemi*, item:statement, anysemi*)
+        -> ^(BlockStatNode item);
+    statements(anysemi*, first:statement, anysemi+, second:statement, anysemi*)
+        -> ^(BlockStatNode first second);
+    controlStructureBody(value:expression) -> ^(ExprStatNode value);
+    ifExpression('if', NL*, '(', test:expression, ')', NL*, yes:controlStructureBody)
+        -> ^(IfStatNode test yes);
+    ifExpression('if', NL*, '(', test:expression, ')', NL*, yes:controlStructureBody,
+        NL*, 'else', NL*, no:controlStructureBody)
+        -> ^(IfStatNode test yes no);
+    whileExpression('while', NL*, '(', test:expression, ')', NL*, body:controlStructureBody)
+        -> ^(WhileStatNode test body);
+    jumpExpression('return', value:expression) -> ^(JumpStatNode value);
+    jumpExpression('return') -> ^(JumpStatNode);
+    jumpExpression('break') -> ^(JumpStatNode);
+    jumpExpression('continue') -> ^(JumpStatNode);
+}

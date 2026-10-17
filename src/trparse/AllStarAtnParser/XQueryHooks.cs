@@ -27,6 +27,7 @@ public sealed class XQueryHooks
     private bool _inDeclaration;
 
     public bool HasParserPredicates => _parserPredicates.Count != 0;
+    public bool HasLexerPredicates => _lexerPredicates.Count != 0;
     public bool HasRuntimeHooks => _lexerPredicates.Count != 0 ||
         _parserPredicates.Count != 0 || _ruleEnter.Count != 0 ||
         _ruleExit.Count != 0;
@@ -42,7 +43,8 @@ public sealed class XQueryHooks
 
     public static XQueryHooks Load(string path, string input,
         string[] lexerRules, string[] parserRules, string[] tokenNames,
-        out SourceTransformHook source)
+        out SourceTransformHook source,
+        InterpRuntimeCache runtimeCache = null)
     {
         var manifest = JsonSerializer.Deserialize<Manifest>(File.ReadAllText(path),
             new JsonSerializerOptions { PropertyNameCaseInsensitive = true })
@@ -52,41 +54,51 @@ public sealed class XQueryHooks
             SourceTransformHook.Apply(input,
                 Path.Combine(directory, !string.IsNullOrWhiteSpace(manifest.Source.Query)
                     ? manifest.Source.Query
-                    : throw new InvalidDataException("Source-hook query filename is missing.")));
+                    : throw new InvalidDataException("Source-hook query filename is missing.")),
+                runtimeCache);
         var hooks = new XQueryHooks(source?.Text ?? input, parserRules, tokenNames);
         foreach (var spec in manifest.LexerPredicates ?? [])
         {
             int rule = Array.IndexOf(lexerRules, spec.Rule);
             if (rule < 0) throw new InvalidDataException($"Unknown lexer rule '{spec.Rule}'.");
             hooks._lexerPredicates.Add((rule, spec.Predicate),
-                Compile(directory, spec.Query));
+                Compile(directory, spec.Query, runtimeCache));
         }
         foreach (var spec in manifest.ParserPredicates ?? [])
         {
             int rule = Array.IndexOf(parserRules, spec.Rule);
             if (rule < 0) throw new InvalidDataException($"Unknown parser rule '{spec.Rule}'.");
             hooks._parserPredicates.Add((rule, spec.Predicate),
-                (Compile(directory, spec.Query), spec.Predict));
+                (Compile(directory, spec.Query, runtimeCache), spec.Predict));
         }
         foreach (var spec in manifest.ParserRules ?? [])
         {
             int rule = Array.IndexOf(parserRules, spec.Rule);
             if (rule < 0) throw new InvalidDataException($"Unknown parser rule '{spec.Rule}'.");
             if (!string.IsNullOrWhiteSpace(spec.Enter))
-                hooks._ruleEnter.Add(rule, Compile(directory, spec.Enter));
+                hooks._ruleEnter.Add(rule,
+                    Compile(directory, spec.Enter, runtimeCache));
             if (!string.IsNullOrWhiteSpace(spec.Exit))
-                hooks._ruleExit.Add(rule, Compile(directory, spec.Exit));
+                hooks._ruleExit.Add(rule,
+                    Compile(directory, spec.Exit, runtimeCache));
         }
         return hooks;
     }
 
-    private static ExprNode Compile(string directory, string file)
+    private static ExprNode Compile(string directory, string file,
+        InterpRuntimeCache runtimeCache)
     {
         if (string.IsNullOrWhiteSpace(file))
             throw new InvalidDataException("XQuery hook filename is missing.");
-        var parser = new XQueryParser(File.ReadAllText(Path.Combine(directory, file)));
-        parser.AddNamespace("ctx", ContextNamespace);
-        return parser.Parse();
+        string path = Path.Combine(directory, file);
+        string text = File.ReadAllText(path);
+        ExprNode Parse()
+        {
+            var parser = new XQueryParser(text);
+            parser.AddNamespace("ctx", ContextNamespace);
+            return parser.Parse();
+        }
+        return runtimeCache?.GetCompiledQuery(path, text, Parse) ?? Parse();
     }
 
     public bool EvaluateLexerPredicate(int rule, int predicate, int start, int position)

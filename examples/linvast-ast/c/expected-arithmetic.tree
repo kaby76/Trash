@@ -1,0 +1,1 @@
+(ArithmExprNode (LitExprNode 1) (ArithmOpNode +) (ArithmExprNode (LitExprNode 2) (ArithmOpNode *) (LitExprNode 3)))

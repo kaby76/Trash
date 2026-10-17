@@ -1,0 +1,126 @@
+// Structural approximation of LINVAST's CASTBuilder visitors. This is a
+// separate rewrite specification; C.g4 remains unchanged.
+ast LinvastC {
+    default single-child -> child;
+    default otherwise -> error;
+
+    // CASTBuilder.cs: source and external declarations.
+    compilationUnit(unit:translationUnit, EOF) -> unit;
+    compilationUnit(EOF) -> ^(SourceNode);
+    translationUnit(decl:externalDeclaration) -> ^(SourceNode decl);
+    translationUnit(left:translationUnit, decl:externalDeclaration) -> ^(SourceNode ...left decl);
+    externalDeclaration(';') -> ^(EmptyStatNode);
+
+    // CASTBuilder.Expressions.cs: identifiers, literals, precedence and calls.
+    primaryExpression(value:Identifier) -> ^(IdNode[value]);
+    primaryExpression(value:Constant) -> ^(LitExprNode[value]);
+    primaryExpression(value:StringLiteral) -> ^(LitExprNode[value]);
+    primaryExpression('(', inner:expression, ')') -> inner;
+    castExpression(value:DigitSequence) -> ^(LitExprNode[value]);
+    assignmentExpression(value:DigitSequence) -> ^(LitExprNode[value]);
+
+    multiplicativeExpression(left:multiplicativeExpression, op:_, right:castExpression)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    additiveExpression(left:additiveExpression, op:_, right:multiplicativeExpression)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    shiftExpression(left:shiftExpression, op:_, right:additiveExpression)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    relationalExpression(left:relationalExpression, op:_, right:shiftExpression)
+        -> ^(RelExprNode left ^(RelOpNode[op]) right);
+    equalityExpression(left:equalityExpression, op:_, right:relationalExpression)
+        -> ^(RelExprNode left ^(RelOpNode[op]) right);
+    andExpression(left:andExpression, op:_, right:equalityExpression)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    exclusiveOrExpression(left:exclusiveOrExpression, op:_, right:andExpression)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    inclusiveOrExpression(left:inclusiveOrExpression, op:_, right:exclusiveOrExpression)
+        -> ^(ArithmExprNode left ^(ArithmOpNode[op]) right);
+    logicalAndExpression(left:logicalAndExpression, op:_, right:inclusiveOrExpression)
+        -> ^(LogicExprNode left ^(BinaryLogicOpNode[op]) right);
+    logicalOrExpression(left:logicalOrExpression, op:_, right:logicalAndExpression)
+        -> ^(LogicExprNode left ^(BinaryLogicOpNode[op]) right);
+    conditionalExpression(test:logicalOrExpression, '?', yes:expression, ':', no:conditionalExpression)
+        -> ^(CondExprNode test yes no);
+    assignmentExpression(left:unaryExpression, op:assignmentOperator, right:assignmentExpression)
+        -> ^(AssignExprNode left ^(AssignOpNode[op]) right);
+    expression(left:expression, ',', right:assignmentExpression)
+        -> ^(ExprListNode ...left right);
+    unaryExpression(op:unaryOperator, right:castExpression)
+        -> ^(UnaryExprNode ^(UnaryOpNode[op]) right);
+    unaryExpression('++', value:unaryExpression) -> ^(IncExprNode value);
+    unaryExpression('--', value:unaryExpression) -> ^(DecExprNode value);
+    postfixExpression(value:postfixExpression, '++') -> ^(IncExprNode value);
+    postfixExpression(value:postfixExpression, '--') -> ^(DecExprNode value);
+    postfixExpression(array:postfixExpression, '[', index:expression, ']')
+        -> ^(ArrAccessExprNode array index);
+    postfixExpression(callee:postfixExpression, '(', args:argumentExpressionList, ')')
+        -> ^(FuncCallExprNode callee args);
+    postfixExpression(callee:postfixExpression, '(', ')') -> ^(FuncCallExprNode callee);
+    argumentExpressionList(arg:assignmentExpression) -> ^(ExprListNode arg);
+    argumentExpressionList(left:argumentExpressionList, ',', arg:assignmentExpression)
+        -> ^(ExprListNode ...left arg);
+
+    // CASTBuilder.Declarations.cs / Functions.cs: representative simple forms.
+    typeSpecifier(value:_) -> ^(TypeNameNode[value]);
+    declarationSpecifiers(type:declarationSpecifier) -> ^(DeclSpecsNode type);
+    declarationSpecifiers2(type:declarationSpecifier) -> ^(DeclSpecsNode type);
+    directDeclarator(name:Identifier) -> ^(IdNode[name]);
+    directDeclarator(name:directDeclarator, '(', params:parameterTypeList, ')')
+        -> ^(FuncDeclNode name ^(TypeNameListNode) params);
+    directDeclarator(name:directDeclarator, '(', ')')
+        -> ^(FuncDeclNode name ^(TypeNameListNode));
+    directDeclarator(name:directDeclarator, '[', size:assignmentExpression, ']')
+        -> ^(ArrDeclNode name size);
+    directDeclarator(name:directDeclarator, '[', ']') -> ^(ArrDeclNode name);
+    parameterDeclaration(specs:declarationSpecifiers, name:declarator)
+        -> ^(FuncParamNode specs ^(VarDeclNode name));
+    parameterList(param:parameterDeclaration) -> ^(FuncParamsNode param);
+    parameterList(left:parameterList, ',', param:parameterDeclaration)
+        -> ^(FuncParamsNode ...left param);
+    forDeclaration(specs:declarationSpecifiers, decls:initDeclaratorList)
+        -> ^(DeclStatNode specs decls);
+    forCondition(init:forDeclaration, ';', test:forExpression, ';', step:forExpression)
+        -> ^(ForStatNode init test step);
+    iterationStatement('for', '(', parts:forCondition, ')', body:statement)
+        -> ^(ForStatNode ...parts body);
+    functionDefinition(specs:declarationSpecifiers, decl:declarator, body:compoundStatement)
+        -> ^(FuncNode specs ^(FuncDeclNode ...decl body));
+    initDeclarator(decl:declarator[ArrDeclNode], '=', value:initializer)
+        -> ^(ArrDeclNode ...decl value);
+    initDeclarator(decl:declarator[ArrDeclNode]) -> decl;
+    initDeclarator(decl:declarator, '=', value:initializer) -> ^(VarDeclNode decl value);
+    initDeclarator(decl:declarator) -> ^(VarDeclNode decl);
+    initDeclaratorList(decl:initDeclarator) -> ^(DeclListNode decl);
+    initDeclaratorList(left:initDeclaratorList, ',', decl:initDeclarator)
+        -> ^(DeclListNode ...left decl);
+    declaration(specs:declarationSpecifiers, decls:initDeclaratorList, ';')
+        -> ^(DeclStatNode specs decls);
+    initializer('{', values:initializerList, '}') -> values;
+    initializerList(value:initializer) -> ^(ArrInitExprNode value);
+    initializerList(left:initializerList, ',', value:initializer)
+        -> ^(ArrInitExprNode ...left value);
+    forExpression(left:forExpression, ',', value:assignmentExpression)
+        -> ^(ExprListNode ...left value);
+
+    // CASTBuilder.Statements.cs: blocks, branches, loops, and jumps.
+    compoundStatement('{', '}') -> ^(BlockStatNode);
+    compoundStatement('{', items:blockItemList, '}') -> items;
+    blockItemList(item:blockItem) -> ^(BlockStatNode item);
+    blockItemList(left:blockItemList, item:blockItem) -> ^(BlockStatNode ...left item);
+    expressionStatement(';') -> ^(EmptyStatNode);
+    expressionStatement(value:expression, ';') -> ^(ExprStatNode value);
+    selectionStatement('if', '(', test:expression, ')', yes:statement)
+        -> ^(IfStatNode test yes);
+    selectionStatement('if', '(', test:expression, ')', yes:statement, 'else', no:statement)
+        -> ^(IfStatNode test yes no);
+    selectionStatement('switch', '(', test:expression, ')', body:statement)
+        -> ^(SwitchStatNode test body);
+    iterationStatement('while', '(', test:expression, ')', body:statement)
+        -> ^(WhileStatNode test body);
+    jumpStatement(kind:'return', value:expression, ';') -> ^(JumpStatNode[kind] value);
+    jumpStatement(kind:'return', ';') -> ^(JumpStatNode[kind]);
+    jumpStatement(kind:'break', ';') -> ^(JumpStatNode[kind]);
+    jumpStatement(kind:'continue', ';') -> ^(JumpStatNode[kind]);
+    jumpStatement(kind:'goto', label:Identifier, ';') -> ^(JumpStatNode[kind] ^(IdNode[label]));
+    labeledStatement(label:Identifier, ':', body:statement) -> ^(LabeledStatNode[label] body);
+}

@@ -18,7 +18,7 @@ public sealed class G4XSyntaxTests
         Assert.Equal(0, syntaxErrors);
         Assert.Equal(grammarType, tree.grammarDecl().grammarType().GetText());
         Assert.Equal(new[] { firstRule, secondRule },
-            tree.rules().ruleSpec().Select(rule => rule.identifier().GetText()).ToArray());
+            tree.rules().ruleSpec().Select(rule => rule.ID().GetText()).ToArray());
         Assert.Contains(Descendants<G4XParser.AtomContext>(tree),
             atom => atom.LEXER_CHAR_SET() != null);
     }
@@ -56,7 +56,7 @@ public sealed class G4XSyntaxTests
         Assert.Equal(0, syntaxErrors);
         Assert.Empty(tree.rules().ruleSpec());
         Assert.Equal(new[] { "lowercase", "Uppercase" },
-            tree.modeSpec()[0].ruleSpec().Select(rule => rule.identifier().GetText()).ToArray());
+            tree.modeSpec()[0].ruleSpec().Select(rule => rule.ID().GetText()).ToArray());
     }
 
     [Fact]
@@ -129,13 +129,36 @@ public sealed class G4XSyntaxTests
         Assert.True(syntaxErrors > 0);
     }
 
+    [Theory]
+    [InlineData("grammar G; root : ID #Named;")]
+    [InlineData("grammar G; root : value=ID;")]
+    [InlineData("grammar G; root : values+=ID;")]
+    public void LabelsAreRejected(string grammar)
+    {
+        _ = Parse(grammar, out var syntaxErrors);
+
+        Assert.True(syntaxErrors > 0);
+    }
+
     private static G4XParser.GrammarSpecContext Parse(string source, out int syntaxErrors)
     {
         var lexer = new G4XLexer(new AntlrInputStream(source));
+        var lexerErrors = new LexerErrors();
+        lexer.RemoveErrorListeners();
+        lexer.AddErrorListener(lexerErrors);
         var parser = new G4XParser(new CommonTokenStream(lexer));
         var tree = parser.grammarSpec();
-        syntaxErrors = parser.NumberOfSyntaxErrors;
+        syntaxErrors = parser.NumberOfSyntaxErrors + lexerErrors.Count;
         return tree;
+    }
+
+    private sealed class LexerErrors : IAntlrErrorListener<int>
+    {
+        public int Count { get; private set; }
+
+        public void SyntaxError(TextWriter output, IRecognizer recognizer,
+            int offendingSymbol, int line, int charPositionInLine,
+            string msg, RecognitionException e) => Count++;
     }
 
     private static IEnumerable<T> Descendants<T>(IParseTree node) where T : class, IParseTree

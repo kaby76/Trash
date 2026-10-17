@@ -1,0 +1,1 @@
+(SourceNode (FuncNode (DeclSpecsNode (TypeNameNode Int)) (FuncDeclNode (IdNode f) FuncParamsNode (BlockStatNode (JumpStatNode (LitExprNode 1))))))
