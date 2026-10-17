@@ -1,0 +1,11 @@
+// A separate mapping file; no target-language code is embedded in the grammar.
+ast Arithmetic {
+    default single-child -> child;
+    default otherwise -> error;
+
+    start(root:expr, EOF) -> root;
+    expr(left:term, op:'+', right:expr) -> ^(Binary[op] left right);
+    term(left:atom, op:'*', right:term) -> ^(Binary[op] left right);
+    atom(value:NUMBER) -> ^(Number[value]);
+    atom('(', inner:expr, ')') -> inner;
+}
