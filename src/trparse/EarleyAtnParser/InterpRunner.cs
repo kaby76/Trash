@@ -69,6 +69,9 @@ public static class InterpRunner
                     parserInterpPath, lexerInterpPath, runtime);
         }
         var parserInterp = runtime.ParserInterp;
+        if (parserInterp.AstMapping != null)
+            throw new NotSupportedException(
+                "The parser .interp contains an AST mapping; use --allstar to apply it.");
         if (parserInterp.G4XExclusions.Count != 0)
             throw new NotSupportedException(
                 "G4X parser-rule set-difference requires --allstar; the Earley interpreter does not evaluate parser predicates.");

@@ -1,7 +1,7 @@
 grammar AstMapping;
 
 // Syntax of the external CST-to-AST rewrite mappings consumed by
-// trparse --allstar --ast-map. Keep this in step with MappingParser in
+// trparse --allstar through the parser .interp. Keep this in step with MappingParser in
 // src/trparse/AllStarAtnParser/AstMapping.cs.
 
 mapping

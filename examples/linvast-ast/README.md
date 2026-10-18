@@ -1,8 +1,9 @@
 # A common AST from four LINVAST grammars
 
 This proof of concept copies LINVAST's action-free C, Java, Kotlin, and Lua
-grammars and uses a separate `.ast` mapping for each language. The mapping is
-applied **during** `trparse --allstar`, so the `.pt` file in its default PAX/tar
+grammars and compiles a separate `.ast` mapping for each language into its
+parser `.interp` file. The mapping is applied **during** `trparse --allstar`,
+so the `.pt` file in its default PAX/tar
 output contains `UnvParseTreeNode` AST nodes rather than a CST. All four
 languages produce the same shapes for the tested expression fragments:
 
@@ -23,7 +24,7 @@ calls, arithmetic, branches, loops, and table fragments. See the mapping
 notes for [C](c/README.md), [Java](java/README.md),
 [Kotlin](kotlin/README.md), and [Lua](lua/README.md) for exact coverage and
 limitations. Indirect left recursion and stateful hooks still cannot be
-combined with `--ast-map`.
+combined with embedded AST rewriting.
 
 Run `bash run-example.sh` from any directory. The script compiles each grammar
 to interpreter tables, parses identifier and integer inputs, compares all
@@ -33,8 +34,9 @@ checks include repeated and optional children in source and block rules.
 For example, after producing interpreter files:
 
 ```sh
+dotnet trash parse c/C.g4 c/c.ast | dotnet trash interp -o c/interp
 dotnet trash parse --allstar -L c/interp --start-rule primaryExpression \
-  --ast-map c/c.ast input/identifier.txt | dotnet trash tree --text -a
+  input/identifier.txt | dotnet trash tree --text -a
 ```
 
 The grammar files come from `LINVAST.Imperative/Builders/{C,Java,Kotlin,Lua}/ANTLR`

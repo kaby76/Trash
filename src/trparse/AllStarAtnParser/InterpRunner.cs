@@ -31,8 +31,7 @@ public static class InterpRunner
         LexerAtnSimulator.LexerDfaCache lexerDfaCache = null,
         bool indirectLeftRecursion = false,
         string startRuleName = null,
-        string xqueryHooksPath = null,
-        string astMapPath = null)
+        string xqueryHooksPath = null)
     {
         timings ??= new InterpRunTimings();
         timings.Files = 1;
@@ -90,7 +89,9 @@ public static class InterpRunner
             runtime = new InterpRuntimeCache.RuntimeData(
                 loadedParserInterp, loadedLexerInterp,
                 loadedParserAtn, loadedLexerAtn,
-                loadedParserVocab, loadedLexerVocab, loadedStartRule);
+                loadedParserVocab, loadedLexerVocab, loadedStartRule,
+                loadedParserInterp.AstMapping == null ? null :
+                    MappingParser.FromTable(loadedParserInterp.AstMapping));
             if (runtimeCache != null)
                 runtime = runtimeCache.Add(
                     parserInterpPath, lexerInterpPath, runtime);
@@ -131,10 +132,10 @@ public static class InterpRunner
             throw new ArgumentException(
                 "--indirect-left-recursion cannot currently be combined with " +
                 "stateful --xquery-hooks; source-only hooks are supported.");
-        if (!string.IsNullOrEmpty(astMapPath) &&
+        if (runtime.AstMapping != null &&
             (indirectLeftRecursion || contextAwareLexing || hooks != null))
             throw new ArgumentException(
-                "--ast-map currently requires ordinary --allstar parsing " +
+                "The embedded AST mapping requires ordinary --allstar parsing " +
                 "without --indirect-left-recursion, --context-aware-lexing, " +
                 "or runtime --xquery-hooks.");
 
@@ -190,10 +191,9 @@ public static class InterpRunner
             timer.Stop();
             timings.TokenReconciliation = timer.Elapsed;
             timer.Restart();
-            if (!string.IsNullOrEmpty(astMapPath))
+            if (runtime.AstMapping != null)
             {
-                var mapping = MappingParser.Parse(File.ReadAllText(astMapPath));
-                astBuilder = new AstTreeBuilder(mapping, parserInterp.RuleNames,
+                astBuilder = new AstTreeBuilder(runtime.AstMapping, parserInterp.RuleNames,
                     lexerInterp.SymbolicNames, rawTokens);
                 astAccepted = AllStarParser.ParseStreaming(parserAtn,
                     rawTokens, startRule, astBuilder.OnEvent,

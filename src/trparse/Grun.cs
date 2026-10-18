@@ -389,7 +389,6 @@ public class Grun
         Value("--linterp", config.LInterp);
         Value("--start-rule", config.StartRule);
         Value("--xquery-hooks", config.XQueryHooks);
-        Value("--ast-map", config.AstMap);
         Value("-g", config.Encoding);
         Flag(config.AllStar, "--allstar");
         Flag(config.IndirectLeftRecursion, "--indirect-left-recursion");
@@ -785,8 +784,6 @@ public class Grun
             string interpLabel;
             if (!string.IsNullOrEmpty(config.XQueryHooks) && !config.AllStar)
                 throw new ArgumentException("--xquery-hooks requires --allstar.");
-            if (!string.IsNullOrEmpty(config.AstMap) && !config.AllStar)
-                throw new ArgumentException("--ast-map requires --allstar.");
             if (config.AllStar || contextAwareLexing ||
                 config.IndirectLeftRecursion)
             {
@@ -804,7 +801,7 @@ public class Grun
                     parserStatistics, _parserPredictionCache,
                     _interpRuntimeCache, _lexerDfaCache,
                     config.IndirectLeftRecursion, config.StartRule,
-                    config.XQueryHooks, config.AstMap);
+                    config.XQueryHooks);
                 if (interpTimings != null)
                     _interpTimings.Add(interpTimings);
                 interpLabel = "ALL(*)";
@@ -833,9 +830,6 @@ public class Grun
         if (!string.IsNullOrEmpty(config.StartRule))
             throw new ArgumentException(
                 "--start-rule requires interpreted parsing with parser and lexer .interp files.");
-        if (!string.IsNullOrEmpty(config.AstMap))
-            throw new ArgumentException(
-                "--ast-map requires --allstar with parser and lexer .interp files.");
 
         Type type = null;
         if (parser_type == null || parser_type == "")
@@ -849,6 +843,7 @@ public class Grun
             {
                 ".g4" => "ANTLRv4",
                 ".g4x" => "G4X",
+                ".ast" => "AstMapping",
                 ".g3" => "ANTLRv3",
                 ".g2" => "ANTLRv2",
                 ".peg" => "pegen_v3_10",
@@ -872,6 +867,7 @@ public class Grun
             {
                 "ANTLRv4" => "antlr4",
                 "G4X" => "g4x",
+                "AstMapping" => "ast",
                 "ANTLRv3" => "antlr3",
                 "ANTLRv2" => "antlr2",
                 "pegen_v3_10" => "pegen",
@@ -975,6 +971,7 @@ public class Grun
             {
                 "ANTLRv4" => "antlr4",
                 "G4X" => "g4x",
+                "AstMapping" => "ast",
                 "ANTLRv3" => "antlr3",
                 "ANTLRv2" => "antlr2",
                 "pegen_v3_10" => "pegen",

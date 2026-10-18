@@ -1,12 +1,59 @@
 using AllStarAtnParser;
 using Atn;
+using Antlr4.Runtime;
 using ParseTreeEditing.UnvParseTreeDOM;
+using trinterp;
 using Xunit;
 
 namespace AllStarParserTests;
 
 public sealed class AstMappingTests
 {
+    [Fact]
+    public void GeneratedAstParseTreeCompilesAndRoundTripsThroughInterp()
+    {
+        const string source = """
+            ast Sample {
+                default single-child -> child;
+                default otherwise -> error;
+                source(prefix:ITEM*, last:ITEM, tail:END?)
+                    -> ^(SourceNode ...prefix last ...tail);
+            }
+            """;
+        var lexer = new AstMappingLexer(new AntlrInputStream(source));
+        var tokens = new CommonTokenStream(lexer);
+        var parser = new AstMappingParser(tokens);
+        var tree = parser.mapping();
+        Assert.Equal(0, parser.NumberOfSyntaxErrors);
+        var dom = new ConvertToDOM().BottomUpConvert(
+            tree, null, parser, lexer, tokens);
+        var table = AstMappingCompiler.Compile(dom);
+        Assert.Equal("Sample", table.Name);
+        Assert.True(table.SingleChild);
+        Assert.True(table.ErrorOtherwise);
+        var rule = Assert.Single(table.Rules);
+        Assert.Equal("source", rule.RuleName);
+        Assert.Equal(0, rule.Pattern[0].Min);
+        Assert.Equal(int.MaxValue, rule.Pattern[0].Max);
+        Assert.Equal("node", rule.Result.Op);
+        Assert.Equal("splice", rule.Result.Children[0].Op);
+
+        var encoded = Convert.ToBase64String(
+            System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(table));
+        var interp = "token literal names:\nnull\n\n" +
+            "token symbolic names:\nnull\n\n" +
+            "rule names:\nsource\n\n" +
+            $"atn:\n[1]\n\nast-mapping:\n{encoded}\n\n";
+        var loaded = InterpFileReader.Read(interp).AstMapping;
+        Assert.Equal(table.Name, loaded.Name);
+        Assert.Equal(table.SingleChild, loaded.SingleChild);
+        Assert.Equal(table.ErrorOtherwise, loaded.ErrorOtherwise);
+        Assert.Equal(rule.RuleName, Assert.Single(loaded.Rules).RuleName);
+        var mapping = MappingParser.FromTable(loaded);
+        Assert.Equal("SourceNode", Assert.IsType<NodeTemplate>(
+            Assert.Single(mapping.Rules).Result).Kind);
+    }
+
     [Fact]
     public void DirectLeftRecursionReducesAtEachPush()
     {

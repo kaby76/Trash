@@ -75,5 +75,6 @@ public sealed class InterpRuntimeCache
         MyATN LexerAtn,
         Vocabulary ParserVocabulary,
         Vocabulary LexerVocabulary,
-        int StartRule);
+        int StartRule,
+        Mapping AstMapping = null);
 }

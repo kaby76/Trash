@@ -46,6 +46,7 @@ class Command
                     var parser_type = ext switch
                     {
                         ".g4" => "ANTLRv4",
+                        ".ast" => "AstMapping",
                         ".g3" => "ANTLRv3",
                         ".g2" => "ANTLRv2",
                         ".gram" => "pegen_v3_10",

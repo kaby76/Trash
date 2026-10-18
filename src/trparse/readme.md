@@ -20,6 +20,7 @@ You can force the type of parse with the `--type` command-line option.
 Accepted values:
 
 * `G4X` — Trash's ANTLR4 grammar fork (`.g4x`, `.g4x`)
+* `AstMapping` — AST rewrite mappings (`.ast`)
 * `ANTLRv4` — ANTLRv4 (`.g4`)
 * `ANTLRv3` — ANTLRv3 (`.g3`)
 * `ANTLRv2` — ANTLRv2 (`.g2`)
@@ -43,6 +44,7 @@ Accepted values:
 | Grammar | File suffix | `--type` value |
 |---------|-------------|----------------|
 | G4X | `.g4x`, `.g4x` | `G4X` |
+| AST rewrite mapping | `.ast` | `AstMapping` |
 | ANTLRv4 | `.g4` | `ANTLRv4` |
 | ANTLRv3 | `.g3` | `ANTLRv3` |
 | ANTLRv2 | `.g2` | `ANTLRv2` |
@@ -148,8 +150,11 @@ semantics. Existing lexer modes and `skip`, `type`, `channel`, `mode`,
 
 ### AST construction during ALL(*) parsing (experimental)
 
-Use `--allstar --ast-map path/to/mapping.ast` to reduce committed rule exits
-directly into an AST. The output is still the ordinary PAX/tar bundle with a
+Parse a grammar and its `.ast` rewrite mapping together, then compile the
+parse-result set with `trinterp`. The parser `.interp` contains the compiled
+mapping table; `--allstar` reduces committed rule exits directly into an AST
+without needing a separate mapping file at runtime. The output is still the
+ordinary PAX/tar bundle with a
 `.pt` parse result, so `trtree`, `trxquery`, and other Trash commands can read
 it. No CST or intermediate event list is constructed in this mode. For a
 runnable grammar and `.ast` mapping, see
@@ -295,7 +300,6 @@ this mode; the overall TT and `--per-file` lines remain available.
         --context-aware-lexing
                        Prefer lexer tokens valid in the current ALL(*) parser context.
         --xquery-hooks Manifest for experimental XQuery4 lexer predicates and parser hooks.
-        --ast-map      Build an AST during ALL(*) parsing using a separate .ast mapping.
         --lexer-stats  Write observed interp lexer-overlap statistics to stderr.
         --lexer-overlaps
                        Write detailed observed overlaps (implies --lexer-stats).

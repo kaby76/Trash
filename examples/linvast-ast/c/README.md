@@ -3,7 +3,8 @@
 [`c.ast`](c.ast) approximates the reductions in LINVAST's
 `CASTBuilder.cs` and its `Expressions`, `Declarations`, `Functions`, and
 `Statements` partials. It operates on committed ALL(*) events during the
-parse; `C.g4` is copied unchanged. `--ast-map c.ast` emits the AST as an
+parse; `C.g4` is copied unchanged. Compile `C.g4` and `c.ast` together with
+`trinterp`; `trparse --allstar` then emits the AST as an
 ordinary `.pt` bundle, which can be piped to `dotnet trash tree --text -a` or
 `dotnet trash xquery`.
 

@@ -11,7 +11,7 @@ are produced during the ALL(*) parse.
 The original LINVAST Unicode lexer is preserved in `upstream/`. The active
 lexer is an ASCII-only demo copy. A typed function parameter such as
 `fun f(x: Int) {}` is currently rejected by the interpreter even without
-`--ast-map`; so is a minimal function containing `if (1) {}`. Parameter and
+embedded AST rewriting; so is a minimal function containing `if (1) {}`. Parameter and
 conditional rewrites are therefore not exercised by the whole-file tests.
 Complex Kotlin syntax such as type parameters, lambdas,
 receiver functions, string interpolation, `when`, `try`, destructuring, and
