@@ -1,7 +1,8 @@
 # A common AST from four LINVAST grammars
 
-This proof of concept copies LINVAST's action-free C, Java, Kotlin, and Lua
-grammars and compiles a separate `.ast` mapping for each language into its
+This proof of concept copies the action-free C, Java, Kotlin, and Lua grammars
+from the original ANTLR4-based [LINVAST source code](https://github.com/LINVAST/LINVAST.git)
+and compiles a separate `.ast` mapping for each language into its
 parser `.interp` file. The mapping is applied **during** `trparse --allstar`,
 so the `.pt` file in its default PAX/tar
 output contains `UnvParseTreeNode` AST nodes rather than a CST. All four
@@ -40,7 +41,7 @@ dotnet trash parse --allstar -L c/interp --start-rule primaryExpression \
 ```
 
 The grammar files come from `LINVAST.Imperative/Builders/{C,Java,Kotlin,Lua}/ANTLR`
-in [LINVAST](https://github.com/LINVAST/LINVAST); their upstream notices are
+in that repository; their upstream notices are
 retained in the copied files. C, Java, and Lua are unmodified. The Kotlin
 parser is unmodified, but its full Unicode lexer stalls in the current
 interpreter even for one-character input. The original lexer is preserved at
