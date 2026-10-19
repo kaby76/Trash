@@ -14,6 +14,7 @@ public class ParsedInterp
     /// </summary>
     public int StartStateNumber = -1;
     public bool ContextAwareLexing;
+    public AntlrJson.AstMappingTable AstMapping;
     public Dictionary<(int Rule, int Predicate), MyATN.G4XExclusionOperand[]> G4XExclusions = new();
 }
 
@@ -111,6 +112,26 @@ public static class InterpFileReader
             foreach (var option in ReadSection(lines, ref i))
                 if (TryReadContextAwareLexing(option, out bool enabled))
                     result.ContextAwareLexing = enabled;
+
+        i = optionalSectionStart;
+        if (TrySkipToSection(lines, ref i, "ast-mapping:"))
+        {
+            var entries = ReadSection(lines, ref i);
+            if (entries.Length != 1 || string.IsNullOrWhiteSpace(entries[0]))
+                throw new InvalidDataException(
+                    "Invalid ast-mapping section: expected one base64 table.");
+            try
+            {
+                result.AstMapping = System.Text.Json.JsonSerializer.Deserialize<
+                    AntlrJson.AstMappingTable>(Convert.FromBase64String(entries[0]));
+            }
+            catch (Exception ex) when (ex is FormatException or System.Text.Json.JsonException)
+            {
+                throw new InvalidDataException("Invalid ast-mapping table.", ex);
+            }
+            if (result.AstMapping == null)
+                throw new InvalidDataException("Empty ast-mapping table.");
+        }
 
         return result;
     }

@@ -12,6 +12,11 @@ bundle on stdout. Specify `-o` to write them to a directory instead. Supports bo
 lexer and parser grammars, as well as combined grammars (which produce a lexer
 and parser `.interp` pair).
 
+An `.ast` parse result may accompany exactly one parser grammar. `trinterp`
+compiles its rewrite rules into an `ast-mapping:` section of the parser
+`.interp` file. `trparse --allstar` applies the embedded table while parsing;
+the `.ast` source file is not needed at runtime.
+
 When `--actions-in-interp` is specified, grammar actions and semantic predicates
 are appended as strings to the `.interp` file so that interpreter drivers can
 consume them without needing the generated target-language source.
@@ -31,6 +36,7 @@ consume them without needing the generated target-language source.
 
     dotnet trash parse CLexer.g4 CParser.g4 | dotnet trash interp -o out/
     dotnet trash parse Heavy.g4 | dotnet trash interp --actions-in-interp -o out/
+    dotnet trash parse Arithmetic.g4 arithmetic.ast | dotnet trash interp -o out/
     dotnet trash parse Arithmetic.rex | dotnet trash interp |
         dotnet trash parse --allstar -i '1+2*3' | dotnet trash tree --text -a
 
@@ -147,7 +153,7 @@ See [`examples/w3cebnf-frontend`](../../examples/w3cebnf-frontend/README.md).
 
 ## Current version
 
-Release 4.4.0.
+Release 4.5.0.
 
 ## License
 

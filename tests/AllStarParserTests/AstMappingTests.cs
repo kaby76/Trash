@@ -1,12 +1,137 @@
 using AllStarAtnParser;
 using Atn;
+using AntlrJson;
+using Antlr4.Runtime;
 using ParseTreeEditing.UnvParseTreeDOM;
+using trinterp;
 using Xunit;
 
 namespace AllStarParserTests;
 
 public sealed class AstMappingTests
 {
+    [Fact]
+    public void GeneratedAstParseTreeCompilesAndRoundTripsThroughInterp()
+    {
+        const string source = """
+            ast Sample {
+                default single-child -> child;
+                default otherwise -> error;
+                source(prefix:ITEM*, last:ITEM, tail:END?)
+                    -> ^(SourceNode ...prefix last ...tail);
+            }
+            """;
+        var lexer = new AstMappingLexer(new AntlrInputStream(source));
+        var tokens = new CommonTokenStream(lexer);
+        var parser = new AstMappingParser(tokens);
+        var tree = parser.mapping();
+        Assert.Equal(0, parser.NumberOfSyntaxErrors);
+        var dom = new ConvertToDOM().BottomUpConvert(
+            tree, null, parser, lexer, tokens);
+        Assert.True(AstMappingCompiler.IsMapping(dom));
+        var table = AstMappingCompiler.Compile(dom);
+        Assert.Equal("Sample", table.Name);
+        Assert.True(table.SingleChild);
+        Assert.True(table.ErrorOtherwise);
+        var rule = Assert.Single(table.Rules);
+        Assert.Equal("source", rule.RuleName);
+        Assert.Equal(0, rule.Pattern[0].Min);
+        Assert.Equal(int.MaxValue, rule.Pattern[0].Max);
+        Assert.Equal("node", rule.Result.Op);
+        Assert.Equal("splice", rule.Result.Children[0].Op);
+
+        var encoded = Convert.ToBase64String(
+            System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(table));
+        var interp = "token literal names:\nnull\n\n" +
+            "token symbolic names:\nnull\n\n" +
+            "rule names:\nsource\n\n" +
+            $"atn:\n[1]\n\nast-mapping:\n{encoded}\n\n";
+        var loaded = InterpFileReader.Read(interp).AstMapping;
+        Assert.Equal(table.Name, loaded.Name);
+        Assert.Equal(table.SingleChild, loaded.SingleChild);
+        Assert.Equal(table.ErrorOtherwise, loaded.ErrorOtherwise);
+        Assert.Equal(rule.RuleName, Assert.Single(loaded.Rules).RuleName);
+        var mapping = MappingParser.FromTable(loaded);
+        Assert.Equal("SourceNode", Assert.IsType<NodeTemplate>(
+            Assert.Single(mapping.Rules).Result).Kind);
+    }
+
+    [Fact]
+    public void MappingInputIsRecognizedByTreeShapeRegardlessOfFileName()
+    {
+        const string source = "ast Sample { default single-child -> child; }";
+        var lexer = new AstMappingLexer(new AntlrInputStream(source));
+        var tokens = new CommonTokenStream(lexer);
+        var parser = new AstMappingParser(tokens);
+        var tree = parser.mapping();
+        Assert.Equal(0, parser.NumberOfSyntaxErrors);
+        var dom = new ConvertToDOM().BottomUpConvert(
+            tree, null, parser, lexer, tokens);
+        var result = new ParsingResultSet
+        {
+            FileName = "stdin",
+            Nodes = [dom],
+            Lexer = lexer,
+            Parser = parser
+        };
+        var directory = Directory.CreateTempSubdirectory("AstMappingInput-").FullName;
+        try
+        {
+            var input = Path.Combine(directory, "input.tar");
+            using (var stream = File.Create(input))
+                ArtifactBundle.Write(stream, [new Artifact("stdin.pt",
+                    ArtifactBundle.SerializeParsingResult(result))]);
+            var error = Assert.Throws<InvalidOperationException>(() =>
+                new trinterp.Command().Execute(new trinterp.Config
+                {
+                    File = input,
+                    OutputDirectory = Path.Combine(directory, "out")
+                }));
+            Assert.Contains("An .ast mapping requires exactly one parser grammar",
+                error.Message);
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
+    [Fact]
+    public void EarleyRejectsEmbeddedMappingWithoutPoisoningAllStarRuntimeCache()
+    {
+        var sourceDirectory = Path.Combine(AppContext.BaseDirectory,
+            "TestData", "interp");
+        var directory = Directory.CreateTempSubdirectory("AstMappingCache-").FullName;
+        try
+        {
+            var parserPath = Path.Combine(directory, "Abnf.interp");
+            var lexerPath = Path.Combine(directory, "AbnfLexer.interp");
+            var table = new AstMappingTable("Abnf", false, false,
+                [new AstMappingRuleTable("rulelist",
+                    [new AstPatternPartTable(null, "_", null, null,
+                        0, int.MaxValue)],
+                    new AstTemplateTable("node", "MappedRoot", null, []))]);
+            var encoded = Convert.ToBase64String(
+                System.Text.Json.JsonSerializer.SerializeToUtf8Bytes(table));
+            File.WriteAllText(parserPath,
+                File.ReadAllText(Path.Combine(sourceDirectory, "Abnf.interp")) +
+                $"\nast-mapping:\n{encoded}\n\n");
+            File.Copy(Path.Combine(sourceDirectory, "AbnfLexer.interp"), lexerPath);
+
+            var cache = new InterpRuntimeCache();
+            const string input = "ALPHA = %x41-5A\n";
+            Assert.Throws<NotSupportedException>(() =>
+                EarleyAtnParser.InterpRunner.Run(parserPath, lexerPath,
+                    input, "input.abnf", false, runtimeCache: cache));
+            Assert.Equal(0, cache.Count);
+
+            var (result, _) = AllStarAtnParser.InterpRunner.Run(
+                parserPath, lexerPath, input, "input.abnf", false,
+                runtimeCache: cache);
+            Assert.Equal("MappedRoot",
+                Assert.IsType<UnvParseTreeElement>(Assert.Single(result.Nodes)).LocalName);
+            Assert.Equal(1, cache.Count);
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
     [Fact]
     public void DirectLeftRecursionReducesAtEachPush()
     {

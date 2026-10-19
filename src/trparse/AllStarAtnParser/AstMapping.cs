@@ -1,4 +1,6 @@
 #nullable enable
+using AntlrJson;
+using System.Linq;
 namespace AllStarAtnParser;
 
 public sealed record PatternPart(string? Capture, string? NodeName, string? Literal,
@@ -19,6 +21,24 @@ public sealed class MappingParser
 
     private MappingParser(string input) => _tokens = Tokenize(input);
     public static Mapping Parse(string input) => new MappingParser(input).ReadMapping();
+
+    public static Mapping FromTable(AstMappingTable table) => new(
+        table.Name, table.SingleChild, table.ErrorOtherwise,
+        table.Rules.Select(rule => new MappingRule(rule.RuleName,
+            rule.Pattern.Select(part => new PatternPart(part.Capture,
+                part.NodeName, part.Literal, part.AstKind, part.Min,
+                part.Max)).ToArray(), FromTemplate(rule.Result))).ToArray());
+
+    private static Template FromTemplate(AstTemplateTable template) =>
+        template.Op switch
+        {
+            "capture" => new CaptureTemplate(template.Name),
+            "splice" => new SpliceTemplate(template.Name),
+            "node" => new NodeTemplate(template.Name, template.TextCapture,
+                template.Children.Select(FromTemplate).ToArray()),
+            _ => throw new FormatException(
+                $"Unknown AST template operation '{template.Op}'.")
+        };
 
     private Mapping ReadMapping()
     {

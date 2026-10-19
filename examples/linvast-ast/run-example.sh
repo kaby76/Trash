@@ -3,6 +3,7 @@ set -euo pipefail
 cd "$(dirname "$0")"
 
 dotnet build ../../src/trparse/trparse.csproj -c Release --nologo >&2
+dotnet build ../../src/trinterp/trinterp.csproj -c Release --nologo >&2
 temp_root=$(realpath -e "${TMPDIR:-/tmp}")
 scratch=$(realpath -e "$(mktemp -d "$temp_root/linvast-ast.XXXXXX")")
 cleanup() {
@@ -12,26 +13,27 @@ cleanup() {
 }
 trap cleanup EXIT
 parse=../../../src/trparse/bin/Release/net10.0/trparse.dll
+interp=../../../src/trinterp/bin/Release/net10.0/trinterp.dll
 
 compile() {
   local language=$1
   shift
-  (cd "$language" && dotnet trash parse "$@" |
-    dotnet trash interp -o "$scratch/$language")
+  (cd "$language" && dotnet "$parse" "$@" "$language.ast" |
+    dotnet "$interp" -o "$scratch/$language")
 }
 
 compile c C.g4
 compile java JavaLexer.g4 Java.g4
 # Kotlin has two EOF-terminated entry rules; select kotlinFile explicitly.
-(cd kotlin && dotnet trash parse KotlinLexer.g4 KotlinParser.g4 |
-  dotnet trash interp --start-rule kotlinFile -o "$scratch/kotlin")
+(cd kotlin && dotnet "$parse" KotlinLexer.g4 KotlinParser.g4 kotlin.ast |
+  dotnet "$interp" --start-rule kotlinFile -o "$scratch/kotlin")
 compile lua Lua.g4
 
 check() {
   local language=$1 rule=$2 input=$3 expected=$4 actual
   actual=$(cd "$language" && dotnet "$parse" --allstar \
     -L "$scratch/$language" --start-rule "$rule" \
-    --ast-map "$language.ast" "../input/$input" |
+    "../input/$input" |
     dotnet trash tree --text -a)
   if [[ "$actual" != "$expected" ]]; then
     printf '%s/%s: expected %s, got %s\n' "$language" "$rule" "$expected" "$actual" >&2
@@ -51,7 +53,7 @@ check lua number integer.txt '(LitExprNode 42)'
 
 # The .pt AST is still a normal Trash bundle, not a text-only side channel.
 count=$(cd java && dotnet "$parse" --allstar -L "$scratch/java" \
-  --start-rule primary --ast-map java.ast ../input/identifier.txt |
+  --start-rule primary ../input/identifier.txt |
   dotnet trash xquery 'count(//IdNode)')
 [[ "$count" == 1 ]] || { echo "Expected one IdNode, got $count" >&2; exit 1; }
 
@@ -59,7 +61,7 @@ count=$(cd java && dotnet "$parse" --allstar -L "$scratch/java" \
 check_c_tree() {
   local rule=$1 input=$2 expected=$3 actual
   actual=$(cd c && dotnet "$parse" --allstar -L "$scratch/c" \
-    --start-rule "$rule" --ast-map c.ast "../input/$input" |
+    --start-rule "$rule" "../input/$input" |
     dotnet trash tree --text -a)
   [[ "$actual" == "$(< "$expected")" ]] || {
     printf 'Unexpected C AST for %s:\n%s\n' "$input" "$actual" >&2
@@ -72,7 +74,7 @@ check_c_tree compilationUnit c-function.c c/expected-function.tree
 
 check_c_count() {
   local file=$1 query=$2 expected=$3 actual
-  (cd c && dotnet "$parse" --allstar -L "$scratch/c" --ast-map c.ast \
+  (cd c && dotnet "$parse" --allstar -L "$scratch/c" \
     "../input/$file") > "$scratch/c-ast.tar"
   actual=$(dotnet trash xquery "$query" < "$scratch/c-ast.tar")
   [[ "$actual" == "$expected" ]] || {
@@ -92,7 +94,7 @@ check_language_count() {
   local language=$1 rule=$2 input=$3 query=$4 expected=$5 actual
   (cd "$language" && dotnet "$parse" --allstar \
     -L "$scratch/$language" --start-rule "$rule" \
-    --ast-map "$language.ast" "../input/$input") > "$scratch/$language-ast.tar"
+    "../input/$input") > "$scratch/$language-ast.tar"
   actual=$(dotnet trash xquery "$query" < "$scratch/$language-ast.tar")
   [[ "$actual" == "$expected" ]] || {
     printf '%s/%s: expected %s from %s, got %s\n' \
@@ -143,7 +145,7 @@ check_language_tree() {
   local language=$1 rule=$2 input=$3 expected=$4 actual
   actual=$(cd "$language" && dotnet "$parse" --allstar \
     -L "$scratch/$language" --start-rule "$rule" \
-    --ast-map "$language.ast" "../input/$input" | dotnet trash tree --text -a)
+    "../input/$input" | dotnet trash tree --text -a)
   [[ "$actual" == "$(< "$expected")" ]] || {
     printf 'Unexpected %s AST for %s:\n%s\n' "$language" "$input" "$actual" >&2
     exit 1

@@ -2,10 +2,10 @@
 <!--
   desc.xsd — XML Schema for desc.xml grammar descriptor files used by trgen.
 
-  The desc.xml file lives in each grammar directory under grammars-v4 and
+  The desc.xml file lives in a grammar directory and
   controls how trgen generates parser applications and test harnesses for each
   supported ANTLR4 target language. It specifies which targets to generate for,
-  which ANTLR4 version is required, how to locate grammar files, how to discover
+  how to locate grammar files, how to discover
   test input files, and how multiple separate test configurations should be
   handled.
 
@@ -27,30 +27,26 @@
     </desc>
 
   ============================================================
-  Full example — grammar with non-default naming, version
-  constraint, a glob for inputs, and two test groups:
+  Full example — grammar with non-default naming, a glob for inputs,
+  and two test groups:
   ============================================================
 
     <?xml version="1.0" encoding="UTF-8" ?>
     <desc>
-      <antlr-version>^4.13.2</antlr-version>
       <targets>CSharp;Cpp;Java;JavaScript;Python3</targets>
-      <grammar-files>MyLexer.g4;MyParser.g4</grammar-files>
       <grammar-name>MyLanguage</grammar-name>
       <entry-point>compilationUnit</entry-point>
       <inputs>examples/**/*.mylang</inputs>
-      <!-- Fast targets get the full example suite. -->
       <test>
         <name>fast</name>
         <targets>CSharp;Cpp;Java</targets>
-        <entry-point>compilationUnit</entry-point>
+        <grammar-files>MyLexer.g4;MyParser.g4</grammar-files>
         <inputs>examples/**/*.mylang</inputs>
       </test>
-      <!-- Slow targets get a smaller subset. -->
       <test>
         <name>slow</name>
         <targets>JavaScript;Python3</targets>
-        <entry-point>compilationUnit</entry-point>
+        <grammar-files>MyLexer.g4;MyParser.g4</grammar-files>
         <inputs>examples/small/*.mylang</inputs>
       </test>
     </desc>
@@ -81,13 +77,14 @@
     <?xml version="1.0" encoding="UTF-8" ?>
     <desc>
       <targets>Antlr4ng;Cpp;CSharp;Dart;Java;JavaScript;TypeScript;Python3</targets>
-      <grammar-files>KotlinLexer.g4;KotlinParser.g4</grammar-files>
       <grammar-name>Kotlin</grammar-name>
       <test>
+        <grammar-files>KotlinLexer.g4;KotlinParser.g4</grammar-files>
         <entry-point>kotlinFile</entry-point>
         <inputs>examples/kotlinFile</inputs>
       </test>
       <test>
+        <grammar-files>KotlinLexer.g4;KotlinParser.g4</grammar-files>
         <entry-point>script</entry-point>
         <inputs>examples/script</inputs>
       </test>
@@ -110,16 +107,14 @@
         appear at most once, except &lt;test&gt; which may be repeated any
         number of times.
 
-        The content model is open: unknown elements are permitted (validated
-        laxly) so that future extensions and tooling-specific additions do not
-        break existing desc.xml files. trgen ignores any element it does not
-        recognise.
+        The content model permits extension elements in other namespaces
+        (validated laxly). trgen ignores elements it does not recognise.
 
-        When no &lt;test&gt; elements are present, trgen synthesises a single
-        default test from the top-level &lt;targets&gt;, &lt;entry-point&gt;,
-        and &lt;inputs&gt; values. When one or more &lt;test&gt; elements are
-        present they fully replace the default test, allowing different subsets
-        of targets, input files, or entry points to be combined in any way.
+        When no &lt;test&gt; elements are present, trgen synthesises a default
+        test for each target. When &lt;test&gt; elements are present, each can
+        select targets, input files, and an entry point. A command-line
+        --start-rule or top-level &lt;entry-point&gt; takes precedence over a
+        test-level &lt;entry-point&gt;.
       </xs:documentation>
     </xs:annotation>
     <xs:complexType>
@@ -141,14 +136,9 @@
         <xs:element name="antlr-version" type="xs:string" minOccurs="0">
           <xs:annotation>
             <xs:documentation>
-              Minimum ANTLR4 runtime version required by this grammar, expressed
-              as a semver range. trgen uses this to select a compatible ANTLR4
-              JAR and target-language runtime packages. The caret (^) prefix
-              means "compatible with" — i.e., >= the specified version and
-              &lt; the next major version.
-
-              When absent, trgen uses whatever ANTLR4 version it is configured
-              with by default.
+              Legacy descriptor field. Current trgen does not read this value;
+              use the --antlr-version command-line option to select a tool and
+              runtime version.
 
               Examples:
                 &lt;antlr-version&gt;^4.10&lt;/antlr-version&gt;
@@ -175,6 +165,7 @@
                 JavaScript — JavaScript (Node.js)
                 PHP       — PHP
                 Python3   — Python 3
+                OphiRust — Rust (OphiRust runtime)
                 Rust      — Rust (community runtime)
                 TypeScript — TypeScript (official runtime)
 
@@ -190,14 +181,9 @@
         <xs:element name="grammar-files" type="xs:string" minOccurs="0">
           <xs:annotation>
             <xs:documentation>
-              Semicolon-separated list of .g4 grammar files that make up this
-              grammar. Use this element when the grammar files do not follow the
-              default naming convention (where the file name matches the grammar
-              directory name). List files in dependency order: lexer grammars
-              before combined or parser grammars.
-
-              When absent, trgen discovers grammar files by looking for .g4 files
-              whose base name matches the directory name.
+              Legacy top-level field. Current trgen does not read it; use
+              &lt;test&gt;/&lt;grammar-files&gt; to select grammar files for a
+              test. Without a test-level list, trgen discovers local .g4 files.
 
               Examples:
                 &lt;grammar-files&gt;KotlinLexer.g4;KotlinParser.g4&lt;/grammar-files&gt;
@@ -232,18 +218,47 @@
         <xs:element name="entry-point" type="xs:string" minOccurs="0">
           <xs:annotation>
             <xs:documentation>
-              The parser rule name used as the top-level (start) rule when
-              parsing input files. If absent, trgen uses the first parser rule
-              defined in the grammar.
-
-              This top-level value is the default for all tests. Each &lt;test&gt;
-              element may provide its own &lt;entry-point&gt; to override it for
-              that test run.
+              Parser rule name used as the start rule. A command-line
+              --start-rule takes precedence. If neither is specified, a
+              test-level &lt;entry-point&gt; may select the start rule. Otherwise
+              trgen selects the sole EOF-terminated parser rule. If there are
+              multiple EOF-terminated rules, an explicit start rule is required;
+              if there are none, automatic selection cannot determine one.
+              trgen checks that an explicitly selected rule exists in the
+              selected parser grammar.
 
               Examples:
                 &lt;entry-point&gt;compilationUnit&lt;/entry-point&gt;
                 &lt;entry-point&gt;file_input&lt;/entry-point&gt;
                 &lt;entry-point&gt;source_text&lt;/entry-point&gt;
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+
+        <xs:element name="os-targets" type="xs:string" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Semicolon-separated operating-system targets. When absent, trgen
+              uses the current operating system. A test-level &lt;os-targets&gt;
+              can select its own operating systems.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+
+        <xs:element name="parsing-type" type="xs:string" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Parsing mode for generated tests. Defaults to "group"; a
+              test-level &lt;parsing-type&gt; overrides this value.
+            </xs:documentation>
+          </xs:annotation>
+        </xs:element>
+
+        <xs:element name="file-encoding" type="xs:string" minOccurs="0">
+          <xs:annotation>
+            <xs:documentation>
+              Default input-file encoding. A test-level &lt;file-encoding&gt;
+              overrides this value for that test.
             </xs:documentation>
           </xs:annotation>
         </xs:element>
@@ -267,10 +282,10 @@
         <xs:element name="inputs" type="xs:string" minOccurs="0">
           <xs:annotation>
             <xs:documentation>
-              Glob pattern (relative to the grammar directory) that specifies
-              which input files are used to test the grammar. Supports `**` for
-              recursive directory matching. May also be a bare directory path, in
-              which case all files directly inside that directory are used.
+              Semicolon-separated input patterns (relative to the grammar
+              directory). Supports `**` for recursive matching. A pattern
+              prefixed with `!` excludes matching files. A bare directory path
+              selects files in that directory.
 
               This top-level value is the default; each &lt;test&gt; may provide
               its own &lt;inputs&gt; to override it for that run.
@@ -287,10 +302,8 @@
         <xs:element name="imports" type="xs:string" minOccurs="0">
           <xs:annotation>
             <xs:documentation>
-              Relative path to another grammar directory whose .g4 files are
-              imported by this grammar via ANTLR4 `import` statements. trgen
-              will look in that directory when resolving imported grammars during
-              code generation.
+              Semicolon-separated relative paths to directories containing .g4
+              files. trgen also searches the current directory.
 
               Example:
                 &lt;imports&gt;../c&lt;/imports&gt;
@@ -356,9 +369,8 @@
                      &lt;grammar-name&gt;EiffelNoSkip&lt;/grammar-name&gt;
                    &lt;/test&gt;
 
-              When no &lt;test&gt; elements are present, trgen synthesises a
-              single default test using the top-level &lt;targets&gt;,
-              &lt;entry-point&gt;, and &lt;inputs&gt; values.
+              When no &lt;test&gt; elements are present, trgen synthesises
+              default tests using the top-level descriptor values.
             </xs:documentation>
           </xs:annotation>
           <xs:complexType>
@@ -397,10 +409,10 @@
               <xs:element name="entry-point" type="xs:string">
                 <xs:annotation>
                   <xs:documentation>
-                    Parser rule to use as the start rule for this specific test,
-                    overriding the top-level &lt;entry-point&gt;. Use this when
-                    a grammar exposes multiple valid start rules and different
-                    tests need to exercise different ones.
+                    Parser rule to use as the start rule for this specific test
+                    when neither --start-rule nor a top-level &lt;entry-point&gt;
+                    was supplied. Required to disambiguate multiple
+                    EOF-terminated start rules in that case.
 
                     Example:
                       &lt;entry-point&gt;start_scriptlet&lt;/entry-point&gt;
@@ -408,12 +420,74 @@
                 </xs:annotation>
               </xs:element>
 
+              <xs:element name="grammar-files" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>
+                    Semicolon-separated grammar file names or patterns for this
+                    test. Without this field, trgen discovers local .g4 files.
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:element>
+
+              <xs:element name="os-targets" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>
+                    Semicolon-separated operating systems for this test; when
+                    omitted, trgen uses the current operating system.
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:element>
+
+              <xs:element name="parsing-type" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>
+                    Parsing mode for this test; defaults to the top-level value
+                    or "group" when neither is specified.
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:element>
+
+              <xs:element name="binary">
+                <xs:annotation>
+                  <xs:documentation>
+                    Marks this test as using binary input. Its presence enables
+                    binary mode even if the element is empty.
+                  </xs:documentation>
+                </xs:annotation>
+                <xs:complexType/>
+              </xs:element>
+
+              <xs:element name="source-directory" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>
+                    Directory containing the grammar sources for this test.
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:element>
+
+              <xs:element name="lexer-name" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>
+                    Lexer name read by trgen for this test. Currently it does
+                    not affect generated output.
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:element>
+
+              <xs:element name="package-name" type="xs:string">
+                <xs:annotation>
+                  <xs:documentation>
+                    Package or namespace for generated code in this test.
+                  </xs:documentation>
+                </xs:annotation>
+              </xs:element>
+
               <xs:element name="inputs" type="xs:string">
                 <xs:annotation>
                   <xs:documentation>
-                    Glob pattern for input files used in this specific test run,
-                    overriding the top-level &lt;inputs&gt; value. Supports `**`
-                    for recursive matching or may be a bare directory path.
+                    Semicolon-separated input patterns for this test, replacing
+                    the top-level &lt;inputs&gt; value. Supports `**` for
+                    recursive matching and `!` prefixes for exclusions.
 
                     Examples:
                       &lt;inputs&gt;examples/small/*.sql&lt;/inputs&gt;
@@ -453,7 +527,7 @@
                 </xs:annotation>
               </xs:element>
 
-              <!-- Open content: allow unknown elements inside <test> as well. -->
+              <!-- Allow extension elements from other namespaces. -->
               <xs:any namespace="##other" processContents="lax"
                       minOccurs="0" maxOccurs="unbounded"/>
 
@@ -461,9 +535,7 @@
           </xs:complexType>
         </xs:element>
 
-        <!-- Open content: allow any unknown element so future extensions and
-             tooling-specific additions do not break validation. trgen ignores
-             elements it does not recognise at runtime. -->
+        <!-- Allow extension elements from other namespaces. -->
         <xs:any namespace="##other" processContents="lax"
                 minOccurs="0" maxOccurs="unbounded"/>
 

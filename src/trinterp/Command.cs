@@ -16,7 +16,7 @@ namespace trinterp;
 public class Command
 {
     public string Help() =>
-        "trinterp: Generate .interp and .tokens files from ANTLRv4, G4X, basic REx, basic iXML, basic ABNF, basic Bison, or basic W3C EBNF grammar parse trees.\n" +
+        "trinterp: Generate .interp and .tokens files from grammar parse trees, optionally embedding a compiled .ast rewrite mapping.\n" +
         "Usage: dotnet trash parse grammar.g4 | dotnet trash interp [options]\n";
 
     public void Execute(Config config)
@@ -55,6 +55,7 @@ public class Command
 
         // Pass 1: parse all grammar models and detect EOF-terminated start rules.
         var models = new List<GrammarModel>();
+        var astMappings = new List<AstMappingTable>();
         var startRuleIndices = new Dictionary<GrammarModel, int>(); // parser models only
         foreach (var set in sets)
         {
@@ -62,6 +63,16 @@ public class Command
             var root = set.Nodes[0] as UnvParseTreeElement;
             if (root == null) continue;
             var fileName = set.FileName ?? "grammar";
+            if (AstMappingCompiler.IsMapping(root))
+            {
+                try { astMappings.Add(AstMappingCompiler.Compile(root)); }
+                catch (Exception ex)
+                {
+                    throw new InvalidOperationException(
+                        $"[trinterp] Failed to compile AST mapping for {fileName}: {ex.Message}", ex);
+                }
+                continue;
+            }
             GrammarModel model;
             try { model = new GrammarParser().Parse(root, fileName); }
             catch (Exception ex)
@@ -101,15 +112,23 @@ public class Command
         }
 
         // Bind and validate the entire batch before writing any tables.
+        if (astMappings.Count > 0 &&
+            (astMappings.Count != 1 || models.Count(model => !model.IsLexer) != 1))
+            throw new InvalidOperationException(
+                "[trinterp] An .ast mapping requires exactly one parser grammar " +
+                "and one .ast file in the input parse-result set.");
         GrammarBinding.Bind(models);
         foreach (var model in models)
         {
             int? startRuleIdx = startRuleIndices.TryGetValue(model, out var sri) ? sri : (int?)null;
-            EmitGrammar(model, config, outDir, optimize, startRuleIdx);
+            EmitGrammar(model, config, outDir, optimize, startRuleIdx,
+                !model.IsLexer && astMappings.Count > 0 ? astMappings[0] : null);
         }
     }
 
-    private static void EmitGrammar(GrammarModel grammar, Config config, string outDir, OptimizeOptions optimize, int? startRuleIndex = null)
+    private static void EmitGrammar(GrammarModel grammar, Config config, string outDir,
+        OptimizeOptions optimize, int? startRuleIndex = null,
+        AstMappingTable astMapping = null)
     {
         // ---- Build ATN ----
         ParserAtnFactory factory = grammar.IsLexer
@@ -152,6 +171,13 @@ public class Command
         {
             int stateNumber = atn.ruleToStartState[startRuleIndex.Value].stateNumber;
             interpContent += "\nstart-rule:\n" + stateNumber + "\n";
+        }
+
+        if (astMapping != null)
+        {
+            interpContent += "\nast-mapping:\n" +
+                Convert.ToBase64String(JsonSerializer.SerializeToUtf8Bytes(astMapping)) +
+                "\n\n";
         }
 
         // ---- Write files ----
