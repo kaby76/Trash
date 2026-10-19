@@ -1,1 +1,1 @@
-./bin/Debug/net10.0/Test.exe "$@"
+dotnet ./bin/Debug/net10.0/ast.dll "$@"

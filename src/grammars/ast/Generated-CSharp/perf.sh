@@ -75,6 +75,7 @@ fi
 
 n=$1
 type=$2
+status=0
 echo SampleSize=$n >> parse.txt
 echo "" >> parse.txt
 
@@ -96,7 +97,7 @@ then
         # Loop from 1 to n and execute the body of the loop each time
         for ((i=1; i<=n; i++))
         do
-            dotnet trash wdog ./bin/Debug/net10.0/Test.exe -prefix individual $f >> parse.txt 2>&1
+            dotnet trash wdog dotnet ./bin/Debug/net10.0/ast.dll -prefix individual "$f" >> parse.txt 2>&1
             xxx="$?"
             if [ "$xxx" -ne 0 ]
             then
@@ -110,10 +111,12 @@ fi
 # Loop from 1 to n and execute the body of the loop each time
 if [[ "$type" == "group" ]]
 then
-    echo "${files[1]}" | dotnet trash wdog ./bin/Debug/net10.0/Test.exe -x --perf --per-file -prefix group > /dev/null 2>&1
+    echo "${files[1]}" | dotnet trash wdog dotnet ./bin/Debug/net10.0/ast.dll -x --perf --per-file -prefix group > /dev/null 2>&1
+    warmup_status=$?
+    if [ "$warmup_status" -ne 0 ]; then status="$warmup_status"; fi
     for ((i=1; i<=n; i++))
     do
-        echo "${files[*]}" | dotnet trash wdog ./bin/Debug/net10.0/Test.exe -x --perf --per-file -prefix group >> parse.txt 2>&1
+        echo "${files[*]}" | dotnet trash wdog dotnet ./bin/Debug/net10.0/ast.dll -x --perf --per-file -prefix group >> parse.txt 2>&1
         xxx="$?"
         if [ "$xxx" -ne 0 ]
         then
@@ -124,4 +127,4 @@ fi
 
 dos2unix parse.txt
 
-exit 0
+exit "$status"

@@ -63,7 +63,7 @@ public class Command
             var root = set.Nodes[0] as UnvParseTreeElement;
             if (root == null) continue;
             var fileName = set.FileName ?? "grammar";
-            if (fileName.EndsWith(".ast", StringComparison.OrdinalIgnoreCase))
+            if (AstMappingCompiler.IsMapping(root))
             {
                 try { astMappings.Add(AstMappingCompiler.Compile(root)); }
                 catch (Exception ex)

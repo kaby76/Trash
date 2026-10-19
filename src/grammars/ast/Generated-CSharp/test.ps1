@@ -52,7 +52,7 @@ git clean -f ..\examples
 
 # Parse all input files.
 # Group parsing.
-get-content "$filePath" | dotnet trash wdog ./bin/Debug/net10.0/Test.exe -q -x -tee -tree *> parse.txt
+get-content "$filePath" | dotnet trash wdog dotnet ./bin/Debug/net10.0/ast.dll -q -x -tee -tree *> parse.txt
 $status = $LASTEXITCODE
 
 # trwdog returns 255 if it cannot spawn the process. This could happen

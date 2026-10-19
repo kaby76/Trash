@@ -45,6 +45,9 @@ public static class InterpRunner
         {
             var loadedParserInterp = InterpFileReader.Read(
                 File.ReadAllText(parserInterpPath));
+            if (loadedParserInterp.AstMapping != null)
+                throw new NotSupportedException(
+                    "The parser .interp contains an AST mapping; use --allstar to apply it.");
             var loadedLexerInterp = InterpFileReader.Read(
                 File.ReadAllText(lexerInterpPath));
             var loadedParserAtn = AtnDeserializer.Deserialize(

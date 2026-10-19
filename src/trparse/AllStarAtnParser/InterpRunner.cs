@@ -97,6 +97,9 @@ public static class InterpRunner
                     parserInterpPath, lexerInterpPath, runtime);
         }
         var parserInterp = runtime.ParserInterp;
+        if (parserInterp.AstMapping != null && runtime.AstMapping == null)
+            throw new InvalidOperationException(
+                "The cached parser runtime is missing its embedded AST mapping.");
         contextAwareLexing |= parserInterp.ContextAwareLexing;
         var lexerInterp = runtime.LexerInterp;
         var parserAtn = runtime.ParserAtn;

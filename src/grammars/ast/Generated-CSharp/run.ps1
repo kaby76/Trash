@@ -1,1 +1,1 @@
-./bin/Debug/net10.0/Test.exe $args
+dotnet ./bin/Debug/net10.0/ast.dll @args

@@ -9,6 +9,9 @@ namespace trinterp;
 /// <summary>Compiles an .ast parse tree into the runtime rewrite table.</summary>
 public static class AstMappingCompiler
 {
+    public static bool IsMapping(UnvParseTreeElement root) =>
+        root?.LocalName == "mapping";
+
     public static AstMappingTable Compile(UnvParseTreeElement root)
     {
         var syntax = GrammarNode.FromDom(root);
