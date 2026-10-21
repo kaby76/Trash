@@ -24,7 +24,7 @@ a grammar.
 
 ## Current version
 
-Release 4.6.0.
+Release 4.7.0.
 
 ## License
 

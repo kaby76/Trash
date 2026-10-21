@@ -1,7 +1,8 @@
 #!/usr/bin/bash
 #set -e
 #set -x
-version="4.6.0"
+version="4.7.0"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 cd src
 directories=`find . -maxdepth 1 -type d -name "tr*"`
 cwd=`pwd`
@@ -98,3 +99,16 @@ do
     done
     popd
 done
+
+pushd $SCRIPT_DIR
+rm -f asdfasdf
+for f in publish.sh
+do
+    if [ ! -f $f ]
+    then
+        continue
+    fi
+    cat $f | sed -e 's%version=.*$%version='$version'%' > asdfasdf
+    mv asdfasdf $f
+done
+popd
