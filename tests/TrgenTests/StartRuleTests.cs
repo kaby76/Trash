@@ -9,6 +9,7 @@ public class StartRuleTests
     [InlineData("caql", "Generated-CSharp", "start_", "CaQL.g4")]
     [InlineData("cpp", "Generated-CSharp-cpp14", "translationUnit", "CPP14Parser.g4")]
     [InlineData("cpp", "Generated-CSharp-cpp20", "start_", "CPP20Parser.g4")]
+    [InlineData("hive-v2", "Generated-CSharp", "statements", "HiveParser.g4")]
     public async Task GeneratesDriversForDescriptorSelectedGrammars(
         string fixture, string outputDirectory, string startRule, string parserGrammar)
     {
