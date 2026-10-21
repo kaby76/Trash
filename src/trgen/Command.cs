@@ -813,7 +813,8 @@ namespace Trash
                     if (!z.Any()) test_ostargets = z.Select(t => GetOSPlatformFromName(t)).ToList();
                 }
             }
-            /*{
+            List<string> descriptorGrammarFiles = null;
+            {
                 var xgrammars = navigator
                     .Select("/desc/grammar-files", nsmgr)
                     .Cast<XPathNavigator>()
@@ -857,9 +858,12 @@ namespace Trash
                         }
                     }
 
-                    config.Files = merged_list;
+                    if (merged_list.Count == 0)
+                        throw new InvalidOperationException(
+                            "No grammar files matched <grammar-files> in desc.xml.");
+                    descriptorGrammarFiles = merged_list;
                 }
-            }*/
+            }
             //{
             //    // Add the dirname to the current directory.
             //    var cwd = Environment.CurrentDirectory.Replace("\\", "/");
@@ -1031,7 +1035,8 @@ namespace Trash
                             }
                             config.Files = list;
                         }
-                        test.tool_grammar_files = config.Files.ToList();
+                        test.tool_grammar_files = descriptorGrammarFiles?.ToList()
+                            ?? config.Files.ToList();
                         test.package = test.target == "Go" ? "parser" : test.package;
                         test.package = test.target == "Antlr4cs" ? "Test" : test.package;
                         if (test.parsing_type == null) test.parsing_type = config.parsing_type;
