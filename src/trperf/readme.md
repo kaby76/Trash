@@ -67,7 +67,7 @@ be in a trgen-generated parser directory, or use the -p option.
 
 ## Current version
 
-Release 4.5.0.
+Release 4.6.0.
 
 ## License
 

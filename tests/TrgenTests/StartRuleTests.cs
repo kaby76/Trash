@@ -5,6 +5,57 @@ namespace TrgenTests;
 
 public class StartRuleTests
 {
+    [Theory]
+    [InlineData("caql", "Generated-CSharp", "start_", "CaQL.g4")]
+    [InlineData("cpp", "Generated-CSharp-cpp14", "translationUnit", "CPP14Parser.g4")]
+    [InlineData("cpp", "Generated-CSharp-cpp20", "start_", "CPP20Parser.g4")]
+    [InlineData("hive-v2", "Generated-CSharp", "statements", "HiveParser.g4")]
+    public async Task GeneratesDriversForDescriptorSelectedGrammars(
+        string fixture, string outputDirectory, string startRule, string parserGrammar)
+    {
+        var fixtureDirectory = Path.GetFullPath(Path.Combine(
+            AppContext.BaseDirectory, "../../../../grammars-v4", fixture));
+        var directory = Path.Combine(Path.GetTempPath(),
+            "trgen-real-grammars-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(directory);
+        try
+        {
+            File.Copy(Path.Combine(fixtureDirectory, "desc.xml"),
+                Path.Combine(directory, "desc.xml"));
+            foreach (var grammar in Directory.GetFiles(fixtureDirectory, "*.g4"))
+                File.Copy(grammar, Path.Combine(directory, Path.GetFileName(grammar)));
+
+            var startInfo = new ProcessStartInfo("dotnet")
+            {
+                WorkingDirectory = directory,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false
+            };
+            startInfo.ArgumentList.Add(typeof(Trash.Program).Assembly.Location);
+            startInfo.ArgumentList.Add("-t");
+            startInfo.ArgumentList.Add("CSharp");
+
+            using var process = Process.Start(startInfo);
+            Assert.NotNull(process);
+            var stdoutTask = process.StandardOutput.ReadToEndAsync();
+            var stderrTask = process.StandardError.ReadToEndAsync();
+            await process.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(90));
+            _ = await stdoutTask;
+            var stderr = await stderrTask;
+            Assert.True(process.ExitCode == 0, stderr);
+            Assert.Contains("Start rule " + startRule, stderr);
+            var generatedDirectory = Path.Combine(directory, outputDirectory);
+            Assert.True(File.Exists(Path.Combine(generatedDirectory, parserGrammar)));
+            var driver = File.ReadAllText(Path.Combine(generatedDirectory, "Test.cs"));
+            Assert.Contains("Parser." + startRule + "()", driver);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
     [Fact]
     public async Task DescriptorEntryPointsApplyOnlyToTheirSelectedParserGrammars()
     {

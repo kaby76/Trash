@@ -24,7 +24,7 @@ alias for the default and cannot be combined with `--text`.
 
 ## Current version
 
-Release 4.5.0.
+Release 4.6.0.
 
 ## License
 

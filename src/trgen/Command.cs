@@ -67,8 +67,12 @@ namespace Trash
                 if (!test.tool_grammar_files.Any())
                     test.tool_grammar_files = config.Files.ToList();
                 test.tool_grammar_tuples = new List<GrammarTuple>();
-                foreach (var f in test.tool_grammar_files)
+                var includedGrammarNames = new HashSet<string>(
+                    test.tool_grammar_files.Select(Path.GetFileNameWithoutExtension),
+                    StringComparer.Ordinal);
+                for (var grammarIndex = 0; grammarIndex < test.tool_grammar_files.Count; grammarIndex++)
                 {
+                    var f = test.tool_grammar_files[grammarIndex];
                     // We're going to assume that the grammars are in
                     // the current directory. That's because this is the Maven
                     // Antlr4 tool plugin so it doesn't fish around to find the grammar,
@@ -148,6 +152,30 @@ namespace Trash
 
                     var evaluator = new XPathEvaluator();
                     var adapterDoc = AdapterDocument.Build(pr.First().Nodes);
+                    var importedGrammarNames = evaluator.Evaluate(
+                            new XPathParser("//delegateGrammars/delegateGrammar[not(ASSIGN)]/identifier/(RULE_REF | TOKEN_REF)/text()").Parse(),
+                            adapterDoc)
+                        .OfType<AdapterText>().Select(at => at.Source.Data);
+                    foreach (var importedName in importedGrammarNames)
+                    {
+                        if (includedGrammarNames.Contains(importedName)) continue;
+                        var importedFile = importedName + ".g4";
+                        var candidate = Path.Combine(Path.GetDirectoryName(f) ?? "", importedFile);
+                        if (!File.Exists(candidate) &&
+                            !File.Exists(Path.Combine(test.current_directory ?? "", candidate)))
+                        {
+                            candidate = (config.imports ?? new List<string>())
+                                .Select(dir => Path.Combine(dir, importedFile))
+                                .FirstOrDefault(File.Exists);
+                        }
+                        if (candidate == null ||
+                            (!File.Exists(candidate) &&
+                             !File.Exists(Path.Combine(test.current_directory ?? "", candidate))))
+                            throw new InvalidOperationException(
+                                $"Cannot find imported grammar '{importedFile}' required by '{sgfn}'.");
+                        test.tool_grammar_files.Add(candidate);
+                        includedGrammarNames.Add(importedName);
+                    }
                     List<UnvParseTreeElement> is_par =
                         evaluator.Evaluate(new XPathParser("/grammarSpec/grammarDecl/grammarType/PARSER").Parse(), adapterDoc)
                             .OfType<AdapterElement>().Select(ae => ae.Source).ToList();
@@ -591,7 +619,7 @@ namespace Trash
             }
         }
 
-        public static string version = "4.5.0";
+        public static string version = "4.6.0";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -813,7 +841,8 @@ namespace Trash
                     if (!z.Any()) test_ostargets = z.Select(t => GetOSPlatformFromName(t)).ToList();
                 }
             }
-            /*{
+            List<string> descriptorGrammarFiles = null;
+            {
                 var xgrammars = navigator
                     .Select("/desc/grammar-files", nsmgr)
                     .Cast<XPathNavigator>()
@@ -857,9 +886,12 @@ namespace Trash
                         }
                     }
 
-                    config.Files = merged_list;
+                    if (merged_list.Count == 0)
+                        throw new InvalidOperationException(
+                            "No grammar files matched <grammar-files> in desc.xml.");
+                    descriptorGrammarFiles = merged_list;
                 }
-            }*/
+            }
             //{
             //    // Add the dirname to the current directory.
             //    var cwd = Environment.CurrentDirectory.Replace("\\", "/");
@@ -1031,7 +1063,8 @@ namespace Trash
                             }
                             config.Files = list;
                         }
-                        test.tool_grammar_files = config.Files.ToList();
+                        test.tool_grammar_files = descriptorGrammarFiles?.ToList()
+                            ?? config.Files.ToList();
                         test.package = test.target == "Go" ? "parser" : test.package;
                         test.package = test.target == "Antlr4cs" ? "Test" : test.package;
                         if (test.parsing_type == null) test.parsing_type = config.parsing_type;

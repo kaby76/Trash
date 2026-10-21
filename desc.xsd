@@ -181,9 +181,10 @@
         <xs:element name="grammar-files" type="xs:string" minOccurs="0">
           <xs:annotation>
             <xs:documentation>
-              Legacy top-level field. Current trgen does not read it; use
-              &lt;test&gt;/&lt;grammar-files&gt; to select grammar files for a
-              test. Without a test-level list, trgen discovers local .g4 files.
+              Selects grammar files for the default test when no explicit
+              &lt;test&gt; elements are present. Use
+              &lt;test&gt;/&lt;grammar-files&gt; to select files for an individual
+              test. Without a list, trgen discovers local .g4 files.
 
               Examples:
                 &lt;grammar-files&gt;KotlinLexer.g4;KotlinParser.g4&lt;/grammar-files&gt;

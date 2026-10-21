@@ -36,7 +36,7 @@ no style option, the block-style tree is used.
 
 ## Current version
 
-Release 4.5.0.
+Release 4.6.0.
 
 ## License
 
