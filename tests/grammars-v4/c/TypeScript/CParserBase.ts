@@ -4,16 +4,8 @@ import { Symbol } from "./Symbol.js";
 import { TypeClassification } from "./TypeClassification.js";
 import CLexer from "./CLexer.js";
 // Note: CParser import removed to break circular dependency (CParser extends CParserBase).
-// RULE_declaration = 27, RULE_declarationSpecifiers = 28, RULE_functionDefinition = 92 (from CParser.js static fields).
-
-function isDeclarationContext(x: any): boolean {
-  return x?.ruleIndex === 27;
-}
-
-
-function isFunctionDefinitionContext(x: any): boolean {
-  return x?.ruleIndex === 92;
-}
+// Imported grammars can change rule indices, so identify contexts by the
+// generated parser's rule names instead of CParser's numeric constants.
 
 // List of all semantic function names
 const ALL_SEMANTIC_FUNCTIONS = [
@@ -54,6 +46,12 @@ function parseNoSemantics(args: string[]): Set<string> {
 }
 
 export default abstract class CParserBase extends Parser {
+    public abstract get ruleNames(): string[];
+
+    private isRuleContext(context: ParserRuleContext | null | undefined, name: string): boolean {
+        return context != null && this.ruleNames[(context as any).ruleIndex] === name;
+    }
+
     private _st: SymbolTable;
     private debug: boolean = false;
     private outputSymbolTable: boolean = false;
@@ -142,7 +140,7 @@ export default abstract class CParserBase extends Parser {
         const lt1 = (this._input as CommonTokenStream).LT(1);
         const text = lt1!.text!;
         if (this.debug) console.log("IsDeclarationSpecifier " + lt1);
-        if (lt1!.type === CLexer.Identifier && (this._ctx as any)?.ruleIndex === 28) {
+        if (lt1!.type === CLexer.Identifier && this.isRuleContext(this._ctx, "declarationSpecifiers")) {
             const dsCtx = this._ctx as any;
             const resolvedId = this.resolveWithOutput(lt1);
             if (resolvedId !== null && !resolvedId.predefined
@@ -377,7 +375,7 @@ export default abstract class CParserBase extends Parser {
         if (this.debug) console.log("EnterDeclaration");
         let context: ParserRuleContext | null | undefined = this._ctx;
         for (; context != null; context = context.parentCtx) {
-            if (isDeclarationContext(context)) {
+            if (this.isRuleContext(context, "declaration")) {
                 const declaration_context = context as any;
                 const declaration_specifiers = declaration_context.declarationSpecifiers();
                 const declaration_specifier = declaration_specifiers?.declarationSpecifier_list() ?? null;
@@ -437,7 +435,7 @@ export default abstract class CParserBase extends Parser {
                     }
                 }
             }
-            if (isFunctionDefinitionContext(context)) {
+            if (this.isRuleContext(context, "functionDefinition")) {
                 const fd = context as any;
                 const de = fd.declarator();
                 if (de === null || de === undefined) continue;
@@ -562,7 +560,7 @@ export default abstract class CParserBase extends Parser {
             result = true;
         } else if (resolved.classification.has(TypeClassification.TypeQualifier_) || resolved.classification.has(TypeClassification.TypeSpecifier_)) {
             if (lt1!.type === CLexer.Identifier && resolved.classification.has(TypeClassification.TypeSpecifier_)) {
-                if ((this._ctx as any)?.ruleIndex === 27) {
+                if (this.isRuleContext(this._ctx, "declaration")) {
                     const declCtx = this._ctx as any;
                     const dsCtx = declCtx.declarationSpecifiers();
                     const specList = dsCtx?.declarationSpecifier_list() ?? null;
