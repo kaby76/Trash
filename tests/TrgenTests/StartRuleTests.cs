@@ -10,13 +10,20 @@ public class StartRuleTests
     [InlineData("cpp", "Generated-CSharp-cpp14", "translationUnit", "CPP14Parser.g4")]
     [InlineData("cpp", "Generated-CSharp-cpp20", "start_", "CPP20Parser.g4")]
     [InlineData("hive-v2", "Generated-CSharp", "statements", "HiveParser.g4")]
+    [InlineData("ocl", "Generated-CSharp-spec", "specification", "UMLRSDS.g4")]
+    [InlineData("ocl", "Generated-CSharp-expr", "expressions", "UMLRSDS.g4")]
+    [InlineData("ocl", "Generated-CSharp-contextspecs", "multipleContextSpecifications", "UMLRSDS.g4")]
+    [InlineData("c", "Generated-CSharp", "compilationUnit", "CParser.g4")]
+    [InlineData("trapc", "Generated-CSharp", "compilationUnit", "TrapCParser.g4")]
+    [InlineData("teradata", "Generated-CSharp", "sql_script", "TeradataSQLParser.g4")]
     public async Task GeneratesDriversForDescriptorSelectedGrammars(
         string fixture, string outputDirectory, string startRule, string parserGrammar)
     {
         var fixtureDirectory = Path.GetFullPath(Path.Combine(
             AppContext.BaseDirectory, "../../../../grammars-v4", fixture));
-        var directory = Path.Combine(Path.GetTempPath(),
+        var rootDirectory = Path.Combine(Path.GetTempPath(),
             "trgen-real-grammars-" + Guid.NewGuid().ToString("N"));
+        var directory = Path.Combine(rootDirectory, fixture);
         Directory.CreateDirectory(directory);
         try
         {
@@ -24,6 +31,15 @@ public class StartRuleTests
                 Path.Combine(directory, "desc.xml"));
             foreach (var grammar in Directory.GetFiles(fixtureDirectory, "*.g4"))
                 File.Copy(grammar, Path.Combine(directory, Path.GetFileName(grammar)));
+            if (fixture == "trapc")
+            {
+                var cFixtureDirectory = Path.GetFullPath(Path.Combine(
+                    AppContext.BaseDirectory, "../../../../grammars-v4/c"));
+                var cDirectory = Path.Combine(rootDirectory, "c");
+                Directory.CreateDirectory(cDirectory);
+                foreach (var grammar in Directory.GetFiles(cFixtureDirectory, "*.g4"))
+                    File.Copy(grammar, Path.Combine(cDirectory, Path.GetFileName(grammar)));
+            }
 
             var startInfo = new ProcessStartInfo("dotnet")
             {
@@ -52,7 +68,7 @@ public class StartRuleTests
         }
         finally
         {
-            Directory.Delete(directory, recursive: true);
+            Directory.Delete(rootDirectory, recursive: true);
         }
     }
 

@@ -64,6 +64,7 @@ namespace Trash
             // be ready to handle the worse of the worse.
             foreach (var test in config.Tests)
             {
+                var parserRulesByGrammar = new Dictionary<string, (string FileName, List<string> Rules, List<string> EofRules)>();
                 if (!test.tool_grammar_files.Any())
                     test.tool_grammar_files = config.Files.ToList();
                 test.tool_grammar_tuples = new List<GrammarTuple>();
@@ -191,31 +192,17 @@ namespace Trash
                     List<string> parser_rules =
                         evaluator.Evaluate(new XPathParser("/grammarSpec/rules/ruleSpec/parserRuleSpec/RULE_REF/text()").Parse(), adapterDoc)
                             .OfType<AdapterText>().Select(at => at.Source.Data).ToList();
+                    var grammar_name = name_.First();
+
+                    parserRulesByGrammar[grammar_name] = (sgfn, parser_rules, ss);
 
                     var is_parser_grammar = is_par.Count() != 0;
                     var is_lexer_grammar = is_lex.Count() != 0;
                     var is_combined = !is_parser_grammar && !is_lexer_grammar;
-                    var grammar_name = name_.First();
-                    // A descriptor may define several tests over different
-                    // grammars in the same directory. Its entry point only
-                    // belongs to the parser selected by this test.
-                    bool selected_parser = parser_rules.Count > 0 &&
-                        (string.IsNullOrEmpty(test.grammar_name) ||
-                         grammar_name == test.grammar_name ||
-                         grammar_name == test.grammar_name + "Parser");
-                    if (selected_parser && !string.IsNullOrEmpty(test.start_rule) &&
-                        !parser_rules.Contains(test.start_rule))
-                        throw new InvalidOperationException(
-                            $"Start rule '{test.start_rule}' was not found in grammar '{sgfn}'. " +
-                            "Available parser rules: " + string.Join(", ", parser_rules));
-                    if (selected_parser && ss.Count > 1 &&
-                        string.IsNullOrEmpty(test.start_rule))
-                        throw new InvalidOperationException(
-                            $"Grammar '{sgfn}' has multiple EOF-terminated parser start rules: " +
-                            string.Join(", ", ss) + ". Use --start-rule to select one.");
-                    var start_symbol = selected_parser &&
-                        !string.IsNullOrEmpty(test.start_rule)
-                        ? test.start_rule : ss.FirstOrDefault();
+                    // Validate the requested entry point after dependency sorting,
+                    // when the top-level parser (rather than an imported grammar)
+                    // is known.
+                    var start_symbol = ss.FirstOrDefault();
 
                     if (!(is_combined && !is_parser_grammar && !is_lexer_grammar
                           || !is_combined && is_parser_grammar && !is_lexer_grammar
@@ -478,6 +465,38 @@ namespace Trash
                         throw new Exception("Can't figure out the top-level parser tuple.");
                     }
                     top_level_parser_grammar = all.First();
+                }
+
+                var topLevelRules = parserRulesByGrammar[top_level_parser_grammar.GrammarNameOriginating];
+                var reachableGrammarNames = new HashSet<string>(StringComparer.Ordinal);
+                var pendingGrammarNames = new Queue<string>();
+                pendingGrammarNames.Enqueue(top_level_parser_grammar.GrammarName);
+                while (pendingGrammarNames.Count > 0)
+                {
+                    var name = pendingGrammarNames.Dequeue();
+                    if (!reachableGrammarNames.Add(name)) continue;
+                    foreach (var edge in dependency_graph.Edges.Where(e => e.From == name))
+                        pendingGrammarNames.Enqueue(edge.To);
+                }
+                var availableRules = test.tool_grammar_tuples
+                    .Where(t => t.WhatType == GrammarTuple.Type.Parser &&
+                                reachableGrammarNames.Contains(t.GrammarName))
+                    .SelectMany(t => parserRulesByGrammar[t.GrammarNameOriginating].Rules)
+                    .Distinct(StringComparer.Ordinal)
+                    .ToList();
+                if (!string.IsNullOrEmpty(test.start_rule))
+                {
+                    if (!availableRules.Contains(test.start_rule))
+                        throw new InvalidOperationException(
+                            $"Start rule '{test.start_rule}' was not found in grammar '{topLevelRules.FileName}' " +
+                            "or its imports. Available parser rules: " + string.Join(", ", availableRules));
+                    top_level_parser_grammar.StartSymbol = test.start_rule;
+                }
+                else if (topLevelRules.EofRules.Count > 1)
+                {
+                    throw new InvalidOperationException(
+                        $"Grammar '{topLevelRules.FileName}' has multiple EOF-terminated parser start rules: " +
+                        string.Join(", ", topLevelRules.EofRules) + ". Use --start-rule to select one.");
                 }
 
                 // Pick top-level lexer grammar.
