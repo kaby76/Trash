@@ -17,7 +17,7 @@ namespace Trash
         public bool Verbose { get; set; }
 
 	[Option("version", Required = false)]
-	public string Version { get; set; } = "4.7.0";
+	public string Version { get; set; } = "4.8.0";
 
     }
 }

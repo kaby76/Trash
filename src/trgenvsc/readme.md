@@ -30,7 +30,7 @@ the XPath patterns to match certain parse trees.
 
 ## Current version
 
-Release 4.7.0.
+Release 4.8.0.
 
 ## License
 

@@ -339,7 +339,7 @@ this mode; the overall TT and `--per-file` lines remain available.
 
 ## Current version
 
-Release 4.7.0.
+Release 4.8.0.
 
 ## License
 
