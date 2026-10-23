@@ -56,6 +56,7 @@ std::string prefix;
 bool quiet = false;
 bool perf = false;
 bool per_file = false;
+bool sll = false;
 std::string file_encoding = "<file_encoding>";
 long total_tokens = 0;
 double total_parse_seconds = 0;
@@ -90,6 +91,8 @@ void DoParse(antlr4::CharStream* str, std::string input_name, int row_number)
     }
     auto tokens = new antlr4::CommonTokenStream(lexer);
     auto* parser = new <parser_name>(tokens);
+    if (sll)
+        parser->getInterpreter<antlr4::atn::ParserATNSimulator>()->setPredictionMode(antlr4::atn::PredictionMode::SLL);
     std::ostream* output = tee
         ? new std::ofstream(out_name + ".errors")
         : &std::cerr;
@@ -236,6 +239,10 @@ int TryParse(std::vector\<std::string>& args)
         else if (args[i] == "--per-file")
         {
             per_file = true;
+        }
+        else if (args[i] == "--sll")
+        {
+            sll = true;
         }
         else if (args[i] == "-trace")
         {

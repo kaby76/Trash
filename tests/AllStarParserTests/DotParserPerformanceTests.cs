@@ -26,6 +26,18 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
         DotData, "DOTLexer.interp");
 
     [Fact]
+    public void SllOnlyRecognitionNeverUsesFullContextFallback()
+    {
+        var fixture = Prepare(GenerateDotInput(100));
+        var statistics = new ParserStatistics();
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            statistics, sllOnly: true));
+        Assert.Equal(0, statistics.FullContextFallbacks);
+        Assert.Equal(0, statistics.FullContextLookaheadTokens);
+    }
+
+    [Fact]
     [Trait("Category", "Performance")]
     public void GeneratedDotSeparatesRecognitionEventsAndTreeBuilding()
     {

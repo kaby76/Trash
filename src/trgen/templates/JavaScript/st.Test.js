@@ -57,6 +57,7 @@ var error_code = 0;
 var quiet = false;
 var perf = false;
 var per_file = false;
+var sll = false;
 var enc = '<file_encoding>';
 var binary = <binary>;
 var string_instance = 0;
@@ -119,6 +120,9 @@ function main() {
                 break;
             case '--per-file':
                 per_file = true;
+                break;
+            case '--sll':
+                sll = true;
                 break;
             case '-trace':
                 show_trace = true;
@@ -210,6 +214,7 @@ function DoParse(str, input_name, row_number) {
     const lexer = new <lexer_name>(str);
     const tokens = new antlr4.CommonTokenStream(lexer);
     const parser = new <parser_name>(tokens);
+    if (sll) parser._interp.predictionMode = antlr4.atn.PredictionMode.SLL;
     lexer.removeErrorListeners();
     parser.removeErrorListeners();
     var output = tee ? fs.openSync(out_name + ".errors", 'w') : 1;

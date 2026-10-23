@@ -31,7 +31,8 @@ public static class InterpRunner
         LexerAtnSimulator.LexerDfaCache lexerDfaCache = null,
         bool indirectLeftRecursion = false,
         string startRuleName = null,
-        string xqueryHooksPath = null)
+        string xqueryHooksPath = null,
+        bool sllOnly = false)
     {
         timings ??= new InterpRunTimings();
         timings.Files = 1;
@@ -162,7 +163,7 @@ public static class InterpRunner
                         statistics, parserStatistics,
                         hooks == null ? predictionCache : null,
                         lexerDfaCache: lexerDfaCache,
-                        hooks: hooks);
+                        hooks: hooks, sllOnly: sllOnly);
             }
             catch (LexerNoViableAltException ex) when (source != null)
             {
@@ -200,7 +201,7 @@ public static class InterpRunner
                     lexerInterp.SymbolicNames, rawTokens);
                 astAccepted = AllStarParser.ParseStreaming(parserAtn,
                     rawTokens, startRule, astBuilder.OnEvent,
-                    parserStatistics, predictionCache);
+                    parserStatistics, predictionCache, sllOnly);
                 events = null;
             }
             else
@@ -212,7 +213,7 @@ public static class InterpRunner
                     : AllStarParser.Parse(
                         parserAtn, rawTokens, startRule, parserStatistics,
                         hooks == null ? predictionCache : null,
-                        hooks);
+                        hooks, sllOnly);
             }
             timer.Stop();
             timings.Parsing = timer.Elapsed;

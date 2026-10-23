@@ -86,6 +86,10 @@ public class Config
     [Option("allstar", Required = false, HelpText = "Use ALL(*) interpreter parsing. Without -L, read .interp files from a PAX/tar bundle on stdin.")]
     public bool AllStar { get; set; }
 
+    [Option("sll", Required = false,
+        HelpText = "Use SLL prediction without full-context LL fallback (generated/built-in parsers or ALL(*) interpreter).")]
+    public bool Sll { get; set; }
+
     [Option("indirect-left-recursion", Required = false,
         HelpText = "Allow indirect left recursion in ALL(*) interp grammars. Uses fixed-point rule evaluation and reconstructs the grammar-rule parse tree.")]
     public bool IndirectLeftRecursion { get; set; }
