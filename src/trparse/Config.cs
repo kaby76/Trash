@@ -58,7 +58,7 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "4.7.0";
+    public string Version { get; set; } = "4.8.0";
 
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }
@@ -85,6 +85,10 @@ public class Config
 
     [Option("allstar", Required = false, HelpText = "Use ALL(*) interpreter parsing. Without -L, read .interp files from a PAX/tar bundle on stdin.")]
     public bool AllStar { get; set; }
+
+    [Option("sll", Required = false,
+        HelpText = "Use SLL prediction without full-context LL fallback (generated/built-in parsers or ALL(*) interpreter).")]
+    public bool Sll { get; set; }
 
     [Option("indirect-left-recursion", Required = false,
         HelpText = "Allow indirect left recursion in ALL(*) interp grammars. Uses fixed-point rule evaluation and reconstructs the grammar-rule parse tree.")]

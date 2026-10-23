@@ -295,6 +295,7 @@ this mode; the overall TT and `--per-file` lines remain available.
         --pinterp      Path to parser .interp file (Earley ATN-based parsing).
         --linterp      Path to lexer .interp file  (Earley ATN-based parsing).
         --allstar      Use the ALL(*) interpreter instead of Earley.
+        --sll          Use SLL prediction only, with no full-context LL fallback.
         --indirect-left-recursion
                        Allow mutually/indirectly left-recursive interp rules.
         --context-aware-lexing
@@ -330,6 +331,11 @@ this mode; the overall TT and `--per-file` lines remain available.
     dotnet trash parse --allstar -L interp --no-output input.txt
     dotnet trash parse --perf --per-file --allstar -L interp --no-output input.txt
     dotnet trash parse --allstar --parser-stats -L interp --no-output input.txt
+    dotnet trash parse --allstar --sll --parser-stats -L interp --no-output input.txt
+
+`--sll` disables full-context LL fallback. Compare it with the default on the
+same inputs and check for parse errors or changed trees as well as elapsed time;
+pure SLL can choose a different alternative for context-sensitive grammars.
     echo "1+2+3" | dotnet trash parse | dotnet trash tree --text
     mkdir out; dotnet trash parse MyParser.g4 MyLexer.g4 | dotnet trash sponge -o out
 
@@ -339,7 +345,7 @@ this mode; the overall TT and `--per-file` lines remain available.
 
 ## Current version
 
-Release 4.7.0.
+Release 4.8.0.
 
 ## License
 

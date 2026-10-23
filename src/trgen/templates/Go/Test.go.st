@@ -69,6 +69,7 @@ var prefix = ""
 var quiet = false
 var perf = false
 var per_file = false
+var sll = false
 var tee = false
 var output_dir = ""
 var binary = <binary>
@@ -109,6 +110,8 @@ func main() {
             perf = true
         } else if os.Args[i] == "--per-file" {
             per_file = true
+        } else if os.Args[i] == "--sll" {
+            sll = true
         } else if os.Args[i] == "-trace" {
             show_trace = true
         } else if os.Args[i][0] == '-' {
@@ -229,6 +232,9 @@ func DoParse(str antlr.CharStream, input_name string, row_number int) {
     // Requires additional 0??
     var tokens = antlr.NewCommonTokenStream(lexer, 0)
     var parser = <go_parser_name>(tokens)
+    if sll {
+        parser.GetInterpreter().SetPredictionMode(antlr.PredictionModeSLL)
+    }
 
     var (
         output *os.File

@@ -391,6 +391,7 @@ public class Grun
         Value("--xquery-hooks", config.XQueryHooks);
         Value("-g", config.Encoding);
         Flag(config.AllStar, "--allstar");
+        Flag(config.Sll, "--sll");
         Flag(config.IndirectLeftRecursion, "--indirect-left-recursion");
         Flag(config.ContextAwareLexing, "--context-aware-lexing");
         Flag(config.LexerStats, "--lexer-stats");
@@ -774,6 +775,10 @@ public class Grun
 
         if (resolvedPInterp != null && resolvedLInterp != null)
         {
+            if (config.Sll && config.IndirectLeftRecursion)
+                throw new ArgumentException(
+                    "--sll cannot be combined with --indirect-left-recursion; " +
+                    "the fixed-point parser does not use SLL prediction.");
             bool grammarContextAwareLexing =
                 RequiresContextAwareLexing(resolvedPInterp);
             bool contextAwareLexing = config.ContextAwareLexing ||
@@ -784,7 +789,7 @@ public class Grun
             string interpLabel;
             if (!string.IsNullOrEmpty(config.XQueryHooks) && !config.AllStar)
                 throw new ArgumentException("--xquery-hooks requires --allstar.");
-            if (config.AllStar || contextAwareLexing ||
+            if (config.AllStar || config.Sll || contextAwareLexing ||
                 config.IndirectLeftRecursion)
             {
                 AllStarAtnParser.AllStarParser.Trace = config.Verbose;
@@ -801,7 +806,7 @@ public class Grun
                     parserStatistics, _parserPredictionCache,
                     _interpRuntimeCache, _lexerDfaCache,
                     config.IndirectLeftRecursion, config.StartRule,
-                    config.XQueryHooks);
+                    config.XQueryHooks, config.Sll);
                 if (interpTimings != null)
                     _interpTimings.Add(interpTimings);
                 interpLabel = "ALL(*)";
@@ -1018,6 +1023,14 @@ public class Grun
         MethodInfo methodInfo = type.GetMethod("SetupParse2");
         object[] parm1 = new object[] { txt, input_name, config.Quiet };
         var res = methodInfo.Invoke(null, parm1);
+
+        if (config.Sll)
+        {
+            var nativeParser = type.GetProperty("Parser")?.GetValue(null) as Antlr4.Runtime.Parser;
+            if (nativeParser == null)
+                throw new InvalidOperationException("--sll requires a generated parser exposing Program.Parser.");
+            nativeParser.Interpreter.PredictionMode = Antlr4.Runtime.Atn.PredictionMode.SLL;
+        }
 
         var result = "";
         object res2 = null;

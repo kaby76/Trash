@@ -27,11 +27,13 @@ public static class AllStarParser
         MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex,
         ParserStatistics statistics = null,
         ParserPredictionCache predictionCache = null,
-        XQueryHooks hooks = null)
+        XQueryHooks hooks = null,
+        bool sllOnly = false)
     {
         return ParseCore(
             atn, allTokens, startRuleIndex, buildEvents: true, statistics,
-            predictionCache, enableLl1Bypass: false, hooks).Events;
+            predictionCache, enableLl1Bypass: false, hooks,
+            sllOnly: sllOnly).Events;
     }
 
     /// <summary>
@@ -43,13 +45,14 @@ public static class AllStarParser
         MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex,
         Action<ParseEvent> onEvent,
         ParserStatistics statistics = null,
-        ParserPredictionCache predictionCache = null)
+        ParserPredictionCache predictionCache = null,
+        bool sllOnly = false)
     {
         ArgumentNullException.ThrowIfNull(onEvent);
         return ParseCore(
             atn, allTokens, startRuleIndex, buildEvents: false, statistics,
             predictionCache, enableLl1Bypass: false,
-            eventObserver: onEvent).Success;
+            eventObserver: onEvent, sllOnly: sllOnly).Success;
     }
 
     /// <summary>
@@ -60,11 +63,13 @@ public static class AllStarParser
     public static bool Recognize(
         MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex,
         ParserStatistics statistics = null,
-        ParserPredictionCache predictionCache = null)
+        ParserPredictionCache predictionCache = null,
+        bool sllOnly = false)
     {
         return ParseCore(
             atn, allTokens, startRuleIndex, buildEvents: false, statistics,
-            predictionCache, enableLl1Bypass: false).Success;
+            predictionCache, enableLl1Bypass: false,
+            sllOnly: sllOnly).Success;
     }
 
     internal static List<ParseEvent> ParseWithLl1(
@@ -91,7 +96,8 @@ public static class AllStarParser
         bool buildEvents, ParserStatistics statistics,
         ParserPredictionCache predictionCache, bool enableLl1Bypass,
         XQueryHooks hooks = null,
-        Action<ParseEvent> eventObserver = null)
+        Action<ParseEvent> eventObserver = null,
+        bool sllOnly = false)
     {
         if (atn == null) throw new ArgumentNullException(nameof(atn));
         if (startRuleIndex < 0 || startRuleIndex >= atn.start.Length)
@@ -116,7 +122,7 @@ public static class AllStarParser
         var events = buildEvents ? new List<ParseEvent>() : null;
         var instance = new ParserInstance(
             atn, allTokens, onIdx, tokenTypes, metadata, events, statistics,
-            predictionCache, enableLl1Bypass, hooks, eventObserver);
+            predictionCache, enableLl1Bypass, hooks, eventObserver, sllOnly);
         bool success = instance.ParseRule(startRuleIndex, PredictionContext.EMPTY);
         instance.CaptureStatistics();
         if (!success)
@@ -136,7 +142,8 @@ public static class AllStarParser
         ParserStatistics parserStatistics = null,
         ParserPredictionCache predictionCache = null,
         LexerAtnSimulator.LexerDfaCache lexerDfaCache = null,
-        XQueryHooks hooks = null)
+        XQueryHooks hooks = null,
+        bool sllOnly = false)
     {
         if (parserAtn == null) throw new ArgumentNullException(nameof(parserAtn));
         if (lexerAtn == null) throw new ArgumentNullException(nameof(lexerAtn));
@@ -150,7 +157,7 @@ public static class AllStarParser
         var instance = new ParserInstance(
             parserAtn, lexerAtn, input, allTokens, metadata,
             events, lexerStatistics, parserStatistics, predictionCache,
-            lexerDfaCache, hooks);
+            lexerDfaCache, hooks, sllOnly);
         bool success = instance.ParseRule(startRuleIndex, PredictionContext.EMPTY);
         instance.CaptureStatistics();
         if (!success)
@@ -194,7 +201,8 @@ public static class AllStarParser
                               ParserPredictionCache predictionCache = null,
                               bool enableLl1Bypass = true,
                               XQueryHooks hooks = null,
-                              Action<ParseEvent> eventObserver = null)
+                              Action<ParseEvent> eventObserver = null,
+                              bool sllOnly = false)
         {
             _atn = atn;
             _allTokens = allTokens;
@@ -210,7 +218,7 @@ public static class AllStarParser
                 : null;
             _sim = new AllStarSimulator(atn, statistics, predictionCache,
                 hooks?.HasParserPredicates == true || atn.G4XExclusions.Count != 0
-                    ? EvaluatePredictionPredicate : null);
+                    ? EvaluatePredictionPredicate : null, sllOnly);
         }
 
         public ParserInstance(MyATN parserAtn, MyATN lexerAtn, string input,
@@ -221,7 +229,8 @@ public static class AllStarParser
                               ParserStatistics parserStatistics = null,
                               ParserPredictionCache predictionCache = null,
                               LexerAtnSimulator.LexerDfaCache lexerDfaCache = null,
-                              XQueryHooks hooks = null)
+                              XQueryHooks hooks = null,
+                              bool sllOnly = false)
         {
             _atn = parserAtn;
             _allTokens = allTokens;
@@ -236,7 +245,7 @@ public static class AllStarParser
             _sim = new AllStarSimulator(
                 parserAtn, parserStatistics, predictionCache,
                 hooks?.HasParserPredicates == true || parserAtn.G4XExclusions.Count != 0
-                    ? EvaluatePredictionPredicate : null);
+                    ? EvaluatePredictionPredicate : null, sllOnly);
             _lexer = hooks?.HasLexerPredicates != true
                 ? new LexerAtnSimulator(lexerAtn, lexerStatistics, lexerDfaCache)
                 : new LexerAtnSimulator(lexerAtn, lexerStatistics,

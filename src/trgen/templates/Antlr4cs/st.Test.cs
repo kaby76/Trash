@@ -37,6 +37,7 @@ public class Program
     static bool quiet = false;
     static bool perf = false;
     static bool per_file = false;
+    static bool sll = false;
     static string output_dir = null;
     static long total_tokens = 0;
     static double total_parse_seconds = 0;
@@ -117,6 +118,10 @@ public class Program
             else if (args[i] == "--per-file")
             {
                 per_file = true;
+            }
+            else if (args[i] == "--sll")
+            {
+                sll = true;
             }
             else if (args[i] == "-trace")
             {
@@ -227,6 +232,8 @@ public class Program
         }
         var tokens = new CommonTokenStream(lexer);
         var parser = new <parser_name>(tokens);
+        if (sll)
+            parser.Interpreter.PredictionMode = PredictionMode.SLL;
         string out_name;
         if (output_dir != null) {
             var abs = System.IO.Path.GetFullPath(input_name);
