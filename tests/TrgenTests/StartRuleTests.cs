@@ -126,11 +126,12 @@ public class StartRuleTests
                 "Generated-CSharp-one", "test.sh"));
             string twoScript = File.ReadAllText(Path.Combine(directory,
                 "Generated-CSharp-two", "test.sh"));
-            Assert.Contains("glob '../examples/*.one' " +
-                "'../examples/nested/**/*.one' '!../examples/ignored/**'",
+            Assert.Contains("glob 'examples/*.one' " +
+                "'examples/nested/**/*.one' '!examples/ignored/**'",
                 oneScript);
-            Assert.Contains("glob '../examples/*.two' " +
-                "'../examples/deep/**/*.two'", twoScript);
+            Assert.Contains("glob 'examples/*.two' " +
+                "'examples/deep/**/*.two'", twoScript);
+            Assert.Contains("if [ -d \"$source_root/$f\" ]; then continue; fi", oneScript);
         }
         finally
         {

@@ -35,7 +35,7 @@ files2=`trash glob <source_glob_args_unix> | tr -d '\r' | grep -v '[.]errors$' |
 files=()
 for f in $files2
 do
-    if [ -d "$f" ]; then continue; fi
+    if [ -d "$source_root/$f" ]; then continue; fi
         files+=( "$source_root/$f" )
 done
 parse_inputs=()
