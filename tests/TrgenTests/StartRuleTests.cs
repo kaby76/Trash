@@ -140,6 +140,60 @@ public class StartRuleTests
     }
 
     [Fact]
+    public async Task XQueryAssertionsUseOnlyTheGeneratedCSharpParser()
+    {
+        var directory = Path.Combine(Path.GetTempPath(),
+            "trgen-assertions-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(directory);
+        try
+        {
+            File.WriteAllText(Path.Combine(directory, "Assertions.g4"),
+                "grammar Assertions; start : 'a' EOF;");
+            File.WriteAllText(Path.Combine(directory, "desc.xml"),
+                "<desc><targets>CSharp;Java</targets>" +
+                "<inputs>examples/*.txt</inputs></desc>");
+
+            var startInfo = new ProcessStartInfo("dotnet")
+            {
+                WorkingDirectory = directory,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false
+            };
+            startInfo.ArgumentList.Add(typeof(Trash.Program).Assembly.Location);
+            startInfo.ArgumentList.Add("-t");
+            startInfo.ArgumentList.Add("CSharp");
+            startInfo.ArgumentList.Add("Java");
+
+            using var process = Process.Start(startInfo);
+            Assert.NotNull(process);
+            var stdoutTask = process.StandardOutput.ReadToEndAsync();
+            var stderrTask = process.StandardError.ReadToEndAsync();
+            await process.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(60));
+            _ = await stdoutTask;
+            Assert.True(process.ExitCode == 0, await stderrTask);
+
+            var csharpSh = File.ReadAllText(Path.Combine(directory,
+                "Generated-CSharp", "test.sh"));
+            var csharpPs = File.ReadAllText(Path.Combine(directory,
+                "Generated-CSharp", "test.ps1"));
+            var javaSh = File.ReadAllText(Path.Combine(directory,
+                "Generated-Java", "test.sh"));
+            var javaPs = File.ReadAllText(Path.Combine(directory,
+                "Generated-Java", "test.ps1"));
+            Assert.Contains("set -o pipefail", csharpSh);
+            Assert.Contains("trash parse -p \"$generated_dir\" \"$file\"", csharpSh);
+            Assert.Contains("dotnet trash parse -p $generatedDir $file", csharpPs);
+            Assert.DoesNotContain("trash parse \"$file\"", javaSh);
+            Assert.DoesNotContain("dotnet trash parse $file", javaPs);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
+    [Fact]
     public void RejectsMultipleEofTerminatedParserRulesAndNamesThem()
     {
         var directory = Path.Combine(Path.GetTempPath(),

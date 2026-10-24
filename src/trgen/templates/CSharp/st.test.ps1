@@ -54,7 +54,7 @@ foreach ($file in $files) {
     if (Test-Path -LiteralPath $trq -PathType Leaf) {
         Push-Location -LiteralPath $sourceRoot
         try {
-            $assertionOutput = & dotnet trash parse $file | & dotnet trash xquery -q $trq
+            $assertionOutput = & dotnet trash parse -p $generatedDir $file | & dotnet trash xquery -q $trq
             if ($LASTEXITCODE -ne 0 -or $assertionOutput) {
                 Write-Host "${trq}: $assertionOutput"
                 $failed = $true

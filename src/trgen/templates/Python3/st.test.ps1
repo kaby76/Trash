@@ -51,19 +51,6 @@ if ($status -eq 255 -or ((Test-Path -LiteralPath $parseFile) -and (Get-Item -Lit
 
 $failed = $false
 foreach ($file in $files) {
-    $trq = "$file.trq"
-    if (Test-Path -LiteralPath $trq -PathType Leaf) {
-        Push-Location -LiteralPath $sourceRoot
-        try {
-            $assertionOutput = & dotnet trash parse $file | & dotnet trash xquery -q $trq
-            if ($LASTEXITCODE -ne 0 -or $assertionOutput) {
-                Write-Host "${trq}: $assertionOutput"
-                $failed = $true
-            }
-        } finally {
-            Pop-Location
-        }
-    }
     $relative = [IO.Path]::GetRelativePath($sourceExamples, $file)
     if ($relative -eq '..' -or $relative.StartsWith('..' + [IO.Path]::DirectorySeparatorChar)) {
         Write-Host "Input is outside the example directory: $file"

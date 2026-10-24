@@ -103,6 +103,7 @@ then
 fi
 
 # Validate parse trees via XQuery assertions.
+set -o pipefail
 echo "Checking any XQuery parse tree assertions..."
 assertions_err=0
 for file in "${files[@]}"
@@ -110,7 +111,7 @@ do
     trq=$file.trq
     if [ -f "$trq" ]
     then
-        assertion_output=$(trash parse "$file" | trash xquery -q "$trq")
+        assertion_output=$(trash parse -p "$generated_dir" "$file" | trash xquery -q "$trq")
         xxx=$?
         if [ "$xxx" -ne 0 ]
         then

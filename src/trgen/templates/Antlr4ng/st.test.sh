@@ -102,27 +102,8 @@ then
     find "$output_dir" -type f \( -name '*.errors' -o -name '*.tree' \) -exec dos2unix -q -f {} +
 fi
 
-# Validate parse trees via XQuery assertions.
-echo "Checking any XQuery parse tree assertions..."
-assertions_err=0
-for file in "${files[@]}"
-do
-    trq=$file.trq
-    if [ -f "$trq" ]
-    then
-        assertion_output=$(trash parse "$file" | trash xquery -q "$trq")
-        xxx=$?
-        if [ "$xxx" -ne 0 ]
-        then
-            assertions_err=$xxx
-        elif [ -n "$assertion_output" ]
-        then
-            echo "$trq: $assertion_output"
-            assertions_err=1
-        fi
-    fi
-done
-echo "Finished checking XQuery parse tree assertions."
+# XQuery .trq assertions use trparse's generated CSharp parser and are
+# checked by the CSharp test script. This target validates its own outputs.
 
 # Compare generated results with the source examples without modifying them.
 difference=0
@@ -153,7 +134,7 @@ do
     done
 done
 
-if [ "$assertions_err" -ne 0 ] || [ "$difference" -ne 0 ]; then
+if [ "$difference" -ne 0 ]; then
     echo "Test failed."
     exit 1
 fi
