@@ -11,5 +11,8 @@ public class Config
     [Option("version", Required = false)]
     public string Version { get; set; } = "4.8.0";
 
+    [Option("file-name", Required = false, HelpText = "Prefix each output line with the input file name.")]
+    public bool FileName { get; set; }
+
     [Value(0)] public IEnumerable<string> Files { get; set; }
 }

@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="../../src/trxml/trxml.csproj" Aliases="trxml" />
     <ProjectReference Include="../../src/trjson/trjson.csproj" Aliases="trjson" />
+    <ProjectReference Include="../../src/trxml2/trxml2.csproj" Aliases="trxml2" />
     <ProjectReference Include="../../src/AntlrJson/AntlrJson.csproj" />
     <ProjectReference Include="../../src/ParseTreeEditing/ParseTreeEditing.csproj" />
   </ItemGroup>

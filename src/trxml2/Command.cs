@@ -23,23 +23,23 @@ public class Command
     {
         if (config.Files == null || !config.Files.Any())
         {
-            Process();
+            Process(config.FileName);
         }
         else
         {
             foreach (var arg in config.Files)
             {
-                Process(arg);
+                Process(arg, config.FileName);
             }
         }
     }
 
-    private static void Process()
+    private static void Process(bool includeFileName)
     {
         try
         {
             XDocument xmlDocument = XDocument.Load(System.Console.In);
-            Process(xmlDocument);
+            Process(xmlDocument, includeFileName ? "<stdin>" : null);
         }
         catch (Exception e)
         {
@@ -47,12 +47,12 @@ public class Command
         }
     }
 
-    private static void Process(string file_name)
+    private static void Process(string file_name, bool includeFileName)
     {
         try
         {
             XDocument xmlDocument = XDocument.Load(file_name);
-            Process(xmlDocument);
+            Process(xmlDocument, includeFileName ? file_name : null);
         }
         catch (Exception e)
         {
@@ -60,7 +60,7 @@ public class Command
         }
     }
 
-    private static void Process(XDocument xmlDocument)
+    private static void Process(XDocument xmlDocument, string fileName)
     {
         {
             // See https://chatgpt.com/share/6785943e-a524-8007-9e20-3658280500da
@@ -116,7 +116,17 @@ public class Command
             writer.Flush();
             writer.Close();
             var result = Encoding.Unicode.GetString(strm.ToArray()).Substring(1);
-            Console.WriteLine(result);
+            if (fileName == null)
+            {
+                Console.WriteLine(result);
+            }
+            else
+            {
+                using var lines = new StringReader(result);
+                string line;
+                while ((line = lines.ReadLine()) != null)
+                    Console.WriteLine($"{fileName}:{line}");
+            }
         }
     }
 }
