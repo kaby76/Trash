@@ -187,7 +187,7 @@ def DoParse(str, input_name, row_number):
 
     if output_dir is not None:
         abs_name = os.path.abspath(input_name)
-        root = os.path.abspath('../<example_dir_unix>')
+        root = os.path.abspath('<source_example_dir_unix>')
         rootless = os.path.relpath(abs_name, root)
         if rootless == '..' or rootless.startswith('..' + os.sep) or os.path.isabs(rootless):
             rootless = os.path.basename(abs_name)

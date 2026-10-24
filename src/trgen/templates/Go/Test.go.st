@@ -204,7 +204,7 @@ func DoParse(str antlr.CharStream, input_name string, row_number int) {
     out_name := input_name
     if output_dir != "" {
         absPath, _ := filepath.Abs(input_name)
-        root, _ := filepath.Abs("../<example_dir_unix>")
+        root, _ := filepath.Abs("<source_example_dir_unix>")
         rel, err := filepath.Rel(root, absPath)
         if err != nil || rel == ".." || strings.HasPrefix(rel, ".." + string(filepath.Separator)) || filepath.IsAbs(rel) {
             rel = filepath.Base(absPath)

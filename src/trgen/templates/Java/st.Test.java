@@ -222,7 +222,7 @@ public class Test {
         String out_name = input_name;
         if (output_dir != null) {
             File abs = new File(input_name).getAbsoluteFile();
-            File root = new File("../<example_dir_unix>").getAbsoluteFile();
+            File root = new File("<source_example_dir_unix>").getAbsoluteFile();
             String rootless;
             try {
                 rootless = root.toPath().normalize().relativize(abs.toPath().normalize()).toString();

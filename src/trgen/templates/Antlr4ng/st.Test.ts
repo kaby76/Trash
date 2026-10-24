@@ -207,7 +207,7 @@ function DoParse(str: CharStream, input_name: string, row_number: number) {
     let out_name = input_name;
     if (output_dir) {
         const absPath = pathResolve(input_name);
-        const root = pathResolve('../<example_dir_unix>');
+        const root = pathResolve('<source_example_dir_unix>');
         let rootless = pathRelative(root, absPath);
         if (rootless === '..' || rootless.startsWith('..' + pathSep) || pathIsAbsolute(rootless))
             rootless = pathBasename(absPath);

@@ -237,7 +237,7 @@ public class Program
         string out_name;
         if (output_dir != null) {
             var abs = System.IO.Path.GetFullPath(input_name);
-            var root = System.IO.Path.GetFullPath(System.IO.Path.Combine("..", "<example_dir_unix>"));
+            var root = System.IO.Path.GetFullPath("<source_example_dir_unix>");
             var rootless = System.IO.Path.GetRelativePath(root, abs);
             if (rootless == ".." || rootless.StartsWith(".." + System.IO.Path.DirectorySeparatorChar))
                 rootless = System.IO.Path.GetFileName(abs);

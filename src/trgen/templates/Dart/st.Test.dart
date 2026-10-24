@@ -225,7 +225,7 @@ Future\<void> DoParse(CharStream str, String input_name, int row_number) async
     String out_name = input_name;
     if (output_dir != "") {
         String absPath = File(input_name).absolute.path;
-        String root = Directory('../<example_dir_unix>').absolute.path;
+        String root = Directory('<source_example_dir_unix>').absolute.path;
         String rootPrefix = root.endsWith(Platform.pathSeparator)
             ? root : root + Platform.pathSeparator;
         String rootless = absPath.startsWith(rootPrefix)

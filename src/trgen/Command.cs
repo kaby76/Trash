@@ -33,7 +33,7 @@ namespace Trash
         public int Execute(Config config)
         {
             if (!config.output_directory.EndsWith('/')) config.output_directory += '/';
-            else if (config.hasDesc)
+            if (config.hasDesc)
                 ModifyWithDesc(config);
             else
                 GenerateFromGrammarFilesOnly(config);
@@ -1862,7 +1862,8 @@ namespace Trash
                                                + to);
                 var target_dir_name = Dirname(to);
                 Directory.CreateDirectory(target_dir_name);
-                File.WriteAllText(to, content);
+                File.WriteAllText(to, to.EndsWith(".sh", StringComparison.OrdinalIgnoreCase)
+                    ? content.Replace("\r\n", "\n") : content);
                 return;
             }
 
@@ -1929,6 +1930,22 @@ namespace Trash
             t.Add("example_files_win", RemoveTrailingSlash(test.example_files.Replace('/', '\\')));
             t.Add("example_dir_unix", RemoveTrailingSlash(GetBaseDir(test.example_files.Replace('\\', '/'))));
             t.Add("example_dir_win", RemoveTrailingSlash(GetBaseDir(test.example_files.Replace('/', '\\'))));
+            var sourceDirectory = test.current_directory ?? "";
+            var sourceRoot = Path.GetFullPath(Path.IsPathRooted(sourceDirectory)
+                ? sourceDirectory : Path.Combine(config.root_directory, sourceDirectory))
+                .Replace('\\', '/').TrimEnd('/');
+            t.Add("source_root_unix", sourceRoot);
+            var sourceExampleDir = Path.GetFullPath(Path.Combine(sourceRoot,
+                RemoveTrailingSlash(GetBaseDir(test.example_files.Replace('\\', '/')))))
+                .Replace('\\', '/').TrimEnd('/');
+            t.Add("source_example_dir_unix", sourceExampleDir);
+            var sourceGlobArgsUnix = string.Join(" ", test.all_example_files.Select(p =>
+            {
+                var negated = p.StartsWith("!");
+                var pattern = (negated ? p.Substring(1) : p).Replace('\\', '/');
+                return $"'{(negated ? "!" : "")}{pattern}'";
+            }));
+            t.Add("source_glob_args_unix", sourceGlobArgsUnix);
             // Pre-compute single-quoted glob arguments for generated shell/ps1 scripts.
             // Negation patterns (starting with '!') get a '!../' prefix; others get '../'.
             var globArgsUnix = string.Join(" ", test.all_example_files.Select(p =>
@@ -1985,7 +2002,8 @@ namespace Trash
             t.Add("antlr_dev_dir", config.antlr_dev_dir.Replace("\\", "/"));
             t.Add("version", Command.version);
             var o = t.Render();
-            File.WriteAllText(to, o);
+            File.WriteAllText(to, to.EndsWith(".sh", StringComparison.OrdinalIgnoreCase)
+                ? o.Replace("\r\n", "\n") : o);
         }
 
         // As a first approximation, get the first directory from a
