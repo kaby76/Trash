@@ -72,9 +72,10 @@ directly from the `.interp` files produced by `trinterp`, using a from-scratch
 Earley parser over the serialized ATN.  No generated C# code and no
 `Antlr4.Runtime.Standard` deserialization are involved.
 
-Provide both the parser and lexer interp files:
+Select Earley explicitly with `--earley`, and provide both the parser and
+lexer interp files:
 
-    dotnet trash parse --pinterp abbParser.interp --linterp abbLexer.interp input.abb
+    dotnet trash parse --earley --pinterp abbParser.interp --linterp abbLexer.interp input.abb
 
 The output is the same `ParsingResultSet` JSON format as all other `trparse`
 modes, so every downstream Trash Toolkit tool (`trtree`, `trxgrep`, etc.)
@@ -297,7 +298,8 @@ this mode; the overall TT and `--per-file` lines remain available.
     -p, --parser       Location of pre-built parser (aka the trgen Generated/ directory)
         --pinterp      Path to parser .interp file (Earley ATN-based parsing).
         --linterp      Path to lexer .interp file  (Earley ATN-based parsing).
-        --allstar      Use the ALL(*) interpreter instead of Earley.
+        --allstar      Use the ALL(*) interpreter explicitly.
+        --earley       Use the Earley interpreter instead of the default ALL(*).
         --sll          Use SLL prediction only, with no full-context LL fallback.
         --indirect-left-recursion
                        Allow mutually/indirectly left-recursive interp rules.
@@ -344,7 +346,7 @@ pure SLL can choose a different alternative for context-sensitive grammars.
 
     # Earley interp-based parse (no generated code needed)
     dotnet trash parse abb.g4 | dotnet trash interp -o out/
-    dotnet trash parse --pinterp out/abbParser.interp --linterp out/abbLexer.interp input.abb | dotnet trash tree --text
+    dotnet trash parse --earley --pinterp out/abbParser.interp --linterp out/abbLexer.interp input.abb | dotnet trash tree --text
 
 ## Current version
 

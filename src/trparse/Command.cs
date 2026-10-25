@@ -23,7 +23,7 @@ class Command
         // A generated parser in a sibling directory is not an implicit
         // choice. For ordinary source files outside Generated-CSharp...,
         // consume the interpreter bundle on stdin and run ALL(*).
-        if (config.Type == null && !config.AllStar &&
+        if (config.Type == null && !config.AllStar && !config.Earley &&
             !IsGeneratedCSharpDirectory(Environment.CurrentDirectory))
         {
             string firstFile = config.Files?.FirstOrDefault();

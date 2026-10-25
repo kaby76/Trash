@@ -110,8 +110,9 @@ public sealed class TrparseOutputTests
             UseShellExecute = false
         };
         startInfo.ArgumentList.Add(typeof(Trash.Program).Assembly.Location);
-        if (allstar) startInfo.ArgumentList.Add("--allstar");
+        startInfo.ArgumentList.Add(allstar ? "--allstar" : "--earley");
         startInfo.ArgumentList.Add("--no-output");
+        startInfo.ArgumentList.Add("--per-file");
         startInfo.ArgumentList.Add("--start-rule");
         startInfo.ArgumentList.Add("elements");
         startInfo.ArgumentList.Add("-L");
@@ -125,8 +126,66 @@ public sealed class TrparseOutputTests
         Assert.Equal(string.Empty, process.StandardOutput.ReadToEnd());
         var stderr = process.StandardError.ReadToEnd();
         Assert.True(process.WaitForExit(30_000));
-        Assert.Equal(0, process.ExitCode);
+        Assert.True(process.ExitCode == 0, stderr);
+        Assert.Contains(allstar ? "ALL(*) 0 " : "Earley 0 ", stderr);
         Assert.Contains("TT:", stderr);
+    }
+
+    [Fact]
+    public void EarleyRejectsConflictingAllStarOption()
+    {
+        var startInfo = new ProcessStartInfo("dotnet")
+        {
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false
+        };
+        startInfo.ArgumentList.Add(typeof(Trash.Program).Assembly.Location);
+        startInfo.ArgumentList.Add("--earley");
+        startInfo.ArgumentList.Add("--allstar");
+        startInfo.ArgumentList.Add("-L");
+        startInfo.ArgumentList.Add(Path.Combine(
+            AppContext.BaseDirectory, "TestData", "interp"));
+        startInfo.ArgumentList.Add("-i");
+        startInfo.ArgumentList.Add("rule = %x41\r\n");
+
+        using var process = Process.Start(startInfo)!;
+        _ = process.StandardOutput.ReadToEnd();
+        var stderr = process.StandardError.ReadToEnd();
+        Assert.True(process.WaitForExit(30_000));
+        Assert.NotEqual(0, process.ExitCode);
+        Assert.Contains("--earley cannot be combined with ALL(*)-only options", stderr);
+    }
+
+    [Fact]
+    public void EarleyAcceptsExplicitInterpPairWithoutLibOrStdinBundle()
+    {
+        string interp = Path.Combine(AppContext.BaseDirectory, "TestData", "interp");
+        var startInfo = new ProcessStartInfo("dotnet")
+        {
+            RedirectStandardInput = true,
+            RedirectStandardOutput = true,
+            RedirectStandardError = true,
+            UseShellExecute = false
+        };
+        startInfo.ArgumentList.Add(typeof(Trash.Program).Assembly.Location);
+        startInfo.ArgumentList.Add("--earley");
+        startInfo.ArgumentList.Add("--no-output");
+        startInfo.ArgumentList.Add("--per-file");
+        startInfo.ArgumentList.Add("--pinterp");
+        startInfo.ArgumentList.Add(Path.Combine(interp, "Abnf.interp"));
+        startInfo.ArgumentList.Add("--linterp");
+        startInfo.ArgumentList.Add(Path.Combine(interp, "AbnfLexer.interp"));
+        startInfo.ArgumentList.Add("-i");
+        startInfo.ArgumentList.Add("rule = %x41\r\n");
+
+        using var process = Process.Start(startInfo)!;
+        process.StandardInput.Close();
+        Assert.Equal(string.Empty, process.StandardOutput.ReadToEnd());
+        string stderr = process.StandardError.ReadToEnd();
+        Assert.True(process.WaitForExit(30_000));
+        Assert.True(process.ExitCode == 0, stderr);
+        Assert.Contains("Earley 0 ", stderr);
     }
 
     [Fact]

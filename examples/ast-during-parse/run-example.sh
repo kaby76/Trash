@@ -53,7 +53,7 @@ fi
 grep -q 'input rejected by grammar' "$scratch/invalid.err"
 
 # An embedded mapping must never silently produce a CST through Earley.
-if dotnet "$parse" -L "$scratch/interp" -i '1+2' \
+if dotnet "$parse" --earley -L "$scratch/interp" -i '1+2' \
     > "$scratch/earley.pt" 2> "$scratch/earley.err"; then
   echo 'Earley unexpectedly accepted an embedded AST mapping.' >&2
   exit 1

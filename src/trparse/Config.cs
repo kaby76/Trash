@@ -86,6 +86,9 @@ public class Config
     [Option("allstar", Required = false, HelpText = "Use ALL(*) interpreter parsing. Without -L, read .interp files from a PAX/tar bundle on stdin.")]
     public bool AllStar { get; set; }
 
+    [Option("earley", Required = false, HelpText = "Use Earley interpreter parsing instead of the default ALL(*). Without -L, read .interp files from a PAX/tar bundle on stdin.")]
+    public bool Earley { get; set; }
+
     [Option("sll", Required = false,
         HelpText = "Use SLL prediction without full-context LL fallback (generated/built-in parsers or ALL(*) interpreter).")]
     public bool Sll { get; set; }

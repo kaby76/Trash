@@ -87,6 +87,12 @@ public class Grun
     public int Run(string parser_type)
     {
         int result = 0;
+        if (config.Earley && (config.AllStar || config.Sll ||
+            config.IndirectLeftRecursion || config.ContextAwareLexing ||
+            !string.IsNullOrEmpty(config.XQueryHooks) || config.ParserStats))
+            throw new ArgumentException("--earley cannot be combined with ALL(*)-only options.");
+        if (config.Earley && (parser_type != null || config.ParserLocation != null))
+            throw new ArgumentException("--earley cannot be combined with a generated or built-in parser selection.");
         if (config.TimeoutSeconds < 0)
             throw new ArgumentOutOfRangeException("--timeout",
                 "The per-file timeout must be zero or a positive number of seconds.");
@@ -105,18 +111,19 @@ public class Grun
                     config.ReadFileNameFile != null || (config.Files?.Any() ?? false))
                     throw new ArgumentException(
                         "--bundle-glob reads its inputs from stdin; do not combine it with -i, -x, --xf, or positional files.");
-                if (config.AllStar && string.IsNullOrEmpty(config.Lib))
+                if ((config.AllStar || config.Earley) && string.IsNullOrEmpty(config.Lib))
                     throw new ArgumentException(
-                        "--bundle-glob with --allstar requires -L; stdin contains source files, not an interpreter bundle.");
+                        "--bundle-glob with an interpreted parser requires -L; stdin contains source files, not an interpreter bundle.");
                 return RunInputBundle(parser_type, overallBefore);
             }
-            if (config.AllStar && string.IsNullOrEmpty(config.Lib))
+            if ((config.AllStar || config.Earley) && string.IsNullOrEmpty(config.Lib) &&
+                string.IsNullOrEmpty(config.PInterp) && string.IsNullOrEmpty(config.LInterp))
             {
                 if (config.ReadFileNameStdin ||
                     (config.Input == null && string.IsNullOrEmpty(config.ReadFileNameFile) &&
                      (config.Files == null || !config.Files.Any())))
                     throw new ArgumentException(
-                        "--allstar without -L reads interpreter tables from stdin; specify inputs with -i, positional files, or --xf (not -x or stdin text).");
+                        "Interpreted parsing without -L reads interpreter tables from stdin; specify inputs with -i, positional files, or --xf (not -x or stdin text).");
                 stagedTables = InterpBundle.Open(Console.OpenStandardInput());
                 config.Lib = stagedTables.DirectoryPath;
             }
@@ -391,6 +398,7 @@ public class Grun
         Value("--xquery-hooks", config.XQueryHooks);
         Value("-g", config.Encoding);
         Flag(config.AllStar, "--allstar");
+        Flag(config.Earley, "--earley");
         Flag(config.Sll, "--sll");
         Flag(config.IndirectLeftRecursion, "--indirect-left-recursion");
         Flag(config.ContextAwareLexing, "--context-aware-lexing");
@@ -474,7 +482,7 @@ public class Grun
     private void WriteFailedFileStatus(string inputName, int rowNumber)
     {
         if (config.Quiet || !config.PerFilePerformance) return;
-        string label = config.AllStar || config.IndirectLeftRecursion ||
+        string label = config.Earley ? "Earley" : config.AllStar || config.IndirectLeftRecursion ||
             config.ContextAwareLexing ||
             _grammarContextAwareLexing.Values.Any(value => value) ? "ALL(*)" :
             !string.IsNullOrEmpty(config.Lib) ? "Earley" : "CSharp";
@@ -773,6 +781,9 @@ public class Grun
             resolvedLInterp = discovered.linterp;
         }
 
+        if (config.Earley && (resolvedPInterp == null || resolvedLInterp == null))
+            throw new ArgumentException("--earley requires parser and lexer .interp files (use -L or --pinterp/--linterp).");
+
         if (resolvedPInterp != null && resolvedLInterp != null)
         {
             if (config.Sll && config.IndirectLeftRecursion)
@@ -789,8 +800,8 @@ public class Grun
             string interpLabel;
             if (!string.IsNullOrEmpty(config.XQueryHooks) && !config.AllStar)
                 throw new ArgumentException("--xquery-hooks requires --allstar.");
-            if (config.AllStar || config.Sll || contextAwareLexing ||
-                config.IndirectLeftRecursion)
+            if (!config.Earley && (config.AllStar || config.Sll || contextAwareLexing ||
+                config.IndirectLeftRecursion))
             {
                 AllStarAtnParser.AllStarParser.Trace = config.Verbose;
                 var interpTimings = config.InterpTimings
