@@ -1,11 +1,63 @@
 using System.Diagnostics;
 using System.Text.RegularExpressions;
+using AntlrJson;
 using Xunit;
 
 namespace AllStarParserTests;
 
 public sealed class TrparseOutputTests
 {
+    [Fact]
+    public async Task OutsideGeneratedDirectoryDefaultsToPipedAllStarDespiteSibling()
+    {
+        string directory = Directory.CreateTempSubdirectory("TrparseDefault-").FullName;
+        try
+        {
+            string generated = Path.Combine(directory, "Generated-CSharp", "bin", "Debug", "net10.0");
+            Directory.CreateDirectory(generated);
+            await File.WriteAllBytesAsync(Path.Combine(generated, "Test.dll"), [0]);
+
+            string input = Path.Combine(directory, "input.txt");
+            await File.WriteAllTextAsync(input, "rule = %x41\r\n");
+            string interp = Path.Combine(AppContext.BaseDirectory, "TestData", "interp");
+            using var bundle = new MemoryStream();
+            ArtifactBundle.Write(bundle,
+            [
+                new Artifact("Abnf.interp", File.ReadAllBytes(Path.Combine(interp, "Abnf.interp"))),
+                new Artifact("AbnfLexer.interp", File.ReadAllBytes(Path.Combine(interp, "AbnfLexer.interp")))
+            ]);
+
+            var startInfo = new ProcessStartInfo("dotnet")
+            {
+                WorkingDirectory = directory,
+                RedirectStandardInput = true,
+                RedirectStandardOutput = true,
+                RedirectStandardError = true,
+                UseShellExecute = false
+            };
+            startInfo.ArgumentList.Add(typeof(Trash.Program).Assembly.Location);
+            startInfo.ArgumentList.Add("--no-output");
+            startInfo.ArgumentList.Add("--per-file");
+            startInfo.ArgumentList.Add(input);
+
+            using var process = Process.Start(startInfo)!;
+            await process.StandardInput.BaseStream.WriteAsync(bundle.ToArray());
+            process.StandardInput.Close();
+            var stdout = process.StandardOutput.ReadToEndAsync();
+            var stderr = process.StandardError.ReadToEndAsync();
+            await process.WaitForExitAsync().WaitAsync(TimeSpan.FromSeconds(30));
+            Assert.Equal(string.Empty, await stdout);
+            string diagnostics = await stderr;
+            Assert.True(process.ExitCode == 0, diagnostics);
+            Assert.Contains("ALL(*) 0 ", diagnostics);
+            Assert.Contains(" success ", diagnostics);
+        }
+        finally
+        {
+            Directory.Delete(directory, recursive: true);
+        }
+    }
+
     [Theory]
     [InlineData(".g4x", false)]
     [InlineData(".g4", true)]

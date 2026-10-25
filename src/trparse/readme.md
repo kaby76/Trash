@@ -7,10 +7,12 @@ Parse a grammar or use generated parse to parse input
 ## Description
 
 Parse files and output to stdout parse tree data.
-The tool requires a pre-built parser via trgen for a grammar
-for anything other than the standard parser grammars that
-are supported. To specify the grammar, you can either
-be in a trgen-generated parser directory, or use the -p option.
+For source files other than the standard grammar formats, the default outside
+a `Generated-CSharp...` working directory is ALL(*) interpreted parsing.
+It reads the `.interp` PAX/tar bundle from stdin, as produced by `trinterp`.
+A sibling `Generated-CSharp...` directory is not selected implicitly. To use
+a generated parser, run inside its directory or pass `-p`/`--parser` (or
+`-t gen`) explicitly.
 
 If using positional args on the command line, a file is parsed
 depending on the extension of the file name.  The recognized extensions are
@@ -80,11 +82,12 @@ works without modification.
 
 ### Piped ALL(*) interpretation
 
-Without `-L`, `--allstar` reads a PAX/tar bundle containing root-level
+Outside `Generated-CSharp...`, ALL(*) is the default for ordinary source files.
+Without `-L`, it reads a PAX/tar bundle containing root-level
 `.interp` files from stdin. The bundle is the default output of `trinterp`:
 
     dotnet trash parse Arithmetic.rex | dotnet trash interp |
-        dotnet trash parse --allstar -i '1+2*3' | dotnet trash tree --text -a
+        dotnet trash parse -i '1+2*3' | dotnet trash tree --text -a
 
 Provide the input text with `-i`, positional files, or `--xf`; `-x` cannot
 share stdin with the table bundle. The interpreter files are staged in a

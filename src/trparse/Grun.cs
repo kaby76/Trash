@@ -840,10 +840,9 @@ public class Grun
         if (parser_type == null || parser_type == "")
         {
             var extension = Path.GetExtension(input_name);
-            // There are two choices:
-            // If a Generated-CSharp directory exists, use that.
-            // If the directory does not exist, pick based on
-            // file extension.
+            // Recognized grammar extensions use their built-in parsers.
+            // Other inputs use a generated parser only when running inside
+            // its Generated-CSharp... directory (or when -p/-t gen is given).
             parser_type = extension switch
             {
                 ".g4" => "ANTLRv4",
@@ -907,19 +906,13 @@ public class Grun
                 Type[] types = asm.GetTypes();
                 type = asm.GetType("Program");
             }
-            else
+            else if (Command.IsGeneratedCSharpDirectory(Environment.CurrentDirectory))
             {
-                string path = config.ParserLocation != null
-                    ? config.ParserLocation
-                    : Environment.CurrentDirectory + Path.DirectorySeparatorChar;
+                string path = Environment.CurrentDirectory + Path.DirectorySeparatorChar;
                 path = path.Replace("\\", "/");
                 if (!path.EndsWith("/")) path = path + "/";
-                var full_path = path + "Generated-CSharp/bin/Debug/net10.0/";
+                var full_path = path + "bin/Debug/net10.0/";
                 var exists = File.Exists(full_path + "Test.dll");
-                if (!exists) full_path = path + "bin/Debug/net10.0/";
-                exists = File.Exists(full_path + "Test.dll");
-                if (!exists) full_path = path + "Generated-CSharp/bin/Release/net10.0/";
-                exists = File.Exists(full_path + "Test.dll");
                 if (!exists) full_path = path + "bin/Release/net10.0/";
                 exists = File.Exists(full_path + "Test.dll");
                 if (exists)
