@@ -116,8 +116,11 @@ public class Grun
                         "--bundle-glob with an interpreted parser requires -L; stdin contains source files, not an interpreter bundle.");
                 return RunInputBundle(parser_type, overallBefore);
             }
+            bool explicitTablesOnDisk = !string.IsNullOrEmpty(config.PInterp) &&
+                !string.IsNullOrEmpty(config.LInterp) &&
+                File.Exists(config.PInterp) && File.Exists(config.LInterp);
             if ((config.AllStar || config.Earley) && string.IsNullOrEmpty(config.Lib) &&
-                string.IsNullOrEmpty(config.PInterp) && string.IsNullOrEmpty(config.LInterp))
+                !explicitTablesOnDisk)
             {
                 if (config.ReadFileNameStdin ||
                     (config.Input == null && string.IsNullOrEmpty(config.ReadFileNameFile) &&

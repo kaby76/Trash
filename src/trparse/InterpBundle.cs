@@ -19,7 +19,7 @@ internal sealed class InterpBundle : IDisposable
                                artifact.Name.EndsWith(".tokens", StringComparison.OrdinalIgnoreCase))
             .ToArray();
         if (!tables.Any(artifact => artifact.Name.EndsWith(".interp", StringComparison.OrdinalIgnoreCase)))
-            throw new InvalidDataException("--allstar without -L requires a PAX/tar bundle containing .interp files on stdin.");
+            throw new InvalidDataException("Interpreted parsing without -L requires a PAX/tar bundle containing .interp files on stdin.");
         var names = new System.Collections.Generic.HashSet<string>(
             OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
         foreach (var artifact in tables)

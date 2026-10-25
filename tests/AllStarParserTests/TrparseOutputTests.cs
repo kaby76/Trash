@@ -7,8 +7,10 @@ namespace AllStarParserTests;
 
 public sealed class TrparseOutputTests
 {
-    [Fact]
-    public async Task OutsideGeneratedDirectoryDefaultsToPipedAllStarDespiteSibling()
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public async Task OutsideGeneratedDirectoryDefaultsToPipedAllStarDespiteSibling(bool selectBundlePair)
     {
         string directory = Directory.CreateTempSubdirectory("TrparseDefault-").FullName;
         try
@@ -38,6 +40,13 @@ public sealed class TrparseOutputTests
             startInfo.ArgumentList.Add(typeof(Trash.Program).Assembly.Location);
             startInfo.ArgumentList.Add("--no-output");
             startInfo.ArgumentList.Add("--per-file");
+            if (selectBundlePair)
+            {
+                startInfo.ArgumentList.Add("--pinterp");
+                startInfo.ArgumentList.Add("Abnf.interp");
+                startInfo.ArgumentList.Add("--linterp");
+                startInfo.ArgumentList.Add("AbnfLexer.interp");
+            }
             startInfo.ArgumentList.Add(input);
 
             using var process = Process.Start(startInfo)!;

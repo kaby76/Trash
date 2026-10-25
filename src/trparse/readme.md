@@ -94,6 +94,7 @@ Provide the input text with `-i`, positional files, or `--xf`; `-x` cannot
 share stdin with the table bundle. The interpreter files are staged in a
 temporary directory for the parse and removed afterward. If the bundle has
 more than one parser/lexer pair, select one with `--pinterp` and `--linterp`.
+If both named files already exist on disk, they are used directly instead.
 Supplying `-L` retains the existing directory-based behavior and does not
 consume a table bundle from stdin.
 
