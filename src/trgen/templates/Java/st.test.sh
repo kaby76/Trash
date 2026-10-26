@@ -64,7 +64,9 @@ JAR=$(ls "$ANTLR4_DEV_DIR"/tool/target/antlr4-*-complete.jar | tail -1)
 version=<antlr_version>
 JAR=`python -c "import os; from pathlib import Path; print(os.path.join(Path.home() , '.m2',  'repository', 'org', 'antlr', 'antlr4', '$version', 'antlr4-$version-complete.jar'))"`
 <endif>
-CLASSPATH="$JAR<if(path_sep_semi)>;<else>:<endif>$generated_dir"
+class_dir="$generated_dir"
+if command -v cygpath >/dev/null 2>&1; then class_dir=$(cygpath -m "$class_dir"); fi
+CLASSPATH="$JAR<if(path_sep_semi)>;<else>:<endif>$class_dir"
 runner=(java -classpath "$CLASSPATH" Test)
 <if(individual_parsing)>
 # Individual parsing.
