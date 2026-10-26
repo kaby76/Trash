@@ -55,7 +55,8 @@ class Program
         for (int i = 0; i < args.Length; ++i, divide = i)
         {
             var arg = args[i];
-            if (arg[0] == '-' || arg[0] == '/')
+            // Unix absolute paths begin with '/', so only '-' introduces an option.
+            if (arg.StartsWith("-", StringComparison.Ordinal))
             {
                 if (arg.ToLower() == "--timeout" || arg.ToLower() == "-t")
                     ++i;

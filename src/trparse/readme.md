@@ -7,10 +7,12 @@ Parse a grammar or use generated parse to parse input
 ## Description
 
 Parse files and output to stdout parse tree data.
-The tool requires a pre-built parser via trgen for a grammar
-for anything other than the standard parser grammars that
-are supported. To specify the grammar, you can either
-be in a trgen-generated parser directory, or use the -p option.
+For source files other than the standard grammar formats, the default outside
+a `Generated-CSharp...` working directory is ALL(*) interpreted parsing.
+It reads the `.interp` PAX/tar bundle from stdin, as produced by `trinterp`.
+A sibling `Generated-CSharp...` directory is not selected implicitly. To use
+a generated parser, run inside its directory or pass `-p`/`--parser` (or
+`-t gen`) explicitly.
 
 If using positional args on the command line, a file is parsed
 depending on the extension of the file name.  The recognized extensions are
@@ -70,9 +72,10 @@ directly from the `.interp` files produced by `trinterp`, using a from-scratch
 Earley parser over the serialized ATN.  No generated C# code and no
 `Antlr4.Runtime.Standard` deserialization are involved.
 
-Provide both the parser and lexer interp files:
+Select Earley explicitly with `--earley`, and provide both the parser and
+lexer interp files:
 
-    dotnet trash parse --pinterp abbParser.interp --linterp abbLexer.interp input.abb
+    dotnet trash parse --earley --pinterp abbParser.interp --linterp abbLexer.interp input.abb
 
 The output is the same `ParsingResultSet` JSON format as all other `trparse`
 modes, so every downstream Trash Toolkit tool (`trtree`, `trxgrep`, etc.)
@@ -80,16 +83,18 @@ works without modification.
 
 ### Piped ALL(*) interpretation
 
-Without `-L`, `--allstar` reads a PAX/tar bundle containing root-level
+Outside `Generated-CSharp...`, ALL(*) is the default for ordinary source files.
+Without `-L`, it reads a PAX/tar bundle containing root-level
 `.interp` files from stdin. The bundle is the default output of `trinterp`:
 
     dotnet trash parse Arithmetic.rex | dotnet trash interp |
-        dotnet trash parse --allstar -i '1+2*3' | dotnet trash tree --text -a
+        dotnet trash parse -i '1+2*3' | dotnet trash tree --text -a
 
 Provide the input text with `-i`, positional files, or `--xf`; `-x` cannot
 share stdin with the table bundle. The interpreter files are staged in a
 temporary directory for the parse and removed afterward. If the bundle has
 more than one parser/lexer pair, select one with `--pinterp` and `--linterp`.
+If both named files already exist on disk, they are used directly instead.
 Supplying `-L` retains the existing directory-based behavior and does not
 consume a table bundle from stdin.
 
@@ -294,7 +299,9 @@ this mode; the overall TT and `--per-file` lines remain available.
     -p, --parser       Location of pre-built parser (aka the trgen Generated/ directory)
         --pinterp      Path to parser .interp file (Earley ATN-based parsing).
         --linterp      Path to lexer .interp file  (Earley ATN-based parsing).
-        --allstar      Use the ALL(*) interpreter instead of Earley.
+        --allstar      Use the ALL(*) interpreter explicitly.
+        --earley       Use the Earley interpreter instead of the default ALL(*).
+        --sll          Use SLL prediction only, with no full-context LL fallback.
         --indirect-left-recursion
                        Allow mutually/indirectly left-recursive interp rules.
         --context-aware-lexing
@@ -330,16 +337,21 @@ this mode; the overall TT and `--per-file` lines remain available.
     dotnet trash parse --allstar -L interp --no-output input.txt
     dotnet trash parse --perf --per-file --allstar -L interp --no-output input.txt
     dotnet trash parse --allstar --parser-stats -L interp --no-output input.txt
+    dotnet trash parse --allstar --sll --parser-stats -L interp --no-output input.txt
+
+`--sll` disables full-context LL fallback. Compare it with the default on the
+same inputs and check for parse errors or changed trees as well as elapsed time;
+pure SLL can choose a different alternative for context-sensitive grammars.
     echo "1+2+3" | dotnet trash parse | dotnet trash tree --text
     mkdir out; dotnet trash parse MyParser.g4 MyLexer.g4 | dotnet trash sponge -o out
 
     # Earley interp-based parse (no generated code needed)
     dotnet trash parse abb.g4 | dotnet trash interp -o out/
-    dotnet trash parse --pinterp out/abbParser.interp --linterp out/abbLexer.interp input.abb | dotnet trash tree --text
+    dotnet trash parse --earley --pinterp out/abbParser.interp --linterp out/abbLexer.interp input.abb | dotnet trash tree --text
 
 ## Current version
 
-Release 4.7.0.
+Release 4.8.0.
 
 ## License
 

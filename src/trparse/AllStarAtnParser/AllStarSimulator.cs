@@ -15,6 +15,7 @@ public sealed class AllStarSimulator
     private readonly MyATN _atn;
     private readonly ParserStatistics _statistics;
     private readonly ParserPredictionCache _sharedCache;
+    private readonly bool _sllOnly;
     private readonly Func<MyPredicateTransition, int[], int, bool>
         _predicateEvaluator;
 
@@ -35,11 +36,13 @@ public sealed class AllStarSimulator
     public AllStarSimulator(
         MyATN atn, ParserStatistics statistics = null,
         ParserPredictionCache predictionCache = null,
-        Func<MyPredicateTransition, int[], int, bool> predicateEvaluator = null)
+        Func<MyPredicateTransition, int[], int, bool> predicateEvaluator = null,
+        bool sllOnly = false)
     {
         _atn = atn;
         _statistics = statistics;
         _predicateEvaluator = predicateEvaluator;
+        _sllOnly = sllOnly;
         // A DFA learned without an evaluator may have treated predicates as
         // unconditional. Keep predicate-aware prediction local to this parse.
         if (predictionCache != null && predicateEvaluator == null)
@@ -145,6 +148,18 @@ public sealed class AllStarSimulator
                 callerCtx, precedence, precedenceRuleIndex);
             if (sllAlt > 0) return sllAlt;
 
+            if (_sllOnly)
+            {
+                // The DFA cannot decide (for example, a predicate requires
+                // evaluation). Retry against EMPTY, never the caller context.
+                // A conflicting SLL state is resolved to its lowest alt in
+                // ExecSllDfa below, as in ANTLR's pure-SLL mode.
+                return ExecATN(decisionState, tokenTypes, startPos,
+                    PredictionContext.EMPTY, fullCtx: false,
+                    precedence: precedence,
+                    precedenceRuleIndex: precedenceRuleIndex);
+            }
+
             _statistics?.RecordFullContextFallback(decision);
 
             int llAlt = ExecATN(
@@ -237,7 +252,8 @@ public sealed class AllStarSimulator
                     _statistics.SllConflicts++;
                 if (AllStarParser.Trace && state.RequiresFullContext)
                     Console.Error.WriteLine($"[SLL] dec={decision} fallback=conflict");
-                return -1;
+                return state.RequiresFullContext && _sllOnly
+                    ? state.Configs.MinAlt() : -1;
             }
             if (pos >= tokenTypes.Length) return -1;
 
@@ -281,7 +297,7 @@ public sealed class AllStarSimulator
             }
             if (_sharedCache?.IsSaturated == true)
                 return -1;
-            if (state.StopLiveEdges.Contains(tokenType) &&
+            if (!_sllOnly && state.StopLiveEdges.Contains(tokenType) &&
                 CallerCanMatchToken(
                     callerCtx, tokenType, state.CompletedPrediction,
                     precedenceRuleIndex))
@@ -560,7 +576,7 @@ public sealed class AllStarSimulator
             }
             if (minSurviving >= 0) return minSurviving;
         }
-        return -1;
+        return !fullCtx && _sllOnly ? current.MinAlt() : -1;
     }
 
     private ATNConfigSet ComputeReachSet(ATNConfigSet configs, int tokenType,

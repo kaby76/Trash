@@ -17,14 +17,24 @@ class Command
 
     public void Execute(Config config)
     {
-        // There are two ways to do this. One is a
-        // bootstrapped method using LanguageServer, the
-        // other is by using the generated code, with the loading
-        // and running of the parser. We need to determine which way.
-        // If Generated/exists, and it's a CSharp program that compiles,
-        // use that to parse the input.
-        //
-        if (config.Type == null)
+        if (config.Type == null && config.ParserLocation != null)
+            config.Type = "gen";
+
+        // A generated parser in a sibling directory is not an implicit
+        // choice. For ordinary source files outside Generated-CSharp...,
+        // consume the interpreter bundle on stdin and run ALL(*).
+        if (config.Type == null && !config.AllStar && !config.Earley &&
+            !IsGeneratedCSharpDirectory(Environment.CurrentDirectory))
+        {
+            string firstFile = config.Files?.FirstOrDefault();
+            bool hasInput = firstFile != null || config.Input != null;
+            if (config.Lib != null || config.BundleGlob != null ||
+                (hasInput && (firstFile == null ||
+                    !IsBuiltInGrammarExtension(Path.GetExtension(firstFile)))))
+                config.AllStar = true;
+        }
+
+        if (config.Type == null && IsGeneratedCSharpDirectory(Environment.CurrentDirectory))
         {
             string path = config.ParserLocation != null
                 ? config.ParserLocation
@@ -134,4 +144,19 @@ class Command
         var grun = new Grun(config);
         Environment.ExitCode = grun.Run(config.Type);
     }
+
+    internal static bool IsGeneratedCSharpDirectory(string directory)
+    {
+        string name = Path.GetFileName(Path.TrimEndingDirectorySeparator(Path.GetFullPath(directory)));
+        return name.StartsWith("Generated-CSharp", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsBuiltInGrammarExtension(string extension) => extension switch
+    {
+        ".g4" or ".g4x" or ".ast" or ".g3" or ".g2" or ".gram" or
+        ".peg" or ".rex" or ".y" or ".lark" or ".cf" or ".ebnf" or
+        ".xtext" or ".jj" or ".jjt" or ".abnf" or ".iso14977" or
+        ".iso" or ".pegjs" or ".pest" or ".ixml" => true,
+        _ => false
+    };
 }

@@ -10,15 +10,21 @@ Read an xml file and enumerate all paths to elements in xpath syntax.
 
 ## Usage
 
-    dotnet trash xml2
+    dotnet trash xml2 [--file-name] [file ...]
 
 ## Examples
 
     cat desc.xml | dotnet trash xml2
 
+    dotnet trash xml2 --file-name desc.xml other.xml
+
+`--file-name` prefixes each output line with the input argument and a colon,
+for example `desc.xml:/desc/targets=CSharp`. For standard input, the prefix is
+`<stdin>:`. Without this option, output is unchanged.
+
 ## Current version
 
-Release 4.7.0.
+Release 4.8.0.
 
 ## License
 
