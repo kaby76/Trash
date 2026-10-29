@@ -32,7 +32,8 @@ public static class InterpRunner
         bool indirectLeftRecursion = false,
         string startRuleName = null,
         string xqueryHooksPath = null,
-        bool sllOnly = false)
+        bool sllOnly = false,
+        byte[] dfaCacheData = null)
     {
         timings ??= new InterpRunTimings();
         timings.Files = 1;
@@ -105,6 +106,11 @@ public static class InterpRunner
         var lexerInterp = runtime.LexerInterp;
         var parserAtn = runtime.ParserAtn;
         var lexerAtn = runtime.LexerAtn;
+        if (dfaCacheData != null)
+            timings.DfaCacheLoading = Trash.DfaCacheFile.Read(
+                dfaCacheData, parserInterpPath, lexerInterpPath,
+                parserAtn, parserInterp.AtnData, lexerAtn,
+                predictionCache, lexerDfaCache);
         var parserVocab = runtime.ParserVocabulary;
         var lexerVocab = runtime.LexerVocabulary;
         int startRule = string.IsNullOrEmpty(startRuleName)

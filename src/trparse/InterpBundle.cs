@@ -9,15 +9,25 @@ namespace Trash;
 internal sealed class InterpBundle : IDisposable
 {
     public string DirectoryPath { get; }
+    public byte[] DfaCacheData { get; }
 
-    private InterpBundle(string directoryPath) => DirectoryPath = directoryPath;
+    private InterpBundle(string directoryPath, byte[] dfaCacheData)
+    {
+        DirectoryPath = directoryPath;
+        DfaCacheData = dfaCacheData;
+    }
 
     public static InterpBundle Open(Stream input)
     {
         var tables = ArtifactBundle.Read(input)
             .Where(artifact => artifact.Name.EndsWith(".interp", StringComparison.OrdinalIgnoreCase) ||
-                               artifact.Name.EndsWith(".tokens", StringComparison.OrdinalIgnoreCase))
+                               artifact.Name.EndsWith(".tokens", StringComparison.OrdinalIgnoreCase) ||
+                               artifact.Name.EndsWith(".dfacache", StringComparison.OrdinalIgnoreCase))
             .ToArray();
+        var caches = tables.Where(artifact => artifact.Name.EndsWith(
+            ".dfacache", StringComparison.OrdinalIgnoreCase)).ToArray();
+        if (caches.Length > 1)
+            throw new InvalidDataException("Interpreter bundle contains multiple DFA caches.");
         if (!tables.Any(artifact => artifact.Name.EndsWith(".interp", StringComparison.OrdinalIgnoreCase)))
             throw new InvalidDataException("Interpreted parsing without -L requires a PAX/tar bundle containing .interp files on stdin.");
         var names = new System.Collections.Generic.HashSet<string>(
@@ -38,8 +48,11 @@ internal sealed class InterpBundle : IDisposable
         try
         {
             foreach (var artifact in tables)
-                File.WriteAllBytes(Path.Combine(directory, artifact.Name), artifact.Data);
-            return new InterpBundle(directory);
+                if (!artifact.Name.EndsWith(".dfacache",
+                    StringComparison.OrdinalIgnoreCase))
+                    File.WriteAllBytes(Path.Combine(directory, artifact.Name),
+                        artifact.Data);
+            return new InterpBundle(directory, caches.FirstOrDefault()?.Data);
         }
         catch
         {

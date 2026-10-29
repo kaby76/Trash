@@ -10,6 +10,8 @@ public sealed class TrparseBundleInputTests
 {
     private static readonly string InterpDirectory = Path.Combine(
         AppContext.BaseDirectory, "TestData", "interp");
+    private static readonly string DotDirectory = Path.Combine(
+        AppContext.BaseDirectory, "TestData", "dot");
 
     [Fact]
     public void BundleGlobParsesOnlySelectedMembersAndPreservesOriginalBundle()
@@ -143,6 +145,149 @@ public sealed class TrparseBundleInputTests
             string.Join(", ", ArtifactBundle.Read(new MemoryStream(output)).Select(a => a.Name)));
         Assert.Empty(output);
         Assert.Contains("Duplicate bundle member 'src/One.java.pt'", stderr);
+    }
+
+    [Fact]
+    public void InterpreterBundleRestoresLexerAndParserDfasWithoutChangingTree()
+    {
+        const string source = "digraph G { a -> b; }";
+        var parserPath = Path.Combine(DotDirectory, "DOTParser.interp");
+        var lexerPath = Path.Combine(DotDirectory, "DOTLexer.interp");
+        var parserCache = new AllStarAtnParser.ParserPredictionCache();
+        var lexerCache = new EarleyAtnParser.LexerAtnSimulator.LexerDfaCache();
+        AllStarAtnParser.InterpRunner.Run(parserPath, lexerPath,
+            source, "graph.dot", lineNumbers: false,
+            predictionCache: parserCache,
+            lexerDfaCache: lexerCache);
+        Assert.True(parserCache.RetainedStates > 0);
+        var cache = Trash.DfaCacheFile.Write(
+            parserPath, lexerPath, parserCache, lexerCache);
+        var bundle = new[]
+        {
+            new Artifact("DOTParser.interp", File.ReadAllBytes(parserPath)),
+            new Artifact("DOTLexer.interp", File.ReadAllBytes(lexerPath)),
+            new Artifact("graph.dfacache", cache)
+        };
+
+        var cold = Run(Array.Empty<byte>(), "--allstar", "-L",
+            DotDirectory, "-i", source);
+        var warm = Run(bundle, "--allstar", "-i", source,
+            "--parser-stats", "--interp-timings");
+        Assert.True(cold.ExitCode == 0, cold.Stderr);
+        Assert.True(warm.ExitCode == 0, warm.Stderr);
+        var coldTree = ArtifactBundle.Read(new MemoryStream(cold.Output))
+            .Single(artifact => artifact.Name.EndsWith(".pt")).Data;
+        var warmTree = ArtifactBundle.Read(new MemoryStream(warm.Output))
+            .Single(artifact => artifact.Name.EndsWith(".pt")).Data;
+        Assert.Equal(coldTree, warmTree);
+        Assert.Matches("shared DFA at parse start: [1-9]", warm.Stderr);
+        Assert.Matches("Lexer DFA at input start: [1-9]", warm.Stderr);
+        Assert.Contains("DFA cache loading:", warm.Stderr);
+
+        var lexerOnly = Run(bundle, "--allstar", "-i", source,
+            "--no-shared-parser-dfa", "--interp-timings", "--parser-stats");
+        Assert.True(lexerOnly.ExitCode == 0, lexerOnly.Stderr);
+        Assert.Contains("shared DFA at parse start: 0 states", lexerOnly.Stderr);
+        Assert.Matches("Lexer DFA at input start: [1-9]", lexerOnly.Stderr);
+    }
+
+    [Fact]
+    public void InterpreterBundleRejectsCacheForDifferentTables()
+    {
+        const string source = "digraph G { a -> b; }";
+        var parserPath = Path.Combine(DotDirectory, "DOTParser.interp");
+        var lexerPath = Path.Combine(DotDirectory, "DOTLexer.interp");
+        var parserCache = new AllStarAtnParser.ParserPredictionCache();
+        var lexerCache = new EarleyAtnParser.LexerAtnSimulator.LexerDfaCache();
+        AllStarAtnParser.InterpRunner.Run(parserPath, lexerPath,
+            source, "graph.dot", lineNumbers: false,
+            predictionCache: parserCache,
+            lexerDfaCache: lexerCache);
+        var cache = Trash.DfaCacheFile.Write(
+            parserPath, lexerPath, parserCache, lexerCache);
+        var changedParser = File.ReadAllBytes(parserPath)
+            .Concat(new byte[] { (byte)'\n' }).ToArray();
+        var bundle = new[]
+        {
+            new Artifact("DOTParser.interp", changedParser),
+            new Artifact("DOTLexer.interp", File.ReadAllBytes(lexerPath)),
+            new Artifact("graph.dfacache", cache)
+        };
+
+        var result = Run(bundle, "--allstar", "-i", source);
+        Assert.NotEqual(0, result.ExitCode);
+        Assert.Contains("does not match", result.Stderr);
+    }
+
+    [Fact]
+    public void SourceBundleLoadsLeadingDfaCacheBeforeMatchingMembers()
+    {
+        const string source = "digraph G { a -> b; }";
+        var parserPath = Path.Combine(DotDirectory, "DOTParser.interp");
+        var lexerPath = Path.Combine(DotDirectory, "DOTLexer.interp");
+        var parserCache = new AllStarAtnParser.ParserPredictionCache();
+        var lexerCache = new EarleyAtnParser.LexerAtnSimulator.LexerDfaCache();
+        AllStarAtnParser.InterpRunner.Run(parserPath, lexerPath,
+            source, "graph.dot", lineNumbers: false,
+            predictionCache: parserCache, lexerDfaCache: lexerCache);
+        var cache = Trash.DfaCacheFile.Write(
+            parserPath, lexerPath, parserCache, lexerCache);
+        var inputs = new[]
+        {
+            new Artifact("graph.dfacache", cache),
+            new Artifact("src/Graph.dot", Encoding.UTF8.GetBytes(source))
+        };
+
+        var result = Run(inputs, "--allstar", "-L", DotDirectory,
+            "--bundle-glob", "src/**/*.dot", "--interp-timings");
+        Assert.True(result.ExitCode == 0, result.Stderr);
+        var output = ArtifactBundle.Read(new MemoryStream(result.Output));
+        Assert.Contains(output, artifact => artifact.Name == "src/Graph.dot.pt");
+        Assert.Contains(output, artifact => artifact.Name == "graph.dfacache" &&
+            artifact.Data.SequenceEqual(cache));
+        Assert.Matches("Lexer DFA at input start: [1-9]", result.Stderr);
+
+        var noOutput = Run(inputs, "--allstar", "-L", DotDirectory,
+            "--bundle-glob", "src/**/*.dot", "--interp-timings",
+            "--no-output");
+        Assert.True(noOutput.ExitCode == 0, noOutput.Stderr);
+        Assert.Empty(noOutput.Output);
+        Assert.Matches("Lexer DFA at input start: [1-9]", noOutput.Stderr);
+
+        var refreshed = Run(inputs, "--allstar", "-L", DotDirectory,
+            "--bundle-glob", "src/**/*.dot", "--write-dfa-cache");
+        Assert.True(refreshed.ExitCode == 0, refreshed.Stderr);
+        var refreshedArtifacts = ArtifactBundle.Read(
+            new MemoryStream(refreshed.Output));
+        Assert.Equal("trparse.dfacache", refreshedArtifacts[0].Name);
+        Assert.DoesNotContain(refreshedArtifacts,
+            artifact => artifact.Name == "graph.dfacache");
+    }
+
+    [Fact]
+    public void WriteDfaCacheProducesSelfContainedReusableInterpreterBundle()
+    {
+        const string source = "digraph G { a -> b; }";
+        var trained = Run(Array.Empty<byte>(), "--allstar", "-L",
+            DotDirectory, "-i", source, "--write-dfa-cache");
+        Assert.True(trained.ExitCode == 0, trained.Stderr);
+        var artifacts = ArtifactBundle.Read(new MemoryStream(trained.Output));
+        Assert.Contains(artifacts, artifact =>
+            artifact.Name == "DOTParser.interp");
+        Assert.Contains(artifacts, artifact =>
+            artifact.Name == "DOTLexer.interp");
+        Assert.Contains(artifacts, artifact =>
+            artifact.Name == "trparse.dfacache" && artifact.Data.Length > 0);
+        var originalTree = artifacts.Single(artifact =>
+            artifact.Name.EndsWith(".pt")).Data;
+
+        var reused = Run(trained.Output, "--allstar", "-i", source,
+            "--interp-timings", "--parser-stats");
+        Assert.True(reused.ExitCode == 0, reused.Stderr);
+        var reusedTree = ArtifactBundle.Read(new MemoryStream(reused.Output))
+            .Single(artifact => artifact.Name.EndsWith(".pt")).Data;
+        Assert.Equal(originalTree, reusedTree);
+        Assert.Matches("shared DFA at parse start: [1-9]", reused.Stderr);
     }
 
     private static (int ExitCode, byte[] Output, string Stderr) Run(
