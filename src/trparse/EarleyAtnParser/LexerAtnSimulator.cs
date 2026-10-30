@@ -837,6 +837,11 @@ public partial class LexerAtnSimulator
 
         public int Count => _contexts.Count;
 
+        public LexContext GetById(int id) => _byId[id];
+
+        public LexStack GetStack(int id) => id == 0
+            ? LexStack.Empty : new LexStack(_byId[id]);
+
         public LexStack Push(LexStack parent, MyATNState returnState)
         {
             var key = (parent.Id, returnState.stateNumber);
