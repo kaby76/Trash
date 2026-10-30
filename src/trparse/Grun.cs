@@ -106,9 +106,9 @@ public class Grun
             throw new ArgumentException(
                 "--write-dfa-cache requires ordinary ALL(*) parsing without --timeout.");
         if (config.WriteDfaCache &&
-            (!config.Bundle || config.NoOutput || config.NoParsingResultSets))
+            (!config.Bundle || config.NoParsingResultSets))
             throw new ArgumentException(
-                "--write-dfa-cache requires PAX/tar output; remove --no-output or --no-prs.");
+                "--write-dfa-cache requires PAX/tar output; remove --no-prs.");
         DateTime overallBefore = DateTime.Now;
         InterpBundle stagedTables = null;
         string originalLib = config.Lib;
@@ -278,7 +278,7 @@ public class Grun
             DateTime overallAfter = DateTime.Now;
             PrintPerfSummary((overallAfter - overallBefore).TotalSeconds);
 
-            if (config.NoParsingResultSets || config.NoOutput) return result;
+            if (config.NoParsingResultSets || (config.NoOutput && !config.WriteDfaCache)) return result;
             if (config.Bundle)
             {
                 WriteBundle();
@@ -570,7 +570,8 @@ public class Grun
         var matcher = new BundleMemberGlob(config.BundleGlob);
         var names = new HashSet<string>(StringComparer.Ordinal);
         var parseData = new List<AntlrJson.ParsingResultSet>();
-        var emitBundle = !config.NoOutput && !config.NoParsingResultSets;
+        var emitBundle = !config.NoParsingResultSets &&
+            (!config.NoOutput || config.WriteDfaCache);
         var temporaryPath = Path.Combine(Path.GetTempPath(),
             "trparse-" + Guid.NewGuid().ToString("N") + ".tar");
         using var temporary = new FileStream(temporaryPath, FileMode.CreateNew,
@@ -635,7 +636,7 @@ public class Grun
                             name, rowNumber++, parseData);
                         result = result == 0 ? r : result;
                     }
-                    if (selected && writer != null)
+                    if (selected && writer != null && !config.NoOutput)
                     {
                         var parse = _bundleParses[^1];
                         int resultCount = parse.SerializedResults?.Count ??
@@ -747,7 +748,7 @@ public class Grun
             artifacts.Add(new AntlrJson.Artifact(
                 "trparse.dfacache", _writtenDfaCache));
         }
-        foreach (var parse in _bundleParses)
+        foreach (var parse in config.NoOutput ? Enumerable.Empty<BundleParse>() : _bundleParses)
         {
             var baseName = baseNames[paths[parse.InputName]];
             int resultCount = parse.SerializedResults?.Count ?? parse.Results.Count;

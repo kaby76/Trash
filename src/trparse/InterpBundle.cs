@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Formats.Tar;
 using System.IO;
 using System.Linq;
 using AntlrJson;
@@ -19,11 +21,29 @@ internal sealed class InterpBundle : IDisposable
 
     public static InterpBundle Open(Stream input)
     {
-        var tables = ArtifactBundle.Read(input)
-            .Where(artifact => artifact.Name.EndsWith(".interp", StringComparison.OrdinalIgnoreCase) ||
-                               artifact.Name.EndsWith(".tokens", StringComparison.OrdinalIgnoreCase) ||
-                               artifact.Name.EndsWith(".dfacache", StringComparison.OrdinalIgnoreCase))
-            .ToArray();
+        var tables = new List<Artifact>();
+        var bundleNames = new HashSet<string>(StringComparer.Ordinal);
+        using (var reader = new TarReader(input, leaveOpen: true))
+        {
+            TarEntry entry;
+            while ((entry = reader.GetNextEntry(copyData: false)) != null)
+            {
+                if (entry.EntryType == TarEntryType.Directory)
+                    continue;
+                if (entry.EntryType is not (TarEntryType.RegularFile or TarEntryType.V7RegularFile))
+                    throw new InvalidDataException($"Unsupported bundle entry type '{entry.EntryType}' for '{entry.Name}'.");
+                var name = ArtifactBundle.ValidateMemberName(entry.Name);
+                if (!bundleNames.Add(name))
+                    throw new InvalidDataException($"Duplicate bundle member '{name}'.");
+                if (!name.EndsWith(".interp", StringComparison.OrdinalIgnoreCase) &&
+                    !name.EndsWith(".tokens", StringComparison.OrdinalIgnoreCase) &&
+                    !name.EndsWith(".dfacache", StringComparison.OrdinalIgnoreCase))
+                    continue;
+                using var data = new MemoryStream();
+                entry.DataStream?.CopyTo(data);
+                tables.Add(new Artifact(name, data.ToArray()));
+            }
+        }
         var caches = tables.Where(artifact => artifact.Name.EndsWith(
             ".dfacache", StringComparison.OrdinalIgnoreCase)).ToArray();
         if (caches.Length > 1)

@@ -256,7 +256,9 @@ To save learned lexer and parser DFAs for a later process, pass
 A later `trparse --allstar` without `-L` automatically loads that cache from
 stdin before parsing. `--write-dfa-cache-file FILE` additionally writes a
 standalone copy if needed. `--write-dfa-cache` requires bundle output and
-cannot be combined with `--no-output` or `--no-prs`.
+cannot be combined with `--no-prs`. Add `--no-output` to omit the parse trees
+and errors from the warm-up bundle while retaining the tables and DFA cache.
+This avoids passing potentially large parse results to the next parser.
 
 With `--bundle-glob` and `-L`, a source bundle may also contain a `.dfacache`
 member, but it must precede all selected source members. If
@@ -274,7 +276,7 @@ while loading the lexer DFA, making it useful for comparative measurements.
 For example, from a grammar directory containing `interp/` and `examples/`:
 
 ```sh
-trparse --allstar -L interp --write-dfa-cache \
+trparse --allstar -L interp --write-dfa-cache --no-output \
   examples/warm.sql > warmed.tar
 cat warmed.tar | trparse --allstar --no-output --interp-timings \
   examples/other.sql

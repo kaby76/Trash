@@ -290,6 +290,28 @@ public sealed class TrparseBundleInputTests
         Assert.Matches("shared DFA at parse start: [1-9]", reused.Stderr);
     }
 
+    [Fact]
+    public void WriteDfaCacheWithNoOutputProducesCacheOnlyBundle()
+    {
+        const string source = "digraph G { a -> b; }";
+        var trained = Run(Array.Empty<byte>(), "--allstar", "-L",
+            DotDirectory, "-i", source, "--write-dfa-cache", "--no-output");
+        Assert.True(trained.ExitCode == 0, trained.Stderr);
+        var artifacts = ArtifactBundle.Read(new MemoryStream(trained.Output));
+        Assert.Contains(artifacts, artifact => artifact.Name == "DOTParser.interp");
+        Assert.Contains(artifacts, artifact => artifact.Name == "DOTLexer.interp");
+        Assert.Contains(artifacts, artifact => artifact.Name == "trparse.dfacache");
+        Assert.DoesNotContain(artifacts, artifact =>
+            artifact.Name.EndsWith(".pt") || artifact.Name.EndsWith(".errors"));
+
+        var reused = Run(trained.Output, "--allstar", "-i", source,
+            "--parser-stats");
+        Assert.True(reused.ExitCode == 0, reused.Stderr);
+        Assert.Single(ArtifactBundle.Read(new MemoryStream(reused.Output)),
+            artifact => artifact.Name.EndsWith(".pt"));
+        Assert.Matches("shared DFA at parse start: [1-9]", reused.Stderr);
+    }
+
     private static (int ExitCode, byte[] Output, string Stderr) Run(
         IReadOnlyList<Artifact> inputs, params string[] arguments)
     {
