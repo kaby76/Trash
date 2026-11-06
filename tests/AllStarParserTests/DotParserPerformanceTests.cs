@@ -138,6 +138,95 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
             "expected less than the conservative 20,000-byte baseline.");
     }
 
+    [Fact]
+    [Trait("Category", "Performance")]
+    [Trait("Size", "Large")]
+    public void Graphviz1864DotComparesLl1Bypass()
+    {
+        var compressedPath = Path.Combine(DotData, "1864.dot.gz");
+        using var compressed = File.OpenRead(compressedPath);
+        using var gzip = new GZipStream(compressed, CompressionMode.Decompress);
+        using var reader = new StreamReader(gzip, Encoding.UTF8);
+        var fixture = Prepare(reader.ReadToEnd());
+
+        var baselineEvents = AllStarParser.Parse(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule);
+        var bypassStatistics = new ParserStatistics();
+        var bypassEvents = AllStarParser.ParseWithLl1(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            bypassStatistics);
+        Assert.Equal(baselineEvents, bypassEvents);
+        Assert.True(bypassStatistics.Ll1Bypasses > 0);
+
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+        Assert.True(AllStarParser.RecognizeWithLl1(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+
+        var baseline = Measure(() =>
+        {
+            Assert.True(AllStarParser.Recognize(
+                fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+            return null;
+        }, fixture.OnChannelTokenCount);
+        var bypass = Measure(() =>
+        {
+            Assert.True(AllStarParser.RecognizeWithLl1(
+                fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+            return null;
+        }, fixture.OnChannelTokenCount);
+
+        Report("1864.dot without LL(1) bypass", baseline);
+        Report("1864.dot with LL(1) bypass", bypass);
+        output.WriteLine($"LL(1) bypasses: {bypassStatistics.Ll1Bypasses:N0}; " +
+            $"adaptive predictions: {bypassStatistics.AdaptivePredictionCalls:N0}");
+        var analyzer = Ll1DecisionAnalyzer.For(fixture.ParserAtn);
+        var eligible = Enumerable.Range(0, fixture.ParserAtn.decisionToState.Length)
+            .Count(analyzer.IsEligible);
+        output.WriteLine($"Eligible decisions: {eligible} / " +
+            $"{fixture.ParserAtn.decisionToState.Length}");
+        output.WriteLine(bypassStatistics.Format());
+    }
+
+    [Fact]
+    [Trait("Category", "Performance")]
+    [Trait("Size", "Large")]
+    public void Graphviz1864DotComparesActiveRuleGuards()
+    {
+        var compressedPath = Path.Combine(DotData, "1864.dot.gz");
+        using var compressed = File.OpenRead(compressedPath);
+        using var gzip = new GZipStream(compressed, CompressionMode.Decompress);
+        using var reader = new StreamReader(gzip, Encoding.UTF8);
+        var fixture = Prepare(reader.ReadToEnd());
+
+        var baselineEvents = AllStarParser.ParseWithHashGuard(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule);
+        var stackEvents = AllStarParser.Parse(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule);
+        Assert.Equal(baselineEvents, stackEvents);
+
+        Assert.True(AllStarParser.RecognizeWithHashGuard(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+
+        var baseline = Measure(() =>
+        {
+            Assert.True(AllStarParser.RecognizeWithHashGuard(
+                fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+            return null;
+        }, fixture.OnChannelTokenCount);
+        var stack = Measure(() =>
+        {
+            Assert.True(AllStarParser.Recognize(
+                fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+            return null;
+        }, fixture.OnChannelTokenCount);
+
+        Report("1864.dot with hash-set recursion guard", baseline);
+        Report("1864.dot with stack recursion guard", stack);
+    }
+
     private static DotFixture Prepare(string input)
     {
         var parserInterp = InterpFileReader.Read(File.ReadAllText(ParserInterpPath));
