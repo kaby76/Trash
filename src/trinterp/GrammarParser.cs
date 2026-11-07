@@ -92,6 +92,20 @@ public class GrammarParser
 
     private void ProcessPrequel(GrammarModel model, GrammarNode pre)
     {
+        var delegates = Child(pre, "delegateGrammars");
+        if (delegates != null)
+        {
+            foreach (var grammar in Children(delegates, "delegateGrammar"))
+            {
+                // In "import alias=Grammar;", the right-hand name identifies
+                // the grammar to import.
+                var names = Children(grammar, "identifier").ToList();
+                if (names.Count != 0)
+                    model.Imports.Add(GetText(names[^1]).Trim());
+            }
+            return;
+        }
+
         var optionsSpec = Child(pre, "optionsSpec");
         if (optionsSpec != null) { ProcessOptions(model, optionsSpec); return; }
 

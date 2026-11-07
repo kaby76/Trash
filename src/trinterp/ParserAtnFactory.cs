@@ -945,7 +945,9 @@ public class ParserAtnFactory
     protected AtnHandle MakeRuleRef(string name)
     {
         var rule = _grammar.GetRule(name);
-        if (rule == null) return MakeEpsilonHandle();
+        if (rule == null)
+            throw new InvalidOperationException(
+                $"Undefined rule '{name}' in grammar '{_grammar.Name}'.");
         var ruleStart = _atn.ruleToStartState[rule.Index];
         var left = NewState<BasicState>();
         var right = NewState<BasicState>();

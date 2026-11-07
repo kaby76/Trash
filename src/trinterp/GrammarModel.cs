@@ -86,6 +86,9 @@ public class GrammarModel
     // tokenVocab option value (parser grammars only).
     public string TokenVocab;
 
+    // Grammar names in an ANTLR import declaration, in declaration order.
+    public List<string> Imports = new();
+
     // caseInsensitive option: when true, every char literal/range is expanded to both cases.
     public bool IsCaseInsensitive;
 

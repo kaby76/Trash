@@ -245,6 +245,11 @@ public partial class LexerAtnSimulator
             throw new LexerNoViableAltException(
                 start, startLine, startColumn, _input[start]);
 
+        if (matchEnd <= start)
+            throw new InvalidOperationException(
+                $"Lexer rule {matchedRule} matched empty input at line " +
+                $"{startLine}:{startColumn}; tokenization cannot advance.");
+
         int tokenType = _atn.ruleToTokenType[matchedRule];
         int channel = DEFAULT_CHANNEL;
         bool skip = false;
