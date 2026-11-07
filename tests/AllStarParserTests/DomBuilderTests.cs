@@ -107,6 +107,36 @@ public class DomBuilderTests
         Assert.Equal("root", root.LocalName);
     }
 
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void StreamingCompactBuilderMatchesBufferedEvents(bool lineNumbers)
+    {
+        var tokens = new[]
+        {
+            Token(3, LexerToken.SKIP_CHANNEL, " ", 0),
+            Token(1, 0, "x", 1)
+        };
+        var events = new[]
+        {
+            ParseEvent.EnterRule(0),
+            ParseEvent.EnterRule(1),
+            ParseEvent.Consume(1),
+            ParseEvent.ExitRule(1),
+            ParseEvent.ExitRule(0)
+        };
+        string[] symbolic = [null!, "VISIBLE", "COMMENT", "WS"];
+        string[] lexerRules = [null!, "VISIBLE", "COMMENT", "WS"];
+        var buffered = CompactTreeBuilder.Build(events, tokens,
+            ["root", "item"], symbolic, [], lexerRules, lineNumbers);
+        var streaming = new CompactTreeBuilder.StreamingBuilder(tokens,
+            ["root", "item"], symbolic, [], lexerRules, lineNumbers);
+        foreach (var ev in events) streaming.OnEvent(ev);
+
+        Assert.Equal(Serialize(new ParsingResultSet { NodeProvider = buffered }),
+            Serialize(new ParsingResultSet { NodeProvider = streaming.Complete() }));
+    }
+
     private static string Serialize(ParsingResultSet result)
     {
         var options = new JsonSerializerOptions { MaxDepth = 10000 };

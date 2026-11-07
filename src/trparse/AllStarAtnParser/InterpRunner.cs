@@ -153,6 +153,8 @@ public static class InterpRunner
         List<ParseEvent> events;
         AstTreeBuilder astBuilder = null;
         bool astAccepted = false;
+        CompactTreeBuilder.StreamingBuilder compactBuilder = null;
+        bool compactAccepted = false;
         var parseProgress = indirectLeftRecursion
             ? new IndirectLeftRecursiveParser.ParseProgress() : null;
         if (contextAwareLexing || hooks?.HasLexerPredicates == true)
@@ -210,6 +212,18 @@ public static class InterpRunner
                     parserStatistics, predictionCache, sllOnly);
                 events = null;
             }
+            else if (!indirectLeftRecursion && hooks == null)
+            {
+                compactBuilder = new CompactTreeBuilder.StreamingBuilder(
+                    rawTokens, parserInterp.RuleNames,
+                    parserInterp.SymbolicNames, parserInterp.LiteralNames,
+                    lexerInterp.RuleNames, lineNumbers);
+                compactAccepted = AllStarParser.ParseStreaming(parserAtn,
+                    rawTokens, startRule, compactBuilder.OnEvent,
+                    parserStatistics, predictionCache, sllOnly);
+                events = null;
+                timings.TreeBuildingIncludedInParsing = true;
+            }
             else
             {
                 events = indirectLeftRecursion
@@ -230,7 +244,7 @@ public static class InterpRunner
             inputText, source);
         if (parserStatistics != null)
             Console.Error.WriteLine(parserStatistics.Format());
-        if (events == null && !astAccepted)
+        if (events == null && !astAccepted && !compactAccepted)
         {
             if (!indirectLeftRecursion)
                 throw new InvalidOperationException(
@@ -271,13 +285,10 @@ public static class InterpRunner
 
         timer.Restart();
         var compactTree = astBuilder == null
-            ? CompactTreeBuilder.Build(
-                events, rawTokens,
-                parserInterp.RuleNames,
-                parserInterp.SymbolicNames,
-                parserInterp.LiteralNames,
-                lexerInterp.RuleNames,
-                lineNumbers)
+            ? compactBuilder?.Complete() ?? CompactTreeBuilder.Build(
+                events, rawTokens, parserInterp.RuleNames,
+                parserInterp.SymbolicNames, parserInterp.LiteralNames,
+                lexerInterp.RuleNames, lineNumbers)
             : null;
         timer.Stop();
         timings.TreeBuilding = timer.Elapsed;

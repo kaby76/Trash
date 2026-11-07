@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
+using System.Text.Json;
 using AllStarAtnParser;
+using AntlrJson;
 using Atn;
 using EarleyAtnParser;
 using ParseTreeEditing.UnvParseTreeDOM;
@@ -331,6 +333,74 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
 
         Assert.NotNull(events);
         Assert.Equal(events.Count, statistics.ParseEventsCreated);
+    }
+
+    [Fact]
+    public void DotStreamingCompactTreeMatchesBufferedParserEvents()
+    {
+        var fixture = Prepare(GenerateDotInput(100));
+        var events = AllStarParser.Parse(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule);
+        Assert.NotNull(events);
+        var buffered = CompactTreeBuilder.Build(events, fixture.Tokens,
+            fixture.ParserInterp.RuleNames,
+            fixture.ParserInterp.SymbolicNames,
+            fixture.ParserInterp.LiteralNames,
+            fixture.LexerInterp.RuleNames, lineNumbers: true);
+
+        var streaming = new CompactTreeBuilder.StreamingBuilder(
+            fixture.Tokens, fixture.ParserInterp.RuleNames,
+            fixture.ParserInterp.SymbolicNames,
+            fixture.ParserInterp.LiteralNames,
+            fixture.LexerInterp.RuleNames, lineNumbers: true);
+        Assert.True(AllStarParser.ParseStreaming(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            streaming.OnEvent));
+        var options = new JsonSerializerOptions { MaxDepth = 10000 };
+        options.Converters.Add(new ParsingResultSetSerializer());
+        string Serialize(CompactParseTree tree) => JsonSerializer.Serialize(
+            new[] { new ParsingResultSet { NodeProvider = tree } }, options);
+
+        Assert.Equal(Serialize(buffered), Serialize(streaming.Complete()));
+    }
+
+    [Fact]
+    [Trait("Category", "Performance")]
+    [Trait("Size", "Large")]
+    public void Graphviz1864DotComparesBufferedAndStreamingTreeConstruction()
+    {
+        var compressedPath = Path.Combine(DotData, "1864.dot.gz");
+        using var compressed = File.OpenRead(compressedPath);
+        using var gzip = new GZipStream(compressed, CompressionMode.Decompress);
+        using var reader = new StreamReader(gzip, Encoding.UTF8);
+        var fixture = Prepare(reader.ReadToEnd());
+
+        var buffered = Measure(() =>
+        {
+            var events = AllStarParser.Parse(
+                fixture.ParserAtn, fixture.Tokens, fixture.StartRule);
+            Assert.NotNull(events);
+            return CompactTreeBuilder.Build(events, fixture.Tokens,
+                fixture.ParserInterp.RuleNames,
+                fixture.ParserInterp.SymbolicNames,
+                fixture.ParserInterp.LiteralNames,
+                fixture.LexerInterp.RuleNames, lineNumbers: false);
+        }, fixture.OnChannelTokenCount);
+        var streaming = Measure(() =>
+        {
+            var builder = new CompactTreeBuilder.StreamingBuilder(
+                fixture.Tokens, fixture.ParserInterp.RuleNames,
+                fixture.ParserInterp.SymbolicNames,
+                fixture.ParserInterp.LiteralNames,
+                fixture.LexerInterp.RuleNames, lineNumbers: false);
+            Assert.True(AllStarParser.ParseStreaming(
+                fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+                builder.OnEvent));
+            return builder.Complete();
+        }, fixture.OnChannelTokenCount);
+
+        Report("1864.dot buffered parse and compact tree", buffered);
+        Report("1864.dot streaming compact tree", streaming);
     }
 
     [Fact]

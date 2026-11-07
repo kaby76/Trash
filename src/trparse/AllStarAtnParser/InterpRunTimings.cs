@@ -16,6 +16,7 @@ public sealed class InterpRunTimings
     public TimeSpan TokenReconciliation { get; internal set; }
     public TimeSpan Parsing { get; internal set; }
     public TimeSpan TreeBuilding { get; internal set; }
+    public bool TreeBuildingIncludedInParsing { get; internal set; }
     public TimeSpan ResultConstruction { get; internal set; }
     public LexerAtnSimulator.LexerDfaStatistics? LexerDfa { get; internal set; }
 
@@ -33,6 +34,7 @@ public sealed class InterpRunTimings
         TokenReconciliation += other.TokenReconciliation;
         Parsing += other.Parsing;
         TreeBuilding += other.TreeBuilding;
+        TreeBuildingIncludedInParsing |= other.TreeBuildingIncludedInParsing;
         ResultConstruction += other.ResultConstruction;
         LexerDfa = other.LexerDfa;
     }
@@ -50,8 +52,10 @@ public sealed class InterpRunTimings
             $"{prefix}DFA cache writing: {DfaCacheWriting.TotalSeconds:F6} s",
             $"{prefix}Tokenization: {Tokenization.TotalSeconds:F6} s",
             $"{prefix}Token reconciliation: {TokenReconciliation.TotalSeconds:F6} s",
-            $"{prefix}ALL(*) parsing: {Parsing.TotalSeconds:F6} s",
-            $"{prefix}Tree building: {TreeBuilding.TotalSeconds:F6} s",
+            $"{prefix}ALL(*) parsing: {Parsing.TotalSeconds:F6} s" +
+                (TreeBuildingIncludedInParsing ? " (includes streamed tree building)" : ""),
+            $"{prefix}Tree building: {TreeBuilding.TotalSeconds:F6} s" +
+                (TreeBuildingIncludedInParsing ? " (finalization only)" : ""),
             $"{prefix}Result construction: {ResultConstruction.TotalSeconds:F6} s"
         };
         if (LexerDfa is { } dfa)
