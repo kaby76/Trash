@@ -63,9 +63,9 @@
     <Content Include="../grammars-v4/kotlin/*.g4"
              CopyToOutputDirectory="PreserveNewest"
              Link="TestData/kotlin/%(Filename)%(Extension)" />
-    <Content Include="../grammars-v4/kotlin/examples/kotlinFile/fix-3218.kt"
+    <Content Include="../grammars-v4/kotlin/examples/kotlinFile/fix-*.kt"
              CopyToOutputDirectory="PreserveNewest"
-             Link="TestData/kotlin/fix-3218.kt" />
+             Link="TestData/kotlin/%(Filename)%(Extension)" />
 
     <Content Include="TestData/indirect-left-recursion/*.interp"
              CopyToOutputDirectory="Always"

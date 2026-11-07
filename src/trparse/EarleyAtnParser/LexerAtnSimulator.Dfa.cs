@@ -31,6 +31,7 @@ public partial class LexerAtnSimulator
         internal object DfaStates;
         internal object ContextCache;
         internal object ActionSets;
+        internal object ActionSequences;
 
         internal void Bind(MyATN atn)
         {
@@ -42,6 +43,7 @@ public partial class LexerAtnSimulator
                 DfaStates = new List<DfaState>();
                 ContextCache = new LexContextCache();
                 ActionSets = new Dictionary<int, IMyLexerAction[]>();
+                ActionSequences = new LexerActionSequences();
             }
             else if (!ReferenceEquals(_atn, atn))
             {
@@ -61,6 +63,14 @@ public partial class LexerAtnSimulator
                 var context = contexts.GetById(id);
                 writer.Write(context.Parent?.Id ?? 0);
                 writer.Write(context.ReturnState.stateNumber);
+            }
+            var actionSequences = (LexerActionSequences)ActionSequences;
+            writer.Write(actionSequences.Count);
+            for (int id = 1; id <= actionSequences.Count; id++)
+            {
+                var (parent, index) = actionSequences.Get(id);
+                writer.Write(parent);
+                writer.Write(index);
             }
             var indices = new Dictionary<DfaState, int>(ReferenceEqualityComparer.Instance);
             for (int i = 0; i < states.Count; i++) indices.Add(states[i], i);
@@ -112,6 +122,17 @@ public partial class LexerAtnSimulator
                     atn.allStates[returnState]).Id != id)
                     throw new InvalidDataException("Duplicate lexer DFA context.");
             }
+            var actionSequences = (LexerActionSequences)ActionSequences;
+            int actionCount = ReadCount(reader, 2_000_000);
+            for (int id = 1; id <= actionCount; id++)
+            {
+                int parent = reader.ReadInt32();
+                int index = reader.ReadInt32();
+                if (parent < 0 || parent >= id ||
+                    (uint)index >= (uint)atn.lexerActions.Length ||
+                    actionSequences.Append(parent, index) != id)
+                    throw new InvalidDataException("Invalid lexer DFA action sequence.");
+            }
             int stateCount = ReadCount(reader, 2_000_000);
             var edges = new List<(int Symbol, int Target)>[stateCount];
             for (int i = 0; i < stateCount; i++)
@@ -131,6 +152,7 @@ public partial class LexerAtnSimulator
                     if ((uint)number >= (uint)atn.allStates.Length ||
                         atn.allStates[number] == null ||
                         (uint)stack > contextCount ||
+                        (uint)actions > actionCount ||
                         (uint)nonGreedyContext > contextCount)
                         throw new InvalidDataException("Invalid lexer DFA configuration.");
                     configs.Add(new LexerConfig(atn.allStates[number],
@@ -170,6 +192,38 @@ public partial class LexerAtnSimulator
             if (count < 0 || count > maximum)
                 throw new InvalidDataException("Invalid lexer DFA cache count.");
             return count;
+        }
+    }
+
+    private sealed class LexerActionSequences
+    {
+        private readonly List<(int Parent, int Index)> _nodes = [(0, -1)];
+        private readonly Dictionary<(int Parent, int Index), int> _ids = new();
+
+        public int Count => _nodes.Count - 1;
+        public (int Parent, int Index) Get(int id) => _nodes[id];
+
+        public int Append(int parent, int index)
+        {
+            var key = (parent, index);
+            if (_ids.TryGetValue(key, out int id)) return id;
+            id = _nodes.Count;
+            _nodes.Add(key);
+            _ids.Add(key, id);
+            return id;
+        }
+
+        public IEnumerable<int> Indices(int id)
+        {
+            var indices = new List<int>();
+            while (id != 0)
+            {
+                var node = _nodes[id];
+                indices.Add(node.Index);
+                id = node.Parent;
+            }
+            for (int i = indices.Count - 1; i >= 0; i--)
+                yield return indices[i];
         }
     }
 

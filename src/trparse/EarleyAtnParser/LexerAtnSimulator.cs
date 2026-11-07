@@ -31,6 +31,7 @@ public partial class LexerAtnSimulator
     private readonly LexContextCache _contextCache;
     private readonly Stack<LexerConfig> _closureWork = new();
     private readonly Dictionary<int, IMyLexerAction[]> _actionSets;
+    private readonly LexerActionSequences _actionSequences;
     private readonly Dictionary<(int Decision, int Character, int OuterRule), bool>
         _preferredNonGreedyMatches = new();
     private string _input;
@@ -70,6 +71,7 @@ public partial class LexerAtnSimulator
             _contextCache = (LexContextCache)dfaCache.ContextCache;
             _actionSets =
                 (Dictionary<int, IMyLexerAction[]>)dfaCache.ActionSets;
+            _actionSequences = (LexerActionSequences)dfaCache.ActionSequences;
         }
         else
         {
@@ -77,6 +79,7 @@ public partial class LexerAtnSimulator
             _dfaStates = new List<DfaState>();
             _contextCache = new LexContextCache();
             _actionSets = new Dictionary<int, IMyLexerAction[]>();
+            _actionSequences = new LexerActionSequences();
         }
         _dfaStatesAtStart = _dfaStates.Count;
         _dfaTransitionsAtStart = CountDfaTransitions();
@@ -475,9 +478,8 @@ public partial class LexerAtnSimulator
         if (actionBits == 0) return Array.Empty<IMyLexerAction>();
         if (_actionSets.TryGetValue(actionBits, out var cached)) return cached;
         var actions = new List<IMyLexerAction>();
-        for (int i = 0; i < _atn.lexerActions.Length && i < 32; i++)
-            if ((actionBits & (1 << i)) != 0)
-                actions.Add(_atn.lexerActions[i]);
+        foreach (int index in _actionSequences.Indices(actionBits))
+            actions.Add(_atn.lexerActions[index]);
         cached = actions.ToArray();
         _actionSets.Add(actionBits, cached);
         return cached;
@@ -489,10 +491,8 @@ public partial class LexerAtnSimulator
         int tokenType = _atn.ruleToTokenType[ruleIndex];
         int channel = DEFAULT_CHANNEL;
         bool skip = false;
-        for (int i = 0; i < _atn.lexerActions.Length && i < 32; i++)
+        foreach (var action in ResolveActions(actionBits))
         {
-            if ((actionBits & (1 << i)) == 0) continue;
-            var action = _atn.lexerActions[i];
             if (action.ActionType == MyLexerActionType.Type) tokenType = action.Arg1;
             else if (action.ActionType == MyLexerActionType.Channel) channel = action.Arg1;
             else if (action.ActionType == MyLexerActionType.Skip) skip = true;
@@ -669,8 +669,9 @@ public partial class LexerAtnSimulator
                         // ANTLR executes actions only in the outermost token rule.
                         // Actions reached inside a referenced lexer rule/fragment
                         // must not affect the token being assembled by its caller.
-                        if (c.Stack.IsEmpty && at.actionIndex >= 0 && at.actionIndex < 32)
-                            acts |= 1 << at.actionIndex;
+                        if (c.Stack.IsEmpty && at.actionIndex >= 0 &&
+                            at.actionIndex < _atn.lexerActions.Length)
+                            acts = _actionSequences.Append(acts, at.actionIndex);
                         next = new LexerConfig(
                             tr.target, c.Stack, acts, c.OuterRule,
                             NextNonGreedyDecision(c),
@@ -726,12 +727,12 @@ public partial class LexerAtnSimulator
         }
     }
 
-    // NFA configuration: state + persistent return-address stack + accumulated action bitfield
+    // NFA configuration: state + persistent return-address stack + action sequence ID
     private readonly struct LexerConfig
     {
         public readonly MyATNState State;
         public readonly LexStack Stack;
-        public readonly int Actions; // bitfield indexing into atn.lexerActions
+        public readonly int Actions; // ID in LexerActionSequences
         public readonly int OuterRule;
         public readonly int NonGreedyDecision;
         public readonly LexStack NonGreedyContext;

@@ -566,8 +566,10 @@ public sealed class G4XInterpTests
         Assert.Contains("matched empty input", error.Message);
     }
 
-    [Fact]
-    public async Task KotlinLexerImportParsesFix3218()
+    [Theory]
+    [InlineData("fix-3218.kt")]
+    [InlineData("fix-3220.kt")]
+    public async Task KotlinLexerImportParsesExamples(string fileName)
     {
         var fixture = Path.Combine(AppContext.BaseDirectory, "TestData", "kotlin");
         var directory = Directory.CreateTempSubdirectory("KotlinImport-").FullName;
@@ -583,11 +585,28 @@ public sealed class G4XInterpTests
                 parsed.Output, "-o", directory, "--start-rule", "kotlinFile");
             Assert.True(generated.Exit == 0, generated.Error);
 
-            var input = await File.ReadAllTextAsync(Path.Combine(fixture, "fix-3218.kt"));
+            var input = await File.ReadAllTextAsync(Path.Combine(fixture, fileName));
+            if (fileName == "fix-3220.kt")
+            {
+                var lexerData = Atn.InterpFileReader.Read(File.ReadAllText(
+                    Path.Combine(directory, "KotlinLexer.interp")));
+                Assert.True(lexerData.AtnData != null);
+                Assert.True(Atn.AtnDeserializer.Deserialize(lexerData.AtnData)
+                    .lexerActions.Length > 32);
+                var tokenStore = new EarleyAtnParser.LexerAtnSimulator(
+                    Atn.AtnDeserializer.Deserialize(lexerData.AtnData)).Tokenize(input);
+                int identifier = Array.IndexOf(lexerData.SymbolicNames, "Identifier");
+                Assert.True(identifier > 0);
+                var identifiers = tokenStore.Where(token =>
+                    token.Text is "t" or "T" or "d" or "D").ToArray();
+                Assert.True(identifiers.Length >= 4);
+                Assert.All(identifiers,
+                    token => Assert.Equal(identifier, token.Type));
+            }
             var (result, _) = AllStarAtnParser.InterpRunner.Run(
                 Path.Combine(directory, "KotlinParser.interp"),
                 Path.Combine(directory, "KotlinLexer.interp"),
-                input, "fix-3218.kt", false);
+                input, fileName, false);
             Assert.StartsWith("(kotlinFile ",
                 new TreeOutput(result.Lexer, result.Parser)
                     .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString());

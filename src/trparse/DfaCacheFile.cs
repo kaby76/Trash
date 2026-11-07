@@ -18,7 +18,7 @@ internal sealed class DfaCacheLoadException : IOException
 /// <summary>A versioned snapshot of learned interpreter DFAs, tied to both .interp files.</summary>
 internal static class DfaCacheFile
 {
-    private const int Version = 2;
+    private const int Version = 3;
     private const string Magic = "TrashDFA";
 
     public static byte[] Write(string parserInterp, string lexerInterp,
