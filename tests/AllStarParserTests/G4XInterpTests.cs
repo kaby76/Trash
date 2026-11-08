@@ -532,6 +532,88 @@ public sealed class G4XInterpTests
         Assert.Equal(Tables(antlr), Tables(plus));
     }
 
+    [Fact]
+    public void ImportedAntlrLexerRulesAreCompiledIntoTheImportingLexer()
+    {
+        var letters = Model("lexer grammar Letters; LOWER:[a-z]; Z:'z';", false);
+        var lexer = Model("lexer grammar L; import Letters; FUN:'fun'; Identifier:LOWER (LOWER | [0-9])*; WS:[ ]+ -> skip;", false);
+        var parser = Model("parser grammar P; options{tokenVocab=L;} start:FUN Identifier EOF;", false);
+        var batch = Batch(parser, lexer, letters);
+
+        Assert.Contains(lexer.Rules, rule => rule.Name == "LOWER");
+        Assert.Equal(lexer.TokenNameToType["Z"], lexer.StringLiteralToType["'z'"]);
+        Assert.Equal("(start fun f1 <EOF>)", Parse(batch, "P", "L", "fun f1"));
+    }
+
+    [Fact]
+    public void MissingAntlrLexerImportIsReportedBeforeTableGeneration()
+    {
+        var lexer = Model("lexer grammar L; import Letters; Identifier:LOWER+;", false);
+        var error = Assert.Throws<InvalidOperationException>(() => Batch(lexer));
+        Assert.Contains("Imported grammar 'Letters'", error.Message);
+    }
+
+    [Fact]
+    public void EmptyLexerMatchFailsInsteadOfRepeatingForever()
+    {
+        var lexer = Model("lexer grammar L; Empty: ;", false);
+        Batch(lexer);
+        var interp = Atn.InterpFileReader.Read(Tables(lexer));
+        var atn = Atn.AtnDeserializer.Deserialize(interp.AtnData);
+
+        var error = Assert.Throws<InvalidOperationException>(() =>
+            new EarleyAtnParser.LexerAtnSimulator(atn).Tokenize("x"));
+        Assert.Contains("matched empty input", error.Message);
+    }
+
+    [Theory]
+    [InlineData("fix-3218.kt")]
+    [InlineData("fix-3220.kt")]
+    public async Task KotlinLexerImportParsesExamples(string fileName)
+    {
+        var fixture = Path.Combine(AppContext.BaseDirectory, "TestData", "kotlin");
+        var directory = Directory.CreateTempSubdirectory("KotlinImport-").FullName;
+        try
+        {
+            var parsed = await RunCli(typeof(Trash.Program).Assembly.Location, null,
+                "-t", "ANTLRv4",
+                Path.Combine(fixture, "KotlinLexer.g4"),
+                Path.Combine(fixture, "KotlinParser.g4"),
+                Path.Combine(fixture, "UnicodeClasses.g4"));
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCli(typeof(trinterp.Program).Assembly.Location,
+                parsed.Output, "-o", directory, "--start-rule", "kotlinFile");
+            Assert.True(generated.Exit == 0, generated.Error);
+
+            var input = await File.ReadAllTextAsync(Path.Combine(fixture, fileName));
+            if (fileName == "fix-3220.kt")
+            {
+                var lexerData = Atn.InterpFileReader.Read(File.ReadAllText(
+                    Path.Combine(directory, "KotlinLexer.interp")));
+                Assert.True(lexerData.AtnData != null);
+                Assert.True(Atn.AtnDeserializer.Deserialize(lexerData.AtnData)
+                    .lexerActions.Length > 32);
+                var tokenStore = new EarleyAtnParser.LexerAtnSimulator(
+                    Atn.AtnDeserializer.Deserialize(lexerData.AtnData)).Tokenize(input);
+                int identifier = Array.IndexOf(lexerData.SymbolicNames, "Identifier");
+                Assert.True(identifier > 0);
+                var identifiers = tokenStore.Where(token =>
+                    token.Text is "t" or "T" or "d" or "D").ToArray();
+                Assert.True(identifiers.Length >= 4);
+                Assert.All(identifiers,
+                    token => Assert.Equal(identifier, token.Type));
+            }
+            var (result, _) = AllStarAtnParser.InterpRunner.Run(
+                Path.Combine(directory, "KotlinParser.interp"),
+                Path.Combine(directory, "KotlinLexer.interp"),
+                input, fileName, false);
+            Assert.StartsWith("(kotlinFile ",
+                new TreeOutput(result.Lexer, result.Parser)
+                    .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString());
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
     [Theory]
     [InlineData("grammar C; Start : Missing EOF;", "Undefined")]
     [InlineData("lexer grammar L; word : missing;", "Undefined")]

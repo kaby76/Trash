@@ -31,6 +31,7 @@ public partial class LexerAtnSimulator
         internal object DfaStates;
         internal object ContextCache;
         internal object ActionSets;
+        internal object ActionSequences;
 
         internal void Bind(MyATN atn)
         {
@@ -42,12 +43,187 @@ public partial class LexerAtnSimulator
                 DfaStates = new List<DfaState>();
                 ContextCache = new LexContextCache();
                 ActionSets = new Dictionary<int, IMyLexerAction[]>();
+                ActionSequences = new LexerActionSequences();
             }
             else if (!ReferenceEquals(_atn, atn))
             {
                 throw new InvalidOperationException(
                     "A lexer DFA cache cannot be shared by different ATN instances.");
             }
+        }
+
+        internal void Write(BinaryWriter writer)
+        {
+            var contexts = (LexContextCache)ContextCache;
+            var states = (List<DfaState>)DfaStates;
+            var starts = (DfaState[])ModeStartStates;
+            writer.Write(contexts.Count);
+            for (int id = 1; id <= contexts.Count; id++)
+            {
+                var context = contexts.GetById(id);
+                writer.Write(context.Parent?.Id ?? 0);
+                writer.Write(context.ReturnState.stateNumber);
+            }
+            var actionSequences = (LexerActionSequences)ActionSequences;
+            writer.Write(actionSequences.Count);
+            for (int id = 1; id <= actionSequences.Count; id++)
+            {
+                var (parent, index) = actionSequences.Get(id);
+                writer.Write(parent);
+                writer.Write(index);
+            }
+            var indices = new Dictionary<DfaState, int>(ReferenceEqualityComparer.Instance);
+            for (int i = 0; i < states.Count; i++) indices.Add(states[i], i);
+            writer.Write(states.Count);
+            foreach (var state in states)
+            {
+                writer.Write(state.Configs.Count);
+                foreach (var config in state.Configs)
+                {
+                    writer.Write(config.State.stateNumber);
+                    writer.Write(config.Stack.Id);
+                    writer.Write(config.Actions);
+                    writer.Write(config.OuterRule);
+                    writer.Write(config.NonGreedyDecision);
+                    writer.Write(config.NonGreedyContext.Id);
+                    writer.Write(config.NonGreedyBranch);
+                    writer.Write(config.CompletedRule);
+                }
+                var edges = state.Edges.Entries().ToArray();
+                writer.Write(edges.Length);
+                foreach (var (symbol, target) in edges)
+                {
+                    writer.Write(symbol);
+                    writer.Write(target == null ? -1 : indices[target]);
+                }
+            }
+            writer.Write(starts.Length);
+            foreach (var start in starts)
+                writer.Write(start == null ? -1 : indices[start]);
+        }
+
+        internal void Read(BinaryReader reader, MyATN atn)
+        {
+            Bind(atn);
+            var contexts = (LexContextCache)ContextCache;
+            var states = (List<DfaState>)DfaStates;
+            if (contexts.Count != 0 || states.Count != 0)
+                throw new InvalidOperationException("The lexer DFA cache is already populated.");
+            int contextCount = ReadCount(reader, 2_000_000);
+            for (int id = 1; id <= contextCount; id++)
+            {
+                int parent = reader.ReadInt32();
+                int returnState = reader.ReadInt32();
+                if (parent < 0 || parent >= id ||
+                    (uint)returnState >= (uint)atn.allStates.Length ||
+                    atn.allStates[returnState] == null)
+                    throw new InvalidDataException("Invalid lexer DFA context.");
+                if (contexts.Push(contexts.GetStack(parent),
+                    atn.allStates[returnState]).Id != id)
+                    throw new InvalidDataException("Duplicate lexer DFA context.");
+            }
+            var actionSequences = (LexerActionSequences)ActionSequences;
+            int actionCount = ReadCount(reader, 2_000_000);
+            for (int id = 1; id <= actionCount; id++)
+            {
+                int parent = reader.ReadInt32();
+                int index = reader.ReadInt32();
+                if (parent < 0 || parent >= id ||
+                    (uint)index >= (uint)atn.lexerActions.Length ||
+                    actionSequences.Append(parent, index) != id)
+                    throw new InvalidDataException("Invalid lexer DFA action sequence.");
+            }
+            int stateCount = ReadCount(reader, 2_000_000);
+            var edges = new List<(int Symbol, int Target)>[stateCount];
+            for (int i = 0; i < stateCount; i++)
+            {
+                var configs = new HashSet<LexerConfig>(DfaLexerConfigEq.Instance);
+                int configCount = ReadCount(reader, 1_000_000);
+                for (int j = 0; j < configCount; j++)
+                {
+                    int number = reader.ReadInt32();
+                    int stack = reader.ReadInt32();
+                    int actions = reader.ReadInt32();
+                    int outer = reader.ReadInt32();
+                    int decision = reader.ReadInt32();
+                    int nonGreedyContext = reader.ReadInt32();
+                    int branch = reader.ReadInt32();
+                    int completed = reader.ReadInt32();
+                    if ((uint)number >= (uint)atn.allStates.Length ||
+                        atn.allStates[number] == null ||
+                        (uint)stack > contextCount ||
+                        (uint)actions > actionCount ||
+                        (uint)nonGreedyContext > contextCount)
+                        throw new InvalidDataException("Invalid lexer DFA configuration.");
+                    configs.Add(new LexerConfig(atn.allStates[number],
+                        contexts.GetStack(stack), actions, outer, decision,
+                        contexts.GetStack(nonGreedyContext), branch, completed));
+                }
+                states.Add(new DfaState(configs));
+                int edgeCount = ReadCount(reader, 2_000_000);
+                edges[i] = new List<(int, int)>(edgeCount);
+                for (int j = 0; j < edgeCount; j++)
+                {
+                    int symbol = reader.ReadInt32();
+                    int target = reader.ReadInt32();
+                    if (symbol < -1 || target < -1 || target >= stateCount)
+                        throw new InvalidDataException("Invalid lexer DFA edge.");
+                    edges[i].Add((symbol, target));
+                }
+            }
+            for (int i = 0; i < stateCount; i++)
+                foreach (var (symbol, target) in edges[i])
+                    states[i].Edges.Set(symbol, target < 0 ? null : states[target]);
+            var starts = (DfaState[])ModeStartStates;
+            if (reader.ReadInt32() != starts.Length)
+                throw new InvalidDataException("Lexer DFA mode count does not match the grammar.");
+            for (int i = 0; i < starts.Length; i++)
+            {
+                int index = reader.ReadInt32();
+                if (index < -1 || index >= stateCount)
+                    throw new InvalidDataException("Invalid lexer DFA start state.");
+                starts[i] = index < 0 ? null : states[index];
+            }
+        }
+
+        private static int ReadCount(BinaryReader reader, int maximum)
+        {
+            int count = reader.ReadInt32();
+            if (count < 0 || count > maximum)
+                throw new InvalidDataException("Invalid lexer DFA cache count.");
+            return count;
+        }
+    }
+
+    private sealed class LexerActionSequences
+    {
+        private readonly List<(int Parent, int Index)> _nodes = [(0, -1)];
+        private readonly Dictionary<(int Parent, int Index), int> _ids = new();
+
+        public int Count => _nodes.Count - 1;
+        public (int Parent, int Index) Get(int id) => _nodes[id];
+
+        public int Append(int parent, int index)
+        {
+            var key = (parent, index);
+            if (_ids.TryGetValue(key, out int id)) return id;
+            id = _nodes.Count;
+            _nodes.Add(key);
+            _ids.Add(key, id);
+            return id;
+        }
+
+        public IEnumerable<int> Indices(int id)
+        {
+            var indices = new List<int>();
+            while (id != 0)
+            {
+                var node = _nodes[id];
+                indices.Add(node.Index);
+                id = node.Parent;
+            }
+            for (int i = indices.Count - 1; i >= 0; i--)
+                yield return indices[i];
         }
     }
 
@@ -62,6 +238,17 @@ public partial class LexerAtnSimulator
         public int DeadCount { get; private set; }
         public bool HasDenseRow => _asciiKinds != null;
         public int SparseCount => _sparse?.Count ?? 0;
+
+        public IEnumerable<(int Symbol, DfaState Target)> Entries()
+        {
+            if (_asciiKinds != null)
+                for (int i = 0; i < AsciiLimit; i++)
+                    if (_asciiKinds[i] != 0)
+                        yield return (i, _asciiTargets[i]);
+            if (_sparse != null)
+                foreach (var (symbol, target) in _sparse)
+                    yield return (symbol, target);
+        }
 
         public bool TryGet(int symbol, out DfaState target)
         {

@@ -91,13 +91,32 @@ public static class AllStarParser
             enableLl1Bypass: true).Success;
     }
 
+    internal static bool RecognizeWithHashGuard(
+        MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex)
+    {
+        return ParseCore(
+            atn, allTokens, startRuleIndex, buildEvents: false,
+            statistics: null, predictionCache: null,
+            enableLl1Bypass: false, useStackGuard: false).Success;
+    }
+
+    internal static List<ParseEvent> ParseWithHashGuard(
+        MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex)
+    {
+        return ParseCore(
+            atn, allTokens, startRuleIndex, buildEvents: true,
+            statistics: null, predictionCache: null,
+            enableLl1Bypass: false, useStackGuard: false).Events;
+    }
+
     private static (bool Success, List<ParseEvent> Events) ParseCore(
         MyATN atn, IReadOnlyList<LexerToken> allTokens, int startRuleIndex,
         bool buildEvents, ParserStatistics statistics,
         ParserPredictionCache predictionCache, bool enableLl1Bypass,
         XQueryHooks hooks = null,
         Action<ParseEvent> eventObserver = null,
-        bool sllOnly = false)
+        bool sllOnly = false,
+        bool useStackGuard = true)
     {
         if (atn == null) throw new ArgumentNullException(nameof(atn));
         if (startRuleIndex < 0 || startRuleIndex >= atn.start.Length)
@@ -122,7 +141,8 @@ public static class AllStarParser
         var events = buildEvents ? new List<ParseEvent>() : null;
         var instance = new ParserInstance(
             atn, allTokens, onIdx, tokenTypes, metadata, events, statistics,
-            predictionCache, enableLl1Bypass, hooks, eventObserver, sllOnly);
+            predictionCache, enableLl1Bypass, hooks, eventObserver, sllOnly,
+            useStackGuard);
         bool success = instance.ParseRule(startRuleIndex, PredictionContext.EMPTY);
         instance.CaptureStatistics();
         if (!success)
@@ -189,7 +209,12 @@ public static class AllStarParser
         private readonly XQueryHooks _hooks;
         private List<string> _predictionTexts;
         private readonly HashSet<(int Rule, int Position, int Precedence)>
-            _activeRuleCalls = new();
+            _activeRuleCalls;
+        private readonly bool _useStackGuard;
+        private readonly int[] _activeTopByRule;
+        private int[] _activePreviousByDepth;
+        private int[] _activePositionByDepth;
+        private int[] _activePrecedenceByDepth;
 
         public int Pos { get; private set; } // current on-channel token position
 
@@ -202,7 +227,8 @@ public static class AllStarParser
                               bool enableLl1Bypass = true,
                               XQueryHooks hooks = null,
                               Action<ParseEvent> eventObserver = null,
-                              bool sllOnly = false)
+                              bool sllOnly = false,
+                              bool useStackGuard = true)
         {
             _atn = atn;
             _allTokens = allTokens;
@@ -213,6 +239,19 @@ public static class AllStarParser
             _eventObserver = eventObserver;
             _hooks = hooks;
             _statistics = statistics;
+            _useStackGuard = useStackGuard;
+            if (useStackGuard)
+            {
+                _activeTopByRule = new int[atn.start.Length];
+                Array.Fill(_activeTopByRule, -1);
+                _activePreviousByDepth = new int[64];
+                _activePositionByDepth = new int[64];
+                _activePrecedenceByDepth = new int[64];
+            }
+            else
+            {
+                _activeRuleCalls = new();
+            }
             _ll1Tables = enableLl1Bypass
                 ? Ll1DecisionAnalyzer.For(atn).Tables
                 : null;
@@ -241,6 +280,12 @@ public static class AllStarParser
             _events = events;
             _hooks = hooks;
             _statistics = parserStatistics;
+            _useStackGuard = true;
+            _activeTopByRule = new int[parserAtn.start.Length];
+            Array.Fill(_activeTopByRule, -1);
+            _activePreviousByDepth = new int[64];
+            _activePositionByDepth = new int[64];
+            _activePrecedenceByDepth = new int[64];
             _ll1Tables = null;
             _sim = new AllStarSimulator(
                 parserAtn, parserStatistics, predictionCache,
@@ -268,7 +313,7 @@ public static class AllStarParser
                     _statistics.MaximumRuleDepth = depth;
             }
             var activeCall = (ruleIndex, Pos, precedence);
-            if (!_activeRuleCalls.Add(activeCall))
+            if (!EnterActiveRule(activeCall, depth))
                 throw new InvalidOperationException(
                     $"Indirect left recursion detected while entering parser " +
                     $"rule {ruleIndex} at token position {Pos}. Re-run trparse " +
@@ -436,8 +481,49 @@ public static class AllStarParser
             }
             finally
             {
-                _activeRuleCalls.Remove(activeCall);
+                ExitActiveRule(activeCall, depth);
             }
+        }
+
+        private bool EnterActiveRule(
+            (int Rule, int Position, int Precedence) call, int depth)
+        {
+            if (!_useStackGuard)
+                return _activeRuleCalls.Add(call);
+
+            // Token positions only advance during committed parsing. An older
+            // invocation at a smaller position cannot match the new call.
+            for (int frame = _activeTopByRule[call.Rule]; frame >= 0;
+                 frame = _activePreviousByDepth[frame])
+            {
+                if (_activePositionByDepth[frame] != call.Position)
+                    break;
+                if (_activePrecedenceByDepth[frame] == call.Precedence)
+                    return false;
+            }
+
+            int index = depth - 1;
+            if (index >= _activePreviousByDepth.Length)
+            {
+                int capacity = Math.Max(index + 1, _activePreviousByDepth.Length * 2);
+                Array.Resize(ref _activePreviousByDepth, capacity);
+                Array.Resize(ref _activePositionByDepth, capacity);
+                Array.Resize(ref _activePrecedenceByDepth, capacity);
+            }
+            _activePreviousByDepth[index] = _activeTopByRule[call.Rule];
+            _activePositionByDepth[index] = call.Position;
+            _activePrecedenceByDepth[index] = call.Precedence;
+            _activeTopByRule[call.Rule] = index;
+            return true;
+        }
+
+        private void ExitActiveRule(
+            (int Rule, int Position, int Precedence) call, int depth)
+        {
+            if (_useStackGuard)
+                _activeTopByRule[call.Rule] = _activePreviousByDepth[depth - 1];
+            else
+                _activeRuleCalls.Remove(call);
         }
 
         private bool ConsumeToken(int stateNumber, MyTransition tr)

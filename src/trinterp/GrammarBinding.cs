@@ -12,6 +12,7 @@ public static class GrammarBinding
     {
         foreach (var duplicate in models.GroupBy(m => m.Name).Where(g => g.Count() > 1))
             throw new InvalidOperationException($"Duplicate grammar '{duplicate.Key}'.");
+        ResolveLexerImports(models);
         foreach (var model in models.Where(m => !m.IsLexer))
         {
             var lexer = model.ImplicitLexer;
@@ -64,6 +65,83 @@ public static class GrammarBinding
                 }
             }
         }
+    }
+
+    private static void ResolveLexerImports(IReadOnlyList<GrammarModel> models)
+    {
+        var byName = models.ToDictionary(model => model.Name);
+        var visiting = new HashSet<GrammarModel>();
+        var resolved = new HashSet<GrammarModel>();
+
+        void Resolve(GrammarModel model)
+        {
+            if (resolved.Contains(model)) return;
+            if (!visiting.Add(model))
+                throw new InvalidOperationException(
+                    $"Cyclic grammar import involving '{model.Name}'.");
+            foreach (var name in model.Imports)
+            {
+                if (!model.IsLexer)
+                    throw new NotSupportedException(
+                        $"Grammar imports in '{model.Name}' require parser/combined grammar import support.");
+                if (!byName.TryGetValue(name, out var imported))
+                    throw new InvalidOperationException(
+                        $"Imported grammar '{name}' for '{model.Name}' was not supplied. " +
+                        "Include its grammar in the input to trinterp.");
+                if (!imported.IsLexer)
+                    throw new InvalidOperationException(
+                        $"Lexer grammar '{model.Name}' cannot import non-lexer grammar '{name}'.");
+                Resolve(imported);
+                foreach (var mode in imported.ModeNames)
+                    if (!model.ModeNames.Contains(mode)) model.ModeNames.Add(mode);
+                foreach (var channel in imported.ExtraChannelNames)
+                    if (!model.ExtraChannelNames.Contains(channel))
+                        model.ExtraChannelNames.Add(channel);
+                int nextType = model.GetMaxTokenType() + 1;
+                var importedTypes = new Dictionary<int, int>();
+                foreach (var rule in imported.Rules)
+                {
+                    // The importing grammar's rules override delegate rules.
+                    var existing = model.GetRule(rule.Name);
+                    if (existing != null)
+                    {
+                        if (!rule.IsFragment && !existing.IsFragment)
+                            importedTypes[rule.TokenType] = existing.TokenType;
+                        continue;
+                    }
+                    var copy = new RuleModel
+                    {
+                        Name = rule.Name,
+                        Index = model.Rules.Count,
+                        IsLexerRule = rule.IsLexerRule,
+                        IsFragment = rule.IsFragment,
+                        TokenType = rule.IsFragment ? 0 : nextType++,
+                        ModeName = rule.ModeName,
+                        BodyNode = rule.BodyNode,
+                        ImplicitLiteral = rule.ImplicitLiteral,
+                        SourceLine = rule.SourceLine,
+                        SourceColumn = rule.SourceColumn,
+                        PerRuleCaseInsensitive = rule.PerRuleCaseInsensitive
+                            ?? imported.IsCaseInsensitive,
+                        HasRuleOptions = rule.HasRuleOptions
+                    };
+                    model.Rules.Add(copy);
+                    if (!copy.IsFragment)
+                    {
+                        model.TokenNameToType[copy.Name] = copy.TokenType;
+                        importedTypes[rule.TokenType] = copy.TokenType;
+                    }
+                }
+                foreach (var (literal, type) in imported.StringLiteralToType)
+                    if (importedTypes.TryGetValue(type, out var mapped) &&
+                        !model.StringLiteralToType.ContainsKey(literal))
+                        model.StringLiteralToType[literal] = mapped;
+            }
+            visiting.Remove(model);
+            resolved.Add(model);
+        }
+
+        foreach (var model in models) Resolve(model);
     }
 
     private static void ValidateCommand(GrammarModel model, GrammarNode node)

@@ -224,86 +224,120 @@ public static class CompactTreeBuilder
         string[] lexerRuleNames,
         bool lineNumbers)
     {
-        var builder = new Builder(allTokens as TokenStore);
-        var stack = new Stack<int>();
-        var recursionParents = new Stack<int>();
-        var root = -1;
-        var previousToken = -1;
-
+        var builder = new StreamingBuilder(allTokens, ruleNames, symbolicNames,
+            literalNames, lexerRuleNames, lineNumbers);
         foreach (var ev in events)
+            builder.OnEvent(ev);
+        return builder.Complete();
+    }
+
+    /// <summary>
+    /// Receives committed parse events as they occur, without first retaining
+    /// an event list. Discard this builder if the parser rejects the input.
+    /// </summary>
+    public sealed class StreamingBuilder
+    {
+        private readonly IReadOnlyList<LexerToken> _allTokens;
+        private readonly string[] _ruleNames;
+        private readonly string[] _symbolicNames;
+        private readonly string[] _lexerRuleNames;
+        private readonly bool _lineNumbers;
+        private readonly Builder _builder;
+        private readonly Stack<int> _stack = new();
+        private readonly Stack<int> _recursionParents = new();
+        private int _root = -1;
+        private int _previousToken = -1;
+
+        public StreamingBuilder(
+            IReadOnlyList<LexerToken> allTokens,
+            string[] ruleNames,
+            string[] symbolicNames,
+            string[] literalNames,
+            string[] lexerRuleNames,
+            bool lineNumbers)
+        {
+            _allTokens = allTokens;
+            _ruleNames = ruleNames;
+            _symbolicNames = symbolicNames;
+            _lexerRuleNames = lexerRuleNames;
+            _lineNumbers = lineNumbers;
+            _builder = new Builder(allTokens as TokenStore);
+        }
+
+        public void OnEvent(ParseEvent ev)
         {
             switch (ev.Kind)
             {
                 case ParseEventKind.EnterRule:
                 {
-                    var id = builder.Element(ruleNames[ev.Index], ev.Index);
-                    if (root < 0) root = id;
-                    if (stack.Count > 0) builder.AddChild(stack.Peek(), id);
-                    stack.Push(id);
+                    var id = _builder.Element(_ruleNames[ev.Index], ev.Index);
+                    if (_root < 0) _root = id;
+                    if (_stack.Count > 0) _builder.AddChild(_stack.Peek(), id);
+                    _stack.Push(id);
                     break;
                 }
                 case ParseEventKind.ExitRule:
-                    if (stack.Count > 0)
+                    if (_stack.Count > 0)
                     {
-                        var done = stack.Pop();
-                        if (lineNumbers) PropagateLineColumn(builder, done);
+                        var done = _stack.Pop();
+                        if (_lineNumbers) PropagateLineColumn(_builder, done);
                     }
                     break;
                 case ParseEventKind.EnterRecursionRule:
                 {
-                    var parent = stack.Count > 0 ? stack.Peek() : -1;
-                    var id = builder.Element(ruleNames[ev.Index], ev.Index);
-                    if (root < 0 && parent < 0) root = id;
-                    recursionParents.Push(parent);
-                    stack.Push(id);
+                    var parent = _stack.Count > 0 ? _stack.Peek() : -1;
+                    var id = _builder.Element(_ruleNames[ev.Index], ev.Index);
+                    if (_root < 0 && parent < 0) _root = id;
+                    _recursionParents.Push(parent);
+                    _stack.Push(id);
                     break;
                 }
                 case ParseEventKind.PushRecursionContext:
                 {
-                    var previous = stack.Pop();
-                    if (lineNumbers) PropagateLineColumn(builder, previous);
-                    var next = builder.Element(ruleNames[ev.Index], ev.Index);
-                    builder.AddChild(next, previous);
-                    stack.Push(next);
+                    var previous = _stack.Pop();
+                    if (_lineNumbers) PropagateLineColumn(_builder, previous);
+                    var next = _builder.Element(_ruleNames[ev.Index], ev.Index);
+                    _builder.AddChild(next, previous);
+                    _stack.Push(next);
                     break;
                 }
                 case ParseEventKind.ExitRecursionRule:
-                    if (stack.Count > 0)
+                    if (_stack.Count > 0)
                     {
-                        var done = stack.Pop();
-                        if (lineNumbers) PropagateLineColumn(builder, done);
-                        var parent = recursionParents.Pop();
-                        if (parent >= 0) builder.AddChild(parent, done);
-                        else root = done;
+                        var done = _stack.Pop();
+                        if (_lineNumbers) PropagateLineColumn(_builder, done);
+                        var parent = _recursionParents.Pop();
+                        if (parent >= 0) _builder.AddChild(parent, done);
+                        else _root = done;
                     }
                     break;
                 case ParseEventKind.Consume:
                 {
                     var tokenIndex = ev.Index;
-                    var token = allTokens[tokenIndex];
-                    var parent = stack.Count > 0 ? stack.Peek() : -1;
+                    var token = _allTokens[tokenIndex];
+                    var parent = _stack.Count > 0 ? _stack.Peek() : -1;
                     if (parent >= 0)
-                        EmitHiddenTokens(builder, parent, allTokens, previousToken,
-                            tokenIndex, symbolicNames, lexerRuleNames, lineNumbers);
+                        EmitHiddenTokens(_builder, parent, _allTokens, _previousToken,
+                            tokenIndex, _symbolicNames, _lexerRuleNames, _lineNumbers);
 
-                    var terminal = builder.Terminal(
-                        GetTokenName(token.Type, symbolicNames, lexerRuleNames),
+                    var terminal = _builder.Terminal(
+                        GetTokenName(token.Type, _symbolicNames, _lexerRuleNames),
                         token.Type == EofType ? -1 : tokenIndex,
-                        token.Type == EofType ? "" : builder.HasTokenStore
+                        token.Type == EofType ? "" : _builder.HasTokenStore
                             ? null : token.Text ?? "");
-                    if (lineNumbers)
+                    if (_lineNumbers)
                     {
-                        builder.AddChild(terminal, builder.Attribute("Line", token.Line.ToString(), 0, 0));
-                        builder.AddChild(terminal, builder.Attribute("Column", token.Column.ToString(), 0, 0));
+                        _builder.AddChild(terminal, _builder.Attribute("Line", token.Line.ToString(), 0, 0));
+                        _builder.AddChild(terminal, _builder.Attribute("Column", token.Column.ToString(), 0, 0));
                     }
-                    if (parent >= 0) builder.AddChild(parent, terminal);
-                    previousToken = tokenIndex;
+                    if (parent >= 0) _builder.AddChild(parent, terminal);
+                    _previousToken = tokenIndex;
                     break;
                 }
             }
         }
 
-        return builder.Complete(root);
+        public CompactParseTree Complete() => _builder.Complete(_root);
     }
 
     private static void EmitHiddenTokens(

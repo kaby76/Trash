@@ -29,6 +29,9 @@ public class Grun
     private readonly AllStarAtnParser.InterpRunTimings _interpTimings = new();
     private readonly AllStarAtnParser.InterpRuntimeCache _interpRuntimeCache = new();
     private readonly Dictionary<string, bool> _grammarContextAwareLexing = new();
+    private byte[] _dfaCacheData;
+    private byte[] _writtenDfaCache;
+    private bool _dfaCacheLoaded;
     private const string TimeoutWorkerName = "TRPARSE_TIMEOUT_WORKER_NAME";
     private const string TimeoutWorkerRow = "TRPARSE_TIMEOUT_WORKER_ROW";
     private readonly EarleyAtnParser.LexerAtnSimulator.LexerDfaCache
@@ -98,6 +101,14 @@ public class Grun
                 "The per-file timeout must be zero or a positive number of seconds.");
         if (config.TimeoutSeconds > 0 && !config.Bundle)
             throw new ArgumentException("--timeout requires bundle output.");
+        if ((config.WriteDfaCache || config.WriteDfaCacheFile != null) &&
+            (config.Earley || config.TimeoutSeconds > 0))
+            throw new ArgumentException(
+                "--write-dfa-cache requires ordinary ALL(*) parsing without --timeout.");
+        if (config.WriteDfaCache &&
+            (!config.Bundle || config.NoParsingResultSets))
+            throw new ArgumentException(
+                "--write-dfa-cache requires PAX/tar output; remove --no-prs.");
         DateTime overallBefore = DateTime.Now;
         InterpBundle stagedTables = null;
         string originalLib = config.Lib;
@@ -129,6 +140,11 @@ public class Grun
                         "Interpreted parsing without -L reads interpreter tables from stdin; specify inputs with -i, positional files, or --xf (not -x or stdin text).");
                 stagedTables = InterpBundle.Open(Console.OpenStandardInput());
                 config.Lib = stagedTables.DirectoryPath;
+                _dfaCacheData = stagedTables.DfaCacheData;
+                if (_dfaCacheData != null &&
+                    (config.Earley || config.TimeoutSeconds > 0))
+                    throw new ArgumentException(
+                        "A bundled DFA cache requires ALL(*) without --timeout.");
             }
             var data = new List<AntlrJson.ParsingResultSet>();
             string txt = config.Input;
@@ -258,10 +274,11 @@ public class Grun
                 }
             }
 
+            WriteDfaCacheIfRequested();
             DateTime overallAfter = DateTime.Now;
             PrintPerfSummary((overallAfter - overallBefore).TotalSeconds);
 
-            if (config.NoParsingResultSets || config.NoOutput) return result;
+            if (config.NoParsingResultSets || (config.NoOutput && !config.WriteDfaCache)) return result;
             if (config.Bundle)
             {
                 WriteBundle();
@@ -507,6 +524,7 @@ public class Grun
             }
             catch (Exception exception)
             {
+                if (exception is DfaCacheLoadException) throw;
                 // A bad input must not abort the remaining positional, -x, or
                 // --xf inputs. Keep the overall exit status nonzero instead.
                 data.RemoveRange(countBefore, data.Count - countBefore);
@@ -528,6 +546,7 @@ public class Grun
         }
         catch (Exception exception)
         {
+            if (exception is DfaCacheLoadException) throw;
             data.RemoveRange(start, data.Count - start);
             WriteFailedFileStatus(inputName, rowNumber);
             captured.WriteLine(IsParseRejection(exception)
@@ -551,7 +570,8 @@ public class Grun
         var matcher = new BundleMemberGlob(config.BundleGlob);
         var names = new HashSet<string>(StringComparer.Ordinal);
         var parseData = new List<AntlrJson.ParsingResultSet>();
-        var emitBundle = !config.NoOutput && !config.NoParsingResultSets;
+        var emitBundle = !config.NoParsingResultSets &&
+            (!config.NoOutput || config.WriteDfaCache);
         var temporaryPath = Path.Combine(Path.GetTempPath(),
             "trparse-" + Guid.NewGuid().ToString("N") + ".tar");
         using var temporary = new FileStream(temporaryPath, FileMode.CreateNew,
@@ -577,13 +597,25 @@ public class Grun
 
                 bool regular = entry.EntryType is TarEntryType.RegularFile or
                     TarEntryType.V7RegularFile;
-                bool selected = regular && matcher.IsMatch(name);
-                if (regular && !selected && writer == null)
+                bool isCache = regular && name.EndsWith(
+                    ".dfacache", StringComparison.OrdinalIgnoreCase);
+                bool selected = regular && !isCache && matcher.IsMatch(name);
+                if (regular && !selected && !isCache && writer == null)
                     continue;
                 if (regular)
                 {
                     using var sourceData = new MemoryStream();
                     entry.DataStream?.CopyTo(sourceData);
+                    if (isCache)
+                    {
+                        if (config.Earley || config.TimeoutSeconds > 0)
+                            throw new ArgumentException(
+                                "A bundled DFA cache requires ALL(*) without --timeout.");
+                        if (_dfaCacheLoaded || _dfaCacheData != null)
+                            throw new InvalidDataException(
+                                "The source bundle contains multiple or late DFA caches; put one cache before source files.");
+                        _dfaCacheData = sourceData.ToArray();
+                    }
                     string sourceText = null;
                     if (selected)
                     {
@@ -593,7 +625,7 @@ public class Grun
                             leaveOpen: true);
                         sourceText = source.ReadToEnd();
                     }
-                    if (writer != null)
+                    if (writer != null && !(isCache && config.WriteDfaCache))
                     {
                         sourceData.Position = 0;
                         writer.WriteEntry(CopyRegularEntry(entry, name, sourceData));
@@ -604,7 +636,7 @@ public class Grun
                             name, rowNumber++, parseData);
                         result = result == 0 ? r : result;
                     }
-                    if (selected && writer != null)
+                    if (selected && writer != null && !config.NoOutput)
                     {
                         var parse = _bundleParses[^1];
                         int resultCount = parse.SerializedResults?.Count ??
@@ -634,12 +666,29 @@ public class Grun
             }
         }
 
+        WriteDfaCacheIfRequested();
         PrintPerfSummary((DateTime.Now - overallBefore).TotalSeconds);
         if (emitBundle)
         {
             temporary.Position = 0;
             using var output = Console.OpenStandardOutput();
-            temporary.CopyTo(output);
+            if (config.WriteDfaCache)
+            {
+                using var finalWriter = new TarWriter(output, TarEntryFormat.Pax,
+                    leaveOpen: true);
+                finalWriter.WriteEntry(new PaxTarEntry(
+                    TarEntryType.RegularFile, "trparse.dfacache")
+                {
+                    DataStream = new MemoryStream(_writtenDfaCache,
+                        writable: false),
+                    ModificationTime = DateTimeOffset.UnixEpoch
+                });
+                using var outputReader = new TarReader(temporary, leaveOpen: true);
+                TarEntry outputEntry;
+                while ((outputEntry = outputReader.GetNextEntry(copyData: false)) != null)
+                    finalWriter.WriteEntry(new PaxTarEntry(outputEntry));
+            }
+            else temporary.CopyTo(output);
         }
         return result;
     }
@@ -682,7 +731,24 @@ public class Grun
             _bundleParses.Select(parse => parse.InputName), config.BaseDirectory);
         var baseNames = AntlrJson.ArtifactBundle.ArtifactBaseNames(paths.Values);
         var artifacts = new List<AntlrJson.Artifact>();
-        foreach (var parse in _bundleParses)
+        if (config.WriteDfaCache)
+        {
+            var (parserPath, lexerPath) = DiscoverInterpPair(config.Lib);
+            artifacts.Add(new AntlrJson.Artifact(
+                Path.GetFileName(parserPath), File.ReadAllBytes(parserPath)));
+            artifacts.Add(new AntlrJson.Artifact(
+                Path.GetFileName(lexerPath), File.ReadAllBytes(lexerPath)));
+            foreach (var interpPath in new[] { parserPath, lexerPath })
+            {
+                var tokensPath = Path.ChangeExtension(interpPath, ".tokens");
+                if (File.Exists(tokensPath))
+                    artifacts.Add(new AntlrJson.Artifact(
+                        Path.GetFileName(tokensPath), File.ReadAllBytes(tokensPath)));
+            }
+            artifacts.Add(new AntlrJson.Artifact(
+                "trparse.dfacache", _writtenDfaCache));
+        }
+        foreach (var parse in config.NoOutput ? Enumerable.Empty<BundleParse>() : _bundleParses)
         {
             var baseName = baseNames[paths[parse.InputName]];
             int resultCount = parse.SerializedResults?.Count ?? parse.Results.Count;
@@ -702,6 +768,25 @@ public class Grun
 
         using var output = Console.OpenStandardOutput();
         AntlrJson.ArtifactBundle.Write(output, artifacts);
+    }
+
+    private void WriteDfaCacheIfRequested()
+    {
+        if (!config.WriteDfaCache && config.WriteDfaCacheFile == null) return;
+        var timer = Stopwatch.StartNew();
+        if (string.IsNullOrEmpty(config.Lib))
+            throw new ArgumentException("--write-dfa-cache requires interpreted parsing.");
+        var (parserPath, lexerPath) = DiscoverInterpPair(config.Lib);
+        _writtenDfaCache = DfaCacheFile.Write(parserPath, lexerPath,
+            _parserPredictionCache, _lexerDfaCache);
+        if (config.WriteDfaCacheFile != null)
+            File.WriteAllBytes(config.WriteDfaCacheFile, _writtenDfaCache);
+        timer.Stop();
+        _interpTimings.DfaCacheWriting += timer.Elapsed;
+        if (!config.Quiet)
+            Console.Error.WriteLine($"DFA cache: captured {_writtenDfaCache.Length:N0} bytes" +
+                (config.WriteDfaCacheFile == null ? " for PAX/tar output." :
+                    $"; also wrote '{config.WriteDfaCacheFile}'."));
     }
 
     private void UpdateStats(double parseSeconds, long tokenCount)
@@ -813,6 +898,8 @@ public class Grun
                 var parserStatistics = config.ParserStats
                     ? new AllStarAtnParser.ParserStatistics()
                     : null;
+                var cacheData = _dfaCacheLoaded ? null : _dfaCacheData;
+                _dfaCacheLoaded = true;
                 (rs, interpTokenCount) = AllStarAtnParser.InterpRunner.Run(
                     resolvedPInterp, resolvedLInterp, txt, input_name,
                     config.LineNumbers, contextAwareLexing,
@@ -820,7 +907,7 @@ public class Grun
                     parserStatistics, _parserPredictionCache,
                     _interpRuntimeCache, _lexerDfaCache,
                     config.IndirectLeftRecursion, config.StartRule,
-                    config.XQueryHooks, config.Sll);
+                    config.XQueryHooks, config.Sll, cacheData);
                 if (interpTimings != null)
                     _interpTimings.Add(interpTimings);
                 interpLabel = "ALL(*)";

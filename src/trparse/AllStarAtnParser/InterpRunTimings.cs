@@ -10,10 +10,13 @@ public sealed class InterpRunTimings
     public TimeSpan InterpParsing { get; internal set; }
     public TimeSpan AtnDeserialization { get; internal set; }
     public TimeSpan Initialization { get; internal set; }
+    public TimeSpan DfaCacheLoading { get; internal set; }
+    public TimeSpan DfaCacheWriting { get; internal set; }
     public TimeSpan Tokenization { get; internal set; }
     public TimeSpan TokenReconciliation { get; internal set; }
     public TimeSpan Parsing { get; internal set; }
     public TimeSpan TreeBuilding { get; internal set; }
+    public bool TreeBuildingIncludedInParsing { get; internal set; }
     public TimeSpan ResultConstruction { get; internal set; }
     public LexerAtnSimulator.LexerDfaStatistics? LexerDfa { get; internal set; }
 
@@ -25,10 +28,13 @@ public sealed class InterpRunTimings
         InterpParsing += other.InterpParsing;
         AtnDeserialization += other.AtnDeserialization;
         Initialization += other.Initialization;
+        DfaCacheLoading += other.DfaCacheLoading;
+        DfaCacheWriting += other.DfaCacheWriting;
         Tokenization += other.Tokenization;
         TokenReconciliation += other.TokenReconciliation;
         Parsing += other.Parsing;
         TreeBuilding += other.TreeBuilding;
+        TreeBuildingIncludedInParsing |= other.TreeBuildingIncludedInParsing;
         ResultConstruction += other.ResultConstruction;
         LexerDfa = other.LexerDfa;
     }
@@ -42,10 +48,14 @@ public sealed class InterpRunTimings
             $"{prefix}Interp parsing: {InterpParsing.TotalSeconds:F6} s",
             $"{prefix}ATN deserialization: {AtnDeserialization.TotalSeconds:F6} s",
             $"{prefix}Interp initialization: {Initialization.TotalSeconds:F6} s",
+            $"{prefix}DFA cache loading: {DfaCacheLoading.TotalSeconds:F6} s",
+            $"{prefix}DFA cache writing: {DfaCacheWriting.TotalSeconds:F6} s",
             $"{prefix}Tokenization: {Tokenization.TotalSeconds:F6} s",
             $"{prefix}Token reconciliation: {TokenReconciliation.TotalSeconds:F6} s",
-            $"{prefix}ALL(*) parsing: {Parsing.TotalSeconds:F6} s",
-            $"{prefix}Tree building: {TreeBuilding.TotalSeconds:F6} s",
+            $"{prefix}ALL(*) parsing: {Parsing.TotalSeconds:F6} s" +
+                (TreeBuildingIncludedInParsing ? " (includes streamed tree building)" : ""),
+            $"{prefix}Tree building: {TreeBuilding.TotalSeconds:F6} s" +
+                (TreeBuildingIncludedInParsing ? " (finalization only)" : ""),
             $"{prefix}Result construction: {ResultConstruction.TotalSeconds:F6} s"
         };
         if (LexerDfa is { } dfa)

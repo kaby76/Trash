@@ -1,7 +1,9 @@
 using System.Diagnostics;
 using System.IO.Compression;
 using System.Text;
+using System.Text.Json;
 using AllStarAtnParser;
+using AntlrJson;
 using Atn;
 using EarleyAtnParser;
 using ParseTreeEditing.UnvParseTreeDOM;
@@ -138,6 +140,95 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
             "expected less than the conservative 20,000-byte baseline.");
     }
 
+    [Fact]
+    [Trait("Category", "Performance")]
+    [Trait("Size", "Large")]
+    public void Graphviz1864DotComparesLl1Bypass()
+    {
+        var compressedPath = Path.Combine(DotData, "1864.dot.gz");
+        using var compressed = File.OpenRead(compressedPath);
+        using var gzip = new GZipStream(compressed, CompressionMode.Decompress);
+        using var reader = new StreamReader(gzip, Encoding.UTF8);
+        var fixture = Prepare(reader.ReadToEnd());
+
+        var baselineEvents = AllStarParser.Parse(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule);
+        var bypassStatistics = new ParserStatistics();
+        var bypassEvents = AllStarParser.ParseWithLl1(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            bypassStatistics);
+        Assert.Equal(baselineEvents, bypassEvents);
+        Assert.True(bypassStatistics.Ll1Bypasses > 0);
+
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+        Assert.True(AllStarParser.RecognizeWithLl1(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+
+        var baseline = Measure(() =>
+        {
+            Assert.True(AllStarParser.Recognize(
+                fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+            return null;
+        }, fixture.OnChannelTokenCount);
+        var bypass = Measure(() =>
+        {
+            Assert.True(AllStarParser.RecognizeWithLl1(
+                fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+            return null;
+        }, fixture.OnChannelTokenCount);
+
+        Report("1864.dot without LL(1) bypass", baseline);
+        Report("1864.dot with LL(1) bypass", bypass);
+        output.WriteLine($"LL(1) bypasses: {bypassStatistics.Ll1Bypasses:N0}; " +
+            $"adaptive predictions: {bypassStatistics.AdaptivePredictionCalls:N0}");
+        var analyzer = Ll1DecisionAnalyzer.For(fixture.ParserAtn);
+        var eligible = Enumerable.Range(0, fixture.ParserAtn.decisionToState.Length)
+            .Count(analyzer.IsEligible);
+        output.WriteLine($"Eligible decisions: {eligible} / " +
+            $"{fixture.ParserAtn.decisionToState.Length}");
+        output.WriteLine(bypassStatistics.Format());
+    }
+
+    [Fact]
+    [Trait("Category", "Performance")]
+    [Trait("Size", "Large")]
+    public void Graphviz1864DotComparesActiveRuleGuards()
+    {
+        var compressedPath = Path.Combine(DotData, "1864.dot.gz");
+        using var compressed = File.OpenRead(compressedPath);
+        using var gzip = new GZipStream(compressed, CompressionMode.Decompress);
+        using var reader = new StreamReader(gzip, Encoding.UTF8);
+        var fixture = Prepare(reader.ReadToEnd());
+
+        var baselineEvents = AllStarParser.ParseWithHashGuard(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule);
+        var stackEvents = AllStarParser.Parse(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule);
+        Assert.Equal(baselineEvents, stackEvents);
+
+        Assert.True(AllStarParser.RecognizeWithHashGuard(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+        Assert.True(AllStarParser.Recognize(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+
+        var baseline = Measure(() =>
+        {
+            Assert.True(AllStarParser.RecognizeWithHashGuard(
+                fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+            return null;
+        }, fixture.OnChannelTokenCount);
+        var stack = Measure(() =>
+        {
+            Assert.True(AllStarParser.Recognize(
+                fixture.ParserAtn, fixture.Tokens, fixture.StartRule));
+            return null;
+        }, fixture.OnChannelTokenCount);
+
+        Report("1864.dot with hash-set recursion guard", baseline);
+        Report("1864.dot with stack recursion guard", stack);
+    }
+
     private static DotFixture Prepare(string input)
     {
         var parserInterp = InterpFileReader.Read(File.ReadAllText(ParserInterpPath));
@@ -242,6 +333,74 @@ public sealed class DotParserPerformanceTests(ITestOutputHelper output)
 
         Assert.NotNull(events);
         Assert.Equal(events.Count, statistics.ParseEventsCreated);
+    }
+
+    [Fact]
+    public void DotStreamingCompactTreeMatchesBufferedParserEvents()
+    {
+        var fixture = Prepare(GenerateDotInput(100));
+        var events = AllStarParser.Parse(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule);
+        Assert.NotNull(events);
+        var buffered = CompactTreeBuilder.Build(events, fixture.Tokens,
+            fixture.ParserInterp.RuleNames,
+            fixture.ParserInterp.SymbolicNames,
+            fixture.ParserInterp.LiteralNames,
+            fixture.LexerInterp.RuleNames, lineNumbers: true);
+
+        var streaming = new CompactTreeBuilder.StreamingBuilder(
+            fixture.Tokens, fixture.ParserInterp.RuleNames,
+            fixture.ParserInterp.SymbolicNames,
+            fixture.ParserInterp.LiteralNames,
+            fixture.LexerInterp.RuleNames, lineNumbers: true);
+        Assert.True(AllStarParser.ParseStreaming(
+            fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+            streaming.OnEvent));
+        var options = new JsonSerializerOptions { MaxDepth = 10000 };
+        options.Converters.Add(new ParsingResultSetSerializer());
+        string Serialize(CompactParseTree tree) => JsonSerializer.Serialize(
+            new[] { new ParsingResultSet { NodeProvider = tree } }, options);
+
+        Assert.Equal(Serialize(buffered), Serialize(streaming.Complete()));
+    }
+
+    [Fact]
+    [Trait("Category", "Performance")]
+    [Trait("Size", "Large")]
+    public void Graphviz1864DotComparesBufferedAndStreamingTreeConstruction()
+    {
+        var compressedPath = Path.Combine(DotData, "1864.dot.gz");
+        using var compressed = File.OpenRead(compressedPath);
+        using var gzip = new GZipStream(compressed, CompressionMode.Decompress);
+        using var reader = new StreamReader(gzip, Encoding.UTF8);
+        var fixture = Prepare(reader.ReadToEnd());
+
+        var buffered = Measure(() =>
+        {
+            var events = AllStarParser.Parse(
+                fixture.ParserAtn, fixture.Tokens, fixture.StartRule);
+            Assert.NotNull(events);
+            return CompactTreeBuilder.Build(events, fixture.Tokens,
+                fixture.ParserInterp.RuleNames,
+                fixture.ParserInterp.SymbolicNames,
+                fixture.ParserInterp.LiteralNames,
+                fixture.LexerInterp.RuleNames, lineNumbers: false);
+        }, fixture.OnChannelTokenCount);
+        var streaming = Measure(() =>
+        {
+            var builder = new CompactTreeBuilder.StreamingBuilder(
+                fixture.Tokens, fixture.ParserInterp.RuleNames,
+                fixture.ParserInterp.SymbolicNames,
+                fixture.ParserInterp.LiteralNames,
+                fixture.LexerInterp.RuleNames, lineNumbers: false);
+            Assert.True(AllStarParser.ParseStreaming(
+                fixture.ParserAtn, fixture.Tokens, fixture.StartRule,
+                builder.OnEvent));
+            return builder.Complete();
+        }, fixture.OnChannelTokenCount);
+
+        Report("1864.dot buffered parse and compact tree", buffered);
+        Report("1864.dot streaming compact tree", streaming);
     }
 
     [Fact]

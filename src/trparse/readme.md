@@ -250,6 +250,38 @@ used for grammars containing semantic-predicate transitions. Use
 `--parser-dfa-cache-states` and `--parser-dfa-cache-mb`. The public
 `ParserPredictionCache.Clear()` API explicitly discards learned data.
 
+To save learned lexer and parser DFAs for a later process, pass
+`--write-dfa-cache` to an ALL(*) run. The PAX/tar output then contains the
+`.interp` tables, a `trparse.dfacache` member, and the ordinary parse results.
+A later `trparse --allstar` without `-L` automatically loads that cache from
+stdin before parsing. `--write-dfa-cache-file FILE` additionally writes a
+standalone copy if needed. `--write-dfa-cache` requires bundle output and
+cannot be combined with `--no-prs`. Add `--no-output` to omit the parse trees
+and errors from the warm-up bundle while retaining the tables and DFA cache.
+This avoids passing potentially large parse results to the next parser.
+
+With `--bundle-glob` and `-L`, a source bundle may also contain a `.dfacache`
+member, but it must precede all selected source members. If
+`--write-dfa-cache` is set, the output bundle contains an updated
+`trparse.dfacache` as its first member. Loading and writing times appear in
+`--interp-timings` and are included in `TT`. Cache loading is unavailable
+with `--earley` or `--timeout`.
+
+The cache has a format version and SHA-256 hashes of both `.interp` files;
+loading fails if either table differs. Parser DFAs are omitted when sharing is
+disabled by semantic predicates or when the parser cache is saturated. The
+lexer DFA is still saved. `--no-shared-parser-dfa` skips a stored parser DFA
+while loading the lexer DFA, making it useful for comparative measurements.
+
+For example, from a grammar directory containing `interp/` and `examples/`:
+
+```sh
+trparse --allstar -L interp --write-dfa-cache --no-output \
+  examples/warm.sql > warmed.tar
+cat warmed.tar | trparse --allstar --no-output --interp-timings \
+  examples/other.sql
+```
+
 An experimental conservative LL(1) decision-table bypass is retained in the
 code and differential performance tests, but is disabled in production because
 the DOT corpus did not show a reliable improvement. All production decisions
@@ -325,6 +357,10 @@ this mode; the overall TT and `--per-file` lines remain available.
         --interp-timings
                        Write separate interp loading, ATN, lexing, parsing, and
                        tree-building timings to stderr.
+        --write-dfa-cache
+                       Add learned DFAs and .interp tables to output PAX/tar.
+        --write-dfa-cache-file FILE
+                       Also write a standalone DFA cache file.
         --no-output    Parse inputs and build their parse trees, but do not write
                        parsing-result data to stdout. Performance and error
                        diagnostics are still written to stderr.
@@ -351,7 +387,7 @@ pure SLL can choose a different alternative for context-sensitive grammars.
 
 ## Current version
 
-Release 4.8.0.
+Release 4.9.0.
 
 ## License
 

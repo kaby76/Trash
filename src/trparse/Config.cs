@@ -58,7 +58,7 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "4.8.0";
+    public string Version { get; set; } = "4.9.0";
 
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }
@@ -132,6 +132,14 @@ public class Config
     [Option("interp-timings", Required = false,
         HelpText = "Write .interp loading, ATN deserialization, lexing, parsing, and tree-building timings to stderr.")]
     public bool InterpTimings { get; set; }
+
+    [Option("write-dfa-cache", Required = false,
+        HelpText = "Add learned interpreter DFA data and the .interp tables to the output PAX/tar bundle.")]
+    public bool WriteDfaCache { get; set; }
+
+    [Option("write-dfa-cache-file", Required = false,
+        HelpText = "Also write the learned interpreter DFA data to a standalone file.")]
+    public string WriteDfaCacheFile { get; set; }
 
     [Option("bundle", Required = false, HelpText = "Write an ordinary POSIX PAX artifact bundle to stdout (the default).")]
     public bool Bundle { get; set; } = true;

@@ -1,12 +1,45 @@
 using EditableAntlrTree;
 using ParseTreeEditing.UnvParseTreeDOM;
 using System.Formats.Tar;
+using AllStarAtnParser;
+using Atn;
+using EarleyAtnParser;
 using Xunit;
 
 namespace AllStarParserTests;
 
 public class IndirectLeftRecursionTests
 {
+    [Fact]
+    public void StackGuardReportsIndirectCycle()
+    {
+        var startA = new MyATNState
+        { stateNumber = 0, stateType = MyStateType.RuleStart, ruleIndex = 0 };
+        var stopA = new MyATNState
+        { stateNumber = 1, stateType = MyStateType.RuleStop, ruleIndex = 0 };
+        var startB = new MyATNState
+        { stateNumber = 2, stateType = MyStateType.RuleStart, ruleIndex = 1 };
+        var stopB = new MyATNState
+        { stateNumber = 3, stateType = MyStateType.RuleStop, ruleIndex = 1 };
+        startA.AddTransition(new MyRuleTransition(stopA, 1, 0));
+        startB.AddTransition(new MyRuleTransition(stopB, 0, 0));
+        var parserAtn = new Atn.MyATN
+        {
+            grammarType = MyATNType.Parser,
+            allStates = [startA, stopA, startB, stopB],
+            start = [startA, startB],
+            ruleToStopState = [stopA, stopB]
+        };
+        var tokens = Array.Empty<LexerToken>();
+
+        var baseline = Assert.Throws<InvalidOperationException>(() =>
+            AllStarParser.RecognizeWithHashGuard(parserAtn, tokens, 0));
+
+        var exception = Assert.Throws<InvalidOperationException>(() =>
+            AllStarParser.Recognize(parserAtn, tokens, 0));
+        Assert.Contains("Indirect left recursion detected", exception.Message);
+        Assert.Equal(baseline.Message, exception.Message);
+    }
     [Fact]
     public void TimeoutWorkerInheritsParserDfaCacheLimits()
     {
