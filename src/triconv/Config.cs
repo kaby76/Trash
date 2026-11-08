@@ -12,7 +12,7 @@ public class Config
     public string ToCode { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "4.9.0";
+    public string Version { get; set; } = "4.10.0";
 
     [Value(0)] public IEnumerable<string> Files { get; set; }
 }

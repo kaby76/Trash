@@ -37,7 +37,7 @@ root after building `trparse`, `trrename`, and `trtext` in Release configuration
 
 ## Current version
 
-Release 4.9.0.
+Release 4.10.0.
 
 ## License
 
