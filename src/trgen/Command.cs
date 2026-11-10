@@ -638,7 +638,7 @@ namespace Trash
             }
         }
 
-        public static string version = "4.9.0";
+        public static string version = "4.10.0";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -1872,16 +1872,6 @@ namespace Trash
                                            + " to "
                                            + to);
 
-            string output_dir = to;
-            for (;;)
-            {
-                var d = Dirname(output_dir);
-                if (d != null && d != "" && d != ".")
-                {
-                    output_dir = d;
-                }
-                else break;
-            }
 
             Regex re = new Regex("^st[.]");
             test.tool_grammar_files = test.tool_grammar_files.Select(s => re.Replace(s, "")).ToList();
@@ -1892,12 +1882,11 @@ namespace Trash
                 tu.GrammarFileNameTarget = re.Replace(tu.GrammarFileNameTarget, "");
             }
 
-            output_dir = output_dir + "/";
             var yo1 = test.grammar_directory_source_files
-                .Select(t =>
-                    FixedName(t, config, test)
-                        .Substring(output_dir.Length))
-                .Where(t => t.Contains(Suffix(test.target)))
+                .Select(source => Path.GetRelativePath(
+                    test.output_directory, FixedName(source, config, test))
+                    .Replace('\\', '/'))
+                .Where(source => source.Contains(Suffix(test.target)))
                 .ToList();
             t.Add("official_tool", config.generator_name == "official");
             t.Add("antlrng_tool", config.generator_name == "antlr-ng");
