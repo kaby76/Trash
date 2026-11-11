@@ -14,7 +14,7 @@
 
 ## Current version
 
-Release 4.10.0.
+Release 4.11.0.
 
 ## License
 

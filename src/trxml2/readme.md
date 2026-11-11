@@ -24,7 +24,7 @@ for example `desc.xml:/desc/targets=CSharp`. For standard input, the prefix is
 
 ## Current version
 
-Release 4.10.0.
+Release 4.11.0.
 
 ## License
 
