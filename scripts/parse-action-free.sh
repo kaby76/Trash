@@ -53,7 +53,28 @@ run_target() {
         fi
         mapfile -t grammar_files <<< "$grammar_list"
     else
-        grammar_files=(./*.g4)
+        grammar_name=$(trash xml2 desc.xml | awk -F= '/\/grammar-name=/{print $2; exit}')
+        if [[ -n "$grammar_name" ]]; then
+            grammar_files=()
+            if [[ -f "$grammar_name.g4" ]]; then
+                # A named combined grammar is sufficient on its own. For a
+                # separate parser grammar, include its companion lexer first.
+                if grep -Eq '^[[:space:]]*parser[[:space:]]+grammar[[:space:]]' "$grammar_name.g4"; then
+                    lexer_file="${grammar_name%Parser}Lexer.g4"
+                    if [[ -f "$lexer_file" ]]; then grammar_files+=("$lexer_file"); fi
+                fi
+                grammar_files+=("$grammar_name.g4")
+            else
+                if [[ -f "${grammar_name}Lexer.g4" ]]; then grammar_files+=("${grammar_name}Lexer.g4"); fi
+                if [[ -f "${grammar_name}Parser.g4" ]]; then grammar_files+=("${grammar_name}Parser.g4"); fi
+            fi
+            if [[ ${#grammar_files[@]} -eq 0 ]]; then
+                echo "No grammar files matched <grammar-name>: $grammar_name" >&2
+                return 1
+            fi
+        else
+            grammar_files=(./*.g4)
+        fi
     fi
     for grammar_file in "${grammar_files[@]}"; do
         if [[ ! -f "$grammar_file" ]]; then
