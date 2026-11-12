@@ -28,7 +28,7 @@ run_target() {
         f2=examples/
     fi
     files2=`trash glob "$f2" | tr -d '\r' | grep -v '[.]errors$' | grep -v '[.]tree$' | grep -v '[.]trq$'`
-    echo files2 = $files
+    echo "files2 = $files2"
     # Test generated parser on examples.
     local SAVEIFS=$IFS
     IFS=$(echo -en "\n\b")
@@ -43,12 +43,40 @@ run_target() {
     fi
     echo "files = ${files[@]}" 1>&2
     start_rule=$(dotnet trash xml2 desc.xml | awk -F= '/\/entry-point=/{print $2; exit}')
-    interp_args=(-o interp)
+
+    grammar_spec=$(trash xml2 desc.xml | awk -F= '/\/grammar-files=/{print $2; exit}')
+    if [[ -n "$grammar_spec" ]]; then
+        grammar_list=$(trash glob "$grammar_spec" | tr -d '\r')
+        if [[ -z "$grammar_list" ]]; then
+            echo "No grammar files matched <grammar-files>: $grammar_spec" >&2
+            return 1
+        fi
+        mapfile -t grammar_files <<< "$grammar_list"
+    else
+        grammar_files=(./*.g4)
+    fi
+    for grammar_file in "${grammar_files[@]}"; do
+        if [[ ! -f "$grammar_file" ]]; then
+            echo "Grammar file not found: $grammar_file" >&2
+            return 1
+        fi
+    done
+    local interp_dir parse_status
+    interp_dir=$(mktemp -d /tmp/trash-action-free.XXXXXXXX) || return 1
+    interp_args=(-o "$interp_dir")
     if [[ -n "$start_rule" ]]; then
         interp_args+=(--start-rule "$start_rule")
     fi
-    trash parse *.g4 | trash interp "${interp_args[@]}"
-    printf '%s\n' "${files[@]}" | trash wdog -t 200 trash parse -L interp -x --no-output --per-file
+    if ! trash parse "${grammar_files[@]}" | trash interp "${interp_args[@]}"; then
+        rm -f -- "$interp_dir"/*
+        rmdir -- "$interp_dir"
+        return 1
+    fi
+    printf '%s\n' "${files[@]}" | trash wdog -t 200 trash parse -L "$interp_dir" -x --no-output --per-file
+    parse_status=$?
+    rm -f -- "$interp_dir"/*
+    rmdir -- "$interp_dir"
+    return "$parse_status"
 }
 
 root=`pwd`
