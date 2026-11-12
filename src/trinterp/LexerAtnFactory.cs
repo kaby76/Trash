@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using static trinterp.GrammarParser;
@@ -14,6 +15,7 @@ namespace trinterp;
 /// </summary>
 public class LexerAtnFactory : ParserAtnFactory
 {
+    private static readonly Dictionary<string, IntervalSet> UnicodePropertySets = new(StringComparer.Ordinal);
     // Deduplicated list of ILexerAction instances. Index = position in _atn.lexerActions.
     private readonly List<ILexerAction> _lexerActions = new();
     // Map from action identity string → index in _lexerActions.
@@ -652,6 +654,19 @@ public class LexerAtnFactory : ParserAtnFactory
 
         while (idx < s.Length)
         {
+            if (s[idx] == '\\' && idx + 2 < s.Length && s[idx + 1] is 'p' or 'P' && s[idx + 2] == '{')
+            {
+                int close = s.IndexOf('}', idx + 3);
+                if (close < 0)
+                    throw new FormatException("Unterminated Unicode property escape in lexer character set.");
+                var property = s[(idx + 3)..close];
+                var propertySet = GetUnicodePropertySet(property);
+                set.AddAll(s[idx + 1] == 'P'
+                    ? propertySet.Complement(IntervalSet.Of(0, 0x10FFFF))
+                    : propertySet);
+                idx = close + 1;
+                continue;
+            }
             var (c, len) = NextCharInSet(s, idx);
             if (len == 0) break;
             idx += len;
@@ -677,6 +692,63 @@ public class LexerAtnFactory : ParserAtnFactory
 
         if (CurrentCaseInsensitive) set = CaseExpandSet(set);
         return set;
+    }
+
+    private static IntervalSet GetUnicodePropertySet(string property)
+    {
+        lock (UnicodePropertySets)
+        {
+            if (UnicodePropertySets.TryGetValue(property, out var cached))
+                return cached;
+
+            // ANTLR's short names denote Unicode general categories. Reject
+            // unknown names instead of silently treating \\p{...} as literals.
+            Func<UnicodeCategory, bool> matches = property switch
+            {
+                "L" => c => c is UnicodeCategory.UppercaseLetter or UnicodeCategory.LowercaseLetter
+                    or UnicodeCategory.TitlecaseLetter or UnicodeCategory.ModifierLetter or UnicodeCategory.OtherLetter,
+                "Lu" => c => c == UnicodeCategory.UppercaseLetter,
+                "Ll" => c => c == UnicodeCategory.LowercaseLetter,
+                "Lt" => c => c == UnicodeCategory.TitlecaseLetter,
+                "Lm" => c => c == UnicodeCategory.ModifierLetter,
+                "Lo" => c => c == UnicodeCategory.OtherLetter,
+                "M" => c => c is UnicodeCategory.NonSpacingMark or UnicodeCategory.SpacingCombiningMark
+                    or UnicodeCategory.EnclosingMark,
+                "Mn" => c => c == UnicodeCategory.NonSpacingMark,
+                "Mc" => c => c == UnicodeCategory.SpacingCombiningMark,
+                "Me" => c => c == UnicodeCategory.EnclosingMark,
+                "N" => c => c is UnicodeCategory.DecimalDigitNumber or UnicodeCategory.LetterNumber
+                    or UnicodeCategory.OtherNumber,
+                "Nd" => c => c == UnicodeCategory.DecimalDigitNumber,
+                "Nl" => c => c == UnicodeCategory.LetterNumber,
+                "No" => c => c == UnicodeCategory.OtherNumber,
+                "Z" => c => c is UnicodeCategory.SpaceSeparator or UnicodeCategory.LineSeparator
+                    or UnicodeCategory.ParagraphSeparator,
+                "Zs" => c => c == UnicodeCategory.SpaceSeparator,
+                "Zl" => c => c == UnicodeCategory.LineSeparator,
+                "Zp" => c => c == UnicodeCategory.ParagraphSeparator,
+                _ => throw new NotSupportedException($"Unsupported Unicode property \\p{{{property}}} in lexer character set.")
+            };
+
+            var result = new IntervalSet();
+            int runStart = -1;
+            for (int codePoint = 0; codePoint <= 0x10FFFF; codePoint++)
+            {
+                bool included = Rune.TryCreate(codePoint, out var rune)
+                    && matches(Rune.GetUnicodeCategory(rune));
+                if (included && runStart < 0)
+                    runStart = codePoint;
+                else if (!included && runStart >= 0)
+                {
+                    result.Add(runStart, codePoint - 1);
+                    runStart = -1;
+                }
+            }
+            if (runStart >= 0)
+                result.Add(runStart, 0x10FFFF);
+            UnicodePropertySets[property] = result;
+            return result;
+        }
     }
 
     private static (int ch, int len) NextCharInSequence(string s, int idx)

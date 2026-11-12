@@ -66,6 +66,12 @@
     <Content Include="../grammars-v4/kotlin/examples/kotlinFile/fix-*.kt"
              CopyToOutputDirectory="PreserveNewest"
              Link="TestData/kotlin/%(Filename)%(Extension)" />
+    <Content Include="../grammars-v4/elixir/Elixir*.g4"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/elixir/%(Filename)%(Extension)" />
+    <Content Include="../grammars-v4/elixir/examples/block.ex"
+             CopyToOutputDirectory="PreserveNewest"
+             Link="TestData/elixir/block.ex" />
 
     <Content Include="TestData/indirect-left-recursion/*.interp"
              CopyToOutputDirectory="Always"

@@ -9,6 +9,54 @@ namespace AllStarParserTests;
 
 public sealed class G4XInterpTests
 {
+    [Fact]
+    public void AntlrUnicodePropertySetsCompileIntoLexerAtn()
+    {
+        var model = Assert.Single(Batch(Model(
+            @"lexer grammar UnicodeLexer;
+              LOWER: [\p{Ll}_]+;
+              LETTER: [\p{L}]+;
+              SPACE: [ ]+ -> skip;", plus: false)));
+        var interp = Atn.InterpFileReader.Read(Tables(model));
+        var atn = Atn.AtnDeserializer.Deserialize(interp.AtnData);
+        var tokens = new EarleyAtnParser.LexerAtnSimulator(atn)
+            .Tokenize("abc_α Élan")
+            .Where(token => token.Type != 3).ToArray();
+
+        Assert.Equal(new[] { "abc_α", "Élan", "<EOF>" },
+            tokens.Select(token => token.Text).ToArray());
+        Assert.Equal(new[] { 1, 2, -1 },
+            tokens.Select(token => token.Type).ToArray());
+    }
+
+    [Fact]
+    public async Task ElixirGrammarParsesBlockWithUnicodePropertyLexerRules()
+    {
+        var fixture = Path.Combine(AppContext.BaseDirectory, "TestData", "elixir");
+        var directory = Directory.CreateTempSubdirectory("ElixirInterp-").FullName;
+        try
+        {
+            var parsed = await RunCli(typeof(Trash.Program).Assembly.Location, null,
+                "-t", "ANTLRv4",
+                Path.Combine(fixture, "ElixirLexer.g4"),
+                Path.Combine(fixture, "ElixirParser.g4"));
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCli(typeof(trinterp.Program).Assembly.Location,
+                parsed.Output, "-o", directory);
+            Assert.True(generated.Exit == 0, generated.Error);
+
+            var input = await File.ReadAllTextAsync(Path.Combine(fixture, "block.ex"));
+            var (result, _) = AllStarAtnParser.InterpRunner.Run(
+                Path.Combine(directory, "ElixirParser.interp"),
+                Path.Combine(directory, "ElixirLexer.interp"),
+                input, "block.ex", false);
+            Assert.StartsWith("(parse ",
+                new TreeOutput(result.Lexer, result.Parser)
+                    .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString());
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
     [Theory]
     [InlineData(".g4x")]
     public async Task CliBundlePipelineGeneratesRunnableTables(string extension)
