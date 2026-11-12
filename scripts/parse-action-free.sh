@@ -21,7 +21,7 @@ echo cwd $cwd
 
 run_target() {
     files=()
-    f2=`dotnet trash xml2 desc.xml | grep inputs | head -1 | awk -F = '{print $2}'`
+    f2=`trash xml2 desc.xml | grep inputs | head -1 | awk -F = '{print $2}'`
     echo f2 = "'""$f2""'"
     if [[ "$f2" == "" ]]
     then
@@ -48,7 +48,7 @@ run_target() {
         interp_args+=(--start-rule "$start_rule")
     fi
     trash parse *.g4 | trash interp "${interp_args[@]}"
-    printf '%s\n' "${files[@]}" | trash parse -L interp -x --no-output --per-file
+    printf '%s\n' "${files[@]}" | trash wdog -t 200 trash parse -L interp -x --no-output --per-file
 }
 
 root=`pwd`
