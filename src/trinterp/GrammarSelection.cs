@@ -93,7 +93,11 @@ internal static class GrammarSelection
                 IncludeLexerImports(root);
                 continue;
             }
-            var visiting = new HashSet<string>(StringComparer.Ordinal);
+            // Delegate imports can form cycles (for example, Teradata's data
+            // type and expression grammars). A grammar contributes its rules
+            // only on the first visit; the importing grammar's rules retain
+            // precedence over rules reached through delegates.
+            var visited = new HashSet<string>(StringComparer.Ordinal);
             var merged = Clone(root.Syntax);
             var rules = GrammarParser.Child(merged, "rules");
             if (rules == null)
@@ -106,9 +110,7 @@ internal static class GrammarSelection
                 StringComparer.Ordinal);
             void Visit(Source current)
             {
-                if (!visiting.Add(current.Name))
-                    throw new InvalidOperationException(
-                        $"[trinterp] Cyclic grammar import involving '{current.Name}'.");
+                if (!visited.Add(current.Name)) return;
                 foreach (var importName in current.Imports)
                 {
                     if (!byName.TryGetValue(importName, out var dependency))
@@ -121,7 +123,6 @@ internal static class GrammarSelection
                             rules.Children.Add(Clone(rule));
                     Visit(dependency);
                 }
-                visiting.Remove(current.Name);
             }
             Visit(root);
             merged.Children.RemoveAll(pre => pre.LocalName == "prequelConstruct" &&

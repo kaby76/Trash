@@ -33,6 +33,7 @@ public sealed class G4XInterpTests
     [InlineData("ID_Start", "a")]
     [InlineData("ID_Continue", "1")]
     [InlineData("Pc", "_")]
+    [InlineData("Cf", "\u200C")]
     [InlineData("Sc", "$")]
     [InlineData("Grapheme_Cluster_Break=Extend", "\u0301")]
     [InlineData("EmojiPresentation=TextDefault", "#")]
@@ -171,6 +172,44 @@ public sealed class G4XInterpTests
                 Path.Combine(output, "BLexer.interp"),
                 "b", "input.txt", false);
             Assert.StartsWith("(entry ",
+                new TreeOutput(result.Lexer, result.Parser)
+                    .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString());
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
+    [Fact]
+    public async Task CyclicParserImportsContributeRulesOnce()
+    {
+        var directory = Directory.CreateTempSubdirectory("CyclicImports-").FullName;
+        var output = Path.Combine(directory, "interp");
+        try
+        {
+            await File.WriteAllTextAsync(Path.Combine(directory, "P.g4"),
+                "parser grammar P; import A; options{tokenVocab=L;} start:foo EOF;");
+            await File.WriteAllTextAsync(Path.Combine(directory, "A.g4"),
+                "parser grammar A; import B; foo:X;");
+            await File.WriteAllTextAsync(Path.Combine(directory, "B.g4"),
+                "parser grammar B; import A; bar:X;");
+            await File.WriteAllTextAsync(Path.Combine(directory, "L.g4"),
+                "lexer grammar L; X:'x';");
+            await File.WriteAllTextAsync(Path.Combine(directory, "desc.xml"),
+                "<desc><grammar-name>P</grammar-name><entry-point>start</entry-point></desc>");
+            var parsed = await RunCliInDirectory(directory,
+                typeof(Trash.Program).Assembly.Location, null,
+                "-t", "ANTLRv4", "P.g4", "A.g4", "B.g4", "L.g4");
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCliInDirectory(directory,
+                typeof(trinterp.Program).Assembly.Location, parsed.Output,
+                "-o", output);
+            Assert.True(generated.Exit == 0, generated.Error);
+            Assert.True(File.Exists(Path.Combine(output, "P.interp")));
+            Assert.False(File.Exists(Path.Combine(output, "A.interp")));
+            Assert.False(File.Exists(Path.Combine(output, "B.interp")));
+            var (result, _) = AllStarAtnParser.InterpRunner.Run(
+                Path.Combine(output, "P.interp"),
+                Path.Combine(output, "L.interp"), "x", "input.txt", false);
+            Assert.StartsWith("(start (foo x) <EOF>)",
                 new TreeOutput(result.Lexer, result.Parser)
                     .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString());
         }

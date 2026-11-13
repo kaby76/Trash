@@ -58,6 +58,42 @@ run_target() {
             return 1
         fi
     done
+    # <grammar-files> lists the entry grammars, not necessarily their delegates.
+    # Supply every transitive import to trinterp so it can resolve the graph
+    # and select the top-level grammar using desc.xml.
+    local -A supplied=()
+    local grammar_file import_name import_file
+    for grammar_file in "${grammar_files[@]}"; do
+        supplied["$(cd "$(dirname "$grammar_file")" && pwd)/$(basename "$grammar_file")"]=1
+    done
+    for ((i=0; i<${#grammar_files[@]}; i++)); do
+        grammar_file=${grammar_files[i]}
+        while IFS= read -r import_name; do
+            import_file="$(dirname "$grammar_file")/$import_name.g4"
+            if [[ ! -f "$import_file" ]]; then
+                echo "Imported grammar $import_name.g4 required by $grammar_file was not found" >&2
+                return 1
+            fi
+            import_file="$(cd "$(dirname "$import_file")" && pwd)/$(basename "$import_file")"
+            if [[ ! -v supplied["$import_file"] ]]; then
+                grammar_files+=("$import_file")
+                supplied["$import_file"]=1
+            fi
+        done < <(awk '
+            /^[[:space:]]*import[[:space:]]/ {
+                line = $0
+                while (index(line, ";") == 0 && getline) line = line " " $0
+                sub(/^[[:space:]]*import[[:space:]]+/, "", line)
+                sub(/;.*/, "", line)
+                count = split(line, names, ",")
+                for (j = 1; j <= count; j++) {
+                    sub(/^.*=/, "", names[j])
+                    gsub(/[[:space:]]/, "", names[j])
+                    if (names[j] != "") print names[j]
+                }
+            }
+        ' "$grammar_file")
+    done
     local interp_dir parse_status
     interp_dir=$(mktemp -d /tmp/trash-action-free.XXXXXXXX) || return 1
     if ! dotnet trash parse "${grammar_files[@]}" | dotnet trash interp -o "$interp_dir"; then

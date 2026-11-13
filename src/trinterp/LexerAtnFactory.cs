@@ -729,6 +729,7 @@ public class LexerAtnFactory : ParserAtnFactory
                 "nl" => c => c == UnicodeCategory.LetterNumber,
                 "no" => c => c == UnicodeCategory.OtherNumber,
                 "pc" => c => c == UnicodeCategory.ConnectorPunctuation,
+                "cf" => c => c == UnicodeCategory.Format,
                 "sc" => c => c == UnicodeCategory.CurrencySymbol,
                 "z" => c => c is UnicodeCategory.SpaceSeparator or UnicodeCategory.LineSeparator
                     or UnicodeCategory.ParagraphSeparator,
