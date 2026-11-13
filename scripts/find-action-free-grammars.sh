@@ -87,6 +87,12 @@ then
         for g in `echo "$d"/*.g4`
         do
             haveany=true
+            # A custom superclass can generate tokens or change lexing even
+            # when the grammar itself has no action blocks.
+            if grep -Eq 'superClass[[:space:]]*=' "$g"; then
+                action=true
+                break
+            fi
             if [[ `dotnet trash parse -t ANTLRv4 $g 2> /dev/null | dotnet trash xpath 'count(//actionBlock) > 0'` == "true" ]]
             then
                 action="true"
@@ -102,7 +108,7 @@ then
         fi
         g=`cygpath -u $d | sed "s%$cwd/%%"`
 
-	// test $g
+        echo "$g"
     done
 else
     for desc in `find . -name desc.xml | grep -v Generated | grep -v examples`
@@ -118,6 +124,10 @@ else
         for g in `echo *.g4`
         do
             haveany=true
+            if grep -Eq 'superClass[[:space:]]*=' "$g"; then
+                action=true
+                break
+            fi
             if [[ `dotnet trash parse -t ANTLRv4 $g 2> /dev/null | dotnet trash xpath 'count(//actionBlock) > 0'` == "true" ]]
             then
                 action="true"

@@ -16,7 +16,7 @@ internal static class UnicodePropertyData
 
         var key = name switch
         {
-            "id_start" or "id_continue" or "emoji" or "emoji_presentation"
+            "id_start" or "id_continue" or "white_space" or "emoji" or "emoji_presentation"
                 or "extended_pictographic" => "binary_property=" + name,
             _ => name
         };

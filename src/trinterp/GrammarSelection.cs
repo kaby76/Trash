@@ -63,7 +63,7 @@ internal static class GrammarSelection
                     $"does not identify one top-level grammar. Candidates: " +
                     string.Join(", ", sources.Select(source => source.Name)));
             roots.AddRange(sources.Where(source => IsLexer(source.Syntax) &&
-                !roots.Contains(source)));
+                !imported.Contains(source.Name) && !roots.Contains(source)));
         }
         if (roots.Count == 0)
             throw new InvalidOperationException("[trinterp] No top-level grammar found; check for cyclic imports.");

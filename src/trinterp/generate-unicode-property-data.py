@@ -19,6 +19,7 @@ blocks = re.findall(
 required = {
     "binary_property=id_start",
     "binary_property=id_continue",
+    "binary_property=white_space",
     "binary_property=emoji",
     "binary_property=emoji_presentation",
     "binary_property=extended_pictographic",
