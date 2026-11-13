@@ -678,7 +678,7 @@ public sealed class G4XInterpTests
     }
 
     [Fact]
-    public void MoreIsSerializedButRetainsTheRuntimeUnsupportedDiagnostic()
+    public void MoreConcatenatesLexerSegmentsAcrossModes()
     {
         var lexer = Model("""
             lexer grammar L;
@@ -693,7 +693,16 @@ public sealed class G4XInterpTests
         var interp = Atn.InterpFileReader.Read(Tables(lexer));
         var atn = Atn.AtnDeserializer.Deserialize(interp.AtnData);
         Assert.Contains(atn.lexerActions, action => action.ActionType == Atn.MyLexerActionType.More);
-        Assert.Contains("More", Assert.Throws<NotSupportedException>(() => Parse(batch, "P", "L", "\"abc\"")).Message);
+        var tokens = new EarleyAtnParser.LexerAtnSimulator(atn)
+            .Tokenize("\"abc\"\"def\"");
+        Assert.Equal(["\"abc\"", "\"def\"", "<EOF>"],
+            tokens.Select(token => token.Text).ToArray());
+        Assert.Equal(lexer.TokenNameToType["text"], tokens[0].Type);
+        Assert.Equal(0, tokens[0].StartIndex);
+        Assert.Equal(4, tokens[0].StopIndex);
+        Assert.Equal("(Start \"abc\" <EOF>)", Parse(batch, "P", "L", "\"abc\""));
+        Assert.Equal("(Start \"abc\" <EOF>)",
+            Parse(batch, "P", "L", "\"abc\"", contextAware: true));
     }
 
     [Theory]
@@ -707,9 +716,8 @@ public sealed class G4XInterpTests
         var directory = Directory.CreateTempSubdirectory("LexerDiagnostics-").FullName;
         try
         {
-            var lexer = Model("lexer grammar L; tokens {text} begin:'\"' -> more, pushMode(inside); " +
-                "mode inside; chars:~[\"]+ -> more; end:'\"' -> type(text), popMode;");
-            var parser = Model("parser grammar P; options{tokenVocab=L;} start:text EOF;");
+            var lexer = Model("lexer grammar L; A:'a'; B:'b' { DoSomething(); };");
+            var parser = Model("parser grammar P; options{tokenVocab=L;} start:A EOF;");
             var models = Batch(parser, lexer);
             foreach (var model in models)
                 File.WriteAllText(Path.Combine(directory, model.Name + ".interp"), Tables(model));
@@ -728,9 +736,9 @@ public sealed class G4XInterpTests
             Assert.DoesNotContain("at EarleyAtnParser.", noMatch.Error);
 
             var unsupported = await RunCli(typeof(Trash.Program).Assembly.Location,
-                null, [.. options, "-i", "\"abc\""]);
+                null, [.. options, "-i", "b"]);
             Assert.NotEqual(0, unsupported.Exit);
-            Assert.Contains("Lexer action 'More' is not supported", unsupported.Error);
+            Assert.Contains("Lexer action 'Custom' is not supported", unsupported.Error);
             Assert.Contains("at EarleyAtnParser.", unsupported.Error);
         }
         finally { Directory.Delete(directory, true); }
