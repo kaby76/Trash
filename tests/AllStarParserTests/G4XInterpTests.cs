@@ -696,6 +696,46 @@ public sealed class G4XInterpTests
         Assert.Contains("More", Assert.Throws<NotSupportedException>(() => Parse(batch, "P", "L", "\"abc\"")).Message);
     }
 
+    [Theory]
+    [InlineData("--allstar", false)]
+    [InlineData("--allstar", true)]
+    [InlineData("--earley", false)]
+    [InlineData("--earley", true)]
+    public async Task LexerNoMatchIsConciseButUnsupportedActionHasTraceback(
+        string parserMode, bool bundle)
+    {
+        var directory = Directory.CreateTempSubdirectory("LexerDiagnostics-").FullName;
+        try
+        {
+            var lexer = Model("lexer grammar L; tokens {text} begin:'\"' -> more, pushMode(inside); " +
+                "mode inside; chars:~[\"]+ -> more; end:'\"' -> type(text), popMode;");
+            var parser = Model("parser grammar P; options{tokenVocab=L;} start:text EOF;");
+            var models = Batch(parser, lexer);
+            foreach (var model in models)
+                File.WriteAllText(Path.Combine(directory, model.Name + ".interp"), Tables(model));
+
+            string[] options = bundle
+                ? [parserMode, "--bundle", "--no-output", "--per-file",
+                    "--pinterp", Path.Combine(directory, "P.interp"),
+                    "--linterp", Path.Combine(directory, "L.interp")]
+                : [parserMode, "--no-output", "--per-file",
+                    "--pinterp", Path.Combine(directory, "P.interp"),
+                    "--linterp", Path.Combine(directory, "L.interp")];
+            var noMatch = await RunCli(typeof(Trash.Program).Assembly.Location,
+                null, [.. options, "-i", "?"]);
+            Assert.NotEqual(0, noMatch.Exit);
+            Assert.Contains("Lexer error at line 1:0: no rule matches '?'", noMatch.Error);
+            Assert.DoesNotContain("at EarleyAtnParser.", noMatch.Error);
+
+            var unsupported = await RunCli(typeof(Trash.Program).Assembly.Location,
+                null, [.. options, "-i", "\"abc\""]);
+            Assert.NotEqual(0, unsupported.Exit);
+            Assert.Contains("Lexer action 'More' is not supported", unsupported.Error);
+            Assert.Contains("at EarleyAtnParser.", unsupported.Error);
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
     [Fact]
     public void TypeCommandUsesDeclaredCaseNeutralToken()
     {
