@@ -696,37 +696,45 @@ public class LexerAtnFactory : ParserAtnFactory
 
     private static IntervalSet GetUnicodePropertySet(string property)
     {
+        var normalized = property.ToLowerInvariant().Replace('-', '_');
         lock (UnicodePropertySets)
         {
-            if (UnicodePropertySets.TryGetValue(property, out var cached))
+            if (UnicodePropertySets.TryGetValue(normalized, out var cached))
                 return cached;
+            if (UnicodePropertyData.TryGet(normalized, out var fromData))
+            {
+                UnicodePropertySets[normalized] = fromData;
+                return fromData;
+            }
 
             // ANTLR's short names denote Unicode general categories. Reject
             // unknown names instead of silently treating \\p{...} as literals.
-            Func<UnicodeCategory, bool> matches = property switch
+            Func<UnicodeCategory, bool> matches = normalized switch
             {
-                "L" => c => c is UnicodeCategory.UppercaseLetter or UnicodeCategory.LowercaseLetter
+                "l" => c => c is UnicodeCategory.UppercaseLetter or UnicodeCategory.LowercaseLetter
                     or UnicodeCategory.TitlecaseLetter or UnicodeCategory.ModifierLetter or UnicodeCategory.OtherLetter,
-                "Lu" => c => c == UnicodeCategory.UppercaseLetter,
-                "Ll" => c => c == UnicodeCategory.LowercaseLetter,
-                "Lt" => c => c == UnicodeCategory.TitlecaseLetter,
-                "Lm" => c => c == UnicodeCategory.ModifierLetter,
-                "Lo" => c => c == UnicodeCategory.OtherLetter,
-                "M" => c => c is UnicodeCategory.NonSpacingMark or UnicodeCategory.SpacingCombiningMark
+                "lu" => c => c == UnicodeCategory.UppercaseLetter,
+                "ll" => c => c == UnicodeCategory.LowercaseLetter,
+                "lt" => c => c == UnicodeCategory.TitlecaseLetter,
+                "lm" => c => c == UnicodeCategory.ModifierLetter,
+                "lo" => c => c == UnicodeCategory.OtherLetter,
+                "m" => c => c is UnicodeCategory.NonSpacingMark or UnicodeCategory.SpacingCombiningMark
                     or UnicodeCategory.EnclosingMark,
-                "Mn" => c => c == UnicodeCategory.NonSpacingMark,
-                "Mc" => c => c == UnicodeCategory.SpacingCombiningMark,
-                "Me" => c => c == UnicodeCategory.EnclosingMark,
-                "N" => c => c is UnicodeCategory.DecimalDigitNumber or UnicodeCategory.LetterNumber
+                "mn" or "nonspacing_mark" => c => c == UnicodeCategory.NonSpacingMark,
+                "mc" => c => c == UnicodeCategory.SpacingCombiningMark,
+                "me" or "general_category=enclosing_mark" => c => c == UnicodeCategory.EnclosingMark,
+                "n" => c => c is UnicodeCategory.DecimalDigitNumber or UnicodeCategory.LetterNumber
                     or UnicodeCategory.OtherNumber,
-                "Nd" => c => c == UnicodeCategory.DecimalDigitNumber,
-                "Nl" => c => c == UnicodeCategory.LetterNumber,
-                "No" => c => c == UnicodeCategory.OtherNumber,
-                "Z" => c => c is UnicodeCategory.SpaceSeparator or UnicodeCategory.LineSeparator
+                "nd" => c => c == UnicodeCategory.DecimalDigitNumber,
+                "nl" => c => c == UnicodeCategory.LetterNumber,
+                "no" => c => c == UnicodeCategory.OtherNumber,
+                "pc" => c => c == UnicodeCategory.ConnectorPunctuation,
+                "sc" => c => c == UnicodeCategory.CurrencySymbol,
+                "z" => c => c is UnicodeCategory.SpaceSeparator or UnicodeCategory.LineSeparator
                     or UnicodeCategory.ParagraphSeparator,
-                "Zs" => c => c == UnicodeCategory.SpaceSeparator,
-                "Zl" => c => c == UnicodeCategory.LineSeparator,
-                "Zp" => c => c == UnicodeCategory.ParagraphSeparator,
+                "zs" => c => c == UnicodeCategory.SpaceSeparator,
+                "zl" => c => c == UnicodeCategory.LineSeparator,
+                "zp" => c => c == UnicodeCategory.ParagraphSeparator,
                 _ => throw new NotSupportedException($"Unsupported Unicode property \\p{{{property}}} in lexer character set.")
             };
 
@@ -746,7 +754,7 @@ public class LexerAtnFactory : ParserAtnFactory
             }
             if (runStart >= 0)
                 result.Add(runStart, 0x10FFFF);
-            UnicodePropertySets[property] = result;
+            UnicodePropertySets[normalized] = result;
             return result;
         }
     }
@@ -869,15 +877,16 @@ public class LexerAtnFactory : ParserAtnFactory
     internal static IntervalSet CaseExpandSet(IntervalSet set)
     {
         var expanded = new IntervalSet();
+        expanded.AddAll(set);
         foreach (var iv in set.GetIntervals())
             for (int c = iv.a; c <= iv.b; c++)
             {
-                // Expansion must retain every explicitly matched code point.
-                // A Unicode titlecase character can differ from both its
-                // lowercase and uppercase mappings.
-                expanded.Add(c);
-                expanded.Add(char.ToLowerInvariant((char)c));
-                expanded.Add(char.ToUpperInvariant((char)c));
+                if (!Rune.TryCreate(c, out var rune))
+                    continue;
+                int lower = Rune.ToLowerInvariant(rune).Value;
+                int upper = Rune.ToUpperInvariant(rune).Value;
+                if (lower != c) expanded.Add(lower);
+                if (upper != c) expanded.Add(upper);
             }
         return expanded;
     }

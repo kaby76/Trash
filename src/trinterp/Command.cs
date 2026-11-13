@@ -52,6 +52,17 @@ public class Command
         var optimize = optimizeNames.Count > 0
             ? OptimizeOptions.FromNames(optimizeNames)
             : OptimizeOptions.All;
+        var description = GrammarSelection.ReadDescription();
+        var antlrSources = sets
+            .Where(set => set.Nodes?.FirstOrDefault() is UnvParseTreeElement &&
+                (set.FileName ?? "").EndsWith(".g4", StringComparison.OrdinalIgnoreCase))
+            .Select(set => GrammarSelection.FromSyntax(
+                GrammarNode.FromDom((UnvParseTreeElement)set.Nodes[0]),
+                set.FileName))
+            .Where(source => source != null)
+            .ToList();
+        var selectedAntlrSources = GrammarSelection.SelectAndExpand(
+            antlrSources, description).ToDictionary(source => source.Name);
 
         // Pass 1: parse all grammar models and detect EOF-terminated start rules.
         var models = new List<GrammarModel>();
@@ -74,7 +85,18 @@ public class Command
                 continue;
             }
             GrammarModel model;
-            try { model = new GrammarParser().Parse(root, fileName); }
+            try
+            {
+                var source = antlrSources.FirstOrDefault(item => item.FileName == fileName);
+                if (source != null)
+                {
+                    if (!selectedAntlrSources.TryGetValue(source.Name, out var selected))
+                        continue;
+                    model = new GrammarParser().Parse(selected.Syntax, fileName);
+                }
+                else
+                    model = new GrammarParser().Parse(root, fileName);
+            }
             catch (Exception ex)
             {
                 throw new InvalidOperationException($"[trinterp] Failed to parse grammar model for {fileName}: {ex.Message}", ex);
@@ -86,9 +108,10 @@ public class Command
             if (!model.IsLexer)
             {
                 string startRuleName;
-                if (!string.IsNullOrEmpty(config.StartRule))
+                var specifiedStartRule = config.StartRule ?? description.StartRule;
+                if (!string.IsNullOrEmpty(specifiedStartRule))
                 {
-                    startRuleName = config.StartRule;
+                    startRuleName = specifiedStartRule;
                 }
                 else
                 {

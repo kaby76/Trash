@@ -12,6 +12,16 @@ bundle on stdout. Specify `-o` to write them to a directory instead. Supports bo
 lexer and parser grammars, as well as combined grammars (which produce a lexer
 and parser `.interp` pair).
 
+When the current directory contains `desc.xml`, `trinterp` uses its
+`<grammar-name>` and first `<entry-point>` (including values inside the first
+`<test>`) to select the top-level grammar and default start rule. For ANTLR4
+grammars, it follows `import` references, includes imported rules in the
+top-level parser and lexer tables, and omits separate tables for imported
+combined grammars. Without a descriptor, the import graph identifies the
+top-level grammar and the unique EOF-terminated rule supplies its start rule.
+Use the existing `trparse --start-rule` option to run other entry points from
+the same generated tables.
+
 An `.ast` parse result may accompany exactly one parser grammar. `trinterp`
 compiles its rewrite rules into an `ast-mapping:` section of the parser
 `.interp` file. `trparse --allstar` applies the embedded table while parsing;

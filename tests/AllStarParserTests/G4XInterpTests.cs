@@ -29,6 +29,154 @@ public sealed class G4XInterpTests
             tokens.Select(token => token.Type).ToArray());
     }
 
+    [Theory]
+    [InlineData("ID_Start", "a")]
+    [InlineData("ID_Continue", "1")]
+    [InlineData("Pc", "_")]
+    [InlineData("Sc", "$")]
+    [InlineData("Grapheme_Cluster_Break=Extend", "\u0301")]
+    [InlineData("EmojiPresentation=TextDefault", "#")]
+    public void BinaryAndEnumeratedUnicodePropertiesCompileIntoLexerAtn(string property, string input)
+    {
+        var model = Assert.Single(Batch(Model(
+            $@"lexer grammar PropertyLexer; PROPERTY: [\p{{{property}}}];", plus: false)));
+        var interp = Atn.InterpFileReader.Read(Tables(model));
+        var atn = Atn.AtnDeserializer.Deserialize(interp.AtnData);
+        var tokens = new EarleyAtnParser.LexerAtnSimulator(atn).Tokenize(input);
+
+        Assert.Equal(1, tokens[0].Type);
+        Assert.Equal(input, tokens[0].Text);
+    }
+
+    [Fact]
+    public void NegatedEnumeratedUnicodePropertyCompilesIntoLexerAtn()
+    {
+        var model = Assert.Single(Batch(Model(
+            @"lexer grammar PropertyLexer; PROPERTY: [\P{Grapheme_Cluster_Break=Control}];",
+            plus: false)));
+        var interp = Atn.InterpFileReader.Read(Tables(model));
+        var atn = Atn.AtnDeserializer.Deserialize(interp.AtnData);
+        var tokens = new EarleyAtnParser.LexerAtnSimulator(atn).Tokenize("a");
+
+        Assert.Equal(1, tokens[0].Type);
+    }
+
+    [Fact]
+    public void CaseInsensitiveUnicodeIdentifierDoesNotConsumePunctuation()
+    {
+        var model = Assert.Single(Batch(Model(
+            @"lexer grammar CaseFold;
+              options { caseInsensitive = true; }
+              WORD: [\p{ID_Start}] [\p{ID_Continue}]*;
+              LEFT: '(';
+              RIGHT: ')';
+              SPACE: [ \r\n]+ -> skip;", plus: false)));
+        var interp = Atn.InterpFileReader.Read(Tables(model));
+        var atn = Atn.AtnDeserializer.Deserialize(interp.AtnData);
+        var tokens = new EarleyAtnParser.LexerAtnSimulator(atn)
+            .Tokenize("MATCH (n)\nRETURN n")
+            .Where(token => token.Type != 4)
+            .Select(token => token.Text).ToArray();
+
+        Assert.Equal(new[] { "MATCH", "(", "n", ")", "RETURN", "n", "<EOF>" }, tokens);
+    }
+
+    [Fact]
+    public async Task GqlGrammarParsesAllExamples()
+    {
+        var fixture = Path.Combine(AppContext.BaseDirectory, "TestData", "gql");
+        var directory = Directory.CreateTempSubdirectory("GqlInterp-").FullName;
+        try
+        {
+            var parsed = await RunCli(typeof(Trash.Program).Assembly.Location, null,
+                "-t", "ANTLRv4", Path.Combine(fixture, "GQL.g4"));
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCli(typeof(trinterp.Program).Assembly.Location,
+                parsed.Output, "-o", directory);
+            Assert.True(generated.Exit == 0, generated.Error);
+
+            foreach (var file in Directory.GetFiles(Path.Combine(fixture, "examples"), "*.gql"))
+            {
+                var input = await File.ReadAllTextAsync(file);
+                var (result, _) = AllStarAtnParser.InterpRunner.Run(
+                    Path.Combine(directory, "GQL.interp"),
+                    Path.Combine(directory, "GQLLexer.interp"),
+                    input, Path.GetFileName(file), false);
+                Assert.StartsWith("(gqlProgram ",
+                    new TreeOutput(result.Lexer, result.Parser)
+                        .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString());
+            }
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
+    [Fact]
+    public async Task DescSelectsTopLevelImportedOclGrammar()
+    {
+        var fixture = Path.Combine(AppContext.BaseDirectory, "TestData", "ocl");
+        var directory = Directory.CreateTempSubdirectory("OclInterp-").FullName;
+        try
+        {
+            var parsed = await RunCliInDirectory(fixture,
+                typeof(Trash.Program).Assembly.Location, null,
+                "-t", "ANTLRv4", "OCL.g4", "UMLRSDS.g4");
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCliInDirectory(fixture,
+                typeof(trinterp.Program).Assembly.Location, parsed.Output,
+                "-o", directory);
+            Assert.True(generated.Exit == 0, generated.Error);
+            Assert.True(File.Exists(Path.Combine(directory, "UMLRSDS.interp")));
+            Assert.True(File.Exists(Path.Combine(directory, "UMLRSDSLexer.interp")));
+            Assert.False(File.Exists(Path.Combine(directory, "OCL.interp")));
+
+            var input = await File.ReadAllTextAsync(Path.Combine(
+                fixture, "examples", "specification", "bondApp.km3"));
+            var (result, _) = AllStarAtnParser.InterpRunner.Run(
+                Path.Combine(directory, "UMLRSDS.interp"),
+                Path.Combine(directory, "UMLRSDSLexer.interp"),
+                input, "bondApp.km3", false);
+            Assert.StartsWith("(specification ",
+                new TreeOutput(result.Lexer, result.Parser)
+                    .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString());
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
+    [Fact]
+    public async Task DescGrammarNameSelectsOneOfSeveralTopLevelGrammars()
+    {
+        var directory = Directory.CreateTempSubdirectory("NamedInterp-").FullName;
+        var output = Path.Combine(directory, "interp");
+        try
+        {
+            await File.WriteAllTextAsync(Path.Combine(directory, "A.g4"),
+                "grammar A; start: 'a' EOF;");
+            await File.WriteAllTextAsync(Path.Combine(directory, "B.g4"),
+                "grammar B; entry: 'b' EOF;");
+            await File.WriteAllTextAsync(Path.Combine(directory, "desc.xml"),
+                "<desc><grammar-name>B</grammar-name><entry-point>entry</entry-point></desc>");
+            var parsed = await RunCliInDirectory(directory,
+                typeof(Trash.Program).Assembly.Location, null,
+                "-t", "ANTLRv4", "A.g4", "B.g4");
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCliInDirectory(directory,
+                typeof(trinterp.Program).Assembly.Location, parsed.Output,
+                "-o", output);
+            Assert.True(generated.Exit == 0, generated.Error);
+            Assert.True(File.Exists(Path.Combine(output, "B.interp")));
+            Assert.True(File.Exists(Path.Combine(output, "BLexer.interp")));
+            Assert.False(File.Exists(Path.Combine(output, "A.interp")));
+            var (result, _) = AllStarAtnParser.InterpRunner.Run(
+                Path.Combine(output, "B.interp"),
+                Path.Combine(output, "BLexer.interp"),
+                "b", "input.txt", false);
+            Assert.StartsWith("(entry ",
+                new TreeOutput(result.Lexer, result.Parser)
+                    .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString());
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
     [Fact]
     public async Task ElixirGrammarParsesBlockWithUnicodePropertyLexerRules()
     {
@@ -260,11 +408,16 @@ public sealed class G4XInterpTests
     }
 
     private static async Task<(int Exit, byte[] Output, string Error)> RunCli(string assembly, byte[]? input, params string[] args)
+        => await RunCliInDirectory(Environment.CurrentDirectory, assembly, input, args);
+
+    private static async Task<(int Exit, byte[] Output, string Error)> RunCliInDirectory(
+        string directory, string assembly, byte[]? input, params string[] args)
     {
         var start = new System.Diagnostics.ProcessStartInfo("dotnet")
         {
             RedirectStandardInput = true, RedirectStandardOutput = true,
-            RedirectStandardError = true, UseShellExecute = false
+            RedirectStandardError = true, UseShellExecute = false,
+            WorkingDirectory = directory
         };
         start.ArgumentList.Add(assembly);
         foreach (var arg in args) start.ArgumentList.Add(arg);
