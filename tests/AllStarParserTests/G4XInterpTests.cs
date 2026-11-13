@@ -560,26 +560,28 @@ public sealed class G4XInterpTests
         return models;
     }
 
-    private static string Tables(GrammarModel model)
+    private static string Tables(GrammarModel model, string? startRule = null)
     {
         ParserAtnFactory factory = model.IsLexer ? new LexerAtnFactory(model) : new ParserAtnFactory(model);
         var atn = factory.CreateATN();
         var text = InterpFormatter.FormatInterp(model, atn, false);
         if (!model.IsLexer)
         {
-            var name = Assert.Single(trinterp.Command.FindEofTerminatedRules(model));
+            var name = startRule ?? Assert.Single(trinterp.Command.FindEofTerminatedRules(model));
             text += "\nstart-rule:\n" + atn.ruleToStartState[model.GetRule(name).Index].stateNumber + "\n";
         }
         return text;
     }
 
     private static string Parse(List<GrammarModel> models, string parserName, string lexerName,
-        string input, bool indirect = false, bool contextAware = false)
+        string input, bool indirect = false, bool contextAware = false,
+        string? startRule = null)
     {
         var directory = Directory.CreateTempSubdirectory("G4XInterp-").FullName;
         try
         {
-            foreach (var model in models) File.WriteAllText(Path.Combine(directory, model.Name + ".interp"), Tables(model));
+            foreach (var model in models) File.WriteAllText(Path.Combine(directory, model.Name + ".interp"),
+                Tables(model, model.Name == parserName ? startRule : null));
             var (result, _) = AllStarAtnParser.InterpRunner.Run(
                 Path.Combine(directory, parserName + ".interp"), Path.Combine(directory, lexerName + ".interp"),
                 input, "input.txt", false, contextAwareLexing: contextAware,
@@ -784,6 +786,35 @@ public sealed class G4XInterpTests
         var lexer = Model("lexer grammar L; tokens{text} letters:[a-z]+ -> type(text);");
         var parser = Model("parser grammar P; options{tokenVocab=L;} Start:text EOF;");
         Assert.Equal("(Start abc <EOF>)", Parse(Batch(parser, lexer), "P", "L", "abc"));
+    }
+
+    [Fact]
+    public void LexerModeCommandsKeepLiteralAliasesForParserRules()
+    {
+        var lexer = Model("lexer grammar L; OPEN:'(' -> pushMode(Inside); mode Inside; BODY:[a-z]+; CLOSE:')' -> popMode;", false);
+        var parser = Model("parser grammar P; options{tokenVocab=L;} start:'(' BODY ')' EOF;", false);
+        var models = Batch(parser, lexer);
+
+        Assert.Equal(lexer.TokenNameToType["OPEN"], lexer.StringLiteralToType["'('"]);
+        Assert.Equal(lexer.TokenNameToType["CLOSE"], parser.StringLiteralToType["')'"]);
+        Assert.Equal("(start ( abc ) <EOF>)", Parse(models, "P", "L", "(abc)"));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void NestedRuleAndStartRuleCanBothMatchEof(bool contextAware)
+    {
+        var lexer = Model("lexer grammar L; X:'x'; NL:'\\n';", false);
+        var parser = Model("parser grammar P; options{tokenVocab=L;} start:unit* EOF; unit:X semis?; semis:EOF | NL+;", false);
+        var models = Batch(parser, lexer);
+
+        Assert.Equal("(start (unit x (semis <EOF>)) <EOF>)",
+            Parse(models, "P", "L", "x", contextAware: contextAware,
+                startRule: "start"));
+        Assert.Equal("(start (unit x (semis \\n)) <EOF>)",
+            Parse(models, "P", "L", "x\n", contextAware: contextAware,
+                startRule: "start"));
     }
 
     [Fact]
