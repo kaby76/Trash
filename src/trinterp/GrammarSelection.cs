@@ -23,8 +23,8 @@ internal static class GrammarSelection
         var root = XDocument.Load(file).Root;
         var test = root?.Elements("test").FirstOrDefault();
         return new Description(
-            (string)(test?.Element("grammar-name") ?? root?.Element("grammar-name")),
-            (string)(test?.Element("entry-point") ?? root?.Element("entry-point")));
+            ((string)(test?.Element("grammar-name") ?? root?.Element("grammar-name")))?.Trim(),
+            ((string)(root?.Element("entry-point") ?? test?.Element("entry-point")))?.Trim());
     }
 
     internal static Source FromSyntax(GrammarNode syntax, string fileName)
@@ -62,8 +62,14 @@ internal static class GrammarSelection
                     $"[trinterp] desc.xml grammar-name '{description.GrammarName}' " +
                     $"does not identify one top-level grammar. Candidates: " +
                     string.Join(", ", sources.Select(source => source.Name)));
-            roots.AddRange(sources.Where(source => IsLexer(source.Syntax) &&
-                !imported.Contains(source.Name) && !roots.Contains(source)));
+            var selected = roots[0];
+            if (IsParser(selected.Syntax))
+            {
+                var vocabulary = TokenVocabulary(selected.Syntax);
+                roots.AddRange(sources.Where(source => IsLexer(source.Syntax) &&
+                    !imported.Contains(source.Name) && !roots.Contains(source) &&
+                    (vocabulary == null || source.Name == vocabulary)));
+            }
         }
         if (roots.Count == 0)
             throw new InvalidOperationException("[trinterp] No top-level grammar found; check for cyclic imports.");
@@ -117,6 +123,10 @@ internal static class GrammarSelection
                         throw new InvalidOperationException(
                             $"[trinterp] Imported grammar '{importName}' for '{current.Name}' " +
                             "was not supplied.");
+                    // Delegate token declarations precede rule-derived token types.
+                    foreach (var prequel in GrammarParser.Children(dependency.Syntax, "prequelConstruct"))
+                        if (GrammarParser.Child(prequel, "tokensSpec") != null)
+                            merged.Children.Add(Clone(prequel));
                     foreach (var rule in GrammarParser.Children(
                         GrammarParser.Child(dependency.Syntax, "rules"), "ruleSpec"))
                         if (names.Add(RuleName(rule)))
@@ -137,6 +147,24 @@ internal static class GrammarSelection
         var decl = GrammarParser.Child(syntax, "grammarDecl");
         return GrammarParser.ChildTerminal(
             GrammarParser.Child(decl, "grammarType"), "LEXER") != null;
+    }
+
+    private static bool IsParser(GrammarNode syntax)
+    {
+        var decl = GrammarParser.Child(syntax, "grammarDecl");
+        return GrammarParser.ChildTerminal(
+            GrammarParser.Child(decl, "grammarType"), "PARSER") != null;
+    }
+
+    private static string TokenVocabulary(GrammarNode syntax)
+    {
+        foreach (var prequel in GrammarParser.Children(syntax, "prequelConstruct"))
+            foreach (var option in GrammarParser.Children(
+                GrammarParser.Child(prequel, "optionsSpec"), "option"))
+                if (GrammarParser.GetText(GrammarParser.Child(option, "identifier")).Trim() == "tokenVocab")
+                    return GrammarParser.GetText(
+                        GrammarParser.Child(option, "optionValue")).Trim();
+        return null;
     }
 
     private static string RuleName(GrammarNode ruleSpec)

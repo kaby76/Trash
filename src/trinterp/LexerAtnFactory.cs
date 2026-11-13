@@ -586,10 +586,10 @@ public class LexerAtnFactory : ParserAtnFactory
         for (int j = 0; j < chars.Count; j++)
         {
             int c = chars[j];
-            if (CurrentCaseInsensitive)
+            if (CurrentCaseInsensitive && (c > char.MaxValue || !char.IsSurrogate((char)c)))
             {
-                int lo = char.ToLowerInvariant((char)c);
-                int hi = char.ToUpperInvariant((char)c);
+                int lo = System.Text.Rune.ToLowerInvariant(new System.Text.Rune(c)).Value;
+                int hi = System.Text.Rune.ToUpperInvariant(new System.Text.Rune(c)).Value;
                 if (lo != hi)
                 {
                     var cs = new IntervalSet();
@@ -763,7 +763,8 @@ public class LexerAtnFactory : ParserAtnFactory
     private static (int ch, int len) NextCharInSequence(string s, int idx)
     {
         if (idx >= s.Length) return (0, 0);
-        if (s[idx] != '\\') return (s[idx], 1);
+        if (s[idx] != '\\') return char.IsSurrogatePair(s, idx)
+            ? (char.ConvertToUtf32(s, idx), 2) : (s[idx], 1);
         if (idx + 1 >= s.Length) return (s[idx], 1);
         if (s[idx + 1] == 'u')
             return DecodeUnicodeEscape(s, idx);
@@ -779,7 +780,8 @@ public class LexerAtnFactory : ParserAtnFactory
     private static (int ch, int len) NextCharInSet(string s, int idx)
     {
         if (idx >= s.Length) return (0, 0);
-        if (s[idx] != '\\') return (s[idx], 1);
+        if (s[idx] != '\\') return char.IsSurrogatePair(s, idx)
+            ? (char.ConvertToUtf32(s, idx), 2) : (s[idx], 1);
         if (idx + 1 >= s.Length) return (s[idx], 1);
         if (s[idx + 1] == 'u')
             return DecodeUnicodeEscape(s, idx);

@@ -38,7 +38,7 @@ This program is part of the Trash toolkit.
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="readme.md" Pack="true" PackagePath=""/>
-		<None Include="UnicodePropertyData.LICENSE" Pack="true" PackagePath="licenses/" />
+		<None Include="UnicodePropertyData.LICENSE" Pack="true" PackagePath="licenses/" CopyToPublishDirectory="PreserveNewest" />
 	</ItemGroup>
 	<PropertyGroup>
 		<RestoreProjectStyle>PackageReference</RestoreProjectStyle>

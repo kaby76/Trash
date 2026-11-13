@@ -171,11 +171,14 @@ public partial class LexerAtnSimulator
         };
         EpsClosure(configs);
         var state = new DfaState(configs);
-        for (int pos = start; pos < end; pos++)
+        for (int pos = start; pos < end;)
         {
-            _matchPosition = pos + 1;
-            state = GetTargetState(state, _input[pos]);
+            int width = pos + 1 < end && char.IsSurrogatePair(_input, pos) ? 2 : 1;
+            int symbol = width == 2 ? char.ConvertToUtf32(_input, pos) : _input[pos];
+            _matchPosition = pos + width;
+            state = GetTargetState(state, symbol);
             if (state == null) return false;
+            pos += width;
         }
         return state.Accepts.Any(accept => accept.Rule == rule);
     }
@@ -382,11 +385,12 @@ public partial class LexerAtnSimulator
 
         while (pos < _input.Length)
         {
-            int ch = _input[pos];
-            _matchPosition = pos + 1;
+            int width = pos + 1 < _input.Length && char.IsSurrogatePair(_input, pos) ? 2 : 1;
+            int ch = width == 2 ? char.ConvertToUtf32(_input, pos) : _input[pos];
+            _matchPosition = pos + width;
             var next = GetTargetState(current, ch);
             if (next == null) break;
-            pos++;
+            pos += width;
             current = next;
             pos = ConsumeKnownAsciiSelfLoop(current, pos);
             CheckAccepts(current, pos, expectedTokenTypes,
@@ -743,7 +747,8 @@ public partial class LexerAtnSimulator
         for (int i = from; i < to; i++)
         {
             if (_input[i] == '\n') { line++; col = 0; }
-            else col++;
+            else if (!char.IsLowSurrogate(_input[i]) || i == from ||
+                !char.IsHighSurrogate(_input[i - 1])) col++;
         }
     }
 

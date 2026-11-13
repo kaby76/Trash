@@ -1,5 +1,5 @@
 # set -x
-# set -e
+set -o pipefail
 
 myrealpath ()
 {
@@ -95,33 +95,17 @@ run_target() {
         ' "$grammar_file")
     done
     local interp_dir parse_status
-    interp_dir=$(mktemp -d /tmp/trash-action-free.XXXXXXXX) || return 1
-    if ! dotnet trash parse "${grammar_files[@]}" | dotnet trash interp -o "$interp_dir"; then
-        rm -f -- "$interp_dir"/*
-        rmdir -- "$interp_dir"
-        return 1
-    fi
-    local -a test_specs parse_args
-    local spec start_rule pattern
-    mapfile -t test_specs < <(dotnet trash xml2 desc.xml | tr -d '\r' | awk -F= '
-        $1 == "/desc/test/name" {
-            if (seen) print rule "|" input
-            seen = 1; rule = ""; input = ""
-        }
-        $1 == "/desc/test/entry-point" { rule = $2 }
-        $1 == "/desc/test/inputs" { input = $2 }
-        END { if (seen) print rule "|" input }
-    ')
-    if [[ ${#test_specs[@]} -eq 0 ]]; then
-        f2=$(dotnet trash xml2 desc.xml | awk -F= '$1 == "/desc/inputs" {print $2; exit}')
-        if [[ -z "$f2" ]]; then f2=examples/; fi
-        test_specs+=("|$f2")
-    fi
+    local -a test_specs parse_args interp_args
+    local spec grammar_name start_rule pattern spec_output
+    spec_output=$(python "$cwd/descriptor-tests.py" desc.xml) || return 1
+    [[ -n "$spec_output" ]] || return 1
+    mapfile -t test_specs <<< "$spec_output"
     parse_status=0
     for spec in "${test_specs[@]}"; do
+        grammar_name=${spec%%|*}
+        spec=${spec#*|}
         start_rule=${spec%%|*}
         pattern=${spec#*|}
-        if [[ -z "$pattern" ]]; then pattern=examples/; fi
         files=()
         while IFS= read -r f; do
             [[ -f "$f" ]] && files+=("$f")
@@ -132,15 +116,25 @@ run_target() {
             parse_status=1
             continue
         fi
+        interp_dir=$(mktemp -d /tmp/trash-action-free.XXXXXXXX) || return 1
+        interp_args=(-o "$interp_dir")
+        if [[ -n "$grammar_name" ]]; then interp_args+=(--grammar-name "$grammar_name"); fi
+        if [[ -n "$start_rule" ]]; then interp_args+=(--start-rule "$start_rule"); fi
+        if ! dotnet trash parse "${grammar_files[@]}" | dotnet trash interp "${interp_args[@]}"; then
+            rm -f -- "$interp_dir"/*
+            rmdir -- "$interp_dir"
+            parse_status=1
+            continue
+        fi
         echo "files = ${files[*]} (start rule: ${start_rule:-default})" >&2
         parse_args=(-L "$interp_dir" -x --no-output --per-file)
         if [[ -n "$start_rule" ]]; then parse_args+=(--start-rule "$start_rule"); fi
         printf '%s\n' "${files[@]}" |
             dotnet trash wdog -t 200 dotnet trash parse "${parse_args[@]}" ||
             parse_status=1
+        rm -f -- "$interp_dir"/*
+        rmdir -- "$interp_dir"
     done
-    rm -f -- "$interp_dir"/*
-    rmdir -- "$interp_dir"
     return "$parse_status"
 }
 

@@ -14,7 +14,9 @@ and parser `.interp` pair).
 
 When the current directory contains `desc.xml`, `trinterp` uses its
 `<grammar-name>` and first `<entry-point>` (including values inside the first
-`<test>`) to select the top-level grammar and default start rule. For ANTLR4
+`<test>`) to select the top-level grammar and default start rule. A top-level
+`<entry-point>` takes precedence over a test-level value. Use `--grammar-name`
+to select a different grammar family when compiling descriptor tests separately. For ANTLR4
 grammars, it follows `import` references, includes imported rules in the
 top-level parser and lexer tables, and omits separate tables for imported
 combined grammars. Without a descriptor, the import graph identifies the

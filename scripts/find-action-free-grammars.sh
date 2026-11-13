@@ -106,9 +106,7 @@ then
         then
             continue
         fi
-        g=`cygpath -u $d | sed "s%$cwd/%%"`
-
-        echo "$g"
+        echo "$d"
     done
 else
     for desc in `find . -name desc.xml | grep -v Generated | grep -v examples`
@@ -142,7 +140,7 @@ else
             continue
         fi
         d=`dirname $desc`
-        g=`cygpath -u $d | sed "s%$cwd/%%"`
+        g="$d"
 
 	# Testing $g
         echo $g

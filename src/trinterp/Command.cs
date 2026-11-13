@@ -53,6 +53,8 @@ public class Command
             ? OptimizeOptions.FromNames(optimizeNames)
             : OptimizeOptions.All;
         var description = GrammarSelection.ReadDescription();
+        if (!string.IsNullOrWhiteSpace(config.GrammarName))
+            description = description with { GrammarName = config.GrammarName.Trim() };
         var antlrSources = sets
             .Where(set => set.Nodes?.FirstOrDefault() is UnvParseTreeElement &&
                 (set.FileName ?? "").EndsWith(".g4", StringComparison.OrdinalIgnoreCase))
