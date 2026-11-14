@@ -539,7 +539,7 @@ public static class AllStarParser
                     Console.Error.WriteLine(
                         $"[ALLSTAR] consume pos={Pos} tok={contextualToken.Type} '{contextualToken.Text}'");
                 AddEvent(ParseEventKind.Consume, contextualTokenIndex);
-                Pos++;
+                if (contextualToken.Type != EOF_TYPE) Pos++;
                 return true;
             }
             if (Pos >= _onIdx.Count) return false;
@@ -549,7 +549,9 @@ public static class AllStarParser
             if (AllStarParser.Trace)
                 Console.Error.WriteLine($"[ALLSTAR] consume pos={Pos} tok={tok.Type} '{tok.Text}'");
             AddEvent(ParseEventKind.Consume, allTokIdx);
-            Pos++;
+            // ANTLR's Parser.Consume leaves the input positioned on EOF, so a
+            // nested rule and its caller may both match the same EOF token.
+            if (tok.Type != EOF_TYPE) Pos++;
             return true;
         }
 
@@ -603,6 +605,12 @@ public static class AllStarParser
         private int[] BuildPredictionTokens(IReadOnlySet<int> expected,
             int maxOnChannel = int.MaxValue)
         {
+            if (_lexerCursor.Position > _input.Length)
+            {
+                _predictionTexts = _atn.G4XExclusions.Count != 0
+                    ? new List<string> { "<EOF>" } : null;
+                return new[] { EOF_TYPE };
+            }
             var cursor = _lexerCursor.Clone();
             var types = new List<int>();
             var texts = _atn.G4XExclusions.Count != 0 ? new List<string>() : null;
@@ -635,6 +643,9 @@ public static class AllStarParser
 
         private int ReadOnChannelToken(IReadOnlySet<int> expected)
         {
+            if (Pos < _onIdx.Count &&
+                _contextTokens[_onIdx[Pos]].Type == EOF_TYPE)
+                return _onIdx[Pos];
             while (true)
             {
                 int index = _lexer.NextToken(

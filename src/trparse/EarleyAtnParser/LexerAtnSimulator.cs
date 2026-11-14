@@ -171,11 +171,14 @@ public partial class LexerAtnSimulator
         };
         EpsClosure(configs);
         var state = new DfaState(configs);
-        for (int pos = start; pos < end; pos++)
+        for (int pos = start; pos < end;)
         {
-            _matchPosition = pos + 1;
-            state = GetTargetState(state, _input[pos]);
+            int width = pos + 1 < end && char.IsSurrogatePair(_input, pos) ? 2 : 1;
+            int symbol = width == 2 ? char.ConvertToUtf32(_input, pos) : _input[pos];
+            _matchPosition = pos + width;
+            state = GetTargetState(state, symbol);
             if (state == null) return false;
+            pos += width;
         }
         return state.Accepts.Any(accept => accept.Rule == rule);
     }
@@ -236,75 +239,91 @@ public partial class LexerAtnSimulator
         int start = cursor.Position;
         int startLine = cursor.Line;
         int startColumn = cursor.Column;
-        int startMode = cursor.Mode;
         bool collectDiagnostics = RecordStatistics && Statistics != null;
-        var diagnostics = collectDiagnostics ? new MatchDiagnostics() : null;
-        var match = MatchNextToken(
-            start, cursor.Mode, expectedTokenTypes, diagnostics);
-        int matchedRule = match.RuleIndex;
-        int matchEnd = match.EndPosition;
-
-        if (matchedRule < 0)
-            throw new LexerNoViableAltException(
-                start, startLine, startColumn, _input[start]);
-
-        if (matchEnd <= start)
-            throw new InvalidOperationException(
-                $"Lexer rule {matchedRule} matched empty input at line " +
-                $"{startLine}:{startColumn}; tokenization cannot advance.");
-
-        int tokenType = _atn.ruleToTokenType[matchedRule];
-        int channel = DEFAULT_CHANNEL;
-        bool skip = false;
-
-        // Most lexer rules have no commands. Avoid resolving and enumerating an
-        // empty action collection on the production path.
-        var actions = match.ActionBits == 0
-            ? null
-            : ResolveActions(match.ActionBits);
-        if (actions != null)
+        while (true)
         {
-            foreach (var action in actions)
+            int segmentStart = cursor.Position;
+            int segmentLine = cursor.Line;
+            int segmentColumn = cursor.Column;
+            int segmentMode = cursor.Mode;
+            var diagnostics = collectDiagnostics ? new MatchDiagnostics() : null;
+            var match = MatchNextToken(
+                segmentStart, segmentMode, expectedTokenTypes, diagnostics);
+            int matchedRule = match.RuleIndex;
+            int matchEnd = match.EndPosition;
+
+            if (matchedRule < 0)
             {
-                switch (action.ActionType)
+                if (segmentStart == _input.Length)
+                    throw new InvalidOperationException(
+                        $"Lexer error at line {segmentLine}:{segmentColumn}: " +
+                        "input ended after a lexer rule requested more text.");
+                throw new LexerNoViableAltException(
+                    segmentStart, segmentLine, segmentColumn, _input[segmentStart]);
+            }
+
+            if (matchEnd <= segmentStart)
+                throw new InvalidOperationException(
+                    $"Lexer rule {matchedRule} matched empty input at line " +
+                    $"{segmentLine}:{segmentColumn}; tokenization cannot advance.");
+
+            int tokenType = _atn.ruleToTokenType[matchedRule];
+            int channel = DEFAULT_CHANNEL;
+            bool skip = false;
+            bool more = false;
+
+            // Most lexer rules have no commands. Avoid resolving and enumerating an
+            // empty action collection on the production path.
+            var actions = match.ActionBits == 0
+                ? null
+                : ResolveActions(match.ActionBits);
+            if (actions != null)
+            {
+                foreach (var action in actions)
                 {
-                    case MyLexerActionType.Skip:    skip = true; break;
-                    case MyLexerActionType.Channel: channel = action.Arg1; break;
-                    case MyLexerActionType.Type:    tokenType = action.Arg1; break;
-                    case MyLexerActionType.Mode:    cursor.Mode = action.Arg1; break;
-                    case MyLexerActionType.PushMode:
-                        cursor.ModeStack.Push(cursor.Mode);
-                        cursor.Mode = action.Arg1;
-                        break;
-                    case MyLexerActionType.PopMode:
-                        if (cursor.ModeStack.Count == 0)
-                            throw new InvalidOperationException(
-                                "Cannot pop the lexer mode because the mode stack is empty.");
-                        cursor.Mode = cursor.ModeStack.Pop();
-                        break;
-                    default:
-                        throw new NotSupportedException(
-                            $"Lexer action '{action.ActionType}' is not supported by the Earley ATN lexer.");
+                    switch (action.ActionType)
+                    {
+                        case MyLexerActionType.Skip:    skip = true; more = false; break;
+                        case MyLexerActionType.More:    more = true; skip = false; break;
+                        case MyLexerActionType.Channel: channel = action.Arg1; break;
+                        case MyLexerActionType.Type:    tokenType = action.Arg1; more = false; break;
+                        case MyLexerActionType.Mode:    cursor.Mode = action.Arg1; break;
+                        case MyLexerActionType.PushMode:
+                            cursor.ModeStack.Push(cursor.Mode);
+                            cursor.Mode = action.Arg1;
+                            break;
+                        case MyLexerActionType.PopMode:
+                            if (cursor.ModeStack.Count == 0)
+                                throw new InvalidOperationException(
+                                    "Cannot pop the lexer mode because the mode stack is empty.");
+                            cursor.Mode = cursor.ModeStack.Pop();
+                            break;
+                        default:
+                            throw new NotSupportedException(
+                                $"Lexer action '{action.ActionType}' is not supported by the Earley ATN lexer.");
+                    }
                 }
             }
-        }
 
-        int tokenIndex = tokens.Add(
-            tokenType, skip ? LexerToken.SKIP_CHANNEL : channel,
-            start, matchEnd - 1, startLine, startColumn);
-        cursor.TokenIndex++;
-        int line = cursor.Line, column = cursor.Column;
-        UpdateLineCol(start, matchEnd, ref line, ref column);
-        cursor.Line = line;
-        cursor.Column = column;
-        cursor.Position = matchEnd;
-        if (diagnostics != null)
-            Statistics.Record(
-                start, startLine, startColumn, startMode,
-                diagnostics.Candidates, diagnostics.OrdinaryWinner,
-                diagnostics.SelectedWinner, expectedTokenTypes,
-                diagnostics.UsedContextFallback);
-        return tokenIndex;
+            int line = cursor.Line, column = cursor.Column;
+            UpdateLineCol(segmentStart, matchEnd, ref line, ref column);
+            cursor.Line = line;
+            cursor.Column = column;
+            cursor.Position = matchEnd;
+            if (diagnostics != null)
+                Statistics.Record(
+                    segmentStart, segmentLine, segmentColumn, segmentMode,
+                    diagnostics.Candidates, diagnostics.OrdinaryWinner,
+                    diagnostics.SelectedWinner, expectedTokenTypes,
+                    diagnostics.UsedContextFallback);
+            if (more) continue;
+
+            int tokenIndex = tokens.Add(
+                tokenType, skip ? LexerToken.SKIP_CHANNEL : channel,
+                start, matchEnd - 1, startLine, startColumn);
+            cursor.TokenIndex++;
+            return tokenIndex;
+        }
     }
 
     [Obsolete("Bind input with SetInput and call NextToken without repeated session arguments.")]
@@ -366,11 +385,12 @@ public partial class LexerAtnSimulator
 
         while (pos < _input.Length)
         {
-            int ch = _input[pos];
-            _matchPosition = pos + 1;
+            int width = pos + 1 < _input.Length && char.IsSurrogatePair(_input, pos) ? 2 : 1;
+            int ch = width == 2 ? char.ConvertToUtf32(_input, pos) : _input[pos];
+            _matchPosition = pos + width;
             var next = GetTargetState(current, ch);
             if (next == null) break;
-            pos++;
+            pos += width;
             current = next;
             pos = ConsumeKnownAsciiSelfLoop(current, pos);
             CheckAccepts(current, pos, expectedTokenTypes,
@@ -493,9 +513,13 @@ public partial class LexerAtnSimulator
         bool skip = false;
         foreach (var action in ResolveActions(actionBits))
         {
-            if (action.ActionType == MyLexerActionType.Type) tokenType = action.Arg1;
+            if (action.ActionType == MyLexerActionType.Type)
+            {
+                tokenType = action.Arg1;
+                skip = false;
+            }
             else if (action.ActionType == MyLexerActionType.Channel) channel = action.Arg1;
-            else if (action.ActionType == MyLexerActionType.Skip) skip = true;
+            else if (action.ActionType is MyLexerActionType.Skip or MyLexerActionType.More) skip = true;
         }
         return (tokenType, channel, skip);
     }
@@ -723,7 +747,8 @@ public partial class LexerAtnSimulator
         for (int i = from; i < to; i++)
         {
             if (_input[i] == '\n') { line++; col = 0; }
-            else col++;
+            else if (!char.IsLowSurrogate(_input[i]) || i == from ||
+                !char.IsHighSurrogate(_input[i - 1])) col++;
         }
     }
 

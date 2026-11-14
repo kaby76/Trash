@@ -27,12 +27,15 @@ public class Config
         HelpText = "Comma-separated ATN optimizations to apply: tail-epsilon, merge-sets, none. Default: tail-epsilon,merge-sets.")]
     public IEnumerable<string> Optimize { get; set; } = new[] { "tail-epsilon", "merge-sets" };
 
-    [Option("start-rule", Required = false, HelpText = "Name of the parser start rule. Skips the EOF-terminated rule search when specified.")]
+    [Option("start-rule", Required = false, HelpText = "Override the default parser start rule from desc.xml or the EOF-terminated rule search.")]
     public string StartRule { get; set; }
+
+    [Option("grammar-name", Required = false, HelpText = "Select the top-level grammar when multiple grammar families are supplied.")]
+    public string GrammarName { get; set; }
 
     [Option('v', "verbose", Required = false)]
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "4.10.0";
+    public string Version { get; set; } = "4.11.0";
 }

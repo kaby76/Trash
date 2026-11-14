@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using static trinterp.GrammarParser;
@@ -14,6 +15,7 @@ namespace trinterp;
 /// </summary>
 public class LexerAtnFactory : ParserAtnFactory
 {
+    private static readonly Dictionary<string, IntervalSet> UnicodePropertySets = new(StringComparer.Ordinal);
     // Deduplicated list of ILexerAction instances. Index = position in _atn.lexerActions.
     private readonly List<ILexerAction> _lexerActions = new();
     // Map from action identity string → index in _lexerActions.
@@ -584,10 +586,10 @@ public class LexerAtnFactory : ParserAtnFactory
         for (int j = 0; j < chars.Count; j++)
         {
             int c = chars[j];
-            if (CurrentCaseInsensitive)
+            if (CurrentCaseInsensitive && (c > char.MaxValue || !char.IsSurrogate((char)c)))
             {
-                int lo = char.ToLowerInvariant((char)c);
-                int hi = char.ToUpperInvariant((char)c);
+                int lo = System.Text.Rune.ToLowerInvariant(new System.Text.Rune(c)).Value;
+                int hi = System.Text.Rune.ToUpperInvariant(new System.Text.Rune(c)).Value;
                 if (lo != hi)
                 {
                     var cs = new IntervalSet();
@@ -652,6 +654,19 @@ public class LexerAtnFactory : ParserAtnFactory
 
         while (idx < s.Length)
         {
+            if (s[idx] == '\\' && idx + 2 < s.Length && s[idx + 1] is 'p' or 'P' && s[idx + 2] == '{')
+            {
+                int close = s.IndexOf('}', idx + 3);
+                if (close < 0)
+                    throw new FormatException("Unterminated Unicode property escape in lexer character set.");
+                var property = s[(idx + 3)..close];
+                var propertySet = GetUnicodePropertySet(property);
+                set.AddAll(s[idx + 1] == 'P'
+                    ? propertySet.Complement(IntervalSet.Of(0, 0x10FFFF))
+                    : propertySet);
+                idx = close + 1;
+                continue;
+            }
             var (c, len) = NextCharInSet(s, idx);
             if (len == 0) break;
             idx += len;
@@ -679,10 +694,77 @@ public class LexerAtnFactory : ParserAtnFactory
         return set;
     }
 
+    private static IntervalSet GetUnicodePropertySet(string property)
+    {
+        var normalized = property.ToLowerInvariant().Replace('-', '_');
+        lock (UnicodePropertySets)
+        {
+            if (UnicodePropertySets.TryGetValue(normalized, out var cached))
+                return cached;
+            if (UnicodePropertyData.TryGet(normalized, out var fromData))
+            {
+                UnicodePropertySets[normalized] = fromData;
+                return fromData;
+            }
+
+            // ANTLR's short names denote Unicode general categories. Reject
+            // unknown names instead of silently treating \\p{...} as literals.
+            Func<UnicodeCategory, bool> matches = normalized switch
+            {
+                "l" => c => c is UnicodeCategory.UppercaseLetter or UnicodeCategory.LowercaseLetter
+                    or UnicodeCategory.TitlecaseLetter or UnicodeCategory.ModifierLetter or UnicodeCategory.OtherLetter,
+                "lu" => c => c == UnicodeCategory.UppercaseLetter,
+                "ll" => c => c == UnicodeCategory.LowercaseLetter,
+                "lt" => c => c == UnicodeCategory.TitlecaseLetter,
+                "lm" => c => c == UnicodeCategory.ModifierLetter,
+                "lo" => c => c == UnicodeCategory.OtherLetter,
+                "m" => c => c is UnicodeCategory.NonSpacingMark or UnicodeCategory.SpacingCombiningMark
+                    or UnicodeCategory.EnclosingMark,
+                "mn" or "nonspacing_mark" => c => c == UnicodeCategory.NonSpacingMark,
+                "mc" => c => c == UnicodeCategory.SpacingCombiningMark,
+                "me" or "general_category=enclosing_mark" => c => c == UnicodeCategory.EnclosingMark,
+                "n" => c => c is UnicodeCategory.DecimalDigitNumber or UnicodeCategory.LetterNumber
+                    or UnicodeCategory.OtherNumber,
+                "nd" => c => c == UnicodeCategory.DecimalDigitNumber,
+                "nl" => c => c == UnicodeCategory.LetterNumber,
+                "no" => c => c == UnicodeCategory.OtherNumber,
+                "pc" => c => c == UnicodeCategory.ConnectorPunctuation,
+                "cf" => c => c == UnicodeCategory.Format,
+                "sc" => c => c == UnicodeCategory.CurrencySymbol,
+                "z" => c => c is UnicodeCategory.SpaceSeparator or UnicodeCategory.LineSeparator
+                    or UnicodeCategory.ParagraphSeparator,
+                "zs" => c => c == UnicodeCategory.SpaceSeparator,
+                "zl" => c => c == UnicodeCategory.LineSeparator,
+                "zp" => c => c == UnicodeCategory.ParagraphSeparator,
+                _ => throw new NotSupportedException($"Unsupported Unicode property \\p{{{property}}} in lexer character set.")
+            };
+
+            var result = new IntervalSet();
+            int runStart = -1;
+            for (int codePoint = 0; codePoint <= 0x10FFFF; codePoint++)
+            {
+                bool included = Rune.TryCreate(codePoint, out var rune)
+                    && matches(Rune.GetUnicodeCategory(rune));
+                if (included && runStart < 0)
+                    runStart = codePoint;
+                else if (!included && runStart >= 0)
+                {
+                    result.Add(runStart, codePoint - 1);
+                    runStart = -1;
+                }
+            }
+            if (runStart >= 0)
+                result.Add(runStart, 0x10FFFF);
+            UnicodePropertySets[normalized] = result;
+            return result;
+        }
+    }
+
     private static (int ch, int len) NextCharInSequence(string s, int idx)
     {
         if (idx >= s.Length) return (0, 0);
-        if (s[idx] != '\\') return (s[idx], 1);
+        if (s[idx] != '\\') return char.IsSurrogatePair(s, idx)
+            ? (char.ConvertToUtf32(s, idx), 2) : (s[idx], 1);
         if (idx + 1 >= s.Length) return (s[idx], 1);
         if (s[idx + 1] == 'u')
             return DecodeUnicodeEscape(s, idx);
@@ -698,7 +780,8 @@ public class LexerAtnFactory : ParserAtnFactory
     private static (int ch, int len) NextCharInSet(string s, int idx)
     {
         if (idx >= s.Length) return (0, 0);
-        if (s[idx] != '\\') return (s[idx], 1);
+        if (s[idx] != '\\') return char.IsSurrogatePair(s, idx)
+            ? (char.ConvertToUtf32(s, idx), 2) : (s[idx], 1);
         if (idx + 1 >= s.Length) return (s[idx], 1);
         if (s[idx + 1] == 'u')
             return DecodeUnicodeEscape(s, idx);
@@ -797,15 +880,16 @@ public class LexerAtnFactory : ParserAtnFactory
     internal static IntervalSet CaseExpandSet(IntervalSet set)
     {
         var expanded = new IntervalSet();
+        expanded.AddAll(set);
         foreach (var iv in set.GetIntervals())
             for (int c = iv.a; c <= iv.b; c++)
             {
-                // Expansion must retain every explicitly matched code point.
-                // A Unicode titlecase character can differ from both its
-                // lowercase and uppercase mappings.
-                expanded.Add(c);
-                expanded.Add(char.ToLowerInvariant((char)c));
-                expanded.Add(char.ToUpperInvariant((char)c));
+                if (!Rune.TryCreate(c, out var rune))
+                    continue;
+                int lower = Rune.ToLowerInvariant(rune).Value;
+                int upper = Rune.ToUpperInvariant(rune).Value;
+                if (lower != c) expanded.Add(lower);
+                if (upper != c) expanded.Add(upper);
             }
         return expanded;
     }

@@ -1,0 +1,16 @@
+grammar ModeDemo {
+  lexer {
+    Quote : '"' -> pushMode ( StringMode ) ;
+    Identifier : [a-z] + ;
+    order {
+      Quote before Identifier;
+    }
+    mode StringMode {
+      End : '"' -> popMode ;
+      Text : ~ ["] + ;
+      order {
+        End before Text;
+      }
+    }
+  }
+}

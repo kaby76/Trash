@@ -1,0 +1,6 @@
+grammar ParserOnly {
+  options { tokenVocab = ModeDemo ; }
+  parser {
+    start : Identifier EOF ;
+  }
+}

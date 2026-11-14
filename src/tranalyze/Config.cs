@@ -18,6 +18,6 @@ namespace tranalyze
         public bool Verbose { get; set; }
 
 	[Option("version", Required = false)]
-	public string Version { get; set; } = "4.10.0";
+	public string Version { get; set; } = "4.11.0";
     }
 }

@@ -244,21 +244,6 @@ public static class InterpRunner
             inputText, source);
         if (parserStatistics != null)
             Console.Error.WriteLine(parserStatistics.Format());
-        if (events == null && !astAccepted && !compactAccepted)
-        {
-            if (!indirectLeftRecursion)
-                throw new InvalidOperationException(
-                    $"ALL(*) parse failed for '{fileName}': input rejected by grammar.");
-            string location = contextAwareLexing
-                ? DescribeSourcePosition(inputText,
-                    source?.OriginalOffset(parseProgress.FarthestPosition)
-                        ?? parseProgress.FarthestPosition)
-                : DescribeTokenPosition(rawTokens,
-                    parseProgress.FarthestPosition, inputText, source);
-            throw new InvalidOperationException(
-                $"{fileName}: {location}: ALL(*) parse failed: input rejected by grammar.");
-        }
-
         if (show_tokens)
         {
             var symNames = lexerInterp.SymbolicNames;
@@ -281,6 +266,21 @@ public static class InterpRunner
                 System.Console.Error.WriteLine(
                     $"[@{tok.TokenIndex},{start}:{stop}='{text}',<{typeName}>{channel},{line}:{column}]");
             }
+        }
+
+        if (events == null && !astAccepted && !compactAccepted)
+        {
+            if (!indirectLeftRecursion)
+                throw new InvalidOperationException(
+                    $"ALL(*) parse failed for '{fileName}': input rejected by grammar.");
+            string location = contextAwareLexing
+                ? DescribeSourcePosition(inputText,
+                    source?.OriginalOffset(parseProgress.FarthestPosition)
+                        ?? parseProgress.FarthestPosition)
+                : DescribeTokenPosition(rawTokens,
+                    parseProgress.FarthestPosition, inputText, source);
+            throw new InvalidOperationException(
+                $"{fileName}: {location}: ALL(*) parse failed: input rejected by grammar.");
         }
 
         timer.Restart();

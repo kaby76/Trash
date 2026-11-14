@@ -469,6 +469,16 @@ public class Grun
         exception.Message.EndsWith(": input rejected by grammar.",
             StringComparison.Ordinal);
 
+    private static string FormatInputFailure(Exception exception, string inputName)
+    {
+        if (IsParseRejection(exception)) return exception.Message;
+        if (exception is EarleyAtnParser.LexerNoViableAltException)
+            return $"{inputName}: {exception.Message}";
+        if (exception.InnerException is EarleyAtnParser.LexerNoViableAltException)
+            return exception.Message; // Source transform already added the file and location.
+        return exception.ToString();
+    }
+
     private bool RequiresContextAwareLexing(string parserInterp)
     {
         if (!_grammarContextAwareLexing.TryGetValue(parserInterp, out bool enabled))
@@ -529,8 +539,7 @@ public class Grun
                 // --xf inputs. Keep the overall exit status nonzero instead.
                 data.RemoveRange(countBefore, data.Count - countBefore);
                 WriteFailedFileStatus(inputName, rowNumber);
-                Console.Error.WriteLine(IsParseRejection(exception)
-                    ? exception.Message : exception.ToString());
+                Console.Error.WriteLine(FormatInputFailure(exception, inputName));
                 return (1, 0, 0);
             }
         }
@@ -549,8 +558,7 @@ public class Grun
             if (exception is DfaCacheLoadException) throw;
             data.RemoveRange(start, data.Count - start);
             WriteFailedFileStatus(inputName, rowNumber);
-            captured.WriteLine(IsParseRejection(exception)
-                ? exception.Message : exception.ToString());
+            captured.WriteLine(FormatInputFailure(exception, inputName));
             outcome = (1, 0, 0);
         }
         finally

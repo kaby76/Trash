@@ -9,6 +9,330 @@ namespace AllStarParserTests;
 
 public sealed class G4XInterpTests
 {
+    [Fact]
+    public void AntlrUnicodePropertySetsCompileIntoLexerAtn()
+    {
+        var model = Assert.Single(Batch(Model(
+            @"lexer grammar UnicodeLexer;
+              LOWER: [\p{Ll}_]+;
+              LETTER: [\p{L}]+;
+              SPACE: [ ]+ -> skip;", plus: false)));
+        var interp = Atn.InterpFileReader.Read(Tables(model));
+        var atn = Atn.AtnDeserializer.Deserialize(interp.AtnData);
+        var tokens = new EarleyAtnParser.LexerAtnSimulator(atn)
+            .Tokenize("abc_α Élan")
+            .Where(token => token.Type != 3).ToArray();
+
+        Assert.Equal(new[] { "abc_α", "Élan", "<EOF>" },
+            tokens.Select(token => token.Text).ToArray());
+        Assert.Equal(new[] { 1, 2, -1 },
+            tokens.Select(token => token.Type).ToArray());
+    }
+
+    [Theory]
+    [InlineData("ID_Start", "a")]
+    [InlineData("ID_Start", "\U00010400")]
+    [InlineData("ID_Continue", "1")]
+    [InlineData("Pc", "_")]
+    [InlineData("Cf", "\u200C")]
+    [InlineData("White_Space", "\t")]
+    [InlineData("Sc", "$")]
+    [InlineData("Grapheme_Cluster_Break=Extend", "\u0301")]
+    [InlineData("EmojiPresentation=TextDefault", "#")]
+    public void BinaryAndEnumeratedUnicodePropertiesCompileIntoLexerAtn(string property, string input)
+    {
+        var model = Assert.Single(Batch(Model(
+            $@"lexer grammar PropertyLexer; PROPERTY: [\p{{{property}}}];", plus: false)));
+        var interp = Atn.InterpFileReader.Read(Tables(model));
+        var atn = Atn.AtnDeserializer.Deserialize(interp.AtnData);
+        var tokens = new EarleyAtnParser.LexerAtnSimulator(atn).Tokenize(input);
+
+        Assert.Equal(1, tokens[0].Type);
+        Assert.Equal(input, tokens[0].Text);
+    }
+
+    [Fact]
+    public void SupplementaryLiteralAndPropertyConsumeWholeScalars()
+    {
+        const string letter = "\U00010400";
+        var model = Assert.Single(Batch(Model(
+            "lexer grammar Supplementary; WORD:'" + letter + "' [\\p{ID_Start}]+;",
+            plus: false)));
+        var interp = Atn.InterpFileReader.Read(Tables(model));
+        var atn = Atn.AtnDeserializer.Deserialize(interp.AtnData);
+        var tokens = new EarleyAtnParser.LexerAtnSimulator(atn)
+            .Tokenize(letter + letter + "a");
+        Assert.Equal(1, tokens[0].Type);
+        Assert.Equal(letter + letter + "a", tokens[0].Text);
+        Assert.Equal(-1, tokens[1].Type);
+    }
+
+    [Fact]
+    public void NegatedEnumeratedUnicodePropertyCompilesIntoLexerAtn()
+    {
+        var model = Assert.Single(Batch(Model(
+            @"lexer grammar PropertyLexer; PROPERTY: [\P{Grapheme_Cluster_Break=Control}];",
+            plus: false)));
+        var interp = Atn.InterpFileReader.Read(Tables(model));
+        var atn = Atn.AtnDeserializer.Deserialize(interp.AtnData);
+        var tokens = new EarleyAtnParser.LexerAtnSimulator(atn).Tokenize("a");
+
+        Assert.Equal(1, tokens[0].Type);
+    }
+
+    [Fact]
+    public void CaseInsensitiveUnicodeIdentifierDoesNotConsumePunctuation()
+    {
+        var model = Assert.Single(Batch(Model(
+            @"lexer grammar CaseFold;
+              options { caseInsensitive = true; }
+              WORD: [\p{ID_Start}] [\p{ID_Continue}]*;
+              LEFT: '(';
+              RIGHT: ')';
+              SPACE: [ \r\n]+ -> skip;", plus: false)));
+        var interp = Atn.InterpFileReader.Read(Tables(model));
+        var atn = Atn.AtnDeserializer.Deserialize(interp.AtnData);
+        var tokens = new EarleyAtnParser.LexerAtnSimulator(atn)
+            .Tokenize("MATCH (n)\nRETURN n")
+            .Where(token => token.Type != 4)
+            .Select(token => token.Text).ToArray();
+
+        Assert.Equal(new[] { "MATCH", "(", "n", ")", "RETURN", "n", "<EOF>" }, tokens);
+    }
+
+    [Fact]
+    public async Task GqlGrammarParsesAllExamples()
+    {
+        var fixture = Path.Combine(AppContext.BaseDirectory, "TestData", "gql");
+        var directory = Directory.CreateTempSubdirectory("GqlInterp-").FullName;
+        try
+        {
+            var parsed = await RunCli(typeof(Trash.Program).Assembly.Location, null,
+                "-t", "ANTLRv4", Path.Combine(fixture, "GQL.g4"));
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCli(typeof(trinterp.Program).Assembly.Location,
+                parsed.Output, "-o", directory);
+            Assert.True(generated.Exit == 0, generated.Error);
+
+            foreach (var file in Directory.GetFiles(Path.Combine(fixture, "examples"), "*.gql"))
+            {
+                var input = await File.ReadAllTextAsync(file);
+                var (result, _) = AllStarAtnParser.InterpRunner.Run(
+                    Path.Combine(directory, "GQL.interp"),
+                    Path.Combine(directory, "GQLLexer.interp"),
+                    input, Path.GetFileName(file), false);
+                Assert.StartsWith("(gqlProgram ",
+                    new TreeOutput(result.Lexer, result.Parser)
+                        .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString());
+            }
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
+    [Fact]
+    public async Task DescSelectsTopLevelImportedOclGrammar()
+    {
+        var fixture = Path.Combine(AppContext.BaseDirectory, "TestData", "ocl");
+        var directory = Directory.CreateTempSubdirectory("OclInterp-").FullName;
+        try
+        {
+            var parsed = await RunCliInDirectory(fixture,
+                typeof(Trash.Program).Assembly.Location, null,
+                "-t", "ANTLRv4", "OCL.g4", "UMLRSDS.g4");
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCliInDirectory(fixture,
+                typeof(trinterp.Program).Assembly.Location, parsed.Output,
+                "-o", directory);
+            Assert.True(generated.Exit == 0, generated.Error);
+            Assert.True(File.Exists(Path.Combine(directory, "UMLRSDS.interp")));
+            Assert.True(File.Exists(Path.Combine(directory, "UMLRSDSLexer.interp")));
+            Assert.False(File.Exists(Path.Combine(directory, "OCL.interp")));
+
+            var input = await File.ReadAllTextAsync(Path.Combine(
+                fixture, "examples", "specification", "bondApp.km3"));
+            var (result, _) = AllStarAtnParser.InterpRunner.Run(
+                Path.Combine(directory, "UMLRSDS.interp"),
+                Path.Combine(directory, "UMLRSDSLexer.interp"),
+                input, "bondApp.km3", false);
+            Assert.StartsWith("(specification ",
+                new TreeOutput(result.Lexer, result.Parser)
+                    .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString());
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
+    [Fact]
+    public async Task DescGrammarNameSelectsOneOfSeveralTopLevelGrammars()
+    {
+        var directory = Directory.CreateTempSubdirectory("NamedInterp-").FullName;
+        var output = Path.Combine(directory, "interp");
+        try
+        {
+            await File.WriteAllTextAsync(Path.Combine(directory, "A.g4"),
+                "grammar A; start: 'a' EOF;");
+            await File.WriteAllTextAsync(Path.Combine(directory, "B.g4"),
+                "grammar B; entry: 'b' EOF;");
+            await File.WriteAllTextAsync(Path.Combine(directory, "desc.xml"),
+                "<desc><grammar-name> B </grammar-name><entry-point> entry </entry-point>" +
+                "<test><entry-point>missing</entry-point></test></desc>");
+            var parsed = await RunCliInDirectory(directory,
+                typeof(Trash.Program).Assembly.Location, null,
+                "-t", "ANTLRv4", "A.g4", "B.g4");
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCliInDirectory(directory,
+                typeof(trinterp.Program).Assembly.Location, parsed.Output,
+                "-o", output);
+            Assert.True(generated.Exit == 0, generated.Error);
+            Assert.True(File.Exists(Path.Combine(output, "B.interp")));
+            Assert.True(File.Exists(Path.Combine(output, "BLexer.interp")));
+            Assert.False(File.Exists(Path.Combine(output, "A.interp")));
+            var (result, _) = AllStarAtnParser.InterpRunner.Run(
+                Path.Combine(output, "B.interp"),
+                Path.Combine(output, "BLexer.interp"),
+                "b", "input.txt", false);
+            Assert.StartsWith("(entry ",
+                new TreeOutput(result.Lexer, result.Parser)
+                    .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString());
+
+            var otherOutput = Path.Combine(directory, "other-interp");
+            var other = await RunCliInDirectory(directory,
+                typeof(trinterp.Program).Assembly.Location, parsed.Output,
+                "-o", otherOutput, "--grammar-name", "A", "--start-rule", "start");
+            Assert.True(other.Exit == 0, other.Error);
+            Assert.True(File.Exists(Path.Combine(otherOutput, "A.interp")));
+            Assert.False(File.Exists(Path.Combine(otherOutput, "B.interp")));
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
+    [Fact]
+    public async Task DescSelectionIncludesImportedLexerOnlyOnce()
+    {
+        var directory = Directory.CreateTempSubdirectory("NamedLexerImport-").FullName;
+        var output = Path.Combine(directory, "interp");
+        try
+        {
+            await File.WriteAllTextAsync(Path.Combine(directory, "Letters.g4"),
+                "lexer grammar Letters; X:'x';");
+            await File.WriteAllTextAsync(Path.Combine(directory, "L.g4"),
+                "lexer grammar L; import Letters; Y:'y';");
+            await File.WriteAllTextAsync(Path.Combine(directory, "P.g4"),
+                "parser grammar P; options{tokenVocab=L;} start:X EOF;");
+            await File.WriteAllTextAsync(Path.Combine(directory, "desc.xml"),
+                "<desc><grammar-name>P</grammar-name><entry-point>start</entry-point></desc>");
+            var parsed = await RunCliInDirectory(directory,
+                typeof(Trash.Program).Assembly.Location, null,
+                "-t", "ANTLRv4", "L.g4", "P.g4", "Letters.g4");
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCliInDirectory(directory,
+                typeof(trinterp.Program).Assembly.Location, parsed.Output,
+                "-o", output);
+            Assert.True(generated.Exit == 0, generated.Error);
+            var (result, _) = AllStarAtnParser.InterpRunner.Run(
+                Path.Combine(output, "P.interp"),
+                Path.Combine(output, "L.interp"), "x", "input.txt", false);
+            Assert.Equal("(start x <EOF>)",
+                new TreeOutput(result.Lexer, result.Parser)
+                    .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString());
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
+    [Fact]
+    public async Task ImportedTokenDeclarationsKeepTypeCommandNumbers()
+    {
+        var directory = Directory.CreateTempSubdirectory("ImportedTokens-").FullName;
+        var output = Path.Combine(directory, "interp");
+        try
+        {
+            await File.WriteAllTextAsync(Path.Combine(directory, "Root.g4"),
+                "grammar Root; import Part; start: A B EOF;");
+            await File.WriteAllTextAsync(Path.Combine(directory, "Part.g4"),
+                "grammar Part; tokens { A, B } First:'x' -> type(B); Second:'y' -> type(A);");
+            var parsed = await RunCliInDirectory(directory,
+                typeof(Trash.Program).Assembly.Location, null,
+                "-t", "ANTLRv4", "Root.g4", "Part.g4");
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCliInDirectory(directory,
+                typeof(trinterp.Program).Assembly.Location, parsed.Output,
+                "-o", output, "--grammar-name", "Root", "--start-rule", "start");
+            Assert.True(generated.Exit == 0, generated.Error);
+            var (result, _) = AllStarAtnParser.InterpRunner.Run(
+                Path.Combine(output, "Root.interp"),
+                Path.Combine(output, "RootLexer.interp"), "yx", "input.txt", false);
+            Assert.Equal("(start y x <EOF>)",
+                new TreeOutput(result.Lexer, result.Parser)
+                    .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString());
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
+    [Fact]
+    public async Task CyclicParserImportsContributeRulesOnce()
+    {
+        var directory = Directory.CreateTempSubdirectory("CyclicImports-").FullName;
+        var output = Path.Combine(directory, "interp");
+        try
+        {
+            await File.WriteAllTextAsync(Path.Combine(directory, "P.g4"),
+                "parser grammar P; import A; options{tokenVocab=L;} start:foo EOF;");
+            await File.WriteAllTextAsync(Path.Combine(directory, "A.g4"),
+                "parser grammar A; import B; foo:X;");
+            await File.WriteAllTextAsync(Path.Combine(directory, "B.g4"),
+                "parser grammar B; import A; bar:X;");
+            await File.WriteAllTextAsync(Path.Combine(directory, "L.g4"),
+                "lexer grammar L; X:'x';");
+            await File.WriteAllTextAsync(Path.Combine(directory, "desc.xml"),
+                "<desc><grammar-name>P</grammar-name><entry-point>start</entry-point></desc>");
+            var parsed = await RunCliInDirectory(directory,
+                typeof(Trash.Program).Assembly.Location, null,
+                "-t", "ANTLRv4", "P.g4", "A.g4", "B.g4", "L.g4");
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCliInDirectory(directory,
+                typeof(trinterp.Program).Assembly.Location, parsed.Output,
+                "-o", output);
+            Assert.True(generated.Exit == 0, generated.Error);
+            Assert.True(File.Exists(Path.Combine(output, "P.interp")));
+            Assert.False(File.Exists(Path.Combine(output, "A.interp")));
+            Assert.False(File.Exists(Path.Combine(output, "B.interp")));
+            var (result, _) = AllStarAtnParser.InterpRunner.Run(
+                Path.Combine(output, "P.interp"),
+                Path.Combine(output, "L.interp"), "x", "input.txt", false);
+            Assert.StartsWith("(start (foo x) <EOF>)",
+                new TreeOutput(result.Lexer, result.Parser)
+                    .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString());
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
+    [Fact]
+    public async Task ElixirGrammarParsesBlockWithUnicodePropertyLexerRules()
+    {
+        var fixture = Path.Combine(AppContext.BaseDirectory, "TestData", "elixir");
+        var directory = Directory.CreateTempSubdirectory("ElixirInterp-").FullName;
+        try
+        {
+            var parsed = await RunCli(typeof(Trash.Program).Assembly.Location, null,
+                "-t", "ANTLRv4",
+                Path.Combine(fixture, "ElixirLexer.g4"),
+                Path.Combine(fixture, "ElixirParser.g4"));
+            Assert.True(parsed.Exit == 0, parsed.Error);
+            var generated = await RunCli(typeof(trinterp.Program).Assembly.Location,
+                parsed.Output, "-o", directory);
+            Assert.True(generated.Exit == 0, generated.Error);
+
+            var input = await File.ReadAllTextAsync(Path.Combine(fixture, "block.ex"));
+            var (result, _) = AllStarAtnParser.InterpRunner.Run(
+                Path.Combine(directory, "ElixirParser.interp"),
+                Path.Combine(directory, "ElixirLexer.interp"),
+                input, "block.ex", false);
+            Assert.StartsWith("(parse ",
+                new TreeOutput(result.Lexer, result.Parser)
+                    .OutputTreeAntlrStyle(Assert.Single(result.Nodes)).ToString());
+        }
+        finally { Directory.Delete(directory, true); }
+    }
+
     [Theory]
     [InlineData(".g4x")]
     public async Task CliBundlePipelineGeneratesRunnableTables(string extension)
@@ -212,11 +536,16 @@ public sealed class G4XInterpTests
     }
 
     private static async Task<(int Exit, byte[] Output, string Error)> RunCli(string assembly, byte[]? input, params string[] args)
+        => await RunCliInDirectory(Environment.CurrentDirectory, assembly, input, args);
+
+    private static async Task<(int Exit, byte[] Output, string Error)> RunCliInDirectory(
+        string directory, string assembly, byte[]? input, params string[] args)
     {
         var start = new System.Diagnostics.ProcessStartInfo("dotnet")
         {
             RedirectStandardInput = true, RedirectStandardOutput = true,
-            RedirectStandardError = true, UseShellExecute = false
+            RedirectStandardError = true, UseShellExecute = false,
+            WorkingDirectory = directory
         };
         start.ArgumentList.Add(assembly);
         foreach (var arg in args) start.ArgumentList.Add(arg);
@@ -286,26 +615,28 @@ public sealed class G4XInterpTests
         return models;
     }
 
-    private static string Tables(GrammarModel model)
+    private static string Tables(GrammarModel model, string? startRule = null)
     {
         ParserAtnFactory factory = model.IsLexer ? new LexerAtnFactory(model) : new ParserAtnFactory(model);
         var atn = factory.CreateATN();
         var text = InterpFormatter.FormatInterp(model, atn, false);
         if (!model.IsLexer)
         {
-            var name = Assert.Single(trinterp.Command.FindEofTerminatedRules(model));
+            var name = startRule ?? Assert.Single(trinterp.Command.FindEofTerminatedRules(model));
             text += "\nstart-rule:\n" + atn.ruleToStartState[model.GetRule(name).Index].stateNumber + "\n";
         }
         return text;
     }
 
     private static string Parse(List<GrammarModel> models, string parserName, string lexerName,
-        string input, bool indirect = false, bool contextAware = false)
+        string input, bool indirect = false, bool contextAware = false,
+        string? startRule = null)
     {
         var directory = Directory.CreateTempSubdirectory("G4XInterp-").FullName;
         try
         {
-            foreach (var model in models) File.WriteAllText(Path.Combine(directory, model.Name + ".interp"), Tables(model));
+            foreach (var model in models) File.WriteAllText(Path.Combine(directory, model.Name + ".interp"),
+                Tables(model, model.Name == parserName ? startRule : null));
             var (result, _) = AllStarAtnParser.InterpRunner.Run(
                 Path.Combine(directory, parserName + ".interp"), Path.Combine(directory, lexerName + ".interp"),
                 input, "input.txt", false, contextAwareLexing: contextAware,
@@ -438,7 +769,7 @@ public sealed class G4XInterpTests
     }
 
     [Fact]
-    public void MoreIsSerializedButRetainsTheRuntimeUnsupportedDiagnostic()
+    public void MoreConcatenatesLexerSegmentsAcrossModes()
     {
         var lexer = Model("""
             lexer grammar L;
@@ -453,7 +784,55 @@ public sealed class G4XInterpTests
         var interp = Atn.InterpFileReader.Read(Tables(lexer));
         var atn = Atn.AtnDeserializer.Deserialize(interp.AtnData);
         Assert.Contains(atn.lexerActions, action => action.ActionType == Atn.MyLexerActionType.More);
-        Assert.Contains("More", Assert.Throws<NotSupportedException>(() => Parse(batch, "P", "L", "\"abc\"")).Message);
+        var tokens = new EarleyAtnParser.LexerAtnSimulator(atn)
+            .Tokenize("\"abc\"\"def\"");
+        Assert.Equal(["\"abc\"", "\"def\"", "<EOF>"],
+            tokens.Select(token => token.Text).ToArray());
+        Assert.Equal(lexer.TokenNameToType["text"], tokens[0].Type);
+        Assert.Equal(0, tokens[0].StartIndex);
+        Assert.Equal(4, tokens[0].StopIndex);
+        Assert.Equal("(Start \"abc\" <EOF>)", Parse(batch, "P", "L", "\"abc\""));
+        Assert.Equal("(Start \"abc\" <EOF>)",
+            Parse(batch, "P", "L", "\"abc\"", contextAware: true));
+    }
+
+    [Theory]
+    [InlineData("--allstar", false)]
+    [InlineData("--allstar", true)]
+    [InlineData("--earley", false)]
+    [InlineData("--earley", true)]
+    public async Task LexerNoMatchIsConciseButUnsupportedActionHasTraceback(
+        string parserMode, bool bundle)
+    {
+        var directory = Directory.CreateTempSubdirectory("LexerDiagnostics-").FullName;
+        try
+        {
+            var lexer = Model("lexer grammar L; A:'a'; B:'b' { DoSomething(); };");
+            var parser = Model("parser grammar P; options{tokenVocab=L;} start:A EOF;");
+            var models = Batch(parser, lexer);
+            foreach (var model in models)
+                File.WriteAllText(Path.Combine(directory, model.Name + ".interp"), Tables(model));
+
+            string[] options = bundle
+                ? [parserMode, "--bundle", "--no-output", "--per-file",
+                    "--pinterp", Path.Combine(directory, "P.interp"),
+                    "--linterp", Path.Combine(directory, "L.interp")]
+                : [parserMode, "--no-output", "--per-file",
+                    "--pinterp", Path.Combine(directory, "P.interp"),
+                    "--linterp", Path.Combine(directory, "L.interp")];
+            var noMatch = await RunCli(typeof(Trash.Program).Assembly.Location,
+                null, [.. options, "-i", "?"]);
+            Assert.NotEqual(0, noMatch.Exit);
+            Assert.Contains("Lexer error at line 1:0: no rule matches '?'", noMatch.Error);
+            Assert.DoesNotContain("at EarleyAtnParser.", noMatch.Error);
+
+            var unsupported = await RunCli(typeof(Trash.Program).Assembly.Location,
+                null, [.. options, "-i", "b"]);
+            Assert.NotEqual(0, unsupported.Exit);
+            Assert.Contains("Lexer action 'Custom' is not supported", unsupported.Error);
+            Assert.Contains("at EarleyAtnParser.", unsupported.Error);
+        }
+        finally { Directory.Delete(directory, true); }
     }
 
     [Fact]
@@ -462,6 +841,35 @@ public sealed class G4XInterpTests
         var lexer = Model("lexer grammar L; tokens{text} letters:[a-z]+ -> type(text);");
         var parser = Model("parser grammar P; options{tokenVocab=L;} Start:text EOF;");
         Assert.Equal("(Start abc <EOF>)", Parse(Batch(parser, lexer), "P", "L", "abc"));
+    }
+
+    [Fact]
+    public void LexerModeCommandsKeepLiteralAliasesForParserRules()
+    {
+        var lexer = Model("lexer grammar L; OPEN:'(' -> pushMode(Inside); mode Inside; BODY:[a-z]+; CLOSE:')' -> popMode;", false);
+        var parser = Model("parser grammar P; options{tokenVocab=L;} start:'(' BODY ')' EOF;", false);
+        var models = Batch(parser, lexer);
+
+        Assert.Equal(lexer.TokenNameToType["OPEN"], lexer.StringLiteralToType["'('"]);
+        Assert.Equal(lexer.TokenNameToType["CLOSE"], parser.StringLiteralToType["')'"]);
+        Assert.Equal("(start ( abc ) <EOF>)", Parse(models, "P", "L", "(abc)"));
+    }
+
+    [Theory]
+    [InlineData(false)]
+    [InlineData(true)]
+    public void NestedRuleAndStartRuleCanBothMatchEof(bool contextAware)
+    {
+        var lexer = Model("lexer grammar L; X:'x'; NL:'\\n';", false);
+        var parser = Model("parser grammar P; options{tokenVocab=L;} start:unit* EOF; unit:X semis?; semis:EOF | NL+;", false);
+        var models = Batch(parser, lexer);
+
+        Assert.Equal("(start (unit x (semis <EOF>)) <EOF>)",
+            Parse(models, "P", "L", "x", contextAware: contextAware,
+                startRule: "start"));
+        Assert.Equal("(start (unit x (semis \\n)) <EOF>)",
+            Parse(models, "P", "L", "x\n", contextAware: contextAware,
+                startRule: "start"));
     }
 
     [Fact]

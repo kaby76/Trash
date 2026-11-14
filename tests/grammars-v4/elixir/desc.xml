@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<desc xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:noNamespaceSchemaLocation="https://github.com/kaby76/Trash/raw/refs/heads/main/desc.xsd">
+   <targets>CSharp</targets>
+   <grammar-files>ElixirLexer.g4;ElixirParser.g4</grammar-files>
+   <entry-point>parse</entry-point>
+   <inputs>examples/block.ex</inputs>
+</desc>
