@@ -5,7 +5,8 @@
 ## Introduction
 
 Trash is a command-line toolkit for generating parsers, parsing input, and
-analyzing and transforming grammars and parse trees. It supports two workflows:
+analyzing and transforming grammars and parse trees, designed to work in a 
+functional manner from the command line. It supports two workflows:
 generate interpreter tables and parse directly with Trash, or generate an
 ANTLR4 parser application for a supported target language.
 
