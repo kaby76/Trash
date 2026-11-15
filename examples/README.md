@@ -12,6 +12,7 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`antlr-ng-class-syntax/`](antlr-ng-class-syntax/) | Render ANTLR4 grammar rules in the proposed antlr-ng `grammar { lexer { ... } parser { ... } }` layout using XQuery4 |
 | [`antlr-sll-predicate-cache/`](antlr-sll-predicate-cache/) | Reproduce ANTLR 4.13.1's SLL predicate-context merge blowup and compare bounded C# runs with AllStar SLL/LL |
 | [`bison-frontend/`](bison-frontend/) | Compile Bison productions with a separate ANTLR4 lexer and parse input with AllStar |
+| [`case-insensitive-lexer/`](case-insensitive-lexer/) | Expand ASCII case-insensitive ANTLR4 lexer literals, ranges, and character sets with XQuery4 |
 | [`context-aware-lexing/`](context-aware-lexing/) | Parse a Decaf array declaration whose overlapping integer tokens require parser-directed lexical selection |
 | [`combine-custom-channels/`](combine-custom-channels/) | Combine split ANTLR4 grammars and use XQuery4 to map custom lexer channels to HIDDEN |
 | [`first/`](first/) | Compute nullable parser rules and grammar-theoretic FIRST sets with an XQuery4 fixed-point analysis |
