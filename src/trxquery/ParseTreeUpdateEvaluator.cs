@@ -233,7 +233,7 @@ class ParseTreeUpdateEvaluator : XQueryEvaluator
         }
         if (item is XdmElement constructed)
         {
-            TreeEdits.InsertBefore(target, Command.XdmToUnv(constructed));
+            TreeEdits.InsertBefore(target, XdmToUnv(constructed));
             return;
         }
         var src = ExtractSource(item);
@@ -253,7 +253,7 @@ class ParseTreeUpdateEvaluator : XQueryEvaluator
         }
         if (item is XdmElement constructed)
         {
-            TreeEdits.InsertAfter(target, Command.XdmToUnv(constructed));
+            TreeEdits.InsertAfter(target, XdmToUnv(constructed));
             return;
         }
         var src = ExtractSource(item);
@@ -298,7 +298,7 @@ class ParseTreeUpdateEvaluator : XQueryEvaluator
         }
         else if (item is XdmElement constructed)
         {
-            nodeToInsert = Command.XdmToUnv(constructed);
+            nodeToInsert = XdmToUnv(constructed);
         }
         else
         {
@@ -314,5 +314,36 @@ class ParseTreeUpdateEvaluator : XQueryEvaluator
         }
         parent.ChildNodes.Insert(index, nodeToInsert);
         nodeToInsert.ParentNode = parent;
+    }
+
+    // Convert an element constructed by XQuery to a parse tree node. This evaluator
+    // is also compiled into trrename, so the conversion must live here rather than
+    // in the trxquery command.
+    internal static UnvParseTreeElement XdmToUnv(XdmElement elem)
+    {
+        var result = new UnvParseTreeElement { LocalName = elem.NodeName?.LocalName ?? "" };
+        var list = (UnvParseTreeNodeList)result.ChildNodes;
+
+        foreach (var attr in elem.Attributes)
+        {
+            list.Add(new UnvParseTreeAttr
+            {
+                LocalName = attr.LocalName,
+                Name = attr.LocalName,
+                StringValue = attr.Value,
+                NamespaceURI = attr.NamespaceUri,
+                Prefix = attr.Prefix,
+            });
+        }
+
+        foreach (var child in elem.Children)
+        {
+            if (child is XdmElement childElem)
+                list.Add(XdmToUnv(childElem));
+            else if (child is XdmText childText)
+                list.Add(new UnvParseTreeText { Data = childText.Value });
+        }
+
+        return result;
     }
 }
