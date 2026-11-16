@@ -387,7 +387,7 @@ pure SLL can choose a different alternative for context-sensitive grammars.
 
 ## Current version
 
-Release 4.12.0.
+Release 4.13.0.
 
 ## License
 
