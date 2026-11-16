@@ -4,10 +4,17 @@
 
 ## Introduction
 
-Trash is a command-line toolkit for generating parsers, parsing input, and
-analyzing and transforming grammars and parse trees. It supports two workflows:
-generate interpreter tables and parse directly with Trash, or generate an
-ANTLR4 parser application for a supported target language.
+Trash is a command-line toolkit for generating parsers and working with
+grammars, input files, and parse trees. Its commands form a monadic pipeline:
+one command produces a PAX/tar bundle, the next consumes it and returns a new
+bundle, and the shell's `|` operator composes the steps. The bundle carries
+parse trees, source files, interpreter tables, and diagnostics through the
+pipeline, so parsing, queries, and rewrites can be combined without writing
+intermediate files. Rendering commands can turn the result into plain text.
+
+You can parse directly with Trash by compiling a grammar into interpreter
+tables, or generate an ANTLR4 parser application for a supported target
+language.
 
 `dotnet trash interp` compiles grammar parse trees into `.interp` files containing
 lexer and parser ATNs, together with `.tokens` vocabularies. These tables can be
@@ -20,7 +27,7 @@ use `-o` to write them to a directory. Grammar front ends currently support:
 * [ANTLR4](https://github.com/antlr/antlr4/blob/master/doc/grammars.md) (`.g4`) —
   ANTLR4 grammar syntax.
 * [ANTLR4 Experimental (G4X)](src/trinterp/readme.md#g4x-interpretation)
-  (`.g4x`, `.g4x`) — experimental ANTLR4 grammar syntax for new features,
+  (`.g4x`) — experimental ANTLR4 grammar syntax for new features,
   including unconstrained rule names. Rule kind is determined by the grammar
   declaration rather than capitalization.
 * [Bison](https://www.gnu.org/software/bison/manual/html_node/Grammar-File.html)
@@ -58,9 +65,8 @@ provides grammars for many programming languages and data formats.
 Trash also provides XPath 4.0 and XQuery 4.0 expression processing, including
 XQuery Update operations, to query and edit parse trees. Preserved off-channel
 tokens, such as whitespace and comments, can participate in source-preserving
-transformations. Commands compose through shell pipelines using PAX/tar bundles
-of parse trees, diagnostics, and other artifacts; text-rendering commands can
-instead output source text, trees, XML, or Graphviz DOT.
+transformations. Rendering commands can output source text, trees, XML, or
+Graphviz DOT.
 
 Trash runs on Windows, Linux, and macOS as a .NET tool. Invoke its commands as
 `dotnet trash <command>`, for example `dotnet trash parse --help`.
