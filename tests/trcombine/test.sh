@@ -45,6 +45,19 @@ grep -q 'channel(HIDDEN)' "$scratch/channels/Channel.g4"
 if grep -Eq 'channels[[:space:]]*\{|channel\(SPECIAL\)' "$scratch/channels/Channel.g4"; then exit 1; fi
 dotnet "$parse" --no-output "$scratch/channels/Channel.g4"
 
+# Select the two top-level grammars, then inline lexer and parser imports.
+dotnet "$parse" CharacterLexer.g4 LetterLexer.g4 WordLexer.g4 StatementParser.g4 RootParser.g4 |
+    dotnet "$combine" > "$scratch/imports.tar"
+test "$(tar -tf "$scratch/imports.tar")" = 'Root.g4.pt'
+dotnet "$sponge" -f "$scratch/imports.tar" -o "$scratch/imports"
+grep -q '^grammar Root;' "$scratch/imports/Root.g4"
+grep -q 'fragment LETTER' "$scratch/imports/Root.g4"
+grep -q 'fragment LOWER' "$scratch/imports/Root.g4"
+grep -q 'root : start' "$scratch/imports/Root.g4"
+grep -q 'start : WORD EOF' "$scratch/imports/Root.g4"
+if grep -Eq '(^import |tokenVocab|caseInsensitive)' "$scratch/imports/Root.g4"; then exit 1; fi
+dotnet "$parse" --no-output "$scratch/imports/Root.g4"
+
 # Direct source arguments are rejected immediately, without reading stdin.
 if dotnet "$combine" CommentedLexer.g4 CommentedParser.g4 </dev/null \
 	>"$scratch/misuse.out" 2>"$scratch/misuse.err"; then

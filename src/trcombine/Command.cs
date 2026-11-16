@@ -24,22 +24,38 @@ class Command
             throw new ArgumentException(
                 "combine reads parsed grammars from stdin or -f FILE; pipe 'dotnet trash parse ...' into it.");
         var input = ParsingResultIO.Read(config.File);
-        if (input.Results.Length != 2)
-            throw new InvalidDataException("combine requires exactly one parser grammar and one lexer grammar.");
         var grammars = input.Results.Select(result => new Grammar(result)).ToArray();
-        var parser = grammars.SingleOrDefault(g => g.Kind == "parser");
-        var lexer = grammars.SingleOrDefault(g => g.Kind == "lexer");
-        if (parser == null || lexer == null)
-            throw new InvalidDataException("combine requires one parser grammar and one lexer grammar.");
+        var byName = new Dictionary<string, Grammar>(StringComparer.Ordinal);
+        foreach (var grammar in grammars)
+            if (!byName.TryAdd(grammar.Name, grammar))
+                throw new InvalidDataException($"Duplicate grammar name '{grammar.Name}'.");
+        foreach (var grammar in grammars)
+        foreach (var import in grammar.Imports)
+            if (!byName.ContainsKey(import))
+                throw new InvalidDataException(
+                    $"Imported grammar '{import}' for '{grammar.Name}' was not supplied.");
+        var roots = TopLevelGrammars(grammars, byName);
+        var parsers = roots.Where(g => g.Kind == "parser").ToArray();
+        var lexers = roots.Where(g => g.Kind == "lexer").ToArray();
+        if (parsers.Length != 1 || lexers.Length != 1 || roots.Length != 2)
+            throw new InvalidDataException(
+                "combine requires one top-level parser grammar and one top-level lexer grammar; " +
+                "found: " + (roots.Length == 0 ? "none" :
+                    string.Join(", ", roots.Select(g => $"{g.Name} ({g.Kind})"))) + ".");
+        var parser = parsers[0];
+        var lexer = lexers[0];
         if (parser.TokenVocabulary != null && parser.TokenVocabulary != lexer.Name)
             throw new InvalidDataException($"Parser tokenVocab '{parser.TokenVocabulary}' does not name lexer '{lexer.Name}'.");
-        if (lexer.Modes.Any())
-            throw new InvalidDataException("ANTLR4 combined grammars do not support lexer modes.");
+        var parserOrder = ImportOrder(parser, byName);
+        var lexerOrder = ImportOrder(lexer, byName);
+        var selected = new HashSet<Grammar>(parserOrder.Concat(lexerOrder));
+        if (selected.Count != grammars.Length)
+            throw new InvalidDataException("Some supplied grammars are not reachable from the top-level parser or lexer.");
 
         var name = parser.Name.EndsWith("Parser", StringComparison.Ordinal)
             ? parser.Name[..^"Parser".Length] : parser.Name;
         if (name.Length == 0) throw new InvalidDataException("Parser grammar has no usable combined name.");
-        var source = Combine(parser, lexer, name);
+        var source = Combine(parserOrder, lexerOrder, name);
 
         var directory = input.IsBundle
             ? DirectoryOf(input.ResultArtifactNames[Array.IndexOf(input.Results, parser.Result)]) : "";
@@ -56,6 +72,60 @@ class Command
         output.Add(new Artifact(outputName, ArtifactBundle.SerializeParsingResult(result, config.Format)));
         using var stdout = Console.OpenStandardOutput();
         ArtifactBundle.Write(stdout, output);
+    }
+
+    // Topologically sort importer -> dependency edges. Zero-indegree nodes
+    // are the top-level grammars; an incomplete sort reports import cycles.
+    private static Grammar[] TopLevelGrammars(
+        IReadOnlyList<Grammar> grammars, IReadOnlyDictionary<string, Grammar> byName)
+    {
+        var indegree = grammars.ToDictionary(g => g.Name, _ => 0, StringComparer.Ordinal);
+        foreach (var grammar in grammars)
+        foreach (var name in grammar.Imports)
+            indegree[name]++;
+        var roots = grammars.Where(g => indegree[g.Name] == 0).ToArray();
+        var ready = new Queue<Grammar>(roots);
+        var count = 0;
+        while (ready.Count > 0)
+        {
+            var current = ready.Dequeue();
+            count++;
+            foreach (var name in current.Imports)
+                if (--indegree[name] == 0)
+                    ready.Enqueue(byName[name]);
+        }
+        if (count != grammars.Count)
+            throw new InvalidDataException("Cyclic grammar imports prevent topological ordering.");
+        return roots;
+    }
+
+    // ANTLR gives an importing grammar's rules precedence over its delegates.
+    // Visit each importer before its dependencies, in declared import order.
+    private static IReadOnlyList<Grammar> ImportOrder(
+        Grammar root, IReadOnlyDictionary<string, Grammar> byName)
+    {
+        var order = new List<Grammar>();
+        var active = new HashSet<string>(StringComparer.Ordinal);
+        var visited = new HashSet<string>(StringComparer.Ordinal);
+        void Visit(Grammar grammar)
+        {
+            if (active.Contains(grammar.Name))
+                throw new InvalidDataException($"Cyclic grammar import involving '{grammar.Name}'.");
+            if (!visited.Add(grammar.Name)) return;
+            active.Add(grammar.Name);
+            order.Add(grammar);
+            foreach (var name in grammar.Imports)
+            {
+                var dependency = byName[name];
+                if (dependency.Kind != grammar.Kind)
+                    throw new InvalidDataException(
+                        $"Grammar '{grammar.Name}' cannot import {dependency.Kind} grammar '{name}'.");
+                Visit(dependency);
+            }
+            active.Remove(grammar.Name);
+        }
+        Visit(root);
+        return order;
     }
 
     private static ParsingResultSet ParseCombined(string source, string fileName)
@@ -78,9 +148,13 @@ class Command
         };
     }
 
-    private static string Combine(Grammar parser, Grammar lexer, string name)
+    private static string Combine(
+        IReadOnlyList<Grammar> parserOrder, IReadOnlyList<Grammar> lexerOrder, string name)
     {
+        var parser = parserOrder[0];
+        var lexer = lexerOrder[0];
         var options = new Dictionary<string, string>(StringComparer.Ordinal);
+        // ANTLR ignores options declared by imported grammars.
         foreach (var grammar in new[] { parser, lexer })
         foreach (var option in grammar.Options)
         {
@@ -111,12 +185,30 @@ class Command
                 combined.Append("    ").Append(option.Key).Append(" = ").Append(option.Value).Append(";\n");
             combined.Append("}\n");
         }
-        foreach (var grammar in new[] { parser, lexer })
+        foreach (var grammar in parserOrder.Concat(lexerOrder))
         foreach (var prequel in grammar.Prequels)
-            if (Grammar.Child(prequel, "optionsSpec") == null)
+            if (Grammar.Child(prequel, "optionsSpec") == null &&
+                Grammar.Child(prequel, "delegateGrammars") == null)
                 combined.Append(Grammar.Text(prequel));
-        combined.Append(Grammar.Text(parser.Rules).TrimEnd());
-        combined.Append('\n').Append(Grammar.Text(lexer.Rules).TrimStart('\r', '\n'));
+        var ruleNames = new HashSet<string>(StringComparer.Ordinal);
+        string RulesText(IEnumerable<Grammar> order)
+        {
+            var text = new StringBuilder();
+            foreach (var grammar in order)
+            foreach (var rule in Grammar.Children(grammar.Rules, "ruleSpec"))
+            {
+                if (!ruleNames.Add(Grammar.RuleName(rule))) continue;
+                text.Append(Grammar.Text(rule));
+            }
+            return text.ToString();
+        }
+        combined.Append(RulesText(parserOrder).TrimEnd());
+        combined.Append('\n').Append(RulesText(lexerOrder).TrimStart('\r', '\n'));
+        // Modes are retained in the editable .pt result. ANTLR's code generator
+        // requires a lexer grammar for them; an XQuery pass can transform them.
+        foreach (var grammar in lexerOrder)
+        foreach (var mode in grammar.Modes)
+            combined.Append(Grammar.Text(mode));
         return combined.ToString().TrimEnd() + "\n";
     }
 
@@ -138,6 +230,7 @@ class Command
         public UnvParseTreeElement[] Prequels { get; }
         public UnvParseTreeElement[] Modes { get; }
         public UnvParseTreeElement[] Options { get; }
+        public string[] Imports { get; }
 
         public Grammar(ParsingResultSet result)
         {
@@ -154,6 +247,9 @@ class Command
             Prequels = Children(root, "prequelConstruct").ToArray();
             Modes = Children(root, "modeSpec").ToArray();
             Options = Prequels.SelectMany(p => Children(Child(p, "optionsSpec"), "option")).ToArray();
+            Imports = Prequels.SelectMany(p => Children(Child(p, "delegateGrammars"), "delegateGrammar"))
+                .Select(g => Children(g, "identifier").LastOrDefault())
+                .Where(n => n != null).Select(n => Text(n!).Trim()).ToArray();
             var option = Options.FirstOrDefault(o => Text(Child(o, "identifier")!).Trim() == "tokenVocab");
             TokenVocabulary = option == null ? null : Text(Child(option, "optionValue")!).Trim();
         }
@@ -161,9 +257,18 @@ class Command
         public static UnvParseTreeElement? Child(UnvParseTreeElement? node, string name) =>
             Children(node, name).FirstOrDefault();
 
-        private static IEnumerable<UnvParseTreeElement> Children(UnvParseTreeElement? node, string name) =>
+        public static IEnumerable<UnvParseTreeElement> Children(UnvParseTreeElement? node, string name) =>
             node?.AllChildren.OfType<UnvParseTreeElement>().Where(n => n.LocalName == name)
                 ?? Enumerable.Empty<UnvParseTreeElement>();
+
+        public static string RuleName(UnvParseTreeElement rule)
+        {
+            var definition = Child(rule, "parserRuleSpec") ?? Child(rule, "lexerRuleSpec")
+                ?? throw new InvalidDataException("Invalid grammar rule.");
+            var name = Child(definition, "RULE_REF") ?? Child(definition, "TOKEN_REF")
+                ?? throw new InvalidDataException("Grammar rule has no name.");
+            return Text(name).Trim();
+        }
 
         public static string Text(UnvParseTreeNode node, IReadOnlyDictionary<UnvParseTreeNode, string>? replacements = null)
         {
