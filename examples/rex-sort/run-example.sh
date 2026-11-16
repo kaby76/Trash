@@ -11,13 +11,13 @@ dotnet trash parse ../rex-interp/Arithmetic.rex \
 tar -xOf "$scratch/result.tar" Arithmetic.rex >"$scratch/sorted.rex"
 
 awk '
-  /^Expr ::=/{expr=NR}
-  /^Start ::=/{start=NR}
-  /^Term ::=/{term=NR}
+  /^[[:space:]]*Expr[[:space:]]*::=/{expr=NR}
+  /^[[:space:]]*Start[[:space:]]*::=/{start=NR}
+  /^[[:space:]]*Term[[:space:]]*::=/{term=NR}
   /^<\?TOKENS\?>/{tokens=NR}
-  /^Digit ::=/{digit=NR}
-  /^End ::=/{end=NR}
-  /^Number ::=/{number=NR}
+  /^[[:space:]]*Digit[[:space:]]*::=/{digit=NR}
+  /^[[:space:]]*End[[:space:]]*::=/{end=NR}
+  /^[[:space:]]*Number[[:space:]]*::=/{number=NR}
   END {exit !(expr && expr < start && start < term && term < tokens &&
               tokens < digit && digit < end && end < number)}
 ' "$scratch/sorted.rex"

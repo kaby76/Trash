@@ -231,14 +231,11 @@ class ParseTreeUpdateEvaluator : XQueryEvaluator
             if (attrNode != null) TreeEdits.InsertBefore(target, attrNode);
             return;
         }
-        if (item is XdmElement constructed)
-        {
-            TreeEdits.InsertBefore(target, XdmToUnv(constructed));
-            return;
-        }
         var src = ExtractSource(item);
         if (src != null)
             TreeEdits.InsertBefore(target, src);
+        else if (item is XdmElement constructed)
+            TreeEdits.InsertBefore(target, XdmToUnv(constructed));
         else
             TreeEdits.InsertBefore(target, item.StringValue);
     }
@@ -251,14 +248,11 @@ class ParseTreeUpdateEvaluator : XQueryEvaluator
             if (attrNode != null) TreeEdits.InsertAfter(target, attrNode);
             return;
         }
-        if (item is XdmElement constructed)
-        {
-            TreeEdits.InsertAfter(target, XdmToUnv(constructed));
-            return;
-        }
         var src = ExtractSource(item);
         if (src != null)
             TreeEdits.InsertAfter(target, src);
+        else if (item is XdmElement constructed)
+            TreeEdits.InsertAfter(target, XdmToUnv(constructed));
         else
             TreeEdits.InsertAfter(target, item.StringValue);
     }
@@ -296,15 +290,13 @@ class ParseTreeUpdateEvaluator : XQueryEvaluator
             if (attrNode == null) return;
             nodeToInsert = attrNode;
         }
-        else if (item is XdmElement constructed)
-        {
-            nodeToInsert = XdmToUnv(constructed);
-        }
         else
         {
             var src = ExtractSource(item);
             if (src != null)
                 nodeToInsert = src;
+            else if (item is XdmElement constructed)
+                nodeToInsert = XdmToUnv(constructed);
             else
             {
                 var text = new UnvParseTreeText();
