@@ -11,7 +11,7 @@
 		<AssemblyName>trcombine</AssemblyName>
 		<PackageId>trcombine</PackageId>
 		<Description>
-			<![CDATA[Combines split ANTLR4 lexer and parser grammars using XQuery4.
+			<![CDATA[Combines split ANTLR4 lexer and parser grammars into a modifiable parse tree.
 This program is part of the Trash toolkit.]]>
 		</Description>
 		<ToolCommandName>trcombine</ToolCommandName>
@@ -19,7 +19,7 @@ This program is part of the Trash toolkit.]]>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>4.11.0</Version>
+		<Version>4.12.0</Version>
 		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trcombine</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
@@ -31,9 +31,7 @@ This program is part of the Trash toolkit.]]>
 		<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
 		<ProjectReference Include="../ParseTreeEditing/ParseTreeEditing.csproj" />
 		<ProjectReference Include="../Logger/Logger.csproj" />
-		<ProjectReference Include="../xquery4/src/XQuery.DataModel/XQuery.DataModel.csproj" />
-		<ProjectReference Include="../xquery4/src/XQuery.Parser/XQuery.Parser.csproj" />
-		<ProjectReference Include="../xquery4/src/XQuery.Engine/XQuery.Engine.csproj" />
+		<ProjectReference Include="../grammars/antlr4/Generated-CSharp/antlr4.csproj" />
 	</ItemGroup>
 	<ItemGroup>
 		<None Include="readme.md" Pack="true" PackagePath=""/>
@@ -55,7 +53,5 @@ This program is part of the Trash toolkit.]]>
 	</Target>
 	<ItemGroup>
 		<EmbeddedResource Include="readme.md" />
-		<EmbeddedResource Include="combine.xq" />
-		<Compile Include="../trxquery/ParseTreeUpdateEvaluator.cs" Link="ParseTreeUpdateEvaluator.cs" />
 	</ItemGroup>
 </Project>

@@ -12,7 +12,9 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`antlr-ng-class-syntax/`](antlr-ng-class-syntax/) | Render ANTLR4 grammar rules in the proposed antlr-ng `grammar { lexer { ... } parser { ... } }` layout using XQuery4 |
 | [`antlr-sll-predicate-cache/`](antlr-sll-predicate-cache/) | Reproduce ANTLR 4.13.1's SLL predicate-context merge blowup and compare bounded C# runs with AllStar SLL/LL |
 | [`bison-frontend/`](bison-frontend/) | Compile Bison productions with a separate ANTLR4 lexer and parse input with AllStar |
+| [`case-insensitive-lexer/`](case-insensitive-lexer/) | Expand ASCII case-insensitive ANTLR4 lexer literals, ranges, and character sets with XQuery4 |
 | [`context-aware-lexing/`](context-aware-lexing/) | Parse a Decaf array declaration whose overlapping integer tokens require parser-directed lexical selection |
+| [`combine-custom-channels/`](combine-custom-channels/) | Combine split ANTLR4 grammars and use XQuery4 to map custom lexer channels to HIDDEN |
 | [`first/`](first/) | Compute nullable parser rules and grammar-theoretic FIRST sets with an XQuery4 fixed-point analysis |
 | [`g4x-exclusion/`](g4x-exclusion/) | Compile and run G4X lexer set difference for named rules and literals |
 | [`g4x-interp/`](g4x-interp/) | Generate tables from case-neutral G4X lexer/parser grammars and verify a left-recursive expression tree with AllStar |
@@ -27,6 +29,7 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`lark-to-antlr4/`](lark-to-antlr4/) | Convert a Lark grammar to Antlr4 syntax using a multi-pass XQuery Update pipeline |
 | [`linvast-ast/`](linvast-ast/) | Build the same pipeable identifier and integer AST nodes during AllStar parsing with C, Java, Kotlin, and Lua LINVAST grammars |
 | [`rule-names/`](rule-names/) | Construct XML containing one element for every parser-rule name selected from an ANTLR4 grammar parse tree |
+| [`split-literals/`](split-literals/) | Declare lexer tokens for parser string literals inline before splitting a combined ANTLR4 grammar |
 | [`ungroup/`](ungroup/) | Expand a plain grouped alternative `(X \| Y) B` into distributed top-level alternatives `X B \| Y B` using an XQuery Update script with an external variable parameter |
 | [`strip-leading-attrs/`](strip-leading-attrs/) | Remove hidden-channel token attributes before `lexer`/`parser` in `grammarDecl` using an XQuery element constructor |
 | [`tree-sitter-to-w3c-ebnf/`](tree-sitter-to-w3c-ebnf/) | Convert Tree-sitter `grammar.json` rules to structural W3C EBNF with XQuery4, explicitly marking unsupported constructs |

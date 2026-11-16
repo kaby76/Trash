@@ -11,13 +11,13 @@ dotnet trash parse SortDemo.g4 \
 tar -xOf "$scratch/result.tar" SortDemo.g4 >"$scratch/sorted.g4"
 
 awk '
-  /^start[[:space:]]*:/{start=NR}
-  /^alpha[[:space:]]*:/{alpha=NR}
-  /^beta[[:space:]]*:/{beta=NR}
-  /^zeta[[:space:]]*:/{zeta=NR}
+  /^[[:space:]]*start[[:space:]]*:/{start=NR}
+  /^[[:space:]]*alpha[[:space:]]*:/{alpha=NR}
+  /^[[:space:]]*beta[[:space:]]*:/{beta=NR}
+  /^[[:space:]]*zeta[[:space:]]*:/{zeta=NR}
   END {exit !(alpha && alpha < beta && beta < start && start < zeta)}
 ' "$scratch/sorted.g4"
-grep -q '^start : zeta alpha beta EOF ;' "$scratch/sorted.g4"
+grep -Eq '^[[:space:]]*start[[:space:]]*:[[:space:]]*zeta[[:space:]]+alpha[[:space:]]+beta[[:space:]]+EOF[[:space:]]*;' "$scratch/sorted.g4"
 grep -q '^parser grammar SortDemo;' "$scratch/sorted.g4"
 grep -q 'tokenVocab=SortDemoLexer' "$scratch/sorted.g4"
 grep -q 'Keep this comment with alpha' "$scratch/sorted.g4"

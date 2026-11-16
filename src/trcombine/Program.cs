@@ -2,6 +2,7 @@ using CommandLine;
 using CommandLine.Text;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 
 namespace Trash
@@ -14,13 +15,15 @@ namespace Trash
             {
                 new Program().MainInternal(args);
             }
+            catch (Exception e) when (e is ArgumentException or InvalidDataException)
+            {
+                System.Console.Error.WriteLine("trcombine: " + e.Message);
+                Environment.ExitCode = 1;
+            }
             catch (Exception e)
             {
                 System.Console.Error.WriteLine(e.ToString());
                 Environment.ExitCode = 1;
-                System.Console.Out.WriteLine();
-                System.Console.Out.Flush();
-                System.Console.Out.Close();
             }
         }
 

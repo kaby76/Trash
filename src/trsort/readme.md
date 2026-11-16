@@ -42,7 +42,7 @@ Only one mode flag may be specified at a time.
 
 ## Current version
 
-Release 4.11.0.
+Release 4.12.0.
 
 ## License
 

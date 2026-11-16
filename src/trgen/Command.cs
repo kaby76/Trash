@@ -638,7 +638,7 @@ namespace Trash
             }
         }
 
-        public static string version = "4.11.0";
+        public static string version = "4.12.0";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -651,6 +651,7 @@ namespace Trash
                 "Cpp" => ".cpp",
                 "CSharp" => ".cs",
                 "Dart" => ".dart",
+                "Galop" => ".go",
                 "Go" => ".go",
 		"Java" => ".java",
                 "JavaScript" => ".js",
@@ -775,6 +776,7 @@ namespace Trash
                 "Cpp",
                 "CSharp",
                 "Dart",
+                "Galop",
                 "Go",
                 "Java",
                 "JavaScript",
@@ -842,7 +844,17 @@ namespace Trash
                         "TypeScript",
                     };
                 else
-                    test_targets = xtargets.First().Split(';').ToList();
+                    test_targets = xtargets.First()
+                        .Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                        .ToList();
+                // Keep the experimental Galop target out of default wildcard
+                // builds, while allowing an explicit -t Galop selection.
+                if (xtargets[0] == "*" && config.targets?.Contains("Galop") == true)
+                    test_targets.Add("Galop");
+                if (test_targets.Count == 0)
+                    System.Console.Error.WriteLine(
+                        "desc.xml lists no target languages; nothing to generate. " +
+                        "Use <targets>*</targets> or list the desired targets.");
                 if (config.targets == null || !config.targets.Any()) config.targets = test_targets;
             }
             List<OSPlatform> test_ostargets = new List<OSPlatform>() { GetOSTarget() };
@@ -1153,7 +1165,9 @@ namespace Trash
                     }
                     else
                     {
-                        test_targets = xtargets.First().Split(';').ToList();
+                        test_targets = xtargets.First()
+                            .Split(';', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                            .ToList();
                     }
 
                     List<string> tool_grammar_files = null;
@@ -1909,6 +1923,22 @@ namespace Trash
 	    t.Add("file_encoding", test.file_encoding == null ? "" : test.file_encoding);
             if (test.start_rule == null) t.Add("cap_start_symbol", Cap("no_start_rule_declared"));
             else t.Add("cap_start_symbol", Cap(test.start_rule));
+            // Galop follows ANTLR's Go target when escaping rule names.
+            // In particular, a rule named "start" produces ParseStart_.
+            var galopReserved = new HashSet<string>(StringComparer.Ordinal) {
+                "break", "default", "func", "interface", "select", "case", "defer", "go", "map", "struct",
+                "chan", "else", "goto", "package", "switch", "const", "fallthrough", "if", "range", "type",
+                "continue", "for", "import", "return", "var", "bool", "byte", "complex64", "complex128", "error",
+                "float32", "float64", "int", "int8", "int16", "int32", "int64", "rune", "string", "uint",
+                "uint8", "uint16", "uint32", "uint64", "uintptr", "true", "false", "iota", "nil", "append",
+                "cap", "close", "complex", "copy", "delete", "imag", "len", "make", "new", "panic",
+                "print", "println", "real", "recover", "Accept", "GetAltNumber", "GetBaseRuleContext", "GetChild",
+                "GetChildCount", "GetChildren", "GetInvokingState", "GetParent", "GetPayload", "GetRuleContext",
+                "GetRuleIndex", "GetSourceInterval", "GetText", "IsEmpty", "SetAltNumber", "SetInvokingState",
+                "SetParent", "String", "rule", "parserRule", "action", "start", "stop", "exception"
+            };
+            var galopStart = test.start_rule ?? "no_start_rule_declared";
+            t.Add("galop_start_symbol", Cap(galopStart + (galopReserved.Contains(galopStart) ? "_" : "")));
             t.Add("case_insensitive_type", test.case_insensitive_type);
             t.Add("cli_bash", test.os_target != "Windows");
             t.Add("cli_cmd", GetOSTarget() == OSPlatform.Windows);

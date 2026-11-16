@@ -36,7 +36,9 @@ may require hand-tweaking due to various constraints that split grammars
 must follow, including:
 
 * String literals that do not have a corresponding lexer rule must be
-modified.
+  declared in the lexer. See the
+  [split-literals example](../../examples/split-literals/README.md) for an
+  XQuery4 pass that adds these declarations before splitting.
 * Parser options do not apply to lexer grammars. Remove or replace.
 
 ## Example
@@ -45,7 +47,7 @@ modified.
 
 ## Current version
 
-Release 4.11.0.
+Release 4.12.0.
 
 ## License
 

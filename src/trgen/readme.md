@@ -21,6 +21,18 @@ create a parser for the Arithmetic.g4 grammar.
 
     dotnet trash gen
 
+### Galop target
+
+Use `dotnet trash gen -t Galop` to generate a native Go parser application
+with [Galop](https://github.com/martianoff/galop). Run `bash build.sh` or
+`pwsh ./build.ps1` in `Generated-Galop` after installing `galop` and Go.
+Set `GALOP` to the path of the Galop executable if it is not on `PATH`.
+The driver accepts `-x` for newline-separated filenames on stdin,
+`-input` for literal input, `-tree`, `-tokens`, `-tee`, `-o`, `-q`,
+`--per-file`, and `--perf` like the Go target. Its parse time includes
+lexing. Galop currently requires a combined grammar for this driver;
+imports and `tokenVocab` are not yet supported by Galop.
+
 ## Specification of desc.xml ([schema](https://github.com/kaby76/Trash/blob/main/desc.xsd))
 
 The desc.xml is an XML file that specifies how to generate a driver and test
@@ -84,7 +96,7 @@ With `--perf`, six summary lines are printed after all files are parsed:
 
 ## Current version
 
-Release 4.11.0.
+Release 4.12.0.
 
 ## Ignore file
 
