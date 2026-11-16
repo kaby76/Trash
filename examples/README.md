@@ -29,6 +29,7 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`lark-to-antlr4/`](lark-to-antlr4/) | Convert a Lark grammar to Antlr4 syntax using a multi-pass XQuery Update pipeline |
 | [`linvast-ast/`](linvast-ast/) | Build the same pipeable identifier and integer AST nodes during AllStar parsing with C, Java, Kotlin, and Lua LINVAST grammars |
 | [`rule-names/`](rule-names/) | Construct XML containing one element for every parser-rule name selected from an ANTLR4 grammar parse tree |
+| [`split-literals/`](split-literals/) | Declare lexer tokens for parser string literals inline before splitting a combined ANTLR4 grammar |
 | [`ungroup/`](ungroup/) | Expand a plain grouped alternative `(X \| Y) B` into distributed top-level alternatives `X B \| Y B` using an XQuery Update script with an external variable parameter |
 | [`strip-leading-attrs/`](strip-leading-attrs/) | Remove hidden-channel token attributes before `lexer`/`parser` in `grammarDecl` using an XQuery element constructor |
 | [`tree-sitter-to-w3c-ebnf/`](tree-sitter-to-w3c-ebnf/) | Convert Tree-sitter `grammar.json` rules to structural W3C EBNF with XQuery4, explicitly marking unsupported constructs |

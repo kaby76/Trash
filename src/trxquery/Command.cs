@@ -220,7 +220,7 @@ class Command
 
     // Converts a constructed XdmElement tree (from an element constructor) back
     // to a UnvParseTreeElement so it can be serialised as a JSON parse tree.
-    static UnvParseTreeElement XdmToUnv(XdmElement elem)
+    internal static UnvParseTreeElement XdmToUnv(XdmElement elem)
     {
         var result = new UnvParseTreeElement { LocalName = elem.NodeName?.LocalName ?? "" };
         var list = (UnvParseTreeNodeList)result.ChildNodes;

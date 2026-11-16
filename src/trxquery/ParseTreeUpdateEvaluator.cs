@@ -231,6 +231,11 @@ class ParseTreeUpdateEvaluator : XQueryEvaluator
             if (attrNode != null) TreeEdits.InsertBefore(target, attrNode);
             return;
         }
+        if (item is XdmElement constructed)
+        {
+            TreeEdits.InsertBefore(target, Command.XdmToUnv(constructed));
+            return;
+        }
         var src = ExtractSource(item);
         if (src != null)
             TreeEdits.InsertBefore(target, src);
@@ -244,6 +249,11 @@ class ParseTreeUpdateEvaluator : XQueryEvaluator
         {
             var attrNode = MakeAttrNode(item);
             if (attrNode != null) TreeEdits.InsertAfter(target, attrNode);
+            return;
+        }
+        if (item is XdmElement constructed)
+        {
+            TreeEdits.InsertAfter(target, Command.XdmToUnv(constructed));
             return;
         }
         var src = ExtractSource(item);
@@ -285,6 +295,10 @@ class ParseTreeUpdateEvaluator : XQueryEvaluator
             var attrNode = MakeAttrNode(item);
             if (attrNode == null) return;
             nodeToInsert = attrNode;
+        }
+        else if (item is XdmElement constructed)
+        {
+            nodeToInsert = Command.XdmToUnv(constructed);
         }
         else
         {
