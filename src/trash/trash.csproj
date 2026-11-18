@@ -2,7 +2,7 @@
 
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFramework>net11.0</TargetFramework>
 		<PackAsTool>true</PackAsTool>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
@@ -26,7 +26,7 @@ Usage: trash <command> [options]  (e.g. trash trgen, trash gen, trash trparse)]]
 
 	<!-- Sub-tool DLLs pre-published into staging/ by scripts/pack-trash.sh -->
 	<ItemGroup>
-		<None Include="staging\**\*" Pack="true" PackagePath="tools/net10.0/any/" />
+		<None Include="staging\**\*" Pack="true" PackagePath="tools/net11.0/any/" />
 	</ItemGroup>
 
 	<ItemGroup>

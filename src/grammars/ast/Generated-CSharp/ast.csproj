@@ -1,7 +1,7 @@
 <!-- Generated from trgen 4.4.0 -->
 <Project Sdk="Microsoft.NET.Sdk" >
   <PropertyGroup>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net11.0</TargetFramework>
     <OutputType>Exe</OutputType>
     <ProduceReferenceAssembly>false</ProduceReferenceAssembly>
   </PropertyGroup>
@@ -35,7 +35,7 @@ for %%G in (..\examples\*) do (
   set X3=%%~pG
   if !X1! neq .errors (
     echo !FILE!
-    type !FILE! | dotnet bin\Debug\net10.0\ast.dll
+    type !FILE! | dotnet bin\Debug\net11.0\ast.dll
     if not exist !FILE!.errors (
       if ERRORLEVEL 1 set ERR=1
     ) else (
