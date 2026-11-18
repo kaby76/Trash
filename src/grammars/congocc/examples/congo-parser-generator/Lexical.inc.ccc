@@ -1,0 +1,599 @@
+// An included part of the CongoCC grammar that is just the
+// part that involves the lexical specification
+
+
+TOKEN :
+  <HASH : "#">
+  |
+  <BACKSLASH : "\\"> #Backslash
+  |
+  <RIGHT_ARROW : "=>"> #RightArrow
+  |
+  <UP_TO_HERE : "=>|" ("|" | ("+" ["0"-"9"]))>
+  |
+  <_LEXICAL_STATE : "LEXICAL_STATE"> #CongoCCKeyWord
+  |
+  <SINGLE_QUOTE_STRING:
+      "'"
+      (
+          ~["'","\\","\n","\r"]
+          |
+          <STRING_ESCAPE>
+      ){2,}
+       "'"
+  > #StringLiteral
+;
+
+TOKEN :
+   <?UNPARSED_CODE_BLOCK : <UNPARSED_BLOCK1> | <UNPARSED_BLOCK2>> #UnparsedCodeBlock
+   {
+       if (charAt(matchEnd) == '#') matchedToken.truncate(-1);
+       char langLetter = matchedToken.charAt(1);
+       Node.CodeLang codeLang = switch(langLetter) {
+           case 'C' -> Node.CodeLang.CSHARP;
+           case 'J' -> Node.CodeLang.JAVA;
+           case 'P' -> Node.CodeLang.PYTHON;
+           case 'R' -> Node.CodeLang.RUST;
+           default-> null;
+       };
+       if (codeLang != null && codeLang != getGrammar().getCodeLang()) {
+           matchedToken.setUnparsed(true);
+       }
+   }
+   |
+   <#UNPARSED_BLOCK1 : "{" (["J","P","C","R"])? "%" (~[])* "%}">
+   |
+   <#UNPARSED_BLOCK2 : "{{" (["J","P","C","R"])? "%%" (~[])* "%%}}">
+;
+
+TokenProduction :
+{
+    String tokenClassName = null;
+    String firstSpecifiedLexicalState = null;
+    boolean multipleStatesSpecified = false;
+    boolean ignoreCase = false;
+    boolean isContextual = false;
+    THIS.setIgnoreCase(this.ignoreCase);
+}
+  [
+    "<" "*" =>|| ">" {multipleStatesSpecified = true;}
+    |
+    "<" <IDENTIFIER>
+      {
+          firstSpecifiedLexicalState = lastConsumedToken.toString();
+          grammar.addLexicalState(firstSpecifiedLexicalState);
+      }
+      ("," <IDENTIFIER> {multipleStatesSpecified = true; grammar.addLexicalState(lastConsumedToken.toString());})*
+     ">"
+  ]
+  (
+    <_TOKEN> {%thisProduction.setKind(Kind.TOKEN);%}
+    |
+    <_UNPARSED> {%thisProduction.setKind(Kind.UNPARSED);%}
+    |
+    <_SKIP> {%thisProduction.setKind(Kind.SKIPPED);%}
+    |
+    <_MORE> {%thisProduction.setKind(Kind.MORE);%}
+    |
+    <_CONTEXTUAL> {%thisProduction.setKind(Kind.CONTEXTUAL); isContextual = true; %}
+  )
+  [
+    "[" "IGNORE_CASE" {ignoreCase = true;} "]"
+  ]
+  ["#" Name {
+    tokenClassName=peekNode().toString();
+    thisProduction.setTokenClassName(tokenClassName);
+    }
+  ]
+  ":"
+   RegexpSpec(tokenClassName, isContextual)
+   ( "|" RegexpSpec(tokenClassName, isContextual) )*
+   ";"
+   {
+      if (!multipleStatesSpecified) {
+          if (firstSpecifiedLexicalState == null) {
+              firstSpecifiedLexicalState = this.defaultLexicalState;
+          }
+          thisProduction.setImplicitLexicalState(firstSpecifiedLexicalState);
+      }
+      thisProduction.setIgnoreCase(ignoreCase || grammar.getAppSettings().isIgnoreCase());
+   }
+;
+
+INJECT TokenProduction :
+    import java.util.*;
+    import org.congocc.core.RegexpSpec;
+    import static NODE_PACKAGE.TokenProduction.Kind.*;
+{
+    public enum Kind {
+        TOKEN, UNPARSED, MORE, SKIPPED, CONTEXTUAL
+    }
+
+    @Property private boolean ignoreCase;
+    @Property String tokenClassName;
+    @Property Kind kind = TOKEN;
+
+    private String implicitLexicalState;
+
+    public void setImplicitLexicalState(String implicitLexicalState) {
+        this.implicitLexicalState = implicitLexicalState;
+    }
+
+    public boolean isContextual() {
+        return getKind() == CONTEXTUAL;
+    }
+
+    public List<RegexpSpec> getRegexpSpecs() {
+        return childrenOfType(RegexpSpec.class);
+    }
+
+    /**
+     * The states in which this regular expression production exists.
+     */
+    public Set<String> getLexicalStateNames() {
+        Set<String> states = new LinkedHashSet<String>();
+        for (Token t : childrenOfType(Token.class)) {
+            if (t.getType() == HASH || t.getType() == COLON) break;
+            if (t.getType() == STAR) {
+                states.addAll(getGrammar().getLexicalStates());
+                break;
+            }
+            if (t.getType() == IDENTIFIER) {
+                states.add(t.toString());
+            }
+        }
+        if (states.isEmpty()) {
+            states.add(implicitLexicalState);
+        }
+        return states;
+    }
+}
+
+RegexpSpec(String tokenClassName, boolean isContextual)#org.congocc.core.RegexpSpec :
+{
+    RegularExpression regexp;
+    boolean isPrivate = false;
+    String image = "";
+}
+    (
+        RegexpStringLiteral
+        {%
+            regexp = (RegularExpression) peekNode();
+        %}
+        |
+        <LT>
+        [
+            ["?" | "#" {isPrivate = true;}]
+            <IDENTIFIER> {image = lastConsumedToken.toString();}
+            ":"
+        ]
+        RegexpChoice {%regexp = (RegularExpression)peekNode();%}
+        ASSERT {!isContextual || regexp instanceof RegexpStringLiteral}
+        : "The pattern in a contextual token definition can only be a string literal."
+        {%
+            if (regexp instanceof RegexpRef) {
+                RegexpSequence seq = new RegexpSequence();
+                seq.add(regexp);
+                pokeNode(seq);
+                regexp = seq;
+            }
+            regexp.setLabel(image);
+            regexp.setGeneratedClassName(image);
+            regexp.setPrivate(isPrivate);
+        %}
+        <GT>
+    )
+    {
+        if (tokenClassName != null) {
+            regexp.setGeneratedClassName(tokenClassName);
+        }
+    }
+    [
+        "#" Name
+        {
+            regexp.setGeneratedSuperClassName(tokenClassName);
+            regexp.setGeneratedClassName(peekNode().toString());
+        }
+    ]
+    [
+        SCAN {!regexp.isPrivate()} => EmbeddedCode {
+            regexp.setCodeSnippet((EmbeddedCode) peekNode());
+        }
+    ]
+    [
+        SCAN {!regexp.isPrivate()} =>
+        ":" <IDENTIFIER> {thisProduction.setNextLexicalState(lastConsumedToken.toString());}
+    ]
+;
+
+
+RegexpStringLiteral# :
+   (
+    <STRING_LITERAL>
+    |<CHARACTER_LITERAL> {thisProduction.setSingleQuoted(true);}
+    |<SINGLE_QUOTE_STRING> {thisProduction.setSingleQuoted(true);}
+   )
+   {
+      String image = StringLiteral.removeEscapesAndQuotes(lastConsumedToken.toString());
+      thisProduction.setLiteralString(image);
+   }
+;
+
+INJECT RegexpStringLiteral :
+   import org.congocc.core.*;
+   extends RegularExpression;
+{
+  @Property String literalString;
+  @Property boolean singleQuoted;
+  @Property boolean requireTokenDeclaration;
+
+  private String implicitLexicalState;
+
+  private Boolean ignoreCase;
+
+  @Override
+  public boolean isIgnoreCase() {
+     if (ignoreCase != null) return ignoreCase;
+     TokenProduction tp = getTokenProduction();
+     if (tp != null) return tp.isIgnoreCase();
+     return getAppSettings().isIgnoreCase();
+  }
+
+  public void setIgnoreCase(boolean ignoreCase) {
+    this.ignoreCase = ignoreCase;
+  }
+
+
+  public boolean isContextual() {
+    TokenProduction tp = firstAncestorOfType(TokenProduction.class);
+    if (tp != null) return tp.isContextual();
+    return getSource().charAt(0) == '\'';
+  }
+
+  public int hashCode() {
+      return literalString.hashCode();
+  }
+
+  @Override
+  public boolean matchesEmptyString() {
+      return literalString.length() == 0;
+  }
+
+  public Set<String> getLexicalStateNames() {
+     TokenProduction tp = getTokenProduction();
+     return tp != null ? tp.getLexicalStateNames() : Set.of(implicitLexicalState);
+  }
+
+  public void setImplicitLexicalState(String implicitLexicalState) {
+      assert getTokenProduction() == null;
+      this.implicitLexicalState = implicitLexicalState;
+  }
+
+  public String getImplicitLexicalState() {
+      return this.implicitLexicalState;
+  }
+
+  public boolean isInLexicalState(String lexicalState) {
+       for (String name : getLexicalStateNames()) {
+          if (name.equals(lexicalState)) return true;
+       }
+       return false;
+  }
+}
+
+#RegexpRef :
+{
+   Token t;
+}
+    "<"
+    t=<IDENTIFIER> =>||
+    DEACTIVATE_TOKENS RSIGNEDSHIFT, RUNSIGNEDSHIFT (">")
+    {
+       thisProduction.setLabel(t.toString());
+       return thisProduction;
+    }
+;
+
+INJECT RegexpRef :
+    import org.congocc.core.*;
+    extends RegularExpression;
+{
+    @Property RegularExpression regexp;
+
+    public boolean isPrivate() {
+        return regexp!= null && regexp.isPrivate();
+    }
+
+    @Override
+    public boolean matchesEmptyString() {
+        return regexp != null && regexp.matchesEmptyString();
+    }
+
+    @Override
+    public int getOrdinal() {
+        if (regexp == null) {
+            // This is the case if this RegexpRef refers to a token type
+            // specified in the EXTRA_TOKENS
+            int extraTokensIndex = getGrammar().getAppSettings().getExtraTokenNames().indexOf(getLabel());
+            assert extraTokensIndex >=0;
+            return extraTokensIndex + getGrammar().getLexerData().getRegularExpressions().size();
+        }
+        return regexp.getOrdinal();
+    }
+}
+
+EndOfFile : "<" <_EOF> =>|| ">" ;
+
+INJECT EndOfFile : extends org.congocc.core.RegularExpression
+{
+    @Override
+    public boolean matchesEmptyString() {return true;}
+}
+
+RegexpChoice :
+    RegexpSequence
+    ("|" RegexpSequence)*
+;
+
+RegexpChoiceInParen #RegexpChoice :
+   "(" RegexpSequence ("|" RegexpSequence)* ")"
+;
+
+INJECT RegexpChoice :
+    import java.util.List;
+    import org.congocc.core.RegularExpression;
+    extends RegularExpression;
+{
+    public List<RegularExpression> getChoices() {
+        return childrenOfType(RegularExpression.class);
+    }
+
+    @Override
+    public boolean matchesEmptyString() {
+        for (RegularExpression choice: getChoices()) {
+            if (choice.matchesEmptyString()) {
+                return true;
+            }
+        }
+        return false;
+    }
+}
+
+RegexpSequence :
+   (
+      RegexpStringLiteral
+      |
+      RegexpRef
+      |
+      CharacterList
+      |
+      RepeatedRegexp
+   )+
+;
+
+INJECT RegexpSequence :
+   import java.util.*;
+   import org.congocc.core.RegularExpression;
+   extends RegularExpression;
+{
+
+   public List<RegularExpression> getUnits() {
+       return childrenOfType(RegularExpression.class);
+   }
+
+   @Override
+   public boolean matchesEmptyString() {
+       for (RegularExpression child : getUnits()) {
+           if (!child.matchesEmptyString()) return false;
+       }
+       return true;
+   }
+}
+
+RepeatedRegexp #void :
+{
+     int r1 = 0, r2 = -1;
+}
+  RegexpChoiceInParen
+  (  "+" #OneOrMoreRegexp(2)
+   | "*" #ZeroOrMoreRegexp(2)
+   | "?" #ZeroOrOneRegexp(2)
+   | (
+      "{" <INTEGER_LITERAL> {r1 = ((IntegerLiteral)lastConsumedToken).getValue();}
+           [ "," [ <INTEGER_LITERAL> {r2=((IntegerLiteral)lastConsumedToken).getValue();} ] ]
+       "}"
+     ) #RepetitionRange(+1)
+     {
+         RepetitionRange range = (RepetitionRange) peekNode();
+         range.setMin(r1);
+         range.setMax(r2);
+     }
+  )?
+;
+
+INJECT RepetitionRange :
+   import org.congocc.core.RegularExpression;
+   extends RegularExpression;
+{
+    @Property int min = 0, max = -1;
+
+    public boolean hasMax() {
+        return firstChildOfType(COMMA) != null;
+    }
+
+    public RegularExpression getRegexp() {
+        return firstChildOfType(RegularExpression.class);
+    }
+
+    @Override
+    public boolean matchesEmptyString() {
+        return min==0 || getRegexp().matchesEmptyString();
+    }
+}
+
+INJECT OneOrMoreRegexp :
+   import org.congocc.core.RegularExpression;
+   extends RegularExpression;
+{
+   public RegularExpression getRegexp()
+   {
+      return firstChildOfType(RegularExpression.class);
+   }
+
+   @Override
+   public boolean matchesEmptyString() {
+       return getRegexp().matchesEmptyString();
+   }
+}
+
+INJECT ZeroOrMoreRegexp :
+   import org.congocc.core.RegularExpression;
+   extends RegularExpression;
+{
+   public RegularExpression getRegexp()
+   {
+      return firstChildOfType(RegularExpression.class);
+   }
+
+   public void setRegexp(RegularExpression regexp) {
+      RegularExpression current = getRegexp();
+      if (current != null) {
+          replace(current, regexp);
+      } else {
+          add(0, regexp);
+      }
+   }
+
+   @Override
+   public boolean matchesEmptyString() {
+       return true;
+   }
+}
+
+INJECT ZeroOrOneRegexp :
+   import org.congocc.core.RegularExpression;
+   extends RegularExpression;
+{
+   public RegularExpression getRegexp()
+   {
+      return firstChildOfType(RegularExpression.class);
+   }
+
+   public void setRegexp(RegularExpression regexp) {
+      RegularExpression current = getRegexp();
+      if (current != null) {
+          add(indexOf(current), regexp);
+          remove(current);
+      } else {
+          add(0, regexp);
+      }
+   }
+
+   @Override
+   public boolean matchesEmptyString() {
+       return true;
+   }
+}
+
+CharacterList :
+  ["~"]
+  "[" [CharacterRange
+        ( "," CharacterRange)*
+      ]
+  "]"
+;
+
+INJECT CharacterList :
+   import java.util.*;
+   import org.congocc.core.*;
+   extends RegularExpression;
+{
+    public List<CharacterRange> getDescriptors() {
+        return childrenOfType(CharacterRange.class);
+    }
+
+    public boolean isNegated() {
+        return firstChildOfType(TILDE) != null;
+    }
+
+    @Override
+    public boolean matchesEmptyString() {
+        return false;
+    }
+}
+
+CharacterRange# :
+    (<STRING_LITERAL>|<CHARACTER_LITERAL>)
+    [
+    "-"
+    (<STRING_LITERAL>|<CHARACTER_LITERAL>)
+   ]
+;
+
+INJECT CharacterRange :
+  import java.util.ArrayList;
+{
+    @Property int left, right;
+
+    public CharacterRange() {}
+
+    public CharacterRange(int left, int right) {
+        setRange(left, right);
+    }
+
+    public void setRange(int left, int right) {
+        if (left > right) {
+            throw new ArrayIndexOutOfBoundsException();
+        }
+        this.left = left;
+        this.right = right;
+    }
+
+    public boolean isSingleChar() {
+       return left == right;
+    }
+
+    static private boolean isSingleChar(String s) {
+       if (s.length() == 1) return true;
+       if (s.length() == 2) {
+           return Character.isSurrogatePair(s.charAt(0), s.charAt(1));
+       }
+       return false;
+    }
+
+    public void close() {
+        java.util.List<Token> bounds = new ArrayList<>();
+        for (Node n : children()) {
+            if (n instanceof StringLiteral) bounds.add((Token) n);
+            if (n instanceof CharacterLiteral) bounds.add((Token) n);
+            if (bounds.size() >1) break;
+        }
+        String leftBound = StringLiteral.removeEscapesAndQuotes(bounds.get(0).toString());
+        String rightBound = leftBound;
+        if (bounds.size() >1) {
+            rightBound = StringLiteral.removeEscapesAndQuotes(bounds.get(1).toString());
+        }
+        if (!isSingleChar(leftBound)) {
+            getErrors().addError(bounds.get(0),
+                    "String in character list may contain only one character.");
+        }
+        this.left = this.right = leftBound.codePointAt(0);
+        if (!leftBound.equals(rightBound)) {
+            if (!isSingleChar(rightBound)) {
+                getErrors().addError(bounds.get(1),
+                        "String in character list may contain only one character.");
+            }
+        }
+        if (bounds.size()>1) {
+            String right = StringLiteral.removeEscapesAndQuotes(bounds.get(1).toString());
+            if (!isSingleChar(right)) {
+                getErrors().addError(bounds.get(1),
+                        "String in character list may contain only one character.");
+            }
+            this.right = right.codePointAt(0);
+        }
+        if (this.left>this.right) {
+            getErrors().addError(this, "The left side of the character range must be a lower ordinal (in Unicode) value than the right side.");
+        }
+    }
+}

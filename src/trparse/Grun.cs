@@ -968,6 +968,7 @@ public class Grun
                 ".xtext" => "Xtext",
                 ".jj" => "Javacc",
                 ".jjt" => "Javacc",
+                ".ccc" => "CongoCC",
                 ".abnf" => "ABNF",
                 ".iso14977" => "Iso14977",
                 ".iso" => "Iso14977",
@@ -991,6 +992,7 @@ public class Grun
                 "W3CEBNF" => "w3cebnf",
                 "Xtext" => "xtext",
                 "Javacc" => "javacc",
+                "CongoCC" => "congocc",
                 "ABNF" => "abnf",
                 "Iso14977" => "iso14977",
                 "Pegjs" => "pegjs",
@@ -1089,6 +1091,7 @@ public class Grun
                 "W3CEBNF" => "w3cebnf",
                 "Xtext" => "xtext",
                 "Javacc" => "javacc",
+                "CongoCC" => "congocc",
                 "ABNF" => "abnf",
                 "Iso14977" => "iso14977",
                 "Pegjs" => "pegjs",
@@ -1097,7 +1100,7 @@ public class Grun
                 "Princeton" => "princeton",
                 "ixml" => "ixml",
                 _ => throw new Exception(
-                    "Unknown built-in parser type. Supported: G4X, ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton, ixml, gen.")
+                    "Unknown built-in parser type. Supported: G4X, ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, CongoCC, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton, ixml, gen.")
             };
             // Get this assembly.
             System.Reflection.Assembly a = this.GetType().Assembly;

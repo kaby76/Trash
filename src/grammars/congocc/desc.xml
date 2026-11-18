@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<desc>
+   <targets>CSharp</targets>
+   <test>
+      <inputs>examples/**/*.ccc</inputs>
+      <entry-point>grammarFile</entry-point>
+   </test>
+</desc>

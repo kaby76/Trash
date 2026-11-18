@@ -1,0 +1,438 @@
+// Used as an include from the CongoCC grammar though it does
+// work on its own. This include file contains various code
+// injections into the Java AST that are used in CongoCC.
+
+// We can use this symbol to generate code conditionally
+// based on whether we are generating code for internal use
+#define __congo_internal__
+
+REQUIRE_TOKEN_DECLARATION;
+
+// In general usage, it is probably better to INCLUDE the (more stable) Java grammar
+// that is in the bootstrap jarfile.
+//INCLUDE JAVA
+INCLUDE "../../examples/java/Java.ccc"
+
+// This is actually the CompilationUnit production
+// but without the JEP 512 addition that methods and fields
+// can exist at the top level
+
+#JavaCodeInjection#CompilationUnit :
+  [ PackageDeclaration! ]
+  ( ImportDeclaration )*!
+  ( TypeDeclaration)*!
+  ASSERT ("}")
+  {
+    return thisProduction;
+  }
+;
+
+INJECT Expression : extends EmbeddedCode {
+    default CodeLang getSpecifiedLang() {
+        return CodeLang.JAVA;
+    }
+}
+
+VariableDeclarator# : VariableDeclaratorId [ "=" VariableInitializer ] ;
+
+EmbeddedJavaBlock#void :
+    (SCAN ~(<EOF>) => BlockStatement)*
+    <EOF>
+;
+
+EmbeddedJavaClassOrInterfaceBody#void :
+    (SCAN ~(<EOF>) => ClassOrInterfaceBodyDeclaration)*
+    <EOF>
+;
+
+EmbeddedJavaExpression :
+    Expression
+    <EOF>
+;
+
+INJECT CompilationUnit :
+    import java.util.*;
+{
+    public String getPackageName() {
+        PackageDeclaration jpd = getPackageDeclaration();
+        return (jpd == null) ? null : jpd.getName();
+    }
+
+    public void addImportDeclaration(ImportDeclaration decl) {
+        PackageDeclaration pd = firstChildOfType(PackageDeclaration.class);
+        add(1 + indexOf(pd), decl);
+    }
+}
+
+
+INJECT TypeDeclaration :
+    import java.util.*;
+    import PARSER_PACKAGE.Token.TokenType;
+{
+    default void addElements(List<ClassOrInterfaceBodyDeclaration> elements) {
+        Set<String> keys = new HashSet<String>();
+        for (ClassOrInterfaceBodyDeclaration decl : elements) {
+            if (decl instanceof MethodDeclaration) {
+                keys.add(((MethodDeclaration)decl).getFullSignature());
+            }
+        }
+        //REVISIT. fix token chaining
+        for (Iterator<Node> it = getBody().iterator(); it.hasNext();) {
+            Node n = it.next();
+            if (n instanceof MethodDeclaration) {
+                String s = ((MethodDeclaration) n).getFullSignature();
+                if (keys.contains(s)) {
+                    it.remove();
+                }
+            }
+        }
+        getBody().prepend(elements);
+    }
+
+    default void addAnnotations(Set<Annotation> annotations) {
+       Node parent = this.getParent();
+       int index = parent.indexOf(this);
+       //REVISIT. fix token chaining
+       for (Annotation annotation : annotations) {
+           parent.add(index, annotation);
+       }
+    }
+
+    default boolean isClass() {
+        return firstChildOfType(TokenType.CLASS) != null;
+    }
+
+    default void addImplements(ObjectType type) {
+        ImplementsList implementsList = getImplementsList();
+        if (implementsList == null) {
+           implementsList = new ImplementsList();
+           ListIterator<Node> iterator = iterator();
+           while (iterator.hasNext()) {
+              Node node = iterator.next();
+              if (node instanceof ClassOrInterfaceBody || node instanceof EnumBody)
+                  break;
+           }
+           iterator.previous();
+           iterator.add(implementsList);
+        }
+        implementsList.addType(type);
+    }
+
+    default void addExtends(ObjectType type) {
+        ExtendsList extendsList = getExtendsList();
+        if (extendsList == null) {
+            extendsList = new ExtendsList();
+            ListIterator<Node> iterator = iterator();
+            while (iterator.hasNext()) {
+                Node node = iterator.next();
+                if (node instanceof ImplementsList || node instanceof ClassOrInterfaceBody) {
+                    break;
+                }
+            }
+            iterator.previous();
+            iterator.add(extendsList);
+        }
+        extendsList.addType(type, this instanceof InterfaceDeclaration);
+    }
+}
+
+INJECT ExtendsList :
+     import java.util.*;
+{
+    //REVISIT. fix token chaining
+
+      public void addType(ObjectType type, boolean isInterface) {
+        if (!isInterface) {
+            clear();
+        }
+        ListIterator<Node> iterator = iterator();
+        if (!iterator.hasNext()) {
+            iterator.add(Token.newToken(EXTENDS));
+            iterator.next();
+            iterator.add(type);
+        } else {
+            while (iterator.hasNext()) {
+                if (type.equals(iterator.next()))
+                    return;
+            }
+            iterator.add(Token.newToken(COMMA));
+            iterator.next();
+            iterator.add(type);
+        }
+    }
+}
+
+INJECT TypeParameters :
+    import java.util.*;
+{
+    // REVISIT. fix token chaining?
+    public void add(TypeParameter param) {
+        if (!getParameters().contains(param)) {
+            ListIterator<Node> iterator = iterator();
+            while(iterator.hasNext()) {
+                iterator.next();
+            }
+            iterator.previous();
+            iterator.add(Token.newToken(COMMA));
+            iterator.next();
+            iterator.add(param);
+        }
+    }
+
+    // REVISIT. fix token chaining
+    public void add(TypeParameters params) {
+        for (TypeParameter param : params.getParameters()) {
+            add(param);
+        }
+    }
+}
+
+INJECT ClassOrInterfaceBody :
+    import java.util.*;
+{
+
+    // REVISIT. fix token chaining?
+    public void prepend(List<ClassOrInterfaceBodyDeclaration> elements) {
+        ListIterator<Node> iterator = iterator();
+        Node n = null;
+        while (iterator.hasNext()) {
+            n = iterator.next();
+              if (n instanceof Token) {
+              Token t = (Token) n;
+               if (t.getType() == LBRACE) {
+                   break;
+               }
+              }
+        }
+        for (ClassOrInterfaceBodyDeclaration elem : elements) {
+            iterator.add(elem);
+            iterator.next();
+        }
+    }
+}
+
+INJECT FieldDeclaration :
+   import java.util.*;
+{
+
+  /**
+   * @return the Identifier nodes that correspond to the
+   *          declaration of an instance variable.
+   */
+  public List<Identifier> getVariableIds() {
+     return descendants(Identifier.class, FieldDeclaration::isVariableDeclarator);
+  }
+
+  static boolean isVariableDeclarator(Identifier id) {
+      Node parent = id.getParent();
+      return parent instanceof VariableDeclaratorId ||
+             parent instanceof VariableDeclarator ||
+             parent instanceof FieldDeclaration;
+  }
+}
+
+INJECT MethodDeclaration :
+{
+    public String getName() {
+        return firstChildOfType(Identifier.class).toString();
+    }
+
+    public FormalParameters getFormalParameters() {
+        return firstChildOfType(FormalParameters.class);
+    }
+
+    public String getFullSignature() {
+        StringBuilder buf = new StringBuilder();
+        buf.append(getName());
+        for (Type type : getFormalParameters().childrenOfType(Type.class)) {
+            buf.append("#");
+            buf.append(type);
+        }
+        return buf.toString();
+    }
+}
+
+INJECT VariableDeclarator : {
+   public String getName() {
+       return firstDescendantOfType(Identifier.class).toString();
+   }
+}
+
+INJECT ThrowsList :
+    import java.util.List;
+    import java.util.ArrayList;
+{
+    public List<Node> getTypes() {
+        return new ArrayList<Node>(childrenOfType(ObjectType.class));
+    }
+}
+
+INJECT ImplementsList :
+   import java.util.*;
+{
+    public List<ObjectType> getTypes() {
+        return childrenOfType(ObjectType.class);
+    }
+    //REVISIT. fix token chaining?
+    public void addType(ObjectType type) {
+        ListIterator<Node> iterator = iterator();
+        if (!iterator.hasNext()) {
+            iterator.add(Token.newToken(IMPLEMENTS));
+            iterator.next();
+            iterator.add(type);
+        } else {
+            while (iterator.hasNext()) {
+                if (type.equals(iterator.next()))
+                    return;
+            }
+            iterator.add(Token.newToken(COMMA));
+            iterator.next();
+            iterator.add(type);
+        }
+    }
+}
+
+INJECT TypeDeclaration :
+    import java.util.*;
+{
+    default String getName() {
+#if false
+        Node thisNode = getNamedChild("name");
+        return (thisNode != null) ? thisNode.toString() : firstChildOfType(Identifier.class).toString();
+#endif
+        Identifier id = firstChildOfType(Identifier.class);
+        return id == null ? null : id.toString();
+    }
+
+    default TypeParameters getTypeParameters() {
+        return firstChildOfType(TypeParameters.class);
+    }
+
+    default ClassOrInterfaceBody getBody() {
+        return firstChildOfType(ClassOrInterfaceBody.class);
+    }
+
+    default ExtendsList getExtendsList() {
+        return firstChildOfType(ExtendsList.class);
+    }
+
+    default ImplementsList getImplementsList() {
+        return firstChildOfType(ImplementsList.class);
+    }
+
+    default PermitsList getPermitsList() {
+        return firstChildOfType(PermitsList.class);
+    }
+
+    default CompilationUnit getCompilationUnit() {
+        return firstAncestorOfType(CompilationUnit.class);
+    }
+
+    default List<ImportDeclaration> getImportDeclarations() {
+        //CompilationUnit jcu = getCompilationUnit();
+        //return (List<ImportDeclaration>)(List)jcu.getImportDeclarations();
+        return getCompilationUnit().childrenOfType(ImportDeclaration.class);
+    }
+}
+
+INJECT FormalParameter :
+{
+    public String getName() {
+        String result = null;
+        Node last = getLastChild();
+
+        if (last instanceof Identifier) {
+            result = ((Identifier) last).toString();
+        }
+        return result;
+    }
+}
+
+INJECT FormalParameters :
+   import java.util.List;
+{
+    public List<FormalParameter> getParams() {
+        return childrenOfType(FormalParameter.class);
+    }
+
+    public String toString() {
+        StringBuilder buf = new StringBuilder();
+        List<FormalParameter> params = getParams();
+        boolean first = true;
+        for (FormalParameter param : params) {
+            if (!first) {
+                buf.append(", ");
+            }
+            buf.append(param.toString());
+            first = false;
+        }
+        return buf.toString();
+    }
+}
+
+INJECT InvocationArguments :
+    import java.util.*;
+{
+    public List<Expression> getArgs() {
+        return childrenOfType(Expression.class);
+    }
+
+    public String toString() {
+        StringBuilder buf = new StringBuilder();
+        List<Expression> args = getArgs();
+        boolean first = true;
+        for (Expression arg : args) {
+            if (!first) {
+                buf.append(", ");
+            }
+            buf.append(arg.toString());
+            first = false;
+        }
+        return buf.toString();
+    }
+}
+
+INJECT CodeBlock :
+  import java.util.List;
+   extends org.congocc.core.EmptyExpansion
+   implements EmbeddedCode
+{
+    @Property boolean hasHash;
+
+    public boolean isAppliesInLookahead() {
+        return hasHash || getContainingProduction().isOnlyForLookahead();
+    }
+
+    @Override
+    public boolean startsWithGlobalCodeAction(boolean stopAtScanLimit) {
+        return isAppliesInLookahead();
+    }
+
+    public CodeBlock getJavaCode() {
+        return this;
+    }
+
+    public CodeLang getSpecifiedLang() {
+        return CodeLang.JAVA;
+    }
+
+    public String toString() {
+        StringBuilder buf = new StringBuilder();
+        List<? extends TerminalNode> tokens = getAllTokens(true);
+        boolean outputOpeningBrace = false;
+        for (int i=0; i<tokens.size() -1; i++) {
+            Token t = (Token) tokens.get(i);
+            buf.append(" ");
+            if (i>0 && ((Token)tokens.get(i-1)).getEndOffset() != t.getBeginOffset()) {
+                buf.append(" ");
+            }
+            if (outputOpeningBrace) {
+                buf.append(t);
+            } else if (t.getType() == TokenType.LBRACE) {
+                outputOpeningBrace = true;
+            }
+            buf.append(" ");
+        }
+        return buf.toString();
+    }
+}

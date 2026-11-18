@@ -1,0 +1,480 @@
+DEFAULT_LEXICAL_STATE=KOTLIN;
+BASE_Name=Kotlin;
+
+TOKEN :
+   <SHEBANG : "#!" (~["\n"])* >
+   |
+   <NL : "\n" | "\r\n" > #Newline
+;
+
+SKIP :
+   <WS : " " | "\t" | "\f" | "\n" | "\r">
+;
+
+UNPARSED #Comment :
+  < LINE_COMMENT : "//" (~["\n"])* > #LineComment
+;
+
+INJECT LEXER_CLASS :
+{
+    private int commentStart, commentNesting;
+}
+
+MORE:
+   <COMMENT_START : "/*">  {commentStart = matchStart;} : IN_DELIMITED_COMMENT
+;
+
+<IN_DELIMITED_COMMENT>
+MORE:
+   <ANY_CHAR : ~[]>
+   |
+   <START_NESTED_COMMENT: "/*"> {commentNesting++;}
+;
+
+<IN_DELIMITED_COMMENT>
+UNPARSED :
+   <DELIMITED_COMMENT : "*/">
+   {
+      if (commentNesting > 0) {
+         commentNesting--;
+         matchedToken = null;
+      }
+      else {
+         matchedToken.setBeginOffset(commentStart);
+         switchTo(LexicalState.KOTLIN);
+      }
+   }
+;
+
+TOKEN #Operator :
+   <ELLIPSIS : "...">
+   |
+   <DOT : ".">
+   |
+   <COMMA : ",">
+   |
+   <LPAREN : "(" >
+   |
+   <RPAREN : ")" >
+   |
+   <LSQUARE : "[">
+   |
+   <RSQUARE : "]">
+   |
+   <LCURL : "{">
+   |
+   <RCURL : "}" >
+   |
+   <MULT : "*">
+   |
+   <MOD : "%">
+   |
+   <DIV : "/">
+   |
+   <ADD : "+">
+   |
+   <SUB : "-">
+   |
+   <INCR : "++">
+   |
+   <DECR : "--">
+   |
+   <AMP : "&" >
+   |
+   <CONJ : "&&">
+   |
+   <DISJ : "||">
+   |
+   <EXCLAM : "!" >
+   |
+   <COLON : ":">
+   |
+   <ASSIGN : "=">
+   |
+   <ADD_ASSIGNMENT : "+=">
+   |
+   <SUB_ASSIGNMENT : "-=">
+   |
+   <MULT_ASSIGNMENT : "*=">
+   |
+   <DIV_ASSIGNMENT : "/=">
+   |
+   <MOD_ASSIGNMENT : "%=">
+   |
+   <ARROW : "->">
+   |
+   <DOUBLE_ARROW : "=>">
+   |
+   <RANGE : "..">
+   |
+   <RANGE2 : "..<">
+   |
+   <COLON_COLON : "::">
+   |
+   <SEMICOLON : ";">
+   |
+   <DOUBLE_SEMICOLON : ";;">
+   |
+   <HASH : "#">
+   |
+   <AT : "@">
+   |
+   <QUEST : "?">
+   |
+   <ELVIS : "?:"> {
+      if (charAt(matchEnd) == ':') {
+         matchedToken.truncate(1);
+      }
+   }
+   |
+   <LANGLE : "<">
+   |
+   <RANGLE : ">">
+   |
+   <LE : "<=">
+   |
+   <GE : ">=">
+   |
+   <AS_SAFE : "as?">
+   |
+   <EXCL_EQ : "!=">
+   |
+   <EXCL_EQ_EQ : "!==">
+   |
+   <EQ_EQ : "==">
+   |
+   <EQ_EQ_EQ : "===">
+;
+
+TOKEN #Keyword :
+   <RETURN_AT : "return@"<IDENTIFIER>>
+   |
+   <CONTINUE_AT : "continue@"<IDENTIFIER>>
+   |
+   <BREAK_AT : "break@"<IDENTIFIER>>
+   |
+   <SUPER_AT : "super@"<IDENTIFIER>>
+   |
+   <THIS_AT : "this@"<IDENTIFIER>>
+   |
+   <PACKAGE : "package">
+   |
+   <CLASS : "class">
+   |
+   <INTERFACE : "interface">
+   |
+   <FUN : "fun">
+   |
+   <OBJECT : "object">
+   |
+   <VAL : "val">
+   |
+   <VAR : "var">
+   |
+   <TYPE_ALIAS : "typealias">
+   |
+   <_THIS : "this">
+   |
+   <SUPER : "super">
+   |
+   <TYPEOF : "typeof">
+   |
+   <IF : "if">
+   |
+   <ELSE : "else">
+   |
+   <WHEN : "when">
+   |
+   <TRY : "try">
+   |
+   <FOR : "for">
+   |
+   <DO : "do">
+   |
+   <WHILE : "while">
+   |
+   <THROW : "throw">
+   |
+   <RETURN : "return">
+   |
+   <CONTINUE : "continue">
+   |
+   <BREAK : "break">
+   |
+   <AS : "as">
+   |
+   <IS : "is">
+   |
+   <IN : "in">
+   |
+   <NOT_IS : "!is"> {
+      if (Character.isJavaIdentifierPart(charAt(matchEnd))) {
+         matchedToken.truncate(2);
+         matchedToken = matchedToken.replaceType(EXCLAM);
+      }
+   }
+   |
+   <NOT_IN : "!in"> {
+      if (Character.isJavaIdentifierPart(charAt(matchEnd))) {
+         matchedToken.truncate(2);
+         matchedToken = matchedToken.replaceType(EXCLAM);
+      }
+   }
+   |
+   <UNDERSCORE : "_">
+;
+
+CONTEXTUAL :
+   <ABSTRACT : "abstract">
+   |
+   <ALL : "all">
+   |
+   <ANNOTATION : "annotation"> #_ANNOTATION
+   |
+   <BY : "by">
+   |
+   <CATCH : "catch">
+   |
+   <COMPANION : "companion">
+   |
+   <CONSTRUCTOR : "constructor">
+   |
+   <CONTEXT : "context">
+   |
+   <CROSSINLINE : "crossinline">
+   |
+   <DATA : "data">
+   |
+   <DYNAMIC : "dynamic">
+   |
+   <ENUM : "enum">
+   |
+   <EXTERNAL : "external">
+   |
+   <FINAL : "final">
+   |
+   <FINALLY : "finally">
+   |
+   <IMPORT : "import">
+   |
+   <INFIX : "infix">
+   |
+   <INIT : "init">
+   |
+   <INLINE : "inline">
+   |
+   <INNER : "inner">
+   |
+   <INTERNAL : "internal">
+   |
+   <LATEINIT : "lateinit">
+   |
+   <NOINLINE : "noinline">
+   |
+   <OPEN : "open">
+   |
+   <OPERATOR : "operator"> #_OPERATOR
+   |
+   <OUT : "out">
+   |
+   <OVERRIDE : "override">
+   |
+   <PRIVATE : "private">
+   |
+   <PROTECTED : "protected">
+   |
+   <PUBLIC : "public">
+   |
+   <REIFIED : "reified">
+   |
+   <SEALED : "sealed">
+   |
+   <TAILREC : "tailrec">
+   |
+   <VARARG : "vararg">
+   |
+   <WHERE : "where">
+   |
+   <GET : "get">
+   |
+   <SET : "set">
+   |
+   <FIELD : "field">
+   |
+   <PROPERTY : "property">
+   |
+   <RECEIVER : "receiver">
+   |
+   <PARAM : "param">
+   |
+   <SETPARAM : "setparam">
+   |
+   <DELEGATE : "delegate">
+   |
+   <FILE : "file">
+   |
+   <EXPECT : "expect">
+   |
+   <ACTUAL : "actual">
+   |
+   <SUSPEND : "suspend">
+   |
+   <CONST : "const">
+   |
+   <VALUE : "value">
+;
+
+INJECT Literal : implements PrimaryExpression
+
+INJECT NumericalLiteral : extends Literal
+
+INJECT Identifier : implements PrimaryExpression {
+   public boolean canBeAssignedTo() {
+      return true;
+   }
+}
+
+TOKEN #Literal :
+   <TRUE : "true"> #BooleanLiteral
+   |
+   <FALSE : "false"> #BooleanLiteral
+   |
+   <NULL : "null" > #NullLiteral
+;
+
+TOKEN #Literal :
+   <#UNICODE_ESCAPE : "\\" "u" (<HEX_DIGIT>){4}>
+   |
+   <#CHAR_ESCAPE : "\\" ("t" | "b" | "r" | "n" | "'" | '"' | "\\" | "$")>
+   |
+   <#ESCAPE_SEQ : <UNICODE_ESCAPE>|<CHAR_ESCAPE>>
+   |
+   <CHARACTER_LITERAL : "'" (<ESCAPE_SEQ>|~["\r","\n","'","\\"]) "'"> #CharacterLiteral
+;
+
+TOKEN #NumericalLiteral :
+   <#DEC_DIGIT_NO_ZERO : ["1"-"9"]>
+   |
+   <#DEC_DIGIT : ["0"-"9"]>
+   |
+   <#DEC_DIGIT_OR_SEPARATOR : <DEC_DIGIT>|"_">
+   |
+   <#DEC_DIGITS : <DEC_DIGIT> ((<DEC_DIGIT_OR_SEPARATOR>)* <DEC_DIGIT>)?>
+   |
+   <#DOUBLE_EXPONENT : ["e","E"] (["+","-"])? <DEC_DIGITS>>
+   |
+   <DOUBLE_LITERAL : ((<DEC_DIGITS>)? "." <DEC_DIGITS>(<DOUBLE_EXPONENT>)?)
+                     | (<DEC_DIGITS><DOUBLE_EXPONENT>)>
+   |
+   <FLOAT_LITERAL : (<DOUBLE_LITERAL>|<DEC_DIGITS>) ("f"|"F")>
+   |
+   <INTEGER_LITERAL :  <DEC_DIGIT>
+                        |
+                        (
+                           <DEC_DIGIT_NO_ZERO>
+                           (<DEC_DIGIT_OR_SEPARATOR>)*
+                           <DEC_DIGIT>
+                        )
+   >
+   |
+   <#HEX_DIGIT :  ["0"-"9", "a"-"f", "A"-"F"]>
+   |
+   <#HEX_DIGIT_OR_SEPARATOR : <HEX_DIGIT>|"_">
+   |
+   <HEX_LITERAL : "0" ["x","X"] <HEX_DIGIT> ((<HEX_DIGIT_OR_SEPARATOR>)* <HEX_DIGIT>)?>
+   |
+   <#BIN_DIGIT : "0" | "1">
+   |
+   <#BIN_DIGIT_OR_SEPARATOR : "0"|"1"|"_">
+   |
+   <BIN_LITERAL : "0" ["b","B"] <BIN_DIGIT> ((<BIN_DIGIT_OR_SEPARATOR>)* <BIN_DIGIT>)?>
+   |
+   <UNSIGNED_LITERAL : (<INTEGER_LITERAL>|<HEX_LITERAL>|<BIN_LITERAL>) ["u", "U"] ("L")?>
+   |
+   <LONG_LITERAL : (<INTEGER_LITERAL>|<HEX_LITERAL>|<BIN_LITERAL>) "L">
+;
+
+INJECT LEXER_CLASS : {
+   private int numDollars, openingDollars;
+   private int countOpeningDollars(CharSequence seq) {
+      for (int i = 0; i<seq.length();i++) {
+         if (seq.charAt(i) != '$') return i;
+      }
+      return seq.length();
+   }
+}
+
+TOKEN :
+   <TRIPLE_QUOTE_OPEN : ("$")* '"""'> {
+      numDollars = matchedToken.toString().indexOf('"');
+      numDollars=Math.max(numDollars,1);
+   }
+   |
+   <SINGLE_QUOTE_OPEN : ("$")* '"'> {
+      numDollars = matchedToken.toString().indexOf('"');
+      numDollars=Math.max(numDollars,1);
+   }
+;
+
+<IN_REGULAR_STRING>
+TOKEN :
+   <#LINE_STR_TEXT : (~['\\','"','$'])+ | "$">
+   |
+   <SINGLE_QUOTE_CLOSE : '"'>
+   |
+   <FIELD_IDENTIFIER : ("$")+ <IDENTIFIER>> {
+      openingDollars = countOpeningDollars(matchedToken);
+      if (openingDollars < numDollars) {
+         matchedToken.setType(LINE_STRING_CONTENT);
+      }
+      else if (openingDollars > this.numDollars) {
+         matchedToken.setEndOffset(matchedToken.getBeginOffset() + openingDollars - numDollars);
+         matchedToken.setType(LINE_STRING_CONTENT);
+      }
+   }
+   |
+   <LINE_STRING_CONTENT : <LINE_STR_TEXT>|<CHAR_ESCAPE>|<UNICODE_ESCAPE>>
+   |
+   <LINE_STR_EXPRESSION_START : ("$")+ "{">
+   {
+      int dollars = matchedToken.length() -1;
+      if (dollars != numDollars) {
+         //In either case, we just consume a $ character as a plain text token.
+         matchedToken.setEndOffset(matchedToken.getBeginOffset()+1);
+         matchedToken.setType(LINE_STRING_CONTENT);
+      }
+   }
+;
+
+<IN_MULTILINE_STRING>
+TOKEN :
+   <TRIPLE_QUOTE_CLOSE : '"""' > {
+      if (matchedToken.charAt(matchedToken.length()) == '"') {
+         matchedToken.setEndOffset(matchedToken.getBeginOffset()+1);
+         matchedToken.setType(MULTI_LINE_TEXT);
+      }
+   }
+   |
+   <MULTI_LINE_TEXT : (~['"','$'])+ | "$" | '"'>
+   |
+   <MULT_LINE_EXPRESSION_START : ("$")+ "{"> {
+      openingDollars = countOpeningDollars(matchedToken);
+      if (openingDollars < numDollars) {
+         matchedToken.setType(MULTI_LINE_TEXT);
+      }
+      else if (openingDollars > numDollars) {
+         matchedToken.setEndOffset(matchedToken.getBeginOffset() + openingDollars - numDollars);
+         matchedToken.setType(MULTI_LINE_TEXT);
+      }
+   }
+;
+
+INCLUDE "KotlinIdentifierDef.ccc"
+
+TOKEN #Identifier :
+   <#REGULAR_IDENTIFIER : <KOTLIN_IDENTIFIER_START> (<KOTLIN_IDENTIFIER_PART>)*>
+   |
+   <#BACK_QUOTE_IDENTIFIER : '`' (~['`','\r','\n'])+ '`'>
+   |
+   <IDENTIFIER : <REGULAR_IDENTIFIER> | <BACK_QUOTE_IDENTIFIER>>
+;

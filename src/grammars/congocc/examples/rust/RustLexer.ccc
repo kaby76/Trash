@@ -1,0 +1,365 @@
+DEFAULT_LEXICAL_STATE=RUST;
+ENSURE_FINAL_EOL;
+
+SKIP :
+  <WHITESPACE : (" "| "\t"| "\n"| "\r"| "\f")+> #Whitespace
+;
+
+TOKEN :
+   <SHE_BANG : "#!" (~["\n"])* "\n">
+;
+
+UNPARSED #Comment :
+  < LINE_COMMENT : "//" (~["\n"])* "\n" > #LineComment
+;
+
+CONTEXTUAL #KeyWord :
+   <MACRO_RULES : 'macro_rules'>
+   |
+   <RAW : 'raw'>
+   |
+   <SAFE : 'safe'>
+   |
+   <UNION : 'union'>
+   |
+   <STATIC_LIFETIME : "'static">
+;
+
+TOKEN #KeyWord :
+  <UNDERSCORE : "_">
+| < ABSTRACT: "abstract" >
+|  < AS: "as" >
+| < ASYNC: "async" >
+| < AWAIT: "await" >
+| < BECOME: "become" >
+| < BREAK : "break" >
+//| < BOX: "box" >
+| < CONST: "const" >
+| < CONTINUE: "continue" >
+| < CRATE: "crate" >
+| < DOLLAR_CRATE: "$crate">
+| < DO: "do" >
+| < DYN: "dyn" >
+| < ELSE: "else" >
+| < ENUM: "enum" >
+| < EXTERN: "extern" >
+| < FALSE: "false" > #BooleanLiteral
+| < FINAL: "final" >
+| < FN: "fn" >
+| < FOR: "for" >
+| < IF: "if" >
+| < IMPL: "impl" >
+| < IN : "in">
+| < LET: "let" >
+| < LOOP: "loop" >
+| < MACRO: "macro" >
+| < MATCH: "match" >
+| < MOD: "mod" >
+| < MOVE: "move" >
+| < MUT : "mut" >
+| < OVERRIDE: "override" >
+| < PRIV: "priv" >
+| < PUB: "pub">
+| < REF: "ref" >
+| < RETURN: "return" >
+| < SELF: "self" >
+| < SELF2: "Self" >
+| < STATIC: "static" >
+| < STRUCT: "struct" >
+| < SUPER: "super" >
+| < TRAIT: "trait" >
+| < TRUE: "true" > #BooleanLiteral
+| < TRY: "try" >
+| < TYPE: "type" >
+| < TYPEOF: "typeof" >
+| < UNSAFE : "unsafe" >
+| < UNSIZED: "unsized" >
+| < USE: "use" >
+| < VIRTUAL: "virtual" >
+| < WHERE: "where" >
+| < WHILE: "while" >
+| < YIELD: "yield" >
+;
+
+TOKEN #Delimiter :
+    <LBRACE: "{">
+  | <RBRACE: "}">
+  | <LBRACKET: "[">
+  | <RBRACKET: "]">
+  | <LPAREN: "(">
+  | <RPAREN: ")">
+;
+
+TOKEN #NumericalLiteral :
+    <FLOATING_POINT_LITERAL :
+       <FLOATING_POINT_LITERAL1>
+       |<FLOATING_POINT_LITERAL2>
+       |<FLOATING_POINT_LITERAL3>
+       |<FLOATING_POINT_LITERAL4>
+    >
+    {
+      if (charAt(matchEnd-1) == '.' && (charAt(matchEnd) == '.' || Character.isUnicodeIdentifierStart(charAt(matchEnd)))) {
+         matchedToken.truncate(1);
+         matchedToken=matchedToken.replaceType(INTEGER_LITERAL);
+      }
+    }
+    |
+    <#FLOATING_POINT_LITERAL1: <DEC_LITERAL> ("f16"|"f32"|"f64")>
+    |
+    <#FLOATING_POINT_LITERAL2: <DEC_LITERAL> ".">
+    |
+    <#FLOATING_POINT_LITERAL3: <DEC_LITERAL> <FLOAT_EXPONENT> ("f16"|"f32"|"f64")?>
+    |
+    <#FLOATING_POINT_LITERAL4 : <DEC_LITERAL> "." <DEC_LITERAL>  (<FLOAT_EXPONENT>)? ("f16"|"f32"|"f64")?>
+    |
+    <#FLOAT_EXPONENT: ["e","E"] (["+","-"])? ("_")* <DEC_LITERAL>>
+    |
+    <INTEGER_LITERAL: (<DEC_LITERAL> | <BIN_LITERAL> | <OCT_LITERAL> | <HEX_LITERAL>) (<INTEGER_SUFFIX>)?>
+    |
+    <#DEC_LITERAL: ["0"-"9"] (["0"-"9","_"])*>
+    |
+    <#BIN_LITERAL: "0b" ("_")* ["0","1"] (["0","1","_"])*>
+    |
+    <#OCT_LITERAL: "0o" ("_")* (["0"-"7"])* (["0"-"7","_"])*>
+    |
+    <#HEX_LITERAL: "0x" ("_")* (<HEX_DIGIT>|"_")*>
+    |
+    <#INTEGER_SUFFIX: 'u8' | 'u16' | 'u32' | 'u64' | 'u128' | 'usize' | 'i8' | 'i16' | 'i32' | 'i64' | 'i128' | 'isize'>
+;
+
+TOKEN #Punctuation :
+   <ELLIPSIS: "...">
+  |<DOT_DOT_EQUALS: "..=">
+  |<LT_LT_EQUALS: "<<=">
+  |<GT_GT_EQUALS: ">>=">
+  |<NOT_EQUALS: "!=">
+  |<MOD_EQUALS: "%=">
+  |<SC_AND: "&&">
+  |<AND_EQUALS: "&=">
+  |<STAR_EQUALS: "*=">
+  |<PLUS_EQUALS: "+=">
+  |<MINUS_EQUALS: "-=">
+  |<RIGHT_ARROW: "->">
+  |<DOT_DOT: "..">
+  |<SLASH_EQUALS: "/=">
+  |<DOUBLE_COLON: "::">
+  |<LT_LT: "<<">
+  |<LTE: "<=">
+  |<EQ: "==">
+  |<RIGHT_ARROW2: "=>">
+  |<GTE: ">=">
+  |<GT_GT: ">>">
+  |<CARET_EQUALS: "^=">
+  |<OR_EQUALS: "|=">
+  |<SC_OR: "||">
+  |<EXCLAM: "!">
+  |<HASH: "#">
+  |<DOLLAR: "$">
+  |<PERCENT: "%">
+  |<BIT_AND: "&">
+  |<STAR: "*">
+  |<PLUS: "+">
+  |<COMMA: ",">
+  |<MINUS: "-">
+  |<DOT: ".">
+  |<SLASH: "/">
+  |<COLON: ":">
+  |<SEMICOLON: ";">
+  |<LT: "<">
+  |<ASSIGN: "=">
+  |<GT: ">">
+  |<HOOK: "?">
+  |<AT: "@">
+  |<CARET: "^">
+  |<BIT_OR: "|">
+  |<TILDE: "~">
+;
+
+
+TOKEN #CharLiteral :
+  <CHAR_LITERAL:
+      "'"
+      (
+          ~["'","\\","\n","\r","\t"]
+          |
+          <QUOTE_ESCAPE>
+          |
+          <ASCII_ESCAPE>
+          |
+          <COMMON_ESCAPE>
+          |
+          <UNICODE_ESCAPE>
+      )
+      "'"
+      (<ID>)?
+  > #CharacterLiteral
+  |
+  <BYTE_LITERAL : "b'" (<ASCII_FOR_CHAR>|<BYTE_ESCAPE>) "'" (<ID>)?>
+  #ByteLiteral
+  {chopLoneUnderscore(matchedToken);}
+;
+
+TOKEN #StringLiteral :
+  <STRING_LITERAL:
+     '"'
+     (
+        ~['"', "\\", "\r"]
+        |
+        <QUOTE_ESCAPE>
+        |
+        <ASCII_ESCAPE>
+        |
+        <COMMON_ESCAPE>
+        |
+        <UNICODE_ESCAPE>
+        |
+        <STRING_CONTINUE>
+     )*
+     '"'
+     (<ID>)?
+  > {chopLoneUnderscore(matchedToken);}
+  |
+  // REVISIT to limit it to 7-bit ASCII, not worth dealing with now
+  <BYTE_STRING_LITERAL: 'b"' ( ~['"','\\'] | <BYTE_ESCAPE> | "\\\n")* '"' (<ID>)?>
+  {chopLoneUnderscore(matchedToken);}
+  |
+  <C_STRING_LITERAL:
+     'c"'
+     (
+        ~['"', "\\", "\r", "\u0000"]
+        |
+        <C_BYTE_ESCAPE>
+        |
+        <UNICODE_ESCAPE>
+        |
+        <STRING_CONTINUE>
+     )*
+     '"'
+     (<ID>)?
+  >
+  {chopLoneUnderscore(matchedToken);}
+  |
+  <RAW_STRING_LITERAL : ("b")? 'r"' (~['"'])* '"' (<ID>)?>
+  {chopLoneUnderscore(matchedToken);}
+  |
+  <#QUOTE_ESCAPE: '\\"'|"\\'">
+  |
+  <#ASCII_ESCAPE: "\\x" ["0"-"7"] <HEX_DIGIT>>
+  |
+  <#COMMON_ESCAPE: "\\" ["n","r","t","\\","0"]>
+  |
+  <#HEX_DIGIT :  ["0"-"9", "a"-"f", "A"-"F"]>
+  |
+  <#UNICODE_ESCAPE : "\\u{" (<HEX_DIGIT>){1,6} "}">
+  |
+  <#STRING_CONTINUE: "\\\n">
+  |
+  <#ASCII_FOR_CHAR: ["\u0000" - "\u0008", "\u000B", "\u000C", "\u000E"-"&", "("-"[", "]"-"\u007f"]>
+  |
+  <#ASCII_FOR_STRING: ["\u0000" - "&", "(" - "\u007f"]> //any 7-bit ascii char except for the " char
+  |
+  <#BYTE_ESCAPE:
+     "\\x" <HEX_DIGIT><HEX_DIGIT>
+     |
+     "\\" ["n","r","t","\\","0","'",'"']
+  >
+  |
+  <#C_BYTE_ESCAPE:
+     "\\x" <HEX_DIGIT><HEX_DIGIT>
+     |
+     "\\" ["n","r","t","\\","'",'"']
+  >
+;
+
+MORE:
+   <HASH_RAW_STRING_START: ("r"|"br"|"cr") ("#")+ '"'>
+   {
+      rawStringStart = matchStart;
+      int index = matchStart+1;
+      if (charAt(matchStart) != 'r') index++;
+      numStartingHashes = 0;
+      while (charAt(index++) == '#') numStartingHashes++;
+   } : IN_HASH_RAW_STRING
+   |
+   <COMMENT_START : "/*">
+   {commentStart = matchStart;} : IN_MULTILINE_COMMENT
+;
+
+<IN_HASH_RAW_STRING>
+TOKEN:
+   <RAW_STRING_LITERAL_HASH: '"#' ("#")* (<ID>)?> #StringLiteral
+   {
+      int numTrailingHashes = 0;
+      int index2 = matchStart+1;
+      while(charAt(index2++) == '#') numTrailingHashes++;
+      if (numTrailingHashes < numStartingHashes) {
+         matchedToken = null;
+      }
+      else {
+         if (numTrailingHashes > numStartingHashes) {
+             matchedToken.setEndOffset(index2 - (numTrailingHashes - numStartingHashes));
+         }
+         matchedToken.setBeginOffset(rawStringStart);
+         switchTo(LexicalState.RUST);
+      }
+   }
+;
+
+<IN_HASH_RAW_STRING, IN_MULTILINE_COMMENT>
+MORE:
+   <ANY_CHAR : ~[]>
+;
+
+<IN_MULTILINE_COMMENT>
+MORE :
+   <START_NESTED_COMMENT: "/*"> {commentNesting++;}
+;
+
+<IN_MULTILINE_COMMENT>
+UNPARSED :
+   <MULTILINE_COMMENT : "*/">
+   {
+      assert commentNesting >=0 : "Should be impossible!";
+      if (commentNesting > 0) {
+         commentNesting--;
+         matchedToken = null;
+      }
+      else {
+         matchedToken.setBeginOffset(commentStart);
+         switchTo(LexicalState.RUST);
+      }
+   }
+;
+
+INJECT LEXER_CLASS :
+{
+   private int rawStringStart,
+               numStartingHashes,
+               commentStart,
+               commentNesting;
+
+   // The "suffix" after a string literal cannot be a lone underscore.
+   private void chopLoneUnderscore(BASE_TOKEN_CLASS tok) {
+      if (tok.length()>2) {
+        int lastChar = tok.charAt(tok.length()-1);
+        int secondLastChar = tok.charAt(tok.length()-2);
+        if (lastChar == '_' && (secondLastChar == '#' || secondLastChar == '"' || secondLastChar=='\'')) {
+          tok.truncate(1);
+        }
+      }
+   }
+}
+
+TOKEN :
+   <UNDERLINE_LIFETIME : "'_">
+   |
+   <LIFETIME_OR_LABEL : "'" <ID>>
+;
+
+INCLUDE "RustIdentifierDef.ccc"
+
+TOKEN #Ident :
+  < ID: <RUST_IDENTIFIER_START> (<RUST_IDENTIFIER_PART>)* >
+  |
+  < RAW_IDENTIFIER: "r#" <ID>> #RawIdentifier
+;

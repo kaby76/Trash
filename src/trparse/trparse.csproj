@@ -50,6 +50,7 @@ This program is part of the Trash toolkit.]]>
 		<ProjectReference Include="../grammars/grammophone/Generated-CSharp/grammophone.csproj" />
 		<ProjectReference Include="../grammars/iso14977/Generated-CSharp/iso14977.csproj" />
 		<ProjectReference Include="../grammars/javacc/Generated-CSharp/javacc.csproj" />
+		<ProjectReference Include="../grammars/congocc/Generated-CSharp/congocc.csproj" />
 		<ProjectReference Include="../grammars/lark/Generated-CSharp/lark.csproj" />
 		<ProjectReference Include="../grammars/lbnf/Generated-CSharp/lbnf.csproj" />
 		<ProjectReference Include="../grammars/pegjs/Generated-CSharp/pegjs.csproj" />

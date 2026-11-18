@@ -34,6 +34,7 @@ Accepted values:
 * `Iso14977` — ISO 14977 EBNF (`.iso14977`, `.iso`)
 * `ABNF` — IETF ABNF (`.abnf`)
 * `Javacc` — JavaCC (`.jj`, `.jjt`)
+* `CongoCC` — CongoCC (`.ccc`)
 * `Pegjs` — PEG.js (`.pegjs`)
 * `Pest` — Pest (`.pest`)
 * `Xtext` — Xtext (`.xtext`)
@@ -58,6 +59,7 @@ Accepted values:
 | ISO 14977 EBNF | `.iso14977`, `.iso` | `Iso14977` |
 | IETF ABNF | `.abnf` | `ABNF` |
 | JavaCC | `.jj`, `.jjt` | `Javacc` |
+| CongoCC | `.ccc` | `CongoCC` |
 | PEG.js | `.pegjs` | `Pegjs` |
 | Pest | `.pest` | `Pest` |
 | Xtext | `.xtext` | `Xtext` |
