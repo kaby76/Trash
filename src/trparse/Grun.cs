@@ -1022,9 +1022,9 @@ public class Grun
                 string path = Environment.CurrentDirectory + Path.DirectorySeparatorChar;
                 path = path.Replace("\\", "/");
                 if (!path.EndsWith("/")) path = path + "/";
-                var full_path = path + "bin/Debug/net10.0/";
+                var full_path = path + "bin/Debug/net11.0/";
                 var exists = File.Exists(full_path + "Test.dll");
-                if (!exists) full_path = path + "bin/Release/net10.0/";
+                if (!exists) full_path = path + "bin/Release/net11.0/";
                 exists = File.Exists(full_path + "Test.dll");
                 if (exists)
                 {
@@ -1044,10 +1044,10 @@ public class Grun
             if (!path.EndsWith("/")) path = path + "/";
             var candidates = new[]
             {
-                path + "Generated-CSharp/bin/Debug/net10.0/",
-                path + "bin/Debug/net10.0/",
-                path + "Generated-CSharp/bin/Release/net10.0/",
-                path + "bin/Release/net10.0/",
+                path + "Generated-CSharp/bin/Debug/net11.0/",
+                path + "bin/Debug/net11.0/",
+                path + "Generated-CSharp/bin/Release/net11.0/",
+                path + "bin/Release/net11.0/",
             };
             string found_path = null;
             foreach (var candidate in candidates)

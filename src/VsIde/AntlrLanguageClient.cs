@@ -98,8 +98,8 @@
                 string f = System.IO.Path.GetFullPath(a.Location);
                 string p = System.IO.Path.GetDirectoryName(f);
                 //string antlr_executable = p + System.IO.Path.DirectorySeparatorChar
-                //                            + @"Server\net10.0\LspServer.exe";
-                string antlr_executable = @"c:\Users\Kenne\Documents\GitHub\Trash\src\LspServer\bin\Debug\net10.0\LspServer.exe";
+                //                            + @"Server\net11.0\LspServer.exe";
+                string antlr_executable = @"c:\Users\Kenne\Documents\GitHub\Trash\src\LspServer\bin\Debug\net11.0\LspServer.exe";
                 string workspace_path = cache_location;
                 if (string.IsNullOrEmpty(workspace_path))
                 {

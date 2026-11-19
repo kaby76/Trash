@@ -57,7 +57,7 @@ fi
 mkdir -p "$output_dir"
 
 # Parse all input files.
-runner=("$generated_dir/bin/Debug/net10.0/Test.exe")
+runner=("$generated_dir/bin/Debug/net11.0/Test.exe")
 # Group parsing.
 echo "${parse_inputs[*]}" | trash wdog "${runner[@]}" -q -x -tee -tree -o "$output_dir" > parse.txt 2>&1
 status=$?

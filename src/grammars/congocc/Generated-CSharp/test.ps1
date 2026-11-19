@@ -26,7 +26,7 @@ if ($files.Count -eq 0) {
 }
 
 # Parse inputs; all generated artifacts stay under this generated app.
-$runner = @("$generatedDir/bin/Debug/net10.0/Test.exe")
+$runner = @("$generatedDir/bin/Debug/net11.0/Test.exe")
 Push-Location -LiteralPath $sourceRoot
 try {
     $files.ToArray() | & dotnet trash wdog @runner -q -x -tee -tree -o $outputDir *> $parseFile
