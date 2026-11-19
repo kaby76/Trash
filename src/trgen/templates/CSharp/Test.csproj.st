@@ -1,7 +1,7 @@
 \<!-- Generated from trgen <version> -->
 \<Project Sdk="Microsoft.NET.Sdk" >
   \<PropertyGroup>
-    \<TargetFramework>net10.0\</TargetFramework>
+    \<TargetFramework>net11.0\</TargetFramework>
     \<OutputType>Exe\</OutputType>
     \<ProduceReferenceAssembly>false\</ProduceReferenceAssembly>
   \</PropertyGroup>
