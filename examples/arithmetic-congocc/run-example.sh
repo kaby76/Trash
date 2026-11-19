@@ -9,5 +9,5 @@ else
     dotnet trash gen -t CongoCC
 fi
 cd Generated-CongoCC
-bash build.sh
+CONGOCC_RULE_PREFIX=ParserRule_ bash build.sh
 bash run.sh --per-file ../simple.txt

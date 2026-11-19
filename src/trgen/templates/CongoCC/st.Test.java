@@ -50,17 +50,21 @@ public final class Test {
         long totalStart = System.nanoTime();
         int failures = 0;
         int index = 0;
+        String startRule = Files.readString(Path.of("parser-rule-prefix.txt")) + "<start_symbol>";
+        java.lang.reflect.Method startMethod = generated.<parser_name>.class.getMethod(startRule);
         for (Input input : inputs) {
             long start = System.nanoTime();
             try {
                 String text = input.text != null ? input.text : Files.readString(Path.of(input.name));
                 generated.<parser_name> parser = new generated.<parser_name>(text);
-                parser.ParserRule_<start_symbol>();
+                startMethod.invoke(parser);
                 if (perFile) System.err.printf("CongoCC %d %s success %.6f s%n", index, input.name,
                     (System.nanoTime() - start) / 1_000_000_000.0);
             } catch (Exception ex) {
                 failures++;
-                System.err.printf("CongoCC %d %s failed: %s%n", index, input.name, ex.getMessage());
+                Throwable cause = ex instanceof java.lang.reflect.InvocationTargetException
+                    ? ((java.lang.reflect.InvocationTargetException) ex).getTargetException() : ex;
+                System.err.printf("CongoCC %d %s failed: %s%n", index, input.name, cause.getMessage());
             }
             index++;
         }

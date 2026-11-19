@@ -10,5 +10,5 @@ Set `CONGOCC_JAR` to the CongoCC generator JAR. Its default is
 
 This is an initial converter for named lexer tokens, character sets, string
 literals, `-> skip`, lexer fragments and ranges, grouped alternatives, basic repetition, and simple direct left recursion.
-ANTLR4 alternative order and CongoCC `SCAN` decisions are not translated yet. The left-recursion rewrite does not preserve ANTLR4 precedence or associativity. Parser rules are prefixed with `ParserRule_` to avoid case-insensitive AST class collisions with lexer tokens.
+ANTLR4 alternative order and CongoCC `SCAN` decisions are not translated yet. The left-recursion rewrite does not preserve ANTLR4 precedence or associativity. Parser rule names are preserved by default. `convert.xq` accepts the external `$prefix` parameter; `build.sh` passes `CONGOCC_RULE_PREFIX`, which defaults to the empty string. If the generated Java build encounters an AST class collision with a lexer token, rebuild with `CONGOCC_RULE_PREFIX=ParserRule_ bash build.sh`. The generated driver reads the prefix saved by the build, so `run.sh` needs no matching environment setting.
 See `examples/words-congocc` for a runnable example.

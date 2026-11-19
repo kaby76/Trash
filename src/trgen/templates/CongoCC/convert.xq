@@ -2,12 +2,29 @@
    Unsupported nodes fail explicitly. ANTLR4 prediction/precedence and CongoCC
    SCAN semantics are not translated yet. :)
 
+declare variable $prefix external := '';
+
 declare function local:unsupported($name) {
   fn:error((), fn:concat('CongoCC conversion does not support ', $name))
 };
 
+declare function local:escape-quotes($value, $position) {
+  if ($position > fn:string-length($value)) then ''
+  else
+    let $c := fn:substring($value, $position, 1)
+    return fn:concat(
+      if ($c = '"') then '\"' else $c,
+      local:escape-quotes($value, $position + 1))
+};
+
 declare function local:quote($value) {
-  fn:concat('"', $value, '"')
+  let $plain := if (fn:string-length($value) = 2 and
+    fn:substring($value, 1, 1) = '\' and
+    (fn:substring($value, 2, 1) = ']' or
+     fn:substring($value, 2, 1) = '[' or
+     fn:substring($value, 2, 1) = '-'))
+    then fn:substring($value, 2, 1) else $value
+  return fn:concat('"', local:escape-quotes($plain, 1), '"')
 };
 
 declare function local:literal($node) {
@@ -19,7 +36,6 @@ declare function local:read-char($body, $position) {
   let $c := fn:substring($body, $position, 1)
   return if ($c = '\') then fn:substring($body, $position, 2) else $c
 };
-
 declare function local:class-items($body, $position) {
   if ($position > fn:string-length($body)) then ()
   else
@@ -61,7 +77,7 @@ declare function local:parser-element($node) {
   let $atom := $node/atom
   let $block := $node/ebnf/block
   let $body :=
-    if (fn:exists($atom/ruleref/RULE_REF)) then fn:concat('ParserRule_', fn:string($atom/ruleref/RULE_REF))
+    if (fn:exists($atom/ruleref/RULE_REF)) then fn:concat($prefix, fn:string($atom/ruleref/RULE_REF))
     else if (fn:exists($atom/terminalDef/TOKEN_REF))
       then fn:concat('<', fn:string($atom/terminalDef/TOKEN_REF), '>')
     else if (fn:exists($atom/terminalDef/STRING_LITERAL))
@@ -96,7 +112,7 @@ declare function local:parser-rule($rule, $nl) {
           for $element in $alt/alternative/element[position() > 1]
           return local:parser-element($element), ' '), ' | ')
       return fn:concat('(', $base-body, ') ((', $tails, '))*')
-  return fn:concat('ParserRule_', $name, ' : ', $body, ' ;', $nl)
+  return fn:concat($prefix, $name, ' : ', $body, ' ;', $nl)
 };
 declare function local:lexer-alt-list($list) {
   fn:string-join(
@@ -107,6 +123,20 @@ declare function local:lexer-alt-list($list) {
     ' | ')
 };
 
+declare function local:set-element($node) {
+  let $range := $node/characterRange/STRING_LITERAL
+  return if (fn:exists($node/STRING_LITERAL))
+    then local:literal($node/STRING_LITERAL)
+    else if (fn:count($range) = 2)
+      then fn:concat(local:literal($range[1]), '-', local:literal($range[2]))
+    else local:unsupported('negated set element')
+};
+
+declare function local:not-set($node) {
+  let $members := ($node/blockSet/setElement, $node/setElement)
+  return fn:concat('~[', fn:string-join(
+    for $member in $members return local:set-element($member), ', '), ']')
+};
 declare function local:lexer-element($node) {
   let $atom := $node/lexerAtom
   let $block := $node/lexerBlock
@@ -119,6 +149,7 @@ declare function local:lexer-element($node) {
       then fn:concat('<', fn:string($atom/terminalDef/TOKEN_REF), '>')
     else if (fn:count($range) = 2)
       then fn:concat('[', local:literal($range[1]), '-', local:literal($range[2]), ']')
+    else if (fn:exists($atom/notSet)) then local:not-set($atom/notSet)
     else if (fn:exists($block))
       then fn:concat('(', local:lexer-alt-list($block/lexerAltList), ')')
     else local:unsupported('lexer element')

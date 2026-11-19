@@ -489,6 +489,21 @@ public class XQueryTests
     }
 
     [Fact]
+    public void Module_ExternalVariableDefaultAndOverride()
+    {
+        const string query = "declare variable $prefix external := ''; $prefix";
+        var module = new XQueryParser(query).ParseModule();
+
+        var defaultResult = new XQueryEvaluator().EvaluateModule(module);
+        Assert.Equal("", Assert.IsType<XdmAtomicValue>(defaultResult.First).StringValue);
+
+        var context = new EvaluationContext();
+        context.SetVariable("prefix", new XdmSequence(new XdmAtomicValue("P_")));
+        var suppliedResult = new XQueryEvaluator(context).EvaluateModule(module);
+        Assert.Equal("P_", Assert.IsType<XdmAtomicValue>(suppliedResult.First).StringValue);
+    }
+
+    [Fact]
     public void Module_RecursiveFunctionDeclaration()
     {
         const string query = """

@@ -4,6 +4,9 @@ cd "$(dirname "$0")"
 CONGOCC_JAR="${CONGOCC_JAR:-$HOME/congo-parser-generator/bin/congocc.jar}"
 JAVA="${JAVA:-java}"
 JAVAC="${JAVAC:-javac}"
+# Keep parser rule names by default. If generated Java has a token/AST name collision,
+# rebuild with CONGOCC_RULE_PREFIX=ParserRule_ (or another unique prefix).
+CONGOCC_RULE_PREFIX="${CONGOCC_RULE_PREFIX:-}"
 if [[ ! -f "$CONGOCC_JAR" ]]; then
   echo "CongoCC JAR not found: $CONGOCC_JAR (set CONGOCC_JAR)" >&2
   exit 1
@@ -11,7 +14,10 @@ fi
 # Keep the conversion in the Trash pipeline: parse .g4, evaluate the XQuery4
 # translator, then save the resulting CongoCC grammar for CongoCC itself.
 dotnet trash parse <tool_grammar_files:{g | "<g>" }; separator=" "> |
-  dotnet trash xquery -q convert.xq > <grammar_name>.ccc
+  dotnet trash xquery -q convert.xq "$CONGOCC_RULE_PREFIX" > <grammar_name>.ccc
+printf '%s' "$CONGOCC_RULE_PREFIX" > parser-rule-prefix.txt
+# Discard stale Java/AST classes when changing the parser-rule prefix.
+rm -rf generated classes
 "$JAVA" -jar "$CONGOCC_JAR" <grammar_name>.ccc
 mkdir -p classes
 "$JAVAC" -d classes Test.java generated/*.java generated/ast/*.java
