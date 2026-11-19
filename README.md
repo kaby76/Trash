@@ -118,6 +118,7 @@ sortable reference table are in
 | [interp](src/trinterp/readme.md) | Generate Antlr4 `.interp` files from a grammar parse tree |
 | [itext](src/tritext/readme.md) | Get strings from a PDF file |
 | [json](src/trjson/readme.md) | Print a parse tree in JSON structured format |
+| [machine](src/trmachine/readme.md) | Report CPU, memory, disks, GPU, motherboard, and OS for benchmarks |
 | [nullable](src/trnullable/readme.md) | Nullable analysis of a grammar |
 | [parse](src/trparse/readme.md) | Parse a grammar or use a generated parser to parse input |
 | [perf](src/trperf/readme.md) | Performance analysis of an Antlr grammar parse |

@@ -3,8 +3,8 @@ set -euo pipefail
 cd "$(dirname "$0")"
 export MSYS2_ARG_CONV_EXCL='*'
 
-parse=../../src/trparse/bin/Release/net10.0/trparse.dll
-interp=../../src/trinterp/bin/Release/net10.0/trinterp.dll
+parse=../../src/trparse/bin/Release/net11.0/trparse.dll
+interp=../../src/trinterp/bin/Release/net11.0/trinterp.dll
 
 mkdir -p interp
 dotnet "$parse" -t G4X Java27Lexer.g4x Java27Parser.g4x |

@@ -10,7 +10,7 @@ fi
 here="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
 root="$(cd -- "$here/../.." && pwd)"
 input="$(cd -- "$(dirname -- "$1")" && pwd)/$(basename -- "$1")"
-dotnet "$root/src/trparse/bin/Release/net10.0/trparse.dll" "$here/JSON.g4" \
-  | dotnet "$root/src/trinterp/bin/Release/net10.0/trinterp.dll" \
-  | dotnet "$root/src/trparse/bin/Release/net10.0/trparse.dll" --allstar "$input" \
-  | dotnet "$root/src/trxquery/bin/Release/net10.0/trxquery.dll" -q "$here/convert.xq"
+dotnet "$root/src/trparse/bin/Release/net11.0/trparse.dll" "$here/JSON.g4" \
+  | dotnet "$root/src/trinterp/bin/Release/net11.0/trinterp.dll" \
+  | dotnet "$root/src/trparse/bin/Release/net11.0/trparse.dll" --allstar "$input" \
+  | dotnet "$root/src/trxquery/bin/Release/net11.0/trxquery.dll" -q "$here/convert.xq"
