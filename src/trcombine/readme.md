@@ -56,7 +56,7 @@ root after building `trparse`, `trcombine`, and `trtext` in Release configuratio
 
 ## Current version
 
-Release 4.13.0.
+Release 5.0.0.
 
 ## License
 

@@ -38,7 +38,7 @@ because those scripts run from a `Generated-*` directory.
 
 ## Current version
 
-Release 4.13.0.
+Release 5.0.0.
 
 ## License
 
