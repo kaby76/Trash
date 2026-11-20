@@ -694,7 +694,7 @@ public class LexerAtnFactory : ParserAtnFactory
         return set;
     }
 
-    private static IntervalSet GetUnicodePropertySet(string property)
+    internal static IntervalSet GetUnicodePropertySet(string property)
     {
         var normalized = property.ToLowerInvariant().Replace('-', '_');
         lock (UnicodePropertySets)

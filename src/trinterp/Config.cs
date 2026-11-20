@@ -33,6 +33,12 @@ public class Config
     [Option("grammar-name", Required = false, HelpText = "Select the top-level grammar when multiple grammar families are supplied.")]
     public string GrammarName { get; set; }
 
+    [Option("congocc-scans", Required = false, HelpText = "Write CongoCC choice-analysis facts as text instead of compiling .interp files.")]
+    public bool CongoCCScans { get; set; }
+
+    [Option("congocc-expand-unicode", Required = false, HelpText = "Expand Unicode property placeholders in a CongoCC grammar read as text from stdin.")]
+    public bool CongoCCExpandUnicode { get; set; }
+
     [Option('v', "verbose", Required = false)]
     public bool Verbose { get; set; }
 

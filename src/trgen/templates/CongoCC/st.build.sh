@@ -13,8 +13,23 @@ if [[ ! -f "$CONGOCC_JAR" ]]; then
 fi
 # Keep the conversion in the Trash pipeline: parse .g4, evaluate the XQuery4
 # translator, then save the resulting CongoCC grammar for CongoCC itself.
-dotnet trash parse <tool_grammar_files:{g | "<g>" }; separator=" "> |
-  dotnet trash xquery -q convert.xq "$CONGOCC_RULE_PREFIX" > <grammar_name>.ccc
+grammar_bundle=$(mktemp)
+conversion_error=$(mktemp)
+trap 'rm -f "$grammar_bundle" "$conversion_error"' EXIT
+parse_cmd=(dotnet trash parse)
+query_cmd=(dotnet trash xquery)
+if [[ -n "${TRPARSE_DLL:-}" ]]; then parse_cmd=(dotnet "$TRPARSE_DLL"); fi
+if [[ -n "${TRXQUERY_DLL:-}" ]]; then query_cmd=(dotnet "$TRXQUERY_DLL"); fi
+"${parse_cmd[@]}" <tool_grammar_files:{g | "<g>" }; separator=" "> > "$grammar_bundle"
+interp_cmd=(dotnet trash interp)
+if [[ -n "${TRINTERP_DLL:-}" ]]; then interp_cmd=(dotnet "$TRINTERP_DLL"); fi
+scan_specs=$("${interp_cmd[@]}" --congocc-scans -f "$grammar_bundle")
+if ! "${query_cmd[@]}" -f "$grammar_bundle" -q convert.xq \
+  "$CONGOCC_RULE_PREFIX" "$scan_specs" 2>"$conversion_error" |
+  "${interp_cmd[@]}" --congocc-expand-unicode > <grammar_name>.ccc; then
+  if [[ -s "$conversion_error" ]]; then head -n 1 "$conversion_error" >&2; fi
+  exit 1
+fi
 printf '%s' "$CONGOCC_RULE_PREFIX" > parser-rule-prefix.txt
 # Discard stale Java/AST classes when changing the parser-rule prefix.
 rm -rf generated classes

@@ -21,7 +21,26 @@ public class Command
 
     public void Execute(Config config)
     {
+        if (config.CongoCCExpandUnicode)
+        {
+            var source = config.File == null ? Console.In.ReadToEnd() : File.ReadAllText(config.File);
+            Console.Out.Write(CongoUnicodeExpander.Expand(source));
+            return;
+        }
         var sets = ParsingResultIO.Read(config.File).Results;
+        if (config.CongoCCScans)
+        {
+            foreach (var set in sets)
+                if (set.Nodes?.FirstOrDefault() is UnvParseTreeElement root)
+                {
+                    var syntax = GrammarNode.FromDom(root);
+                    foreach (var diagnostic in CongoChoiceAnalyzer.Diagnostics(syntax))
+                        Console.Error.WriteLine("[trinterp] " + diagnostic);
+                    foreach (var fact in CongoChoiceAnalyzer.Analyze(syntax))
+                        Console.WriteLine(fact);
+                }
+            return;
+        }
         bool bundleOutput = config.OutputDirectory == null;
         var outDir = bundleOutput
             ? Directory.CreateTempSubdirectory("trinterp-").FullName

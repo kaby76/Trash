@@ -33,6 +33,7 @@ This program is part of the Trash toolkit.
 	<ItemGroup>
 		<ProjectReference Include="../AntlrJson/AntlrJson.csproj" />
 		<ProjectReference Include="../ParseTreeEditing/ParseTreeEditing.csproj" />
+		<ProjectReference Include="../GrammarAnalysis/GrammarAnalysis.csproj" />
 		<ProjectReference Include="../Logger/Logger.csproj" />
 		<ProjectReference Include="../xquery4/src/XQuery.DataModel/XQuery.DataModel.csproj" />
 	</ItemGroup>

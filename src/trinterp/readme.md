@@ -33,6 +33,14 @@ When `--actions-in-interp` is specified, grammar actions and semantic predicates
 are appended as strings to the `.interp` file so that interpreter drivers can
 consume them without needing the generated target-language source.
 
+`--congocc-scans` instead writes CongoCC choice-analysis facts as text to
+stdout. The CongoCC `trgen` build template passes these facts to its XQuery
+renderer. The analysis currently covers overlapping terminal-only alternatives
+and tail repetitions whose following tokens distinguish the next enclosing
+rule; it does not translate arbitrary ANTLR4 adaptive prediction.
+Overlapping top-level alternatives that it cannot resolve are reported on
+stderr so the generated CongoCC grammar can be reviewed.
+
 ## Usage
 
     trinterp [options]
@@ -42,6 +50,7 @@ consume them without needing the generated target-language source.
     -o, --output-directory  Write generated files to a directory instead of stdout
     -f, --file              Read parse tree from file instead of stdin
     --actions-in-interp     Append actions and predicates as strings to .interp
+    --congocc-scans         Output CongoCC choice-analysis facts instead of .interp
     -v, --verbose           Verbose output
 
 ## Examples

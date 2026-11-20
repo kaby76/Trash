@@ -5,11 +5,10 @@ This example runs `trgen -t CongoCC` on [Words.g4](Words.g4). The generated
 `dotnet trash parse | dotnet trash xquery`, runs CongoCC on `Words.ccc`, and
 compiles its Java parser and the generated driver.
 
-The alternatives of `wordGroup` deliberately put the three-word form before
-the two-word form. This first pass aims to produce a syntactically valid
-CongoCC grammar and run the three-word input. It does not translate ANTLR4
-alternative prediction into CongoCC `SCAN`; the two-word input is reserved
-for the next step.
+The alternatives of `wordGroup` deliberately share the prefix `WORD COMMA
+WORD`. The C# choice analyzer detects the overlap and emits a CongoCC `SCAN`
+that checks the following `EOF` token before committing to the first
+alternative. Both the two-word and three-word inputs parse.
 
 Set `CONGOCC_JAR` if CongoCC is not at
 `$HOME/congo-parser-generator/bin/congocc.jar`. Java 21 and `javac` must be

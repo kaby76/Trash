@@ -9,8 +9,11 @@ fi
 output=$(bash run-example.sh 2>&1)
 printf '%s\n' "$output"
 [[ "$output" == *'CongoCC 0 ../simple.vmf success'* ]]
+[[ "$output" == *'CongoCC 0 ../example1.txt success'* ]]
+grep -q '^keyvalue :.*SCAN (atomicvalue' Generated-CongoCC/vmf.ccc
 grep -q '^vmf :' Generated-CongoCC/vmf.ccc
 prefixed_output=$(CONGOCC_RULE_PREFIX=ParserRule_ bash run-example.sh 2>&1)
 printf '%s\n' "$prefixed_output"
 [[ "$prefixed_output" == *'CongoCC 0 ../simple.vmf success'* ]]
+[[ "$prefixed_output" == *'CongoCC 0 ../example1.txt success'* ]]
 grep -q '^ParserRule_vmf :' Generated-CongoCC/vmf.ccc
