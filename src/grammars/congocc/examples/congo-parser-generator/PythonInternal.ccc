@@ -1,0 +1,53 @@
+DEFAULT_LEXICAL_STATE=PYTHON;
+BASE_SRC_DIR="../../build/generated-java";
+BASE_NAME=Python;
+ROOT_API_PACKAGE=org.congocc.parser;
+PARSER_PACKAGE=org.congocc.parser.python;
+TOKEN_CHAINING;
+REQUIRE_TOKEN_DECLARATION;
+
+#define __congo_internal__
+
+INCLUDE "../../examples/python/Python.ccc";
+
+INJECT BASE_NODE_CLASS :
+   import org.congocc.core.Grammar;
+{
+    @Property Grammar grammar;
+}
+
+INJECT BASE_TOKEN_CLASS :
+   import org.congocc.core.Grammar;
+{
+    @Property Grammar grammar;
+}
+
+Node EmbeddedPythonExpression :
+    Expression
+    {Node exp = peekNode();}
+    <EOF>
+    {return exp;}
+;
+
+#EmbeddedPythonBlock# :
+  (Statement)*
+  <EOF>
+  {
+    return thisProduction;
+  }
+;
+
+INJECT Module :
+  import org.congocc.codegen.python.PyFormatter;
+{
+    public String toAltFormat() {
+        return new PyFormatter().format(this,true);
+    }
+}
+
+INJECT PARSER_CLASS :
+{
+    public void setExtraIndent(int extraIndent) {
+        token_source.setExtraIndent(extraIndent);
+    }
+}

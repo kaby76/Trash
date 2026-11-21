@@ -3,9 +3,9 @@ set -euo pipefail
 cd "$(dirname "$0")"
 dotnet_cmd=${DOTNET:-dotnet}
 
-parse=../../src/trparse/bin/Release/net10.0/trparse.dll
-interp=../../src/trinterp/bin/Release/net10.0/trinterp.dll
-tree=../../src/trtree/bin/Release/net10.0/trtree.dll
+parse=../../src/trparse/bin/Release/net11.0/trparse.dll
+interp=../../src/trinterp/bin/Release/net11.0/trinterp.dll
+tree=../../src/trtree/bin/Release/net11.0/trtree.dll
 
 parse_tree() {
     "$dotnet_cmd" "$parse" Nest.g4 |

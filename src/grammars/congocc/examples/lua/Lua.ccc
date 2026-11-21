@@ -1,0 +1,160 @@
+// This is a grammar for the Lua programming language.
+// It may be used for any purpose.
+
+PARSER_PACKAGE=org.parsers.lua;
+DEFAULT_LEXICAL_STATE=LUA;
+TAB_SIZE=4;
+DEACTIVATE_TOKENS=SHEBANG;
+ENSURE_FINAL_EOL;
+TEST_PRODUCTION=Root;
+TEST_EXTENSION=lua;
+REQUIRE_TOKEN_DECLARATION;
+
+#if FT
+FAULT_TOLERANT;
+FAULT_TOLERANT_DEFAULT=false;
+#endif
+
+INCLUDE "LuaLexer.ccc"
+
+
+#Root :
+   [
+      SCAN "#" => ACTIVATE_TOKENS SHEBANG (<SHEBANG>)
+   ]
+   Block <EOF> {return thisProduction;}
+;
+
+Block#(>=0) : (Statement)* [LastStatement] ;
+
+Statement :
+   ";" #EmptyStatement(1)
+   |
+   Assignment
+   |
+   FunctionCall
+   |
+   Label
+   |
+   "break" #BreakStatement(1)
+   |
+   GotoStatement
+   |
+   DoBlock
+   |
+   WhileStatement
+   |
+   RepeatStatement
+   |
+   IfStatement
+   |
+   ForStatement
+   |
+   FunctionDeclaration
+   |
+   LocalFunctionDeclaration
+   |
+   LocalAttributeAssignment
+;
+
+Assignment : VarList "=" =>|| ExpressionList ;
+
+DoBlock : "do" Block "end" ;
+
+GotoStatement : "goto" <NAME> ;
+
+ForStatement :
+   "for" <NAME> "=" =>|| Expression "," Expression ["," Expression] DoBlock
+   |
+   "for" NameList "in" =>|| ExpressionList DoBlock
+   |
+   "for" FAIL "invalid for statement"
+;
+
+FunctionDeclaration : "function" FunctionName FunctionBody ;
+
+LocalFunctionDeclaration : "local" "function" =>|| <NAME> FunctionBody ;
+
+LocalAttributeAssignment : "local" =>|+1 AttributeNameList ["=" ExpressionList] ;
+
+IfStatement : "if" Expression "then" Block ("elseif" Expression "then" Block)* ["else" Block] "end" ;
+
+RepeatStatement : "repeat" Block "until" Expression ;
+
+WhileStatement : "while" Expression "do" Block "end" ;
+
+AttributeNameList : <NAME> [Attribute] ("," <NAME> [Attribute])* ;
+
+Attribute : "<" <NAME> ">" ;
+
+LastStatement : "return" [ExpressionList] [";"] ;
+
+Label : "::" <NAME> "::" ;
+
+FunctionName : <NAME> ("." <NAME>)* [":" <NAME>] ;
+
+VarList : Var ("," Var)* ;
+
+NameList : <NAME> ("," <NAME> =>||)* ;
+
+ExpressionList : Expression ("," Expression)* ;
+
+Literal#void : "nil" | "false" | "true" | Number | StringLiteral | "..." ;
+
+PrimaryExpression : Literal | FunctionDef | PrefixExp | TableConstructor ;
+
+PowerExpression : PrimaryExpression ("^" UnaryExpression)* ;
+
+UnaryExpression : (UnaryOperator)* PowerExpression ;
+
+MultiplicativeExpression : UnaryExpression (MultiplicativeOperator UnaryExpression)* ;
+
+AdditiveExpression : MultiplicativeExpression (("+" | "-") MultiplicativeExpression)* ;
+
+StringCatExpression : AdditiveExpression (".." StringCatExpression)* ;
+
+ComparisonExpression : StringCatExpression (ComparisonOperator ComparisonExpression)* ;
+
+AndExpression : ComparisonExpression ("and" ComparisonExpression)* ;
+
+OrExpression : AndExpression ("or" AndExpression)* ;
+
+Expression : OrExpression (BitwiseOperator OrExpression)* ;
+
+PrefixExp : VarOrExp (NameAndArgs)* ;
+
+FunctionCall : VarOrExp (NameAndArgs)+ ;
+
+VarOrExp : (<NAME> | "(" Expression ")" ) (VarSuffix)* ;
+
+Var : (<NAME> | "(" Expression ")" VarSuffix) (VarSuffix)* ;
+
+VarSuffix : (NameAndArgs)* =>|+1 ("[" Expression "]" | "." <NAME>) ;
+
+NameAndArgs : [":" <NAME>] Args ;
+
+Args : "(" [ExpressionList] ")" | TableConstructor | StringLiteral ;
+
+FunctionDef : "function" FunctionBody ;
+
+FunctionBody : "(" [ParamList] ")" Block "end" ;
+
+ParamList : NameList ["," "..."] | "..." ;
+
+TableConstructor : "{" [FieldList]  "}" ;
+
+FieldList : Field (("," | ";") =>|+1 Field)* ["," | ";"] ;
+
+Field : "[" Expression "]" "=" Expression | [<NAME> "=" =>||] Expression ;
+
+ComparisonOperator#void : "<" | ">" | "<=" | ">=" | "~=" | "==" ;
+
+MultiplicativeOperator#void : "*" | "/" | "%" | "//" ;
+
+BitwiseOperator#void : "&" | "|" | "~" | "<<" | ">>" ;
+
+UnaryOperator#void : "not" | "#" | "-" | "~" ;
+
+Number#void : <INT> | <HEX> | <FLOAT> | <HEX_FLOAT> ;
+
+StringLiteral#void : <NORMALSTRING> | <CHARSTRING> | <LONGSTRING> ;

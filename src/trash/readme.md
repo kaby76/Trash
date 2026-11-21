@@ -1,4 +1,4 @@
-Release 4.12.0.
+Release 5.0.0.
 
 # trash
 
@@ -52,6 +52,7 @@ Both the full command name and a short alias (without the `tr` prefix) are accep
 | trinterp       | interp      |
 | tritext        | itext       |
 | trjson         | json        |
+| trmachine      | machine     |
 | trnullable     | nullable    |
 | trparse        | parse       |
 | trperf         | perf        |

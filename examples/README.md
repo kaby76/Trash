@@ -4,6 +4,8 @@ Runnable examples demonstrating common Trash toolchain workflows.
 
 | Directory | Description |
 |-----------|-------------|
+| [`arithmetic-congocc/`](arithmetic-congocc/) | Convert the arithmetic ANTLR4 grammar to CongoCC, compile Java, and parse an input |
+| [`congocc-split/`](congocc-split/) | Combine separate action-free ANTLR4 grammars and generate a CongoCC parser with syntactic SCAN guards |
 | [`ast-during-parse/`](ast-during-parse/) | Construct pipeable `.pt` ASTs on AllStar's committed rule-exit events, without constructing a CST |
 | [`ast-rewrite/`](ast-rewrite/) | Prototype a separate ANTLR3-like `.ast` rewrite mapping from AllStar CSTs to JSON ASTs |
 | [`abnf-interp/`](abnf-interp/) | Parse ABNF/BNF files using generated `.interp` files (no code generation step) |
@@ -34,6 +36,8 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | [`strip-leading-attrs/`](strip-leading-attrs/) | Remove hidden-channel token attributes before `lexer`/`parser` in `grammarDecl` using an XQuery element constructor |
 | [`tree-sitter-to-w3c-ebnf/`](tree-sitter-to-w3c-ebnf/) | Convert Tree-sitter `grammar.json` rules to structural W3C EBNF with XQuery4, explicitly marking unsupported constructs |
 | [`w3cebnf-frontend/`](w3cebnf-frontend/) | Compile a basic W3C EBNF grammar to `.interp` tables and parse its input with AllStar |
+| [`vmf-congocc/`](vmf-congocc/) | Convert a VMF lexer with negated and escaped character sets to CongoCC, then parse a quoted value |
+| [`words-congocc/`](words-congocc/) | Convert an ANTLR4 Words grammar to CongoCC with XQuery4, then build and run the Java parser |
 | [`xpath31-to-antlr4/`](xpath31-to-antlr4/) | Parse the XPath 3.1 EBNF grammar using generated `.interp` files built from the XPath 3.1 meta-grammar (work in progress) |
 | [`xquery-contextual-lexing/`](xquery-contextual-lexing/) | Use XQuery4 lexer predicates and parser-rule hooks to distinguish declared hyphenated identifiers from subtraction |
 

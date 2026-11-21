@@ -3,9 +3,9 @@ set -euo pipefail
 export MSYS2_ARG_CONV_EXCL='*'
 cd "$(dirname "$0")"
 
-parse='../../src/trparse/bin/Release/net10.0/trparse.dll'
-rename='../../src/trrename/bin/Release/net10.0/trrename.dll'
-text='../../src/trtext/bin/Release/net10.0/trtext.dll'
+parse='../../src/trparse/bin/Release/net11.0/trparse.dll'
+rename='../../src/trrename/bin/Release/net11.0/trrename.dll'
+text='../../src/trtext/bin/Release/net11.0/trtext.dll'
 scratch="$(mktemp -d /tmp/trrename-test-XXXXXXXX)"
 map_file="$(mktemp ./trrename-map-XXXXXXXX)"
 trap 'rm -f -- "$map_file"; case "$scratch" in /tmp/trrename-test-*) rm -rf -- "$scratch" ;; esac' EXIT

@@ -55,8 +55,8 @@ grammars and inputs.
 To see the AllStar fallback counters yourself:
 
 ```sh
-dotnet ../../src/trparse/bin/Release/net10.0/trparse.dll Nest.g4 |
-  dotnet ../../src/trinterp/bin/Release/net10.0/trinterp.dll |
-  dotnet ../../src/trparse/bin/Release/net10.0/trparse.dll \
+dotnet ../../src/trparse/bin/Release/net11.0/trparse.dll Nest.g4 |
+  dotnet ../../src/trinterp/bin/Release/net11.0/trinterp.dll |
+  dotnet ../../src/trparse/bin/Release/net11.0/trparse.dll \
     --allstar --parser-stats --no-output examples/n400.txt
 ```

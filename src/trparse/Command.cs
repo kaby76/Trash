@@ -69,6 +69,7 @@ class Command
                         ".xtext" => "Xtext",
                         ".jj" => "Javacc",
                         ".jjt" => "Javacc",
+                        ".ccc" => "CongoCC",
                         ".abnf" => "ABNF",
                         ".iso14977" => "Iso14977",
                         ".iso" => "Iso14977",
@@ -155,7 +156,7 @@ class Command
     {
         ".g4" or ".g4x" or ".ast" or ".g3" or ".g2" or ".gram" or
         ".peg" or ".rex" or ".y" or ".lark" or ".cf" or ".ebnf" or
-        ".xtext" or ".jj" or ".jjt" or ".abnf" or ".iso14977" or
+        ".xtext" or ".jj" or ".jjt" or ".ccc" or ".abnf" or ".iso14977" or
         ".iso" or ".pegjs" or ".pest" or ".ixml" => true,
         _ => false
     };

@@ -51,14 +51,14 @@ public class Config
         HelpText = "Maximum wall-clock seconds per input file; kill a timed-out parse and continue with the next file. Requires bundle output (the default). Zero disables the limit.")]
     public int TimeoutSeconds { get; set; }
 
-    [Option('t', "type", Required = false, HelpText = "Override type of parse. Use 'gen' to force the local Generated-CSharp parser regardless of file extension. Other values: G4X, ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton.")]
+    [Option('t', "type", Required = false, HelpText = "Override type of parse. Use 'gen' to force the local Generated-CSharp parser regardless of file extension. Other values: G4X, ANTLRv4, ANTLRv3, ANTLRv2, Bison, Lark, rex, pegen_v3_10, LBNF, W3CEBNF, Xtext, Javacc, CongoCC, ABNF, Iso14977, Pegjs, Pest, Grammophone, Princeton.")]
     public string Type { get; set; }
 
     [Option('v', "verbose", Required = false)]
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "4.12.0";
+    public string Version { get; set; } = "5.0.0";
 
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }

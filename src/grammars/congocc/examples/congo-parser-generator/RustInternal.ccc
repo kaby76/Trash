@@ -1,0 +1,20 @@
+DEFAULT_LEXICAL_STATE=RUST;
+BASE_SRC_DIR="../../build/generated-java";
+BASE_NAME=Rust;
+ROOT_API_PACKAGE=org.congocc.parser;
+PARSER_PACKAGE=org.congocc.parser.rust;
+
+#define __congo_internal__
+
+INCLUDE "../../examples/rust/Rust.ccc";
+
+BlockNoDelimiters :
+   {boolean seenLastStatement = false;}
+   (InnerAttribute)*
+   (
+      SCAN {!seenLastStatement}
+      => Statement
+      {seenLastStatement = getTokenType(0) != RBRACE && getTokenType(0) != SEMICOLON;}
+   )*
+   <EOF>
+;

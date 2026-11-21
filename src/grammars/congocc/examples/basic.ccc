@@ -1,0 +1,7 @@
+PARSER_PACKAGE=org.example;
+ENSURE_FINAL_EOL;
+
+SKIP : " " | "\t" | "\n" ;
+TOKEN : <NUMBER : (["0"-"9"])+ > ;
+
+NumberList : <NUMBER> ("," <NUMBER>)* <EOF> ;

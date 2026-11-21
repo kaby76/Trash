@@ -1,0 +1,17 @@
+INCLUDE "Tokens.ccc" ! JAVA
+
+INJECT Literal : extends Expression
+INJECT TokenSource :
+    import java.util.List;
+    @SuppressWarnings("unused")
+    implements Node;
+{
+    public void add(String value) {
+        if (value != null) { values.add(value); }
+    }
+}
+
+<DEFAULT,
+ OTHER> TOKEN : <NAME : ["a"-"z"]+ > ;
+
+Root : <NAME> <EOF> ;

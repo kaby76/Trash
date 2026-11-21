@@ -15,7 +15,7 @@ public sealed class TrparseOutputTests
         string directory = Directory.CreateTempSubdirectory("TrparseDefault-").FullName;
         try
         {
-            string generated = Path.Combine(directory, "Generated-CSharp", "bin", "Debug", "net10.0");
+            string generated = Path.Combine(directory, "Generated-CSharp", "bin", "Debug", "net11.0");
             Directory.CreateDirectory(generated);
             await File.WriteAllBytesAsync(Path.Combine(generated, "Test.dll"), [0]);
 
