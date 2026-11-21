@@ -18,7 +18,7 @@ Direct left-recursion lowering may still produce a different tree shape from
 an ANTLR parser.
 
 This is an initial converter for named lexer tokens, character sets, string
-literals, `-> skip`, lexer fragments and ranges, grouped alternatives, basic repetition, and simple direct left recursion.
+literals, `-> skip`, `-> channel(HIDDEN)`, lexer fragments and ranges, grouped alternatives, basic repetition, and simple direct left recursion. The converter maps `channel(HIDDEN)` to CongoCC `SKIP`; other channels remain unsupported.
 `build.sh` asks trinterp's C# choice analyzer for SCAN facts, then passes them
 to the XQuery renderer. It handles a tail repetition that could consume the
 start of the next enclosing rule (VMF), and overlapping alternatives made only

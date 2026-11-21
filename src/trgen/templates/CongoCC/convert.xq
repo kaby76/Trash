@@ -280,12 +280,16 @@ declare function local:lexer-rule($rule, $nl) {
   let $name := local:token-name(fn:string($rule/TOKEN_REF))
   let $commands := $alts/lexerCommands/lexerCommand
   let $skip := fn:count($commands) = fn:count($alts) and
-    fn:count($commands[lexerCommandName/identifier/RULE_REF = 'skip']) = fn:count($alts)
+    fn:count($commands[
+      (lexerCommandName/identifier/RULE_REF = 'skip' and not(lexerCommandExpr)) or
+      (lexerCommandName/identifier/RULE_REF = 'channel' and
+        lexerCommandExpr/identifier/TOKEN_REF = 'HIDDEN')
+    ]) = fn:count($alts)
   let $regex := local:lexer-alt-list($rule/lexerRuleBlock/lexerAltList)
   return if (fn:exists($rule/FRAGMENT) and
     local:nullable-rule(fn:string($rule/TOKEN_REF), ())) then ''
   else if (fn:exists($commands) and not($skip))
-    then local:unsupported('lexer commands other than skip')
+    then local:unsupported(fn:concat('lexer commands other than skip or channel(HIDDEN) in ', $name))
     else if (fn:exists($rule/FRAGMENT))
       then fn:concat('TOKEN : <#', $name, ' : ', $regex, '> ;', $nl)
     else if ($skip)

@@ -13,6 +13,7 @@ fi
 printf '%s\n' "$output"
 [[ $(printf '%s\n' "$output" | grep -c 'CongoCC 0 .* success') -eq 2 ]]
 grep -q '^IGNORE_CASE=true;' Generated-CongoCC/Split.ccc
+grep -q '^SKIP : <COMMENT :' Generated-CongoCC/Split.ccc
 grep -q '^document : (SCAN ' Generated-CongoCC/Split.ccc
 grep -q '^value : SCAN ' Generated-CongoCC/Split.ccc
 ! printf '%s\n' "$output" | grep -q 'Expansion is unreachable'
