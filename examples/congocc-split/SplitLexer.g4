@@ -8,4 +8,5 @@ PLUS : '+';
 MINUS : '-';
 COMMA : ',';
 SEMI : ';';
-WS : [ \t\r\n]+ -> skip;
+NEWLINE : '\r'? '\n';
+WS : [ \t]+ -> skip;

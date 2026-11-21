@@ -13,3 +13,12 @@ syntactic `SCAN` guards for these bounded patterns. `input.txt` exercises both.
 
 Run `bash run-example.sh`. Set `CONGOCC_JAR` if CongoCC is not at
 `~/congo-parser-generator/bin/congocc.jar`.
+
+To print the parse tree in ANTLR `ToStringTree()` form, run:
+
+```sh
+cd Generated-CongoCC
+bash run.sh -tree --no-output --input '+1, -2.5;'
+```
+
+The output is `(document (value + 1) , (value - 2.5) ; <EOF>)`.

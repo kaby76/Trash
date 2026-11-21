@@ -309,6 +309,7 @@ return if (fn:count($grammar) != 1 or
   else fn:string-join((
     'PARSER_PACKAGE=generated;', $nl,
     'PARSER_CLASS=', $name, 'Parser;', $nl, $nl,
+    'SMART_NODE_CREATION=false;', $nl, $nl,
     if (fn:exists($grammar/prequelConstruct/optionsSpec/option[
       fn:string(identifier) = 'caseInsensitive' and
       fn:normalize-space(fn:string(optionValue)) = 'true']))

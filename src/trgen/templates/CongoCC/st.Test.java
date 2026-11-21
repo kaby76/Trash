@@ -19,17 +19,19 @@ public final class Test {
         boolean fromStdin = false;
         boolean perFile = false;
         boolean quiet = false;
+        boolean showTree = false;
         for (int i = 0; i \< args.length; i++) {
             switch (args[i]) {
                 case "-x": fromStdin = true; break;
                 case "--per-file": perFile = true; break;
                 case "--no-output": case "-q": quiet = true; break;
+                case "-tree": case "--tree": showTree = true; break;
                 case "--input": case "-i":
                     if (++i == args.length) throw new IllegalArgumentException("missing input text");
                     inputs.add(new Input("input", args[i]));
                     break;
                 case "--help": case "-h":
-                    System.out.println("Usage: java -cp classes Test [--input TEXT | -x | FILE ...] [--per-file] [--no-output]");
+                    System.out.println("Usage: java -cp classes Test [--input TEXT | -x | FILE ...] [--per-file] [--no-output] [-tree]");
                     return;
                 default:
                     if (args[i].startsWith("-")) throw new IllegalArgumentException("unknown option: " + args[i]);
@@ -50,7 +52,8 @@ public final class Test {
         long totalStart = System.nanoTime();
         int failures = 0;
         int index = 0;
-        String startRule = Files.readString(Path.of("parser-rule-prefix.txt")) + "<start_symbol>";
+        String rulePrefix = Files.readString(Path.of("parser-rule-prefix.txt"));
+        String startRule = rulePrefix + "<start_symbol>";
         java.lang.reflect.Method startMethod = generated.<parser_name>.class.getMethod(startRule);
         for (Input input : inputs) {
             long start = System.nanoTime();
@@ -58,6 +61,7 @@ public final class Test {
                 String text = input.text != null ? input.text : Files.readString(Path.of(input.name));
                 generated.<parser_name> parser = new generated.<parser_name>(text);
                 startMethod.invoke(parser);
+                if (showTree) System.err.println(toStringTree(parser.rootNode(), rulePrefix));
                 if (perFile) System.err.printf("CongoCC %d %s success %.6f s%n", index, input.name,
                     (System.nanoTime() - start) / 1_000_000_000.0);
             } catch (Exception ex) {
@@ -70,5 +74,39 @@ public final class Test {
         }
         if (!quiet) System.err.printf("TT: %.6f%n", (System.nanoTime() - totalStart) / 1_000_000_000.0);
         if (failures != 0) System.exit(1);
+    }
+
+    private static String toStringTree(generated.Node root, String rulePrefix) {
+        if (root == null) throw new IllegalStateException("CongoCC did not build a parse tree");
+        StringBuilder result = new StringBuilder();
+        appendTree(result, root, rulePrefix);
+        return result.toString();
+    }
+
+    private static void appendTree(StringBuilder result, generated.Node node, String rulePrefix) {
+        String text;
+        if (node instanceof generated.Node.TerminalNode) {
+            text = node.getType().isEOF() ? ((char) 60) + "EOF>" : node.toString();
+        } else {
+            text = node.getClass().getSimpleName();
+            if (!rulePrefix.isEmpty() && text.startsWith(rulePrefix))
+                text = text.substring(rulePrefix.length());
+        }
+        // StringTemplate consumes backslash escapes in generated Java source.
+        // Character codes keep the emitted replacement strings literal.
+        text = text.replace(String.valueOf((char) 9), ((char) 92) + "t")
+            .replace(String.valueOf((char) 10), ((char) 92) + "n")
+            .replace(String.valueOf((char) 13), ((char) 92) + "r");
+        // CongoCC Token.isEmpty() checks character length, not child count.
+        if (node.size() == 0) {
+            result.append(text);
+            return;
+        }
+        result.append('(').append(text).append(' ');
+        for (int i = 0; i \< node.size(); i++) {
+            if (i != 0) result.append(' ');
+            appendTree(result, node.get(i), rulePrefix);
+        }
+        result.append(')');
     }
 }

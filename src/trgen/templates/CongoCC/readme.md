@@ -10,6 +10,13 @@ Set `CONGOCC_JAR` to the CongoCC generator JAR. Its default is
 `$HOME/congo-parser-generator/bin/congocc.jar`. Java and `javac` must be on
 `PATH` (or set `JAVA` and `JAVAC`).
 
+Use `bash run.sh -tree FILE` to print a parenthesized ANTLR
+`ToStringTree()`-style parse tree to stderr. `--no-output` suppresses the timing
+line while retaining the tree. The generated grammar sets
+`SMART_NODE_CREATION=false` so single-child parser rules remain visible.
+Direct left-recursion lowering may still produce a different tree shape from
+an ANTLR parser.
+
 This is an initial converter for named lexer tokens, character sets, string
 literals, `-> skip`, lexer fragments and ranges, grouped alternatives, basic repetition, and simple direct left recursion.
 `build.sh` asks trinterp's C# choice analyzer for SCAN facts, then passes them

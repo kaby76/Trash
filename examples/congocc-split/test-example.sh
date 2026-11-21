@@ -16,3 +16,7 @@ grep -q '^IGNORE_CASE=true;' Generated-CongoCC/Split.ccc
 grep -q '^document : (SCAN ' Generated-CongoCC/Split.ccc
 grep -q '^value : SCAN ' Generated-CongoCC/Split.ccc
 ! printf '%s\n' "$output" | grep -q 'Expansion is unreachable'
+tree_output=$(cd Generated-CongoCC && bash run.sh -tree --no-output --input '+1, -2.5;' 2>&1)
+[[ "$tree_output" == '(document (value + 1) , (value - 2.5) ; <EOF>)' ]]
+newline_tree=$(cd Generated-CongoCC && bash run.sh -tree --no-output --input $'+1, -2.5;\n' 2>&1)
+[[ "$newline_tree" == '(document (value + 1) , (value - 2.5) ; \n <EOF>)' ]]
