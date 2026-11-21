@@ -1,1 +1,1 @@
-./bin/Debug/net10.0/Test.exe "$@"
+./bin/Debug/net11.0/Test.exe "$@"

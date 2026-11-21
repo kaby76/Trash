@@ -3,11 +3,11 @@ set -euo pipefail
 export MSYS2_ARG_CONV_EXCL='*'
 cd "$(dirname "$0")"
 
-parse='../../src/trparse/bin/Release/net10.0/trparse.dll'
-split='../../src/trsplit/bin/Release/net10.0/trsplit.dll'
-query='../../src/trxquery/bin/Release/net10.0/trxquery.dll'
-sponge='../../src/trsponge/bin/Release/net10.0/trsponge.dll'
-interp='../../src/trinterp/bin/Release/net10.0/trinterp.dll'
+parse='../../src/trparse/bin/Release/net11.0/trparse.dll'
+split='../../src/trsplit/bin/Release/net11.0/trsplit.dll'
+query='../../src/trxquery/bin/Release/net11.0/trxquery.dll'
+sponge='../../src/trsponge/bin/Release/net11.0/trsponge.dll'
+interp='../../src/trinterp/bin/Release/net11.0/trinterp.dll'
 
 scratch="$(mktemp -d ./split-literals-XXXXXXXX)"
 trap 'case "$scratch" in ./split-literals-*) rm -rf -- "$scratch" ;; esac' EXIT

@@ -638,7 +638,7 @@ namespace Trash
             }
         }
 
-        public static string version = "4.12.0";
+        public static string version = "5.0.0";
 
         // For maven-generated code.
         public List<string> failed_modules = new List<string>();
@@ -650,6 +650,7 @@ namespace Trash
                 "Antlr4cs" => ".cs",
                 "Cpp" => ".cpp",
                 "CSharp" => ".cs",
+                "CongoCC" => ".java",
                 "Dart" => ".dart",
                 "Galop" => ".go",
                 "Go" => ".go",
@@ -775,6 +776,7 @@ namespace Trash
                 "Antlr4ng",
                 "Cpp",
                 "CSharp",
+                "CongoCC",
                 "Dart",
                 "Galop",
                 "Go",

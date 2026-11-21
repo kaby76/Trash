@@ -45,7 +45,7 @@ git clean -f ../examples
 
 # Parse all input files.
 # Group parsing.
-echo "${files[*]}" | dotnet trash wdog dotnet ./bin/Debug/net10.0/ast.dll -q -x -tee -tree > parse.txt 2>&1
+echo "${files[*]}" | dotnet trash wdog dotnet ./bin/Debug/net11.0/ast.dll -q -x -tee -tree > parse.txt 2>&1
 status=$?
 
 # trwdog returns 255 if it cannot spawn the process. This could happen

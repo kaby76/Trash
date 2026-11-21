@@ -4,10 +4,10 @@ cd "$(dirname "$0")"
 dotnet_cmd=${DOTNET:-dotnet}
 repo=$(cd ../.. && pwd)
 
-parse=$repo/src/trparse/bin/Release/net10.0/trparse.dll
-interp=$repo/src/trinterp/bin/Release/net10.0/trinterp.dll
-gen=$repo/src/trgen/bin/Release/net10.0/trgen.dll
-wdog=$repo/src/trwdog/bin/Release/net10.0/trwdog.dll
+parse=$repo/src/trparse/bin/Release/net11.0/trparse.dll
+interp=$repo/src/trinterp/bin/Release/net11.0/trinterp.dll
+gen=$repo/src/trgen/bin/Release/net11.0/trgen.dll
+wdog=$repo/src/trwdog/bin/Release/net11.0/trwdog.dll
 
 bash test-example.sh
 
@@ -24,11 +24,11 @@ echo '--- ALL(*) default LL, n10 ---'
 (cd Generated-CSharp && bash build.sh)
 
 echo '--- ANTLR C# 4.13.1 default LL, n10 ---'
-(cd Generated-CSharp && "$dotnet_cmd" bin/Debug/net10.0/Test.dll --per-file ../examples/n10.txt)
+(cd Generated-CSharp && "$dotnet_cmd" bin/Debug/net11.0/Test.dll --per-file ../examples/n10.txt)
 
 echo '--- ANTLR C# 4.13.1 pure SLL, n10 (five-second cap) ---'
 if output=$(cd Generated-CSharp &&
-    "$dotnet_cmd" "$wdog" -t 5 "$dotnet_cmd" bin/Debug/net10.0/Test.dll \
+    "$dotnet_cmd" "$wdog" -t 5 "$dotnet_cmd" bin/Debug/net11.0/Test.dll \
         --sll --per-file ../examples/n10.txt 2>&1); then
     printf '%s\n' "$output"
 elif [[ "$output" == *'Process is taking longer than 5 seconds'* ]]; then

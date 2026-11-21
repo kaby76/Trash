@@ -12,7 +12,7 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO_ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 SRC="$REPO_ROOT/src"
 CONFIG="${1:-Release}"
-TFM=net10.0
+TFM=net11.0
 STAGING="$SRC/trash/staging"
 
 # All PackAsTool tools except tragl (Windows-only WPF).
@@ -34,6 +34,7 @@ TOOLS=(
     trinterp
     tritext
     trjson
+    trmachine
     trnullable
     trparse
     trperf

@@ -4,11 +4,11 @@ set -euo pipefail
 export MSYS2_ARG_CONV_EXCL='*'
 cd "$(dirname "$0")"
 
-parse='../../src/trparse/bin/Release/net10.0/trparse.dll'
-combine='../../src/trcombine/bin/Release/net10.0/trcombine.dll'
-text='../../src/trtext/bin/Release/net10.0/trtext.dll'
-sponge='../../src/trsponge/bin/Release/net10.0/trsponge.dll'
-xquery='../../src/trxquery/bin/Release/net10.0/trxquery.dll'
+parse='../../src/trparse/bin/Release/net11.0/trparse.dll'
+combine='../../src/trcombine/bin/Release/net11.0/trcombine.dll'
+text='../../src/trtext/bin/Release/net11.0/trtext.dll'
+sponge='../../src/trsponge/bin/Release/net11.0/trsponge.dll'
+xquery='../../src/trxquery/bin/Release/net11.0/trxquery.dll'
 
 scratch="$(mktemp -d ./trcombine-test-XXXXXXXX)"
 trap 'case "$scratch" in ./trcombine-test-*) rm -rf -- "$scratch" ;; esac' EXIT

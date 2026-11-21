@@ -147,7 +147,8 @@ public class XQueryParser
                     {
                         var vnt = vd.varNameAndType();
                         var (name, prefix, seqType) = GetVarNameAndType(vnt);
-                        var value = vd.varValue()?.exprSingle() is { } vs ? BuildExprSingle(vs) : null;
+                        var initializer = vd.varValue()?.exprSingle() ?? vd.varDefaultValue()?.exprSingle();
+                        var value = initializer is { } vs ? BuildExprSingle(vs) : null;
                         prolog.VariableDecls.Add(new VariableDeclNode
                         {
                             Name = name, Prefix = prefix, Type = seqType,

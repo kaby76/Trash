@@ -1,0 +1,26 @@
+DEFAULT_LEXICAL_STATE=CSHARP;
+BASE_SRC_DIR="../../build/generated-java";
+BASE_NAME=CSharp;
+PARSER_PACKAGE=org.congocc.parser.csharp;
+ROOT_API_PACKAGE=org.congocc.parser;
+TAB_SIZE=4;
+ENSURE_FINAL_EOL;
+
+#define __congo_internal__
+
+INCLUDE "../../examples/csharp/CSharp.ccc";
+
+InjectionBody :
+    (ClassMemberDeclaration)*
+    <EOF>
+;
+
+EmbeddedCSharpBlock :
+    (SCAN ~(<EOF>) => Statement)+
+    <EOF>
+;
+
+EmbeddedCSharpExpression :
+    Expression
+    <EOF>
+;

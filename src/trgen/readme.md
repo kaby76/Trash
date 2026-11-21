@@ -21,6 +21,25 @@ create a parser for the Arithmetic.g4 grammar.
 
     dotnet trash gen
 
+### CongoCC target
+
+Use `dotnet trash gen -t CongoCC` for a first-pass Java parser application
+built with [CongoCC](https://github.com/congo-cc/congo-parser-generator).
+The generated `build.sh` converts a combined `.g4` grammar to `.ccc` with
+`dotnet trash parse | dotnet trash xquery`, runs CongoCC, and compiles its
+Java output. Set `CONGOCC_JAR` if the generator JAR is not at
+`$HOME/congo-parser-generator/bin/congocc.jar`. The generated driver accepts
+`--input`/`-i`, file names, `-x`, `--per-file`, and `--no-output`/`-q`.
+
+The initial converter supports named tokens, string literals, character sets
+and ranges, lexer fragments, `-> skip`, parser references, grouped
+alternatives, repetition, and simple direct left recursion. The left-recursion rewrite does not preserve ANTLR4
+precedence or associativity, and alternative prediction is not yet translated
+to CongoCC `SCAN`. See [`examples/words-congocc`](../../examples/words-congocc/)
+and [`examples/arithmetic-congocc`](../../examples/arithmetic-congocc/).
+If a grammar has a `desc.xml` that excludes CongoCC, pass `--force` with
+`-t CongoCC`.
+
 ### Galop target
 
 Use `dotnet trash gen -t Galop` to generate a native Go parser application
@@ -96,7 +115,7 @@ With `--perf`, six summary lines are printed after all files are parsed:
 
 ## Current version
 
-Release 4.12.0.
+Release 5.0.0.
 
 ## Ignore file
 

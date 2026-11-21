@@ -12,8 +12,8 @@ cleanup() {
   fi
 }
 trap cleanup EXIT
-parse=../../../src/trparse/bin/Release/net10.0/trparse.dll
-interp=../../../src/trinterp/bin/Release/net10.0/trinterp.dll
+parse=../../../src/trparse/bin/Release/net11.0/trparse.dll
+interp=../../../src/trinterp/bin/Release/net11.0/trinterp.dll
 
 compile() {
   local language=$1

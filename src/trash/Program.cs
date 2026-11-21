@@ -8,7 +8,7 @@ namespace Trash;
 
 public class Program
 {
-    public static string version = "4.12.0";
+    public static string version = "5.0.0";
 
     // Maps both full names (e.g. "trgen") and short aliases (e.g. "gen") to the
     // sub-tool directory name that lives next to trash.dll in the package.
@@ -36,6 +36,7 @@ public class Program
         { "trinterp",     "trinterp"      },
         { "tritext",      "tritext"      },
         { "trjson",       "trjson"       },
+        { "trmachine",    "trmachine"    },
         { "trnullable",   "trnullable"   },
         { "trparse",      "trparse"      },
         { "trperf",       "trperf"       },
@@ -80,6 +81,7 @@ public class Program
         { "itext",        "tritext"      },
         { "interp",       "trinterp"     },
         { "json",         "trjson"       },
+        { "machine",      "trmachine"    },
         { "nullable",     "trnullable"   },
         { "parse",        "trparse"      },
         { "perf",         "trperf"       },

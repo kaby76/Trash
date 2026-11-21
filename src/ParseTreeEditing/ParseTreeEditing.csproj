@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
 	<PropertyGroup>
-		<TargetFrameworks>net10.0</TargetFrameworks>
+		<TargetFrameworks>net11.0</TargetFrameworks>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -35,7 +35,9 @@
 
   <ItemGroup>
     <PackageReference Include="Antlr4.Runtime.Standard" Version="4.13.1" />
-    <PackageReference Include="Antlr4BuildTasks" Version="12.10.0" PrivateAssets="all" />
+    <!-- 12.14.0 breaks this multi-grammar build: XMLParser runs before XMLLexer.tokens exists,
+         and its compile list includes an AstParserLexer.cs that ANTLR does not generate. -->
+    <PackageReference Include="Antlr4BuildTasks" Version="13.0.0" PrivateAssets="all" />
   </ItemGroup>
 
   <ItemGroup>

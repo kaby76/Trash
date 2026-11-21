@@ -1,0 +1,238 @@
+DEFAULT_LEXICAL_STATE=LUA;
+TAB_SIZE=4;
+
+INJECT LEXER_CLASS :
+{
+   private String desiredEnd;
+   private boolean hasPendingMultiLine;
+   private int realStartOffset;
+
+   // A rather kludgy token hook routine
+   // to deal with multiline strings and comments
+   // which are admittedly quite funky in Lua.
+   private Token TOKEN_HOOK(Token tok) {
+      TokenType type = tok.getType();
+      if (type == TokenType.LONGSTRING || type == TokenType.MULTILINE_COMMENT) {
+         boolean isComment = type == TokenType.MULTILINE_COMMENT;
+         String image = tok.toString();
+         if (!hasPendingMultiLine) {
+            desiredEnd = getDesiredEnd(image);
+            if (!image.endsWith(desiredEnd)) {
+                hasPendingMultiLine = true;
+                if (isComment) switchTo(LexicalState.IN_MULTI_LINE);
+                else switchTo(LexicalState.IN_LONGSTRING);
+                tok.setUnparsed(true);
+                // We need to adjust the end offset
+                // so that on the next tokenization iteration
+                // we pick up a trailing ] character, if there is one.
+                // Tricky...
+                tok.truncate(1);
+                // We store the starting offset
+                // so that we can make the necessary
+                // adjustment on a later iteration.
+                // Also quite tricky!
+                realStartOffset = tok.getBeginOffset();
+            }
+         }
+         else if (image.endsWith(desiredEnd)) {
+            hasPendingMultiLine = false;
+            tok.setBeginOffset(realStartOffset);
+            // This seems to be unnecessary in this spot, but, in principle,
+            // we should be unsetting any cached tokens after this one
+            // at this spot, just in case.
+            reset(tok);
+         }
+         else {
+             if (isComment) switchTo(LexicalState.IN_MULTI_LINE);
+             else switchTo(LexicalState.IN_LONGSTRING);
+             tok.setUnparsed(true);
+             tok.truncate(1);
+         }
+      }
+      return tok;
+   }
+
+   // Return the terminating string that would balance
+   // out this multiline string or comment.
+   // i.e. if it is a comment that starts with --[===[
+   // then the terminating string must be ]===]
+   // That also is why we need to adjust the end offset
+   // back by one at a key moment, so that we can find
+   // the terminating string on the next cycle.
+   private String getDesiredEnd(String tokenImage) {
+       boolean isComment = tokenImage.startsWith("--");
+       int startIndex = isComment? 3 : 1;
+       int idx = startIndex;
+       while (tokenImage.charAt(idx) == '=') idx++;
+       int numEquals = idx - startIndex;
+       String result = "]";
+       for (int i = 0; i< numEquals; i++) result += "=";
+       result += "]";
+       return result;
+   }
+}
+
+TOKEN #Delimiter :
+   <SEMICOLON: ";">
+ | <COMMA: ",">
+ | <LPAREN: "(">
+ | <RPAREN: ")">
+ | <LBRACE: "{">
+ | <RBRACE: "}">
+ | <LBRACKET : "[">
+ | <RBRACKET : "]">
+;
+
+TOKEN #Operator :
+   <ASSIGN : "=">
+ | <LT: "<">
+ | <LE : "<=">
+ | <GT: ">">
+ | <GE : ">=">
+ | <COLON : ":">
+ | <DOUBLE_COLON : "::">
+ | <DOT : ".">
+ | <ELLIPSIS : "...">
+ | <HAT : "^">
+ | <NE : "~=">
+ | <EQ : "==">
+ | <STR_CAT : "..">
+ | <PLUS : "+">
+ | <MINUS : "-">
+ | <TIMES : "*">
+ | <SLASH : "/">
+ | <DOUBLE_SLASH : "//">
+ | <MOD : "%">
+ | <BIT_OR : "|">
+ | <BIT_AND : "&">
+ | <TILDE : "~">
+ | <LSHIFT : "<<">
+ | <RSHIFT  : ">>">
+ | <HASH : "#">
+ | <OR: "or">
+ | <AND: "and">
+ | <NOT : "not">
+;
+
+TOKEN #Literal :
+  <NORMALSTRING : '"' ( <ESCAPE_SEQUENCE> | (~['\\', '"']) )* '"'>
+  |
+  <CHARSTRING : "'" (<ESCAPE_SEQUENCE> | (~['\\',"'"]))* "'" >
+  |
+  <#DIGIT : ["0"-"9"]>
+  |
+  <INT : (<DIGIT>)+ >
+  |
+  <HEX : "0" ["x", "X"] (<HEX_DIGIT>)+ >
+  |
+  <FLOAT :
+      (<INT> "." (<DIGIT>)* (<EXPONENT_PART>)?)
+      |
+      ("." <INT> (<EXPONENT_PART>)?)
+      |
+      (<INT> <EXPONENT_PART>)
+  >
+  |
+  <HEX_FLOAT :
+      ("0" ["x", "X"] (<HEX_DIGIT>)+ "." (<HEX_DIGIT>)* (<HEX_EXPONENT_PART>)?)
+      |
+      ( "0" ["x", "X"] "." (<HEX_DIGIT>)+ (<HEX_EXPONENT_PART>)?)
+      |
+      ( "0" ["x", "X"] (<HEX_DIGIT>)+ <HEX_EXPONENT_PART>)
+  >
+  |
+  <#EXPONENT_PART : ["e", "E"] (["+", "-"])? <INT> >
+  |
+  <#HEX_EXPONENT_PART : ["p", "P"] (["+","-"])? <INT> >
+  |
+  <#ESCAPE_SEQUENCE :
+     ("\\" ["a","b","f","n","r","t","v","z","'", '"', "|", "$", "#", "\\"])
+     |
+     ("\\" (["\r"])? "\n")
+     |
+     <DECIMAL_ESCAPE>
+     |
+     <HEX_ESCAPE>
+     |
+     <UTF_ESCAPE>
+  >
+  |
+  <#DECIMAL_ESCAPE :
+     "\\"
+     (
+        (["0"-"2"] <DIGIT> <DIGIT>)
+        |
+        (<DIGIT> (<DIGIT>)?)
+     )
+  >
+  |
+  <#HEX_ESCAPE : "\\x" <HEX_DIGIT> <HEX_DIGIT> >
+  |
+  <#UTF_ESCAPE : "\\u{" (<HEX_DIGIT>)+ "}" >
+  |
+  <#HEX_DIGIT : ["0"-"9", "a"-"f", "A"-"F"] >
+;
+
+
+TOKEN #KeyWord :
+   <BREAK : "break">
+ | <DO : "do">
+ | <ELSE : "else">
+ | <ELSEIF : "elseif">
+ | <END : "end">
+ | <FALSE : "false">
+ | <FOR : "for">
+ | <FUNCTION : "function">
+ | <GOTO : "goto">
+ | <IF : "if">
+ | <IN : "in">
+ | <LOCAL : "local">
+ | <NIL : "nil">
+ | <REPEAT : "repeat">
+ | <RETURN : "return">
+ | <THEN : "then">
+ | <TRUE : "true">
+ | <UNTIL : "until" >
+ | <WHILE : "while" >
+;
+
+TOKEN :
+    <NAME : ["a"-"z","A"-"Z", "_"](["a"-"z","A"-"Z","0"-"9","_"])*> #Name
+    |
+    <SHEBANG : "#" (<SINGLE_LINE_INPUT_CHARACTER>)*>
+    |
+    <#SINGLE_LINE_INPUT_CHARACTER : ~["\r","\n","\u0085","\u2028","\u2029"] >
+;
+
+
+SKIP :
+ <WS : ([" ", "\t", "\u000C", "\r", "\n"])+>
+;
+
+MORE :
+ <SINGLE_LINE_COMMENT_START : "--" > : IN_SINGLE_LINE_COMMENT
+ |
+ <MULTILINE_START : "--[" ("=")* "[" > : IN_MULTI_LINE
+ |
+ <LONGSTRING_START : "[" ("=")* "[" > : IN_LONGSTRING
+;
+
+<IN_SINGLE_LINE_COMMENT>
+UNPARSED :
+  < LINE_COMMENT : "\n" | "\r" | "\r\n" > #SingleLineComment : LUA
+;
+
+<IN_MULTI_LINE>
+UNPARSED :
+  < MULTILINE_COMMENT : "]" ("=")* "]" > #MultiLineComment : LUA
+;
+
+<IN_LONGSTRING>
+TOKEN :
+  < LONGSTRING : "]" ("=")* "]" > #LongString : LUA
+;
+
+<IN_SINGLE_LINE_COMMENT, IN_MULTI_LINE, IN_LONGSTRING>
+MORE :
+  < ANY_CHAR : ~[] >
+;

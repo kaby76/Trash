@@ -85,7 +85,8 @@ public class XQueryEvaluator : XPathEvaluator
         // Process variable declarations
         foreach (var varDecl in prolog.VariableDecls)
         {
-            if (varDecl.Value != null)
+            if (varDecl.Value != null &&
+                (!varDecl.IsExternal || !_context.HasVariable(new XdmQName(varDecl.Name))))
             {
                 var value = base.Evaluate(varDecl.Value);
                 _context.SetVariable(varDecl.Name, value);

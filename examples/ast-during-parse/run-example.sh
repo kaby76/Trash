@@ -13,8 +13,8 @@ cleanup() {
 }
 trap cleanup EXIT
 
-parse=../../src/trparse/bin/Release/net10.0/trparse.dll
-interp=../../src/trinterp/bin/Release/net10.0/trinterp.dll
+parse=../../src/trparse/bin/Release/net11.0/trparse.dll
+interp=../../src/trinterp/bin/Release/net11.0/trinterp.dll
 dotnet "$parse" Arithmetic.g4 arithmetic.ast | dotnet "$interp" -o "$scratch/interp"
 grep -q '^ast-mapping:$' "$scratch/interp/Arithmetic.interp"
 if grep -q '^ast-mapping:$' "$scratch/interp/ArithmeticLexer.interp"; then

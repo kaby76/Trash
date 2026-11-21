@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<OutputType>Exe</OutputType>
 		<UseAppHost>false</UseAppHost>
-		<TargetFramework>net10.0</TargetFramework>
+		<TargetFramework>net11.0</TargetFramework>
 		<PackAsTool>true</PackAsTool>
 		<GeneratePackageOnBuild>false</GeneratePackageOnBuild>
 		<PackageReadmeFile>readme.md</PackageReadmeFile>
@@ -19,7 +19,7 @@ This program is part of the Trash toolkit.]]>
 		<PublishRepositoryUrl>true</PublishRepositoryUrl>
 		<DebugType>portable</DebugType>
 		<DebugSymbols>true</DebugSymbols>
-		<Version>4.12.0</Version>
+		<Version>5.0.0</Version>
 		<RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trparse</RepositoryUrl>
 		<RepositoryType>git</RepositoryType>
 	</PropertyGroup>
@@ -50,6 +50,7 @@ This program is part of the Trash toolkit.]]>
 		<ProjectReference Include="../grammars/grammophone/Generated-CSharp/grammophone.csproj" />
 		<ProjectReference Include="../grammars/iso14977/Generated-CSharp/iso14977.csproj" />
 		<ProjectReference Include="../grammars/javacc/Generated-CSharp/javacc.csproj" />
+		<ProjectReference Include="../grammars/congocc/Generated-CSharp/congocc.csproj" />
 		<ProjectReference Include="../grammars/lark/Generated-CSharp/lark.csproj" />
 		<ProjectReference Include="../grammars/lbnf/Generated-CSharp/lbnf.csproj" />
 		<ProjectReference Include="../grammars/pegjs/Generated-CSharp/pegjs.csproj" />
@@ -84,6 +85,6 @@ This program is part of the Trash toolkit.]]>
 		<EmbeddedResource Include="readme.md" />
 	</ItemGroup>
 	<ItemGroup>
-		<Content Include="$(SolutionDir)grammars\antlr4\bin\Debug\**\*.*" CopyToOutputDirectory="Always" TargetPath="bin\Debug\net10.0\foo\%(Filename)%(Extension)" />
+		<Content Include="$(SolutionDir)grammars\antlr4\bin\Debug\**\*.*" CopyToOutputDirectory="Always" TargetPath="bin\Debug\net11.0\foo\%(Filename)%(Extension)" />
 	</ItemGroup>
 </Project>

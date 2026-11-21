@@ -47,7 +47,7 @@ must follow, including:
 
 ## Current version
 
-Release 4.12.0.
+Release 5.0.0.
 
 ## License
 

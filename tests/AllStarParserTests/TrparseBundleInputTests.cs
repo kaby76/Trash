@@ -115,6 +115,23 @@ public sealed class TrparseBundleInputTests
     }
 
     [Fact]
+    public void BundleGlobParsesCongoCcGrammar()
+    {
+        var input = new Artifact("src/Small.ccc", Encoding.UTF8.GetBytes(
+            "PARSER_PACKAGE=org.example;\nTOKEN : <NUMBER : ([\"0\"-\"9\"])+ > ;\nRoot : <NUMBER> <EOF> ;\n"));
+        var (exitCode, output, stderr) = Run([input], "-t", "CongoCC",
+            "--bundle-glob", "src/**/*.ccc");
+
+        Assert.True(exitCode == 0, stderr);
+        var artifacts = ArtifactBundle.Read(new MemoryStream(output));
+        Assert.Equal(new[] { "src/Small.ccc", "src/Small.ccc.pt",
+            "src/Small.ccc.errors" }, artifacts.Select(a => a.Name));
+        Assert.Empty(artifacts[2].Data);
+        Assert.Equal("src/Small.ccc", ArtifactBundle.DeserializeParsingResult(
+            artifacts[1].Data).FileName);
+    }
+
+    [Fact]
     public void NoOutputStillParsesSelectedMembers()
     {
         var inputs = new[]
