@@ -13,14 +13,25 @@ if [[ ! -f "$CONGOCC_JAR" ]]; then
 fi
 # Keep the conversion in the Trash pipeline: parse .g4, evaluate the XQuery4
 # translator, then save the resulting CongoCC grammar for CongoCC itself.
+source_bundle=$(mktemp)
 grammar_bundle=$(mktemp)
 conversion_error=$(mktemp)
-trap 'rm -f "$grammar_bundle" "$conversion_error"' EXIT
+trap 'rm -f "$source_bundle" "$grammar_bundle" "$conversion_error"' EXIT
 parse_cmd=(dotnet trash parse)
 query_cmd=(dotnet trash xquery)
+combine_cmd=(dotnet trash combine)
 if [[ -n "${TRPARSE_DLL:-}" ]]; then parse_cmd=(dotnet "$TRPARSE_DLL"); fi
 if [[ -n "${TRXQUERY_DLL:-}" ]]; then query_cmd=(dotnet "$TRXQUERY_DLL"); fi
-"${parse_cmd[@]}" <tool_grammar_files:{g | "<g>" }; separator=" "> > "$grammar_bundle"
+if [[ -n "${TRCOMBINE_DLL:-}" ]]; then combine_cmd=(dotnet "$TRCOMBINE_DLL"); fi
+grammar_files=(<tool_grammar_files:{g | "<g>" }; separator=" ">)
+"${parse_cmd[@]}" "${grammar_files[@]}" > "$source_bundle"
+if (( ${#grammar_files[@]} > 1 )); then
+  # trcombine selects the top-level parser and lexer, follows imports, and
+  # emits one combined .g4.pt while removing the source .pt members.
+  "${combine_cmd[@]}" -f "$source_bundle" > "$grammar_bundle"
+else
+  cp "$source_bundle" "$grammar_bundle"
+fi
 interp_cmd=(dotnet trash interp)
 if [[ -n "${TRINTERP_DLL:-}" ]]; then interp_cmd=(dotnet "$TRINTERP_DLL"); fi
 scan_specs=$("${interp_cmd[@]}" --congocc-scans -f "$grammar_bundle")

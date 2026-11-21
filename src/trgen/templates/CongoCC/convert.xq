@@ -118,6 +118,19 @@ declare function local:scan-alt($owner, $index) {
     where fn:starts-with($line, $key)
     return local:scan-token-names(fn:substring-after($line, $key), $reserved)
 };
+declare function local:scan-syntax-alt($owner, $index) {
+  let $key := fn:concat($owner, '#S#', $index, '#')
+  return fn:exists(for $line in fn:tokenize($scanSpecs, '\r?\n')
+    where $line = $key return $line)
+};
+declare function local:scan-block($element) {
+  let $owner := fn:string(($element/ancestor::parserRuleSpec/RULE_REF)[1])
+  let $alt-index := fn:count($element/ancestor::labeledAlt[1]/preceding-sibling::labeledAlt) + 1
+  let $element-index := fn:count($element/preceding-sibling::element) + 1
+  let $key := fn:concat($owner, '#B#', $alt-index, '#', $element-index, '#')
+  return fn:exists(for $line in fn:tokenize($scanSpecs, '\r?\n')
+    where $line = $key return $line)
+};
 declare function local:parser-alt-list($list) {
   fn:string-join(
     for $alt in $list/alternative
@@ -137,8 +150,11 @@ declare function local:parser-element($node) {
     else if (fn:exists($atom/terminalDef/STRING_LITERAL))
       then local:literal($atom/terminalDef/STRING_LITERAL)
     else if (fn:exists($block))
-      then fn:concat('(', local:parser-alt-list($block/altList), ')',
-        local:suffix($node/ebnf/blockSuffix))
+      then let $block-body := local:parser-alt-list($block/altList)
+        return if (local:scan-block($node))
+          then fn:concat('(SCAN (', $block-body, ') => ', $block-body, ')',
+            local:suffix($node/ebnf/blockSuffix))
+          else fn:concat('(', $block-body, ')', local:suffix($node/ebnf/blockSuffix))
     else local:unsupported('parser element')
   let $follow := if (local:suffix($node) = '') then () else local:scan-follow($node)
   return if (local:suffix($node) = '') then $body
@@ -159,7 +175,9 @@ declare function local:parser-rule($rule, $nl) {
         let $text := local:parser-alt-list($alt)
         let $index := fn:count($alt/preceding-sibling::labeledAlt) + 1
         let $follow := local:scan-alt($name, $index)
-        return if (fn:exists($follow))
+        return if (local:scan-syntax-alt($name, $index))
+          then fn:concat('SCAN (', $text, ') => ', $text)
+          else if (fn:exists($follow))
           then fn:concat('SCAN (', $text, ' (', $follow, ')) => ', $text)
           else $text,
         fn:concat($nl, '  | '))
@@ -292,7 +310,8 @@ return if (fn:count($grammar) != 1 or
     'PARSER_PACKAGE=generated;', $nl,
     'PARSER_CLASS=', $name, 'Parser;', $nl, $nl,
     if (fn:exists($grammar/prequelConstruct/optionsSpec/option[
-      identifier/text() = 'caseInsensitive' and optionValue/text() = 'true']))
+      fn:string(identifier) = 'caseInsensitive' and
+      fn:normalize-space(fn:string(optionValue)) = 'true']))
       then fn:concat('IGNORE_CASE=true;', $nl, $nl) else '',
     fn:string-join(
       for $rule in $grammar/rules/ruleSpec/lexerRuleSpec

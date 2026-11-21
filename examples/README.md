@@ -5,6 +5,7 @@ Runnable examples demonstrating common Trash toolchain workflows.
 | Directory | Description |
 |-----------|-------------|
 | [`arithmetic-congocc/`](arithmetic-congocc/) | Convert the arithmetic ANTLR4 grammar to CongoCC, compile Java, and parse an input |
+| [`congocc-split/`](congocc-split/) | Combine separate action-free ANTLR4 grammars and generate a CongoCC parser with syntactic SCAN guards |
 | [`ast-during-parse/`](ast-during-parse/) | Construct pipeable `.pt` ASTs on AllStar's committed rule-exit events, without constructing a CST |
 | [`ast-rewrite/`](ast-rewrite/) | Prototype a separate ANTLR3-like `.ast` rewrite mapping from AllStar CSTs to JSON ASTs |
 | [`abnf-interp/`](abnf-interp/) | Parse ABNF/BNF files using generated `.interp` files (no code generation step) |

@@ -34,6 +34,7 @@ public sealed class CongoChoiceAnalyzer
         // Leave grammars with predicates or unrecognized parser elements alone.
         if (!analyzer._rules.Values.All(IsSupportedRule)) yield break;
         foreach (var fact in analyzer.FindTailRepetitionGuards()) yield return fact;
+        foreach (var fact in analyzer.FindRepeatedPrefixGuards()) yield return fact;
         foreach (var fact in analyzer.FindAlternativeGuards()) yield return fact;
     }
 
@@ -64,7 +65,9 @@ public sealed class CongoChoiceAnalyzer
                     analyzer.FirstElements(Children(other, "element").ToArray(), new HashSet<string>()))))
                     continue;
                 var key = $"{name}#A#{i + 1}#";
-                if (!guarded.Any(fact => fact.StartsWith(key, StringComparison.Ordinal)))
+                var syntaxKey = $"{name}#S#{i + 1}#";
+                if (!guarded.Any(fact => fact.StartsWith(key, StringComparison.Ordinal) ||
+                    fact.StartsWith(syntaxKey, StringComparison.Ordinal)))
                     unresolved.Add(i + 1);
             }
             if (unresolved.Count != 0)
@@ -111,6 +114,44 @@ public sealed class CongoChoiceAnalyzer
         }
     }
 
+    private IEnumerable<string> FindRepeatedPrefixGuards()
+    {
+        foreach (var (ownerName, rule) in _rules)
+        {
+            var alternatives = Alternatives(rule).ToArray();
+            for (var altIndex = 0; altIndex < alternatives.Length; altIndex++)
+            {
+                var elements = Children(alternatives[altIndex], "element").ToArray();
+                for (var elementIndex = 0; elementIndex + 2 < elements.Length; elementIndex++)
+                {
+                    var block = Child(Child(elements[elementIndex], "ebnf"), "block");
+                    if (block == null || Suffix(Child(Child(elements[elementIndex], "ebnf"), "blockSuffix")) != '*')
+                        continue;
+                    var branches = Children(Child(block, "altList"), "alternative").ToArray();
+                    if (branches.Length != 1) continue;
+                    var repeated = Children(branches[0], "element").ToArray();
+                    if (repeated.Length != 2) continue;
+                    var ruleName = RuleReference(repeated[0]);
+                    if (ruleName == null || ruleName != RuleReference(elements[elementIndex + 1])) continue;
+                    var repeatedTail = Terminal(repeated[1]);
+                    var followingTail = Terminal(elements[elementIndex + 2]);
+                    if (repeatedTail == null || followingTail == null || repeatedTail == followingTail) continue;
+                    yield return $"{ownerName}#B#{altIndex + 1}#{elementIndex + 1}#";
+                }
+            }
+        }
+    }
+
+    private static string Terminal(GrammarNode element)
+    {
+        if (Suffix(element) != '\0') return null;
+        var terminal = Child(Child(element, "atom"), "terminalDef");
+        var token = Child(terminal, "TOKEN_REF")?.GetText();
+        if (token != null) return $"<{token}>";
+        var literal = Child(terminal, "STRING_LITERAL")?.GetText();
+        return literal == null ? null : QuoteLiteral(literal);
+    }
+
     private IEnumerable<string> FindAlternativeGuards()
     {
         foreach (var (ownerName, rule) in _rules)
@@ -120,11 +161,23 @@ public sealed class CongoChoiceAnalyzer
             for (var i = 0; i < alternatives.Length - 1; i++)
             {
                 var elements = Children(alternatives[i], "element").ToArray();
-                if (!IsLinearTerminalSequence(elements)) continue;
                 var first = FirstElements(elements, new HashSet<string>());
                 if (!alternatives.Skip(i + 1).Any(other => first.Overlaps(
                     FirstElements(Children(other, "element").ToArray(), new HashSet<string>()))))
                     continue;
+                // For bounded terminal patterns, a complete syntactic SCAN is
+                // safe when no word of this alternative is a prefix of a word
+                // in a later alternative (or vice versa). This handles, for
+                // example, an optional sign followed by FLOAT versus INT.
+                if (TryTerminalWords(elements, out var words) &&
+                    alternatives.Skip(i + 1).All(other =>
+                        TryTerminalWords(Children(other, "element").ToArray(), out var later) &&
+                        words.All(word => later.All(candidate => !PrefixRelated(word, candidate)))))
+                {
+                    yield return $"{ownerName}#S#{i + 1}#";
+                    continue;
+                }
+                if (!IsLinearTerminalSequence(elements)) continue;
                 var following = Follow(ownerName, new HashSet<string>());
                 if (following.Count == 0) continue;
                 yield return string.Join('#', ownerName, "A", (i + 1).ToString(),
@@ -138,6 +191,47 @@ public sealed class CongoChoiceAnalyzer
             Suffix(element) == '\0' &&
             (Child(Child(Child(element, "atom"), "terminalDef"), "TOKEN_REF") != null ||
              Child(Child(Child(element, "atom"), "terminalDef"), "STRING_LITERAL") != null));
+
+    private static bool PrefixRelated(string[] left, string[] right) =>
+        left.Take(Math.Min(left.Length, right.Length))
+            .SequenceEqual(right.Take(Math.Min(left.Length, right.Length)), StringComparer.Ordinal);
+
+    // Enumerate only small, finite terminal languages. A repetition or rule
+    // reference leaves this proof unavailable; it must not acquire a guessed
+    // numeric SCAN limit from an observed corpus.
+    private static bool TryTerminalWords(GrammarNode[] elements, out List<string[]> words)
+    {
+        words = new List<string[]> { Array.Empty<string>() };
+        foreach (var element in elements)
+        {
+            var terminal = Child(Child(element, "atom"), "terminalDef");
+            var token = Child(terminal, "TOKEN_REF")?.GetText();
+            var literal = Child(terminal, "STRING_LITERAL")?.GetText();
+            List<string[]> choices;
+            if (token != null || literal != null)
+                choices = new List<string[]> { new[] { token != null ? $"<{token}>" : QuoteLiteral(literal) } };
+            else if (Child(Child(element, "ebnf"), "block") is { } block)
+            {
+                choices = new List<string[]>();
+                foreach (var alternative in Children(Child(block, "altList"), "alternative"))
+                {
+                    if (!TryTerminalWords(Children(alternative, "element").ToArray(), out var branch))
+                        return false;
+                    choices.AddRange(branch);
+                }
+            }
+            else return false;
+
+            var suffix = Suffix(element);
+            if (suffix == '\0') suffix = Suffix(Child(Child(element, "ebnf"), "blockSuffix"));
+            if (suffix is '*' or '+') return false;
+            if (suffix == '?') choices.Add(Array.Empty<string>());
+            if (choices.Count == 0 || words.Count * choices.Count > 64) return false;
+            words = words.SelectMany(prefix => choices.Select(choice => prefix.Concat(choice).ToArray())).ToList();
+            if (words.Any(word => word.Length > 8)) return false;
+        }
+        return true;
+    }
 
     private bool IsRepeatedElsewhere(string name) => _rules.Values
         .SelectMany(Occurrences)
