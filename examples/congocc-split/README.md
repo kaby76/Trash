@@ -10,6 +10,9 @@ The parser has two decisions that require more than a one-token choice:
 the repeated `value COMMA` before a final `value SEMI`, and the optional sign
 shared by the `FLOAT` and `INT` alternatives. The C# choice analysis emits
 syntactic `SCAN` guards for these bounded patterns. `input.txt` exercises both.
+It also places two `/* ... */` comments around a value. The converter uses a
+CongoCC lazy `SKIP` token for ANTLR4's `.*?`, so the first comment does not
+consume through the second one.
 
 Run `bash run-example.sh`. Set `CONGOCC_JAR` if CongoCC is not at
 `~/congo-parser-generator/bin/congocc.jar`.

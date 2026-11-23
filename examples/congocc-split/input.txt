@@ -1,1 +1,1 @@
-+1, -2.5; # hidden comment
++1, /* first */ -2.5; /* second */ # hidden comment

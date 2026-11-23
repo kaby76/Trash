@@ -94,9 +94,9 @@ declare function local:char-set($raw) {
 };
 
 declare function local:suffix($node) {
-  if (fn:exists($node/ebnfSuffix/QUESTION)) then '?'
-  else if (fn:exists($node/ebnfSuffix/STAR)) then '*'
+  if (fn:exists($node/ebnfSuffix/STAR)) then '*'
   else if (fn:exists($node/ebnfSuffix/PLUS)) then '+'
+  else if (fn:exists($node/ebnfSuffix/QUESTION)) then '?'
   else ''
 };
 
@@ -284,9 +284,11 @@ declare function local:lexer-element($node) {
     else if (fn:count($range) = 2)
       then fn:concat('[', local:literal($range[1]), '-', local:literal($range[2]), ']')
     else if (fn:exists($atom/notSet)) then local:not-set($atom/notSet)
+    else if (fn:exists($atom/wildcard/DOT)) then '~[]'
     else if (fn:exists($block))
       then fn:concat('(', local:lexer-alt-list($block/lexerAltList), ')')
-    else local:unsupported('lexer element')
+    else local:unsupported(fn:concat('lexer element ', fn:string($node),
+      ' in ', fn:string(($node/ancestor::lexerRuleSpec/TOKEN_REF)[1])))
   return if (local:suffix($node) = '') then $body
     else fn:concat('(', $body, ')', local:suffix($node))
 };
@@ -295,6 +297,11 @@ declare function local:lexer-rule($rule, $nl) {
   let $alts := $rule/lexerRuleBlock/lexerAltList/lexerAlt
   let $name := local:token-name(fn:string($rule/TOKEN_REF))
   let $commands := $alts/lexerCommands/lexerCommand
+  let $nongreedy := $rule//lexerElement/ebnfSuffix[
+    (fn:exists(STAR) or fn:exists(PLUS)) and fn:exists(QUESTION)
+    or fn:count(QUESTION) = 2]
+  let $lazy := fn:count($nongreedy) = 1 and
+    fn:exists($nongreedy[fn:exists(STAR) and ../lexerAtom/wildcard/DOT])
   let $skip := fn:count($commands) = fn:count($alts) and
     fn:count($commands[
       (lexerCommandName/identifier/RULE_REF = 'skip' and not(lexerCommandExpr)) or
@@ -304,13 +311,15 @@ declare function local:lexer-rule($rule, $nl) {
   let $regex := local:lexer-alt-list($rule/lexerRuleBlock/lexerAltList)
   return if (fn:exists($rule/FRAGMENT) and
     local:nullable-rule(fn:string($rule/TOKEN_REF), ())) then ''
+  else if (fn:exists($nongreedy) and (not($lazy) or fn:exists($rule/FRAGMENT)))
+    then local:unsupported(fn:concat('non-greedy lexer element in ', $name))
   else if (fn:exists($commands) and not($skip))
     then local:unsupported(fn:concat('lexer commands other than skip or channel(HIDDEN) in ', $name))
     else if (fn:exists($rule/FRAGMENT))
       then fn:concat('TOKEN : <#', $name, ' : ', $regex, '> ;', $nl)
     else if ($skip)
-      then fn:concat('SKIP : <', $name, ' : ', $regex, '> ;', $nl)
-    else fn:concat('TOKEN : <', $name, ' : ', $regex, '> ;', $nl)
+      then fn:concat('SKIP : <', if ($lazy) then '?' else '', $name, ' : ', $regex, '> ;', $nl)
+    else fn:concat('TOKEN : <', if ($lazy) then '?' else '', $name, ' : ', $regex, '> ;', $nl)
 };
 
 let $grammar := /grammarSpec
