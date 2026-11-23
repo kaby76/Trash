@@ -14,3 +14,6 @@ printf '%s\n' "$output"
 grep -Fq 'contents : (SCAN (ENSURE ~(<ID> "=") item) => item)+ ;' Generated-CongoCC/RuleBoundary.ccc
 grep -Fq 'SKIP : <WS :' Generated-CongoCC/RuleBoundary.ccc
 [[ "$output" == *'CongoCC 0 ../input.txt success'* ]]
+test_output=$(cd Generated-CongoCC && make test 2>&1)
+printf '%s\n' "$test_output"
+[[ "$test_output" == *'Test succeeded.'* ]]

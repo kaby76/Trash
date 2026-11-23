@@ -1,0 +1,1 @@
+(document (definition alpha = (contents (item red) (item green))) (definition beta = (contents (item "two") (item blue))) (definition gamma = (contents (item green))) <EOF>)

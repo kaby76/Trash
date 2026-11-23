@@ -17,6 +17,13 @@ line while retaining the tree. The generated grammar sets
 Direct left-recursion lowering may still produce a different tree shape from
 an ANTLR parser.
 
+After building, run `make test` (or `bash test.sh`) to test the input patterns
+from the source grammar's `desc.xml`. `pwsh test.ps1` provides the same check
+on Windows. A nonempty sibling `.errors` file marks an expected rejection;
+when a sibling `.tree` file exists, the test compares it with the CongoCC
+`-tree` output. Error messages are not compared because CongoCC reports them
+differently from ANTLR.
+
 This is an initial converter for named lexer tokens, character sets, string
 literals, wildcards, `-> skip`, `-> channel(HIDDEN)`, lexer fragments and ranges, grouped alternatives, basic repetition, and simple direct left recursion. The converter maps `channel(HIDDEN)` to CongoCC `SKIP`; other channels remain unsupported. A single `.*?` in a token rule is rendered as a CongoCC lazy token; other non-greedy lexer suffixes are rejected.
 `build.sh` asks trinterp's C# choice analyzer for SCAN facts, then passes them
