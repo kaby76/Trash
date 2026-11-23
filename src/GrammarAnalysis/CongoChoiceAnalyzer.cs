@@ -34,6 +34,7 @@ public sealed class CongoChoiceAnalyzer
         // Leave grammars with predicates or unrecognized parser elements alone.
         if (!analyzer._rules.Values.All(IsSupportedRule)) yield break;
         foreach (var fact in analyzer.FindTailRepetitionGuards()) yield return fact;
+        foreach (var fact in analyzer.FindNestedRuleBoundaryGuards()) yield return fact;
         foreach (var fact in analyzer.FindRepeatedPrefixGuards()) yield return fact;
         foreach (var fact in analyzer.FindAlternativeGuards()) yield return fact;
     }
@@ -112,6 +113,75 @@ public sealed class CongoChoiceAnalyzer
                 if (emitted.Add(fact)) yield return fact;
             }
         }
+    }
+
+    // A repeated outer rule may have a distinctive two-token header while a
+    // nested rule repeats an item that can consume the header's first token.
+    // An ordinary SCAN of that item commits too early. Guard the nested
+    // repetition against the complete next-rule header instead.
+    private IEnumerable<string> FindNestedRuleBoundaryGuards()
+    {
+        var emitted = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var (outerName, outerRule) in _rules)
+        {
+            if (!IsRepeatedElsewhere(outerName)) continue;
+            var alternatives = Alternatives(outerRule).ToArray();
+            if (alternatives.Length != 1) continue;
+            var elements = Children(alternatives[0], "element").ToArray();
+            if (elements.Length < 3) continue;
+            var first = Terminal(elements[0]);
+            var second = Terminal(elements[1]);
+            if (first == null || second == null) continue;
+
+            // The second header token must not occur in another parser rule;
+            // otherwise suppressing the nested item could suppress valid input.
+            if (_rules.Values.SelectMany(AllElements)
+                .Count(element => TerminalText(element) == second) != 1) continue;
+
+            var reachable = new HashSet<string>(StringComparer.Ordinal);
+            var pending = new Queue<string>(elements.Skip(2)
+                .SelectMany(AllElementsIncludingSelf)
+                .Select(RuleReference).Where(name => name != null));
+            while (pending.Count != 0)
+            {
+                var name = pending.Dequeue();
+                if (!reachable.Add(name) || !_rules.TryGetValue(name, out var rule)) continue;
+                foreach (var childName in AllElements(rule).Select(RuleReference).Where(value => value != null))
+                    pending.Enqueue(childName);
+            }
+
+            foreach (var ownerName in reachable)
+            {
+                if (!_rules.TryGetValue(ownerName, out var rule)) continue;
+                foreach (var (tail, suffix) in Occurrences(rule))
+                {
+                    if (suffix.Length != 0 || Suffix(tail) is not ('*' or '+')) continue;
+                    var itemName = RuleReference(tail);
+                    if (itemName == null || !FirstRule(itemName, new HashSet<string>()).Contains(first)) continue;
+                    var fact = string.Join('#', ownerName, "N", itemName, first + " " + second);
+                    if (emitted.Add(fact)) yield return fact;
+                }
+            }
+        }
+    }
+
+    private static IEnumerable<GrammarNode> AllElements(GrammarNode node) =>
+        node.Children.SelectMany(AllElementsIncludingSelf);
+
+    private static IEnumerable<GrammarNode> AllElementsIncludingSelf(GrammarNode node)
+    {
+        if (node.LocalName == "element") yield return node;
+        foreach (var child in node.Children)
+            foreach (var element in AllElementsIncludingSelf(child)) yield return element;
+    }
+
+    private static string TerminalText(GrammarNode element)
+    {
+        var terminal = Child(Child(element, "atom"), "terminalDef");
+        var token = Child(terminal, "TOKEN_REF")?.GetText();
+        if (token != null) return $"<{token}>";
+        var literal = Child(terminal, "STRING_LITERAL")?.GetText();
+        return literal == null ? null : QuoteLiteral(literal);
     }
 
     private IEnumerable<string> FindRepeatedPrefixGuards()

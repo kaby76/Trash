@@ -112,6 +112,17 @@ declare function local:scan-follow($element) {
     return local:scan-token-names(fn:substring-after($line, $key), $reserved)
 };
 
+declare function local:scan-boundary($element) {
+  let $name := fn:string($element/atom/ruleref/RULE_REF)
+  let $owner := fn:string(($element/ancestor::parserRuleSpec/RULE_REF)[1])
+  let $tail := fn:empty($element/following-sibling::element) and
+    fn:empty($element/ancestor::element/following-sibling::element)
+  let $key := fn:concat($owner, '#N#', $name, '#')
+  return if (not($tail)) then () else for $line in fn:tokenize($scanSpecs, '\r?\n')
+    where fn:starts-with($line, $key)
+    return local:scan-token-names(fn:substring-after($line, $key), $reserved)
+};
+
 declare function local:scan-alt($owner, $index) {
   let $key := fn:concat($owner, '#A#', $index, '#')
   return for $line in fn:tokenize($scanSpecs, '\r?\n')
@@ -157,7 +168,12 @@ declare function local:parser-element($node) {
           else fn:concat('(', $block-body, ')', local:suffix($node/ebnf/blockSuffix))
     else local:unsupported('parser element')
   let $follow := if (local:suffix($node) = '') then () else local:scan-follow($node)
+  let $boundary := if (local:suffix($node) = '') then () else local:scan-boundary($node)
   return if (local:suffix($node) = '') then $body
+    else if (fn:exists($boundary))
+      then fn:concat('(SCAN (ENSURE ~(', fn:string-join($boundary, ' | '), ') ',
+        $body, if (fn:exists($follow)) then fn:concat(' (', fn:string-join($follow, ' | '), ')') else '',
+        ') => ', $body, ')', local:suffix($node))
     else if (fn:exists($follow))
       then fn:concat('(SCAN (', $body, ' (', fn:string-join($follow, ' | '), ')) => ', $body, ')', local:suffix($node))
     else fn:concat('(', $body, ')', local:suffix($node))
