@@ -141,6 +141,10 @@ public class Config
         HelpText = "Also write the learned interpreter DFA data to a standalone file.")]
     public string WriteDfaCacheFile { get; set; }
 
+    [Option("dfa-dot", Required = false,
+        HelpText = "After ALL(*) parsing, write learned parser-decision and lexer-mode DFA graphs as .dot files in this directory.")]
+    public string DfaDotDirectory { get; set; }
+
     [Option("bundle", Required = false, HelpText = "Write an ordinary POSIX PAX artifact bundle to stdout (the default).")]
     public bool Bundle { get; set; } = true;
 

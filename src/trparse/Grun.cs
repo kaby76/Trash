@@ -105,6 +105,10 @@ public class Grun
             (config.Earley || config.TimeoutSeconds > 0))
             throw new ArgumentException(
                 "--write-dfa-cache requires ordinary ALL(*) parsing without --timeout.");
+        if (config.DfaDotDirectory != null &&
+            (config.Earley || config.TimeoutSeconds > 0 || config.NoSharedParserDfa))
+            throw new ArgumentException(
+                "--dfa-dot requires ordinary ALL(*) parsing with a shared parser DFA and without --timeout.");
         if (config.WriteDfaCache &&
             (!config.Bundle || config.NoParsingResultSets))
             throw new ArgumentException(
@@ -275,6 +279,7 @@ public class Grun
             }
 
             WriteDfaCacheIfRequested();
+            WriteDfaDotIfRequested();
             DateTime overallAfter = DateTime.Now;
             PrintPerfSummary((overallAfter - overallBefore).TotalSeconds);
 
@@ -431,6 +436,7 @@ public class Grun
         Value("--parser-dfa-cache-mb", config.ParserDfaCacheMegabytes.ToString(
             System.Globalization.CultureInfo.InvariantCulture));
         Flag(config.InterpTimings, "--interp-timings");
+        Value("--dfa-dot", config.DfaDotDirectory);
         Flag(config.LineNumbers, "-l");
         Flag(config.Quiet, "-q");
         Flag(config.Verbose, "-v");
@@ -675,6 +681,7 @@ public class Grun
         }
 
         WriteDfaCacheIfRequested();
+        WriteDfaDotIfRequested();
         PrintPerfSummary((DateTime.Now - overallBefore).TotalSeconds);
         if (emitBundle)
         {
@@ -795,6 +802,28 @@ public class Grun
             Console.Error.WriteLine($"DFA cache: captured {_writtenDfaCache.Length:N0} bytes" +
                 (config.WriteDfaCacheFile == null ? " for PAX/tar output." :
                     $"; also wrote '{config.WriteDfaCacheFile}'."));
+    }
+
+    private void WriteDfaDotIfRequested()
+    {
+        if (config.DfaDotDirectory == null) return;
+        if (string.IsNullOrWhiteSpace(config.DfaDotDirectory))
+            throw new ArgumentException("--dfa-dot requires a directory path.");
+        if (_parserPredictionCache?.BoundAtn == null || string.IsNullOrEmpty(config.Lib))
+            throw new ArgumentException("--dfa-dot requires ALL(*) interpreter tables.");
+        var (parserPath, lexerPath) = DiscoverInterpPair(config.Lib);
+        var parser = Atn.InterpFileReader.Read(File.ReadAllText(parserPath));
+        var lexer = Atn.InterpFileReader.Read(File.ReadAllText(lexerPath));
+        var graphs = _parserPredictionCache.DotGraphs(
+            parser.SymbolicNames, parser.LiteralNames)
+            .Concat(_lexerDfaCache.DotGraphs(lexer.ModeNames, lexer.RuleNames))
+            .ToArray();
+        Directory.CreateDirectory(config.DfaDotDirectory);
+        foreach (var (name, dot) in graphs)
+            File.WriteAllText(Path.Combine(config.DfaDotDirectory, name), dot,
+                new UTF8Encoding(encoderShouldEmitUTF8Identifier: false));
+        if (!config.Quiet)
+            Console.Error.WriteLine($"DFA DOT: wrote {graphs.Length} learned graphs to '{config.DfaDotDirectory}'.");
     }
 
     private void UpdateStats(double parseSeconds, long tokenCount)

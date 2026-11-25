@@ -150,6 +150,12 @@ declare function local:scan-syntax-alt($owner, $index) {
   return fn:exists(for $line in fn:tokenize($scanSpecs, '\r?\n')
     where $line = $key return $line)
 };
+declare function local:scan-prefix-alt($owner, $index) {
+  let $key := fn:concat($owner, '#P#', $index, '#')
+  return for $line in fn:tokenize($scanSpecs, '\r?\n')
+    where fn:starts-with($line, $key)
+    return local:scan-token-names(fn:substring-after($line, $key), $reserved)
+};
 declare function local:scan-block($element) {
   let $owner := fn:string(($element/ancestor::parserRuleSpec/RULE_REF)[1])
   let $alt-index := fn:count($element/ancestor::labeledAlt[1]/preceding-sibling::labeledAlt) + 1
@@ -207,8 +213,11 @@ declare function local:parser-rule($rule, $nl) {
         let $text := local:parser-alt-list($alt)
         let $index := fn:count($alt/preceding-sibling::labeledAlt) + 1
         let $follow := local:scan-alt($name, $index)
+        let $prefix-guard := local:scan-prefix-alt($name, $index)
         return if (local:scan-syntax-alt($name, $index))
           then fn:concat('SCAN (', $text, ') => ', $text)
+          else if (fn:exists($prefix-guard))
+          then fn:concat('SCAN ', $prefix-guard, ' => ', $text)
           else if (fn:exists($follow))
           then fn:concat('SCAN (', $text, ' (', $follow, ')) => ', $text)
           else $text,

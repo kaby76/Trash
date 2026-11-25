@@ -67,8 +67,10 @@ public sealed class CongoChoiceAnalyzer
                     continue;
                 var key = $"{name}#A#{i + 1}#";
                 var syntaxKey = $"{name}#S#{i + 1}#";
+                var prefixKey = $"{name}#P#{i + 1}#";
                 if (!guarded.Any(fact => fact.StartsWith(key, StringComparison.Ordinal) ||
-                    fact.StartsWith(syntaxKey, StringComparison.Ordinal)))
+                    fact.StartsWith(syntaxKey, StringComparison.Ordinal) ||
+                    fact.StartsWith(prefixKey, StringComparison.Ordinal)))
                     unresolved.Add(i + 1);
             }
             if (unresolved.Count != 0)
@@ -247,6 +249,13 @@ public sealed class CongoChoiceAnalyzer
                     yield return $"{ownerName}#S#{i + 1}#";
                     continue;
                 }
+                if (TryOptionalTokenPrefix(elements, out var guard, out var prefixes) &&
+                    alternatives.Skip(i + 1).All(other => prefixes.All(prefix =>
+                        !MayStartWith(Children(other, "element").ToArray(), prefix))))
+                {
+                    yield return $"{ownerName}#P#{i + 1}#{guard}";
+                    continue;
+                }
                 if (!IsLinearTerminalSequence(elements)) continue;
                 var following = Follow(ownerName, new HashSet<string>());
                 if (following.Count == 0) continue;
@@ -254,6 +263,126 @@ public sealed class CongoChoiceAnalyzer
                     string.Join(" | ", following.OrderBy(value => value, StringComparer.Ordinal)));
             }
         }
+    }
+
+    // An optional one-token rule followed by another one-token rule gives two
+    // possible prefixes. Emit a short guard only if neither prefix can start
+    // any later alternative. Keep the token spelling, not the rule name, in
+    // the SCAN so the guard stops at the distinguishing token.
+    private bool TryOptionalTokenPrefix(GrammarNode[] elements, out string guard,
+        out string[][] prefixes)
+    {
+        guard = null;
+        prefixes = null;
+        // Choices commonly delegate to a named line form. Inspect a chain of
+        // single-alternative wrappers while keeping the SCAN on the choice.
+        var seen = new HashSet<string>(StringComparer.Ordinal);
+        while (elements.Length == 1 && Suffix(elements[0]) == '\0' &&
+            RuleReference(elements[0]) is { } name && seen.Add(name) &&
+            _rules.TryGetValue(name, out var rule))
+        {
+            var alternatives = Alternatives(rule).ToArray();
+            if (alternatives.Length != 1) break;
+            elements = Children(alternatives[0], "element").ToArray();
+        }
+        if (elements.Length < 2 || Suffix(elements[0]) != '?' ||
+            Suffix(elements[1]) != '\0' ||
+            !TrySingleToken(elements[0], new HashSet<string>(), out var optional) ||
+            !TrySingleToken(elements[1], new HashSet<string>(), out var required))
+            return false;
+        guard = $"({optional})? {required}";
+        prefixes = new[] { new[] { required }, new[] { optional, required } };
+        return true;
+    }
+
+    private bool TrySingleToken(GrammarNode element, HashSet<string> seen, out string token)
+    {
+        token = TerminalText(element);
+        if (token != null) return true;
+        var name = RuleReference(element);
+        if (name == null || !seen.Add(name) || !_rules.TryGetValue(name, out var rule)) return false;
+        var alternatives = Alternatives(rule).ToArray();
+        if (alternatives.Length != 1) return false;
+        var elements = Children(alternatives[0], "element").ToArray();
+        return elements.Length == 1 && Suffix(elements[0]) == '\0' &&
+            TrySingleToken(elements[0], seen, out token);
+    }
+
+    // A bounded prefix recognizer for competing alternatives. Repetition,
+    // nullable paths, and rule calls are traversed; recursion or an unknown
+    // construct is treated as a possible match, never as proof of separation.
+    private bool MayStartWith(GrammarNode[] elements, string[] prefix) =>
+        MatchElements(elements, 0, prefix, new HashSet<string>(), 0)
+            .Contains(prefix.Length);
+
+    private HashSet<int> MatchElements(GrammarNode[] elements, int position,
+        string[] prefix, HashSet<string> active, int depth)
+    {
+        var positions = new HashSet<int> { position };
+        foreach (var element in elements)
+        {
+            positions = positions.SelectMany(pos => pos == prefix.Length
+                    ? new HashSet<int> { pos }
+                    : MatchElement(element, pos, prefix, active, depth + 1))
+                .ToHashSet();
+            if (positions.Count == 0) break;
+        }
+        return positions;
+    }
+
+    private HashSet<int> MatchElement(GrammarNode element, int position,
+        string[] prefix, HashSet<string> active, int depth)
+    {
+        if (depth > 32) return new HashSet<int> { prefix.Length };
+        var suffix = Suffix(element);
+        if (suffix == '\0') suffix = Suffix(Child(Child(element, "ebnf"), "blockSuffix"));
+        var result = suffix is '?' or '*' ? new HashSet<int> { position } : new HashSet<int>();
+        var next = MatchBody(element, position, prefix, active, depth + 1);
+        result.UnionWith(next);
+        if (suffix is not ('*' or '+')) return result;
+        for (var count = 1; count <= prefix.Length - position; count++)
+        {
+            next = next.SelectMany(pos => pos == prefix.Length
+                    ? new HashSet<int> { pos }
+                    : MatchBody(element, pos, prefix, active, depth + 1))
+                .ToHashSet();
+            result.UnionWith(next);
+            if (next.Count == 0) break;
+        }
+        return result;
+    }
+
+    private HashSet<int> MatchBody(GrammarNode element, int position,
+        string[] prefix, HashSet<string> active, int depth)
+    {
+        if (depth > 32) return new HashSet<int> { prefix.Length };
+        if (TerminalText(element) is { } terminal)
+            return terminal == prefix[position]
+                ? new HashSet<int> { position + 1 } : new HashSet<int>();
+        if (RuleReference(element) is { } name)
+        {
+            var first = FirstRule(name, new HashSet<string>());
+            if (first.Count != 0 && !first.Contains(prefix[position]) &&
+                !NullableRule(name, new HashSet<string>()))
+                return new HashSet<int>();
+            if (!active.Add(name) || !_rules.TryGetValue(name, out var rule))
+                return new HashSet<int> { prefix.Length };
+            var result = new HashSet<int>();
+            foreach (var alt in Alternatives(rule))
+                result.UnionWith(MatchElements(Children(alt, "element").ToArray(),
+                    position, prefix, active, depth + 1));
+            active.Remove(name);
+            return result;
+        }
+        if (Child(Child(element, "ebnf"), "block") is { } block)
+        {
+            var result = new HashSet<int>();
+            foreach (var alt in Children(Child(block, "altList"), "alternative"))
+                result.UnionWith(MatchElements(Children(alt, "element").ToArray(),
+                    position, prefix, active, depth + 1));
+            return result;
+        }
+        return new HashSet<int> { prefix.Length };
     }
 
     private static bool IsLinearTerminalSequence(GrammarNode[] elements) =>

@@ -329,6 +329,31 @@ public sealed class TrparseBundleInputTests
         Assert.Matches("shared DFA at parse start: [1-9]", reused.Stderr);
     }
 
+    [Fact]
+    public void DfaDotWritesLearnedParserAndLexerGraphsWithoutParseOutput()
+    {
+        var directory = Path.Combine(Path.GetTempPath(),
+            "trparse-dfa-dot-" + Guid.NewGuid().ToString("N"));
+        try
+        {
+            var parsed = Run(Array.Empty<byte>(), "--allstar", "-L",
+                DotDirectory, "-i", "digraph G { a -> b; }",
+                "--no-output", "--dfa-dot", directory);
+            Assert.True(parsed.ExitCode == 0, parsed.Stderr);
+            Assert.Empty(parsed.Output);
+            var parserGraphs = Directory.GetFiles(directory, "parser-decision-*.dot");
+            var lexerGraphs = Directory.GetFiles(directory, "lexer-mode-*.dot");
+            Assert.NotEmpty(parserGraphs);
+            Assert.NotEmpty(lexerGraphs);
+            Assert.Contains("digraph parser_dfa", File.ReadAllText(parserGraphs[0]));
+            Assert.Contains("digraph lexer_dfa", File.ReadAllText(lexerGraphs[0]));
+        }
+        finally
+        {
+            if (Directory.Exists(directory)) Directory.Delete(directory, recursive: true);
+        }
+    }
+
     private static (int ExitCode, byte[] Output, string Stderr) Run(
         IReadOnlyList<Artifact> inputs, params string[] arguments)
     {

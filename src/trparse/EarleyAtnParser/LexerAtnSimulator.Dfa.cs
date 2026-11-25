@@ -1,6 +1,7 @@
 namespace EarleyAtnParser;
 
 using Atn;
+using System.Text;
 
 /// <summary>Learned, per-mode DFA support for <see cref="LexerAtnSimulator"/>.</summary>
 public partial class LexerAtnSimulator
@@ -32,6 +33,65 @@ public partial class LexerAtnSimulator
         internal object ContextCache;
         internal object ActionSets;
         internal object ActionSequences;
+
+        internal IReadOnlyList<(string Name, string Dot)> DotGraphs(
+            string[] modeNames, string[] ruleNames)
+        {
+            if (_atn == null) return Array.Empty<(string, string)>();
+            var starts = (DfaState[])ModeStartStates;
+            var graphs = new List<(string, string)>();
+            for (int mode = 0; mode < starts.Length; mode++)
+            {
+                if (starts[mode] == null) continue;
+                var states = new List<DfaState>();
+                var indices = new Dictionary<DfaState, int>(ReferenceEqualityComparer.Instance);
+                void Add(DfaState state)
+                {
+                    if (state == null || indices.ContainsKey(state)) return;
+                    indices.Add(state, states.Count);
+                    states.Add(state);
+                }
+                Add(starts[mode]);
+                for (int i = 0; i < states.Count; i++)
+                    foreach (var (_, target) in states[i].Edges.Entries()) Add(target);
+                var dot = new StringBuilder();
+                dot.AppendLine("digraph lexer_dfa {");
+                dot.AppendLine("  rankdir=LR;");
+                dot.AppendLine("  start [shape=point];");
+                dot.AppendLine("  start -> s0;");
+                for (int i = 0; i < states.Count; i++)
+                {
+                    var state = states[i];
+                    var accepts = state.Accepts.Select(accept =>
+                        accept.Rule >= 0 && accept.Rule < ruleNames.Length
+                            ? ruleNames[accept.Rule] : $"rule {accept.Rule}");
+                    var label = $"s{i}\\n{state.Configs.Count} configs";
+                    if (state.Accepts.Length != 0)
+                        label += "\\naccept: " + string.Join(", ", accepts);
+                    dot.Append("  s").Append(i).Append(" [label=")
+                        .Append(Trash.DfaDot.Quote(label.Replace("\\n", "\n")))
+                        .Append(", shape=")
+                        .Append(state.Accepts.Length != 0 ? "doublecircle" : "circle")
+                        .AppendLine("];");
+                    foreach (var (symbol, target) in state.Edges.Entries().OrderBy(edge => edge.Symbol))
+                    {
+                        dot.Append("  s").Append(i).Append(" -> ")
+                            .Append(target == null ? "error" : $"s{indices[target]}")
+                            .Append(" [label=")
+                            .Append(Trash.DfaDot.Quote(Trash.DfaDot.Character(symbol)))
+                            .AppendLine("];");
+                    }
+                }
+                dot.AppendLine("  error [shape=box];");
+                dot.AppendLine("}");
+                var modeName = mode < modeNames.Length && !string.IsNullOrEmpty(modeNames[mode])
+                    ? modeNames[mode] : $"mode{mode}";
+                var safeName = string.Concat(modeName.Select(ch =>
+                    char.IsLetterOrDigit(ch) || ch is '-' or '_' ? ch : '_'));
+                graphs.Add(($"lexer-mode-{mode}-{safeName}.dot", dot.ToString()));
+            }
+            return graphs;
+        }
 
         internal void Bind(MyATN atn)
         {

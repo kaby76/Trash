@@ -275,6 +275,22 @@ disabled by semantic predicates or when the parser cache is saturated. The
 lexer DFA is still saved. `--no-shared-parser-dfa` skips a stored parser DFA
 while loading the lexer DFA, making it useful for comparative measurements.
 
+To inspect the learned automata, add `--dfa-dot DIRECTORY` to an ALL(*) parse.
+After all inputs finish, trparse writes one Graphviz `.dot` file per learned
+parser decision and per lexer mode into that directory. Parser edges are labeled
+with token names; lexer edges show input characters. Dashed parser edges mark
+cases where a completed alternative remains live alongside another path.
+These graphs contain only states reached by the supplied inputs and retained in
+the command-scoped DFA caches. They are not a complete static DFA for every
+possible input, and full-context LL fallback is not represented as a DFA.
+The option works with `--no-output`; it requires ALL(*) without `--timeout` or
+`--no-shared-parser-dfa`. For example:
+
+```sh
+trparse --allstar -L interp --no-output --dfa-dot dfa-dot examples/input.txt
+dot -Tsvg dfa-dot/parser-decision-1-precedence-0.dot -o decision-1.svg
+```
+
 For example, from a grammar directory containing `interp/` and `examples/`:
 
 ```sh
@@ -363,6 +379,8 @@ this mode; the overall TT and `--per-file` lines remain available.
                        Add learned DFAs and .interp tables to output PAX/tar.
         --write-dfa-cache-file FILE
                        Also write a standalone DFA cache file.
+        --dfa-dot DIRECTORY
+                       Write learned parser and lexer DFA graphs as .dot files.
         --no-output    Parse inputs and build their parse trees, but do not write
                        parsing-result data to stdout. Performance and error
                        diagnostics are still written to stderr.

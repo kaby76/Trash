@@ -2,6 +2,7 @@ namespace AllStarAtnParser;
 
 using Atn;
 using System.Security.Cryptography;
+using System.Text;
 
 /// <summary>
 /// Grammar-scoped learned SLL prediction data which can be shared by parser
@@ -155,6 +156,74 @@ public sealed class ParserPredictionCache
             _retainedTransitions = 0;
             _estimatedBytes = 0;
             IsSaturated = false;
+        }
+    }
+
+    internal IReadOnlyList<(string Name, string Dot)> DotGraphs(string[] symbolicNames,
+        string[] literalNames)
+    {
+        lock (SyncRoot)
+        {
+            var graphs = new List<(string, string)>();
+            foreach (var ((decision, precedence), dfa) in DecisionDfas
+                .OrderBy(pair => pair.Key.decision).ThenBy(pair => pair.Key.precedence))
+            {
+                if (dfa.Start == null) continue;
+                var states = new List<AllStarSimulator.DfaState>();
+                var indices = new Dictionary<AllStarSimulator.DfaState, int>(
+                    ReferenceEqualityComparer.Instance);
+                void Add(AllStarSimulator.DfaState state)
+                {
+                    if (state == null || indices.ContainsKey(state)) return;
+                    indices.Add(state, states.Count);
+                    states.Add(state);
+                }
+                Add(dfa.Start);
+                for (int i = 0; i < states.Count; i++)
+                    foreach (var target in states[i].Edges.Values) Add(target);
+                var dot = new StringBuilder();
+                dot.AppendLine("digraph parser_dfa {");
+                dot.AppendLine("  rankdir=LR;");
+                dot.AppendLine("  start [shape=point];");
+                dot.AppendLine("  start -> s0;");
+                for (int i = 0; i < states.Count; i++)
+                {
+                    var state = states[i];
+                    var label = $"s{i}";
+                    if (state.Prediction > 0) label += $"\\nalt {state.Prediction}";
+                    if (state.CompletedPrediction > 0)
+                        label += $"\\ncompleted alt {state.CompletedPrediction}";
+                    if (state.RequiresFullContext) label += "\\nfull LL";
+                    if (state.IsError) label += "\\nerror";
+                    if (state.Configs != null)
+                        label += $"\\n{state.Configs.Configs.Count} configs";
+                    dot.Append("  s").Append(i).Append(" [label=")
+                        .Append(Trash.DfaDot.Quote(label.Replace("\\n", "\n")))
+                        .Append(", shape=")
+                        .Append(state.Prediction > 0 || state.IsError ? "doublecircle" : "circle")
+                        .AppendLine("];");
+                    foreach (var (token, target) in state.Edges.OrderBy(edge => edge.Key))
+                    {
+                        var name = token == -1 ? "EOF" :
+                            token >= 0 && token < symbolicNames.Length &&
+                            !string.IsNullOrEmpty(symbolicNames[token])
+                                ? symbolicNames[token] :
+                            token >= 0 && token < literalNames.Length &&
+                            !string.IsNullOrEmpty(literalNames[token])
+                                ? literalNames[token] : token.ToString();
+                        dot.Append("  s").Append(i).Append(" -> s")
+                            .Append(indices[target]).Append(" [label=")
+                            .Append(Trash.DfaDot.Quote(name))
+                            .Append(state.StopLiveEdges.Contains(token)
+                                ? ", style=dashed" : "")
+                            .AppendLine("];");
+                    }
+                }
+                dot.AppendLine("}");
+                graphs.Add(($"parser-decision-{decision}-precedence-{precedence}.dot",
+                    dot.ToString()));
+            }
+            return graphs;
         }
     }
 
