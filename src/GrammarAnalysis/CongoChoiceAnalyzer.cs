@@ -36,6 +36,7 @@ public sealed class CongoChoiceAnalyzer
         foreach (var fact in analyzer.FindTailRepetitionGuards()) yield return fact;
         foreach (var fact in analyzer.FindNestedRuleBoundaryGuards()) yield return fact;
         foreach (var fact in analyzer.FindRepeatedPrefixGuards()) yield return fact;
+        foreach (var fact in analyzer.FindDelimitedBlockGuards()) yield return fact;
         foreach (var fact in analyzer.FindAlternativeGuards()) yield return fact;
     }
 
@@ -222,6 +223,47 @@ public sealed class CongoChoiceAnalyzer
         if (token != null) return $"<{token}>";
         var literal = Child(terminal, "STRING_LITERAL")?.GetText();
         return literal == null ? null : QuoteLiteral(literal);
+    }
+
+    // An optional group followed by one required terminal has a precise
+    // decision boundary. A SCAN of each overlapping branch plus that terminal
+    // asks whether the branch lets the enclosing rule continue. In particular,
+    // this avoids committing to an instruction after consuming a label when
+    // the next token is an assembler directive or a label colon.
+    private IEnumerable<string> FindDelimitedBlockGuards()
+    {
+        foreach (var (ownerName, rule) in _rules)
+        {
+            var ruleAlternatives = Alternatives(rule).ToArray();
+            for (int altIndex = 0; altIndex < ruleAlternatives.Length; altIndex++)
+            {
+                var elements = Children(ruleAlternatives[altIndex], "element").ToArray();
+                for (int elementIndex = 0; elementIndex + 1 < elements.Length; elementIndex++)
+                {
+                    var ebnf = Child(elements[elementIndex], "ebnf");
+                    var block = Child(ebnf, "block");
+                    if (block == null || Suffix(Child(ebnf, "blockSuffix")) != '?' ||
+                        elementIndex + 2 != elements.Length) continue;
+                    var following = Terminal(elements[elementIndex + 1]);
+                    if (following == null) continue;
+                    var branches = Children(Child(block, "altList"), "alternative").ToArray();
+                    for (int branchIndex = 0; branchIndex + 1 < branches.Length; branchIndex++)
+                    {
+                        var branchElements = Children(branches[branchIndex], "element").ToArray();
+                        // A nullable branch could pass the following-token
+                        // check without choosing this branch at all.
+                        if (NullableElements(branchElements, new HashSet<string>())) continue;
+                        var first = FirstElements(
+                            branchElements,
+                            new HashSet<string>());
+                        if (!branches.Skip(branchIndex + 1).Any(later => first.Overlaps(
+                            FirstElements(Children(later, "element").ToArray(),
+                                new HashSet<string>())))) continue;
+                        yield return $"{ownerName}#Q#{altIndex + 1}#{elementIndex + 1}#{branchIndex + 1}#{following}";
+                    }
+                }
+            }
+        }
     }
 
     private IEnumerable<string> FindAlternativeGuards()

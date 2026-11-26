@@ -164,12 +164,29 @@ declare function local:scan-block($element) {
   return fn:exists(for $line in fn:tokenize($scanSpecs, '\r?\n')
     where $line = $key return $line)
 };
+declare function local:scan-block-choice($alt) {
+  let $element := $alt/ancestor::element[1]
+  let $owner := fn:string(($alt/ancestor::parserRuleSpec/RULE_REF)[1])
+  let $alt-index := fn:count($element/ancestor::labeledAlt[1]/preceding-sibling::labeledAlt) + 1
+  let $element-index := fn:count($element/preceding-sibling::element) + 1
+  let $branch-index := fn:count($alt/preceding-sibling::alternative) + 1
+  let $key := fn:concat($owner, '#Q#', $alt-index, '#', $element-index,
+    '#', $branch-index, '#')
+  return if (fn:empty($element)) then () else
+    for $line in fn:tokenize($scanSpecs, '\r?\n')
+    where fn:starts-with($line, $key)
+    return local:scan-token-names(fn:substring-after($line, $key), $reserved)
+};
 declare function local:parser-alt-list($list) {
   fn:string-join(
     for $alt in $list/alternative
-    return fn:string-join(
+    let $text := fn:string-join(
       for $element in $alt/element
-      return local:parser-element($element), ' '),
+      return local:parser-element($element), ' ')
+    let $follow := local:scan-block-choice($alt)
+    return if (fn:exists($follow))
+      then fn:concat('SCAN (', $text, ' ', $follow, ') => ', $text)
+      else $text,
     ' | ')
 };
 

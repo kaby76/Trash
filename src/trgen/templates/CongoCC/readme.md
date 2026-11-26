@@ -43,6 +43,10 @@ alternatives and for a repeated `rule separator` before `rule terminator`
 adaptive prediction. For a repeated outer rule with a distinctive two-token
 header, a nested repeated item can use a negative syntactic check to stop
 before the next outer rule (ABNF). The left-recursion rewrite does not preserve ANTLR4 precedence or associativity. Parser rule names are preserved by default. `convert.xq` accepts the external `$prefix` parameter; `build.sh` passes `CONGOCC_RULE_PREFIX`, which defaults to the empty string. If a parser rule differs from a token name only by case, the build automatically chooses `ParserRule_` to avoid Java source-file collisions on case-insensitive filesystems. For other collisions, or a Java keyword such as `boolean` used as a parser rule name, rebuild with `CONGOCC_RULE_PREFIX=ParserRule_ bash build.sh`. The generated driver reads the prefix saved by the build, so `run.sh` needs no matching environment setting.
+For an optional group of overlapping alternatives followed by one required
+terminal, the converter checks each earlier branch through that terminal before
+committing. This handles the instruction, directive, and label choices in
+`asm/asm6502` without using lookahead measured from a particular corpus.
 Unresolved overlapping top-level alternatives produce a warning during build.
 The converter accepts negated lexer character sets and expands supported
 ANTLR Unicode properties into explicit ranges. It rejects recursive lexer-rule
