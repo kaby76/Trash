@@ -15,8 +15,24 @@ declare variable $reserved := ('FAIL', 'UNCACHE_TOKENS', 'ACTIVE_TOKENS',
 
 declare function local:token-name($name) {
   if ($name = $reserved and
-      fn:exists(/grammarSpec/rules/ruleSpec/lexerRuleSpec[TOKEN_REF/text() = $name]))
+      fn:exists((/grammarSpec/rules/ruleSpec/lexerRuleSpec,
+                 /grammarSpec/modeSpec/lexerRuleSpec)[TOKEN_REF/text() = $name]))
     then fn:concat('ANTLR_', $name) else $name
+};
+
+declare function local:token-reference($name) {
+  let $aliases := (
+    /grammarSpec/rules/ruleSpec/lexerRuleSpec,
+    /grammarSpec/modeSpec/lexerRuleSpec
+  )[lexerRuleBlock/lexerAltList/lexerAlt/lexerCommands/lexerCommand[
+      fn:string(lexerCommandName) = 'type' and
+      lexerCommandExpr/identifier/*/text() = $name
+    ]]/TOKEN_REF/text()
+  let $names := (local:token-name($name),
+    for $alias in $aliases return local:token-name(fn:string($alias)))
+  return if (fn:count($names) = 1) then fn:concat('<', $names[1], '>')
+    else fn:concat('(', fn:string-join(
+      for $token in $names return fn:concat('<', $token, '>'), ' | '), ')')
 };
 
 declare function local:scan-token-names($text, $names) {
@@ -94,9 +110,9 @@ declare function local:char-set($raw) {
 };
 
 declare function local:suffix($node) {
-  if (fn:exists($node/ebnfSuffix/QUESTION)) then '?'
-  else if (fn:exists($node/ebnfSuffix/STAR)) then '*'
+  if (fn:exists($node/ebnfSuffix/STAR)) then '*'
   else if (fn:exists($node/ebnfSuffix/PLUS)) then '+'
+  else if (fn:exists($node/ebnfSuffix/QUESTION)) then '?'
   else ''
 };
 
@@ -107,6 +123,17 @@ declare function local:scan-follow($element) {
   let $tail := fn:empty($element/following-sibling::element) and
     fn:empty($element/ancestor::element/following-sibling::element)
   let $key := fn:concat($owner, '#E#', $name, '#')
+  return if (not($tail)) then () else for $line in fn:tokenize($scanSpecs, '\r?\n')
+    where fn:starts-with($line, $key)
+    return local:scan-token-names(fn:substring-after($line, $key), $reserved)
+};
+
+declare function local:scan-boundary($element) {
+  let $name := fn:string($element/atom/ruleref/RULE_REF)
+  let $owner := fn:string(($element/ancestor::parserRuleSpec/RULE_REF)[1])
+  let $tail := fn:empty($element/following-sibling::element) and
+    fn:empty($element/ancestor::element/following-sibling::element)
+  let $key := fn:concat($owner, '#N#', $name, '#')
   return if (not($tail)) then () else for $line in fn:tokenize($scanSpecs, '\r?\n')
     where fn:starts-with($line, $key)
     return local:scan-token-names(fn:substring-after($line, $key), $reserved)
@@ -123,6 +150,12 @@ declare function local:scan-syntax-alt($owner, $index) {
   return fn:exists(for $line in fn:tokenize($scanSpecs, '\r?\n')
     where $line = $key return $line)
 };
+declare function local:scan-prefix-alt($owner, $index) {
+  let $key := fn:concat($owner, '#P#', $index, '#')
+  return for $line in fn:tokenize($scanSpecs, '\r?\n')
+    where fn:starts-with($line, $key)
+    return local:scan-token-names(fn:substring-after($line, $key), $reserved)
+};
 declare function local:scan-block($element) {
   let $owner := fn:string(($element/ancestor::parserRuleSpec/RULE_REF)[1])
   let $alt-index := fn:count($element/ancestor::labeledAlt[1]/preceding-sibling::labeledAlt) + 1
@@ -131,12 +164,29 @@ declare function local:scan-block($element) {
   return fn:exists(for $line in fn:tokenize($scanSpecs, '\r?\n')
     where $line = $key return $line)
 };
+declare function local:scan-block-choice($alt) {
+  let $element := $alt/ancestor::element[1]
+  let $owner := fn:string(($alt/ancestor::parserRuleSpec/RULE_REF)[1])
+  let $alt-index := fn:count($element/ancestor::labeledAlt[1]/preceding-sibling::labeledAlt) + 1
+  let $element-index := fn:count($element/preceding-sibling::element) + 1
+  let $branch-index := fn:count($alt/preceding-sibling::alternative) + 1
+  let $key := fn:concat($owner, '#Q#', $alt-index, '#', $element-index,
+    '#', $branch-index, '#')
+  return if (fn:empty($element)) then () else
+    for $line in fn:tokenize($scanSpecs, '\r?\n')
+    where fn:starts-with($line, $key)
+    return local:scan-token-names(fn:substring-after($line, $key), $reserved)
+};
 declare function local:parser-alt-list($list) {
   fn:string-join(
     for $alt in $list/alternative
-    return fn:string-join(
+    let $text := fn:string-join(
       for $element in $alt/element
-      return local:parser-element($element), ' '),
+      return local:parser-element($element), ' ')
+    let $follow := local:scan-block-choice($alt)
+    return if (fn:exists($follow))
+      then fn:concat('SCAN (', $text, ' ', $follow, ') => ', $text)
+      else $text,
     ' | ')
 };
 
@@ -146,7 +196,7 @@ declare function local:parser-element($node) {
   let $body :=
     if (fn:exists($atom/ruleref/RULE_REF)) then fn:concat($prefix, fn:string($atom/ruleref/RULE_REF))
     else if (fn:exists($atom/terminalDef/TOKEN_REF))
-      then fn:concat('<', local:token-name(fn:string($atom/terminalDef/TOKEN_REF)), '>')
+      then local:token-reference(fn:string($atom/terminalDef/TOKEN_REF))
     else if (fn:exists($atom/terminalDef/STRING_LITERAL))
       then local:literal($atom/terminalDef/STRING_LITERAL)
     else if (fn:exists($block))
@@ -157,7 +207,12 @@ declare function local:parser-element($node) {
           else fn:concat('(', $block-body, ')', local:suffix($node/ebnf/blockSuffix))
     else local:unsupported('parser element')
   let $follow := if (local:suffix($node) = '') then () else local:scan-follow($node)
+  let $boundary := if (local:suffix($node) = '') then () else local:scan-boundary($node)
   return if (local:suffix($node) = '') then $body
+    else if (fn:exists($boundary))
+      then fn:concat('(SCAN (ENSURE ~(', fn:string-join($boundary, ' | '), ') ',
+        $body, if (fn:exists($follow)) then fn:concat(' (', fn:string-join($follow, ' | '), ')') else '',
+        ') => ', $body, ')', local:suffix($node))
     else if (fn:exists($follow))
       then fn:concat('(SCAN (', $body, ' (', fn:string-join($follow, ' | '), ')) => ', $body, ')', local:suffix($node))
     else fn:concat('(', $body, ')', local:suffix($node))
@@ -175,8 +230,11 @@ declare function local:parser-rule($rule, $nl) {
         let $text := local:parser-alt-list($alt)
         let $index := fn:count($alt/preceding-sibling::labeledAlt) + 1
         let $follow := local:scan-alt($name, $index)
+        let $prefix-guard := local:scan-prefix-alt($name, $index)
         return if (local:scan-syntax-alt($name, $index))
           then fn:concat('SCAN (', $text, ') => ', $text)
+          else if (fn:exists($prefix-guard))
+          then fn:concat('SCAN ', $prefix-guard, ' => ', $text)
           else if (fn:exists($follow))
           then fn:concat('SCAN (', $text, ' (', $follow, ')) => ', $text)
           else $text,
@@ -208,7 +266,8 @@ declare function local:lexer-alt-list($list) {
 declare function local:nullable-rule($name, $seen) {
   if ($name = $seen) then false()
   else
-    let $rule := /grammarSpec/rules/ruleSpec/lexerRuleSpec[TOKEN_REF/text() = $name]
+    let $rule := (/grammarSpec/rules/ruleSpec/lexerRuleSpec,
+                  /grammarSpec/modeSpec/lexerRuleSpec)[TOKEN_REF/text() = $name]
     return fn:exists($rule/lexerRuleBlock/lexerAltList/lexerAlt[
       local:nullable-alt(., ($seen, $name))])
 };
@@ -229,7 +288,8 @@ declare function local:nullable-element($node, $seen) {
 declare function local:lexer-cycle($name, $seen) {
   if ($name = $seen) then $name
   else
-    let $rule := /grammarSpec/rules/ruleSpec/lexerRuleSpec[TOKEN_REF/text() = $name]
+    let $rule := (/grammarSpec/rules/ruleSpec/lexerRuleSpec,
+                  /grammarSpec/modeSpec/lexerRuleSpec)[TOKEN_REF/text() = $name]
     return (
       for $ref in $rule//lexerAtom/terminalDef/TOKEN_REF
       return local:lexer-cycle(fn:string($ref), ($seen, $name)))[1]
@@ -261,16 +321,19 @@ declare function local:lexer-element($node) {
       then local:literal($atom/terminalDef/STRING_LITERAL)
     else if (fn:exists($atom/terminalDef/TOKEN_REF))
       then let $ref := fn:string($atom/terminalDef/TOKEN_REF)
-        let $rule := /grammarSpec/rules/ruleSpec/lexerRuleSpec[TOKEN_REF/text() = $ref]
+        let $rule := (/grammarSpec/rules/ruleSpec/lexerRuleSpec,
+                      /grammarSpec/modeSpec/lexerRuleSpec)[TOKEN_REF/text() = $ref]
         return if (fn:exists($rule/FRAGMENT) and local:nullable-rule($ref, ()))
           then fn:concat('(', local:lexer-alt-list($rule/lexerRuleBlock/lexerAltList), ')')
           else fn:concat('<', local:token-name($ref), '>')
     else if (fn:count($range) = 2)
       then fn:concat('[', local:literal($range[1]), '-', local:literal($range[2]), ']')
     else if (fn:exists($atom/notSet)) then local:not-set($atom/notSet)
+    else if (fn:exists($atom/wildcard/DOT)) then '~[]'
     else if (fn:exists($block))
       then fn:concat('(', local:lexer-alt-list($block/lexerAltList), ')')
-    else local:unsupported('lexer element')
+    else local:unsupported(fn:concat('lexer element ', fn:string($node),
+      ' in ', fn:string(($node/ancestor::lexerRuleSpec/TOKEN_REF)[1])))
   return if (local:suffix($node) = '') then $body
     else fn:concat('(', $body, ')', local:suffix($node))
 };
@@ -279,27 +342,56 @@ declare function local:lexer-rule($rule, $nl) {
   let $alts := $rule/lexerRuleBlock/lexerAltList/lexerAlt
   let $name := local:token-name(fn:string($rule/TOKEN_REF))
   let $commands := $alts/lexerCommands/lexerCommand
-  let $skip := fn:count($commands) = fn:count($alts) and
-    fn:count($commands[
-      (lexerCommandName/identifier/RULE_REF = 'skip' and not(lexerCommandExpr)) or
-      (lexerCommandName/identifier/RULE_REF = 'channel' and
-        lexerCommandExpr/identifier/TOKEN_REF = 'HIDDEN')
-    ]) = fn:count($alts)
+  let $state := fn:string($rule/parent::modeSpec/identifier/*[1])
+  let $state-prefix := if ($state = '') then '' else fn:concat('<', $state, '> ')
+  let $mode-commands := $commands[fn:string(lexerCommandName) = 'mode']
+  let $mode-targets := fn:distinct-values(
+    for $command in $mode-commands
+    let $target := fn:string($command/lexerCommandExpr/identifier/*[1])
+    return if ($target = 'DEFAULT_MODE') then 'DEFAULT' else $target)
+  let $next-state := if (fn:empty($mode-targets)) then ''
+    else fn:concat(' : ', $mode-targets[1])
+  let $unsupported-commands := $commands[not(
+    (fn:string(lexerCommandName) = 'skip' and not(lexerCommandExpr)) or
+    (fn:string(lexerCommandName) = 'channel' and
+      lexerCommandExpr/identifier/TOKEN_REF = 'HIDDEN') or
+    (fn:string(lexerCommandName) = 'type' and
+      fn:exists(lexerCommandExpr/identifier/TOKEN_REF)) or
+    (fn:string(lexerCommandName) = 'mode' and
+      fn:exists(lexerCommandExpr/identifier/*)))]
+  let $skip-alts := $alts[lexerCommands/lexerCommand[
+    (fn:string(lexerCommandName) = 'skip' and not(lexerCommandExpr)) or
+    (fn:string(lexerCommandName) = 'channel' and
+      lexerCommandExpr/identifier/TOKEN_REF = 'HIDDEN')]]
+  let $nongreedy := $rule//lexerElement/ebnfSuffix[
+    (fn:exists(STAR) or fn:exists(PLUS)) and fn:exists(QUESTION)
+    or fn:count(QUESTION) = 2]
+  let $lazy := fn:count($nongreedy) = 1 and
+    fn:exists($nongreedy[fn:exists(STAR) and ../lexerAtom/wildcard/DOT])
+  let $skip := fn:count($skip-alts) = fn:count($alts)
   let $regex := local:lexer-alt-list($rule/lexerRuleBlock/lexerAltList)
   return if (fn:exists($rule/FRAGMENT) and
     local:nullable-rule(fn:string($rule/TOKEN_REF), ())) then ''
-  else if (fn:exists($commands) and not($skip))
-    then local:unsupported(fn:concat('lexer commands other than skip or channel(HIDDEN) in ', $name))
+  else if (fn:exists($nongreedy) and (not($lazy) or fn:exists($rule/FRAGMENT)))
+    then local:unsupported(fn:concat('non-greedy lexer element in ', $name))
+  else if (fn:exists($unsupported-commands) or fn:count($mode-targets) > 1 or
+    (fn:exists($skip-alts) and not($skip)) or
+    (fn:exists($mode-commands) and fn:count($mode-commands) != fn:count($alts)))
+    then local:unsupported(fn:concat('lexer command combination in ', $name))
     else if (fn:exists($rule/FRAGMENT))
-      then fn:concat('TOKEN : <#', $name, ' : ', $regex, '> ;', $nl)
+      then fn:concat($state-prefix, 'TOKEN : <#', $name, ' : ', $regex,
+        '>', $next-state, ' ;', $nl)
     else if ($skip)
-      then fn:concat('SKIP : <', $name, ' : ', $regex, '> ;', $nl)
-    else fn:concat('TOKEN : <', $name, ' : ', $regex, '> ;', $nl)
+      then fn:concat($state-prefix, 'SKIP : <', if ($lazy) then '?' else '',
+        $name, ' : ', $regex, '>', $next-state, ' ;', $nl)
+    else fn:concat($state-prefix, 'TOKEN : <', if ($lazy) then '?' else '',
+      $name, ' : ', $regex, '>', $next-state, ' ;', $nl)
 };
 
 let $grammar := /grammarSpec
 let $name := fn:string($grammar/grammarDecl/identifier/*[1])
-let $recursive := (for $rule in $grammar/rules/ruleSpec/lexerRuleSpec
+let $recursive := (for $rule in ($grammar/rules/ruleSpec/lexerRuleSpec,
+                                $grammar/modeSpec/lexerRuleSpec)
   return local:lexer-cycle(fn:string($rule/TOKEN_REF), ()))[1]
 let $nl := '
 '
@@ -319,7 +411,8 @@ return if (fn:count($grammar) != 1 or
       fn:normalize-space(fn:string(optionValue)) = 'true']))
       then fn:concat('IGNORE_CASE=true;', $nl, $nl) else '',
     fn:string-join(
-      for $rule in $grammar/rules/ruleSpec/lexerRuleSpec
+      for $rule in ($grammar/rules/ruleSpec/lexerRuleSpec,
+                    $grammar/modeSpec/lexerRuleSpec)
       return local:lexer-rule($rule, $nl), ''), $nl,
     fn:string-join(
       for $rule in $grammar/rules/ruleSpec/parserRuleSpec

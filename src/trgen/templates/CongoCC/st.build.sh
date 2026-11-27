@@ -4,8 +4,8 @@ cd "$(dirname "$0")"
 CONGOCC_JAR="${CONGOCC_JAR:-$HOME/congo-parser-generator/bin/congocc.jar}"
 JAVA="${JAVA:-java}"
 JAVAC="${JAVAC:-javac}"
-# Keep parser rule names by default. If generated Java has a token/AST name collision,
-# rebuild with CONGOCC_RULE_PREFIX=ParserRule_ (or another unique prefix).
+# Keep parser rule names unless they collide with token class names. An explicit
+# prefix overrides the automatic choice.
 CONGOCC_RULE_PREFIX="${CONGOCC_RULE_PREFIX:-}"
 if [[ ! -f "$CONGOCC_JAR" ]]; then
   echo "CongoCC JAR not found: $CONGOCC_JAR (set CONGOCC_JAR)" >&2
@@ -35,11 +35,33 @@ fi
 interp_cmd=(dotnet trash interp)
 if [[ -n "${TRINTERP_DLL:-}" ]]; then interp_cmd=(dotnet "$TRINTERP_DLL"); fi
 scan_specs=$("${interp_cmd[@]}" --congocc-scans -f "$grammar_bundle")
-if ! "${query_cmd[@]}" -f "$grammar_bundle" -q convert.xq \
-  "$CONGOCC_RULE_PREFIX" "$scan_specs" 2>"$conversion_error" |
-  "${interp_cmd[@]}" --congocc-expand-unicode > <grammar_name>.ccc; then
-  if [[ -s "$conversion_error" ]]; then head -n 1 "$conversion_error" >&2; fi
-  exit 1
+render_grammar() {
+  if ! "${query_cmd[@]}" -f "$grammar_bundle" -q convert.xq \
+    "$CONGOCC_RULE_PREFIX" "$scan_specs" 2>"$conversion_error" |
+    "${interp_cmd[@]}" --congocc-expand-unicode > <grammar_name>.ccc; then
+    if [[ -s "$conversion_error" ]]; then head -n 1 "$conversion_error" >&2; fi
+    return 1
+  fi
+}
+render_grammar
+if [[ -z "$CONGOCC_RULE_PREFIX" ]]; then
+  collision=$(awk '
+    /(^| )(TOKEN|SKIP) : / {
+      split($0, parts, " : ")
+      name = substr(parts[2], 2)
+      sub(/^[#?]/, "", name)
+      tokens[tolower(name)] = 1
+    }
+    /^[[:alpha:]_][[:alnum:]_]* : / {
+      split($0, parts, " : ")
+      if (tokens[tolower(parts[1])]) { print parts[1]; exit }
+    }
+  ' <grammar_name>.ccc)
+  if [[ -n "$collision" ]]; then
+    echo "CongoCC: parser rule '$collision' conflicts with a token class; using ParserRule_ prefix." >&2
+    CONGOCC_RULE_PREFIX=ParserRule_
+    render_grammar
+  fi
 fi
 printf '%s' "$CONGOCC_RULE_PREFIX" > parser-rule-prefix.txt
 # Discard stale Java/AST classes when changing the parser-rule prefix.

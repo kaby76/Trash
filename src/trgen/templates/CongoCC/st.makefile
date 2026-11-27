@@ -3,6 +3,8 @@ build: FORCE
 	bash build.sh
 run: FORCE
 	bash run.sh
+test: FORCE
+	bash test.sh
 clean: FORCE
 	bash clean.sh
 FORCE: ;

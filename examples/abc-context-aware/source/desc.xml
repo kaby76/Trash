@@ -1,0 +1,4 @@
+<desc>
+  <targets>CongoCC</targets>
+  <inputs>../examples/*.abc</inputs>
+</desc>

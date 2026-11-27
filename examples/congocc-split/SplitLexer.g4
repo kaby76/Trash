@@ -11,3 +11,4 @@ SEMI : ';';
 NEWLINE : '\r'? '\n';
 WS : [ \t]+ -> skip;
 COMMENT : '#' ~[\r\n]* -> channel(HIDDEN);
+BLOCK_COMMENT : '/*' .*? '*/' -> skip;

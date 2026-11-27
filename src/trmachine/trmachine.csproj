@@ -11,7 +11,7 @@
     <AssemblyName>trmachine</AssemblyName>
     <PackageId>trmachine</PackageId>
     <ToolCommandName>trmachine</ToolCommandName>
-    <Version>5.0.0</Version>
+    <Version>5.1.0</Version>
     <Description>Print machine hardware and operating-system details for performance reports.</Description>
     <RepositoryUrl>https://github.com/kaby76/Trash/tree/main/src/trmachine</RepositoryUrl>
     <RepositoryType>git</RepositoryType>

@@ -58,7 +58,7 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "5.0.0";
+    public string Version { get; set; } = "5.1.0";
 
     [Option('x', Required = false, HelpText = "Read input file names from stdin.")]
     public bool ReadFileNameStdin { get; set; }
@@ -140,6 +140,10 @@ public class Config
     [Option("write-dfa-cache-file", Required = false,
         HelpText = "Also write the learned interpreter DFA data to a standalone file.")]
     public string WriteDfaCacheFile { get; set; }
+
+    [Option("dfa-dot", Required = false,
+        HelpText = "After ALL(*) parsing, write learned parser-decision and lexer-mode DFA graphs as .dot files in this directory.")]
+    public string DfaDotDirectory { get; set; }
 
     [Option("bundle", Required = false, HelpText = "Write an ordinary POSIX PAX artifact bundle to stdout (the default).")]
     public bool Bundle { get; set; } = true;

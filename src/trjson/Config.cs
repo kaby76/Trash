@@ -17,5 +17,5 @@ public class Config
     public bool Text { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "5.0.0";
+    public string Version { get; set; } = "5.1.0";
 }
