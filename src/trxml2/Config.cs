@@ -9,7 +9,7 @@ public class Config
     public bool Verbose { get; set; }
 
     [Option("version", Required = false)]
-    public string Version { get; set; } = "5.1.0";
+    public string Version { get; set; } = "5.2.0";
 
     [Option("file-name", Required = false, HelpText = "Prefix each output line with the input file name.")]
     public bool FileName { get; set; }
